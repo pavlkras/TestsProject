@@ -1,14 +1,9 @@
 package tel_ran.tests.controller;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import tel_ran.tests.services.interfaces.ICompanyActionsService;
 
 
 @Controller
@@ -17,7 +12,7 @@ import tel_ran.tests.services.interfaces.ICompanyActionsService;
 public class CompanyActions {
 	int company_id;
 	@Autowired
-	ICompanyActionsService companyService;
+	//ICompanyActionsService companyService;
 @RequestMapping({"/CompanyActions"})
 public String signIn(){
 	return "CompanySignIn";
