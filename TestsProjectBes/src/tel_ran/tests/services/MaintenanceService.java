@@ -12,6 +12,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	
 	@Transactional(readOnly=false)
 	public void addQuestion(){
+		//test commit
 		QuestionEntity question=new QuestionEntity();
 		em.persist(question);
 	}
