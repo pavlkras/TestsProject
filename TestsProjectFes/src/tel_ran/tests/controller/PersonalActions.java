@@ -1,11 +1,8 @@
 package tel_ran.tests.controller;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import tel_ran.tests.services.interfaces.IPersonalActionsService;
@@ -17,11 +14,12 @@ public class PersonalActions {
 	int personId;
 	@Autowired
 	IPersonalActionsService personalService;
+
 	@RequestMapping({"/PersonalActions"})
 	public String signIn(){
 		return "PersonalSignIn";
 	}
-//use case Personal Login 3.2.1
+	//use case Personal Login 3.2.1
 	/*3.2.1.	Login
 	Pre-conditions:
 	3.	The System is running up
@@ -43,7 +41,7 @@ public class PersonalActions {
 	3.	The alert window appears with message: “Wrong password. Type the right password”
 	4.	Returns to the Login
 
-*/
+	 */
 	//use case 3.2.2. Personal sign up
 	/*Pre-conditions:
 		3.	The System is running up
@@ -67,7 +65,7 @@ public class PersonalActions {
 		User Registered Flow:
 		3.	The alert window appears with message: “The <username> already registered. Type another username or go to Login with this one”
 		4.	Returns to  the Registration Flow
-*/
+	 */
 	//Use case 3.2.3 Performing Test - Trainee Mode
 	/*Pre-conditions:
 		1.	The System is running up
@@ -96,7 +94,7 @@ public class PersonalActions {
 ...........................
 ................................
 .............................
-*/
+	 */
 	//use case Performing Test - Control Mode
 	/*Pre-conditions:
 		1.	The user has the link for the test given by a company
@@ -134,5 +132,5 @@ public class PersonalActions {
 ...........................................
 ...........................................
 
-*/
+	 */
 }

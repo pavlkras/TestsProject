@@ -1,11 +1,8 @@
 package tel_ran.tests.controller;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import tel_ran.tests.services.interfaces.ICompanyActionsService;
@@ -17,13 +14,14 @@ import tel_ran.tests.services.interfaces.ICompanyActionsService;
 public class CompanyActions {
 	int company_id;
 	@Autowired
-	ICompanyActionsService companyService;
-@RequestMapping({"/CompanyActions"})
-public String signIn(){
-	return "CompanySignIn";
-}
-//Use case Company Login
-/*Pre-conditions:
+	ICompanyActionsService companyService;	
+
+	@RequestMapping({"/CompanyActions"})
+	public String signIn(){
+		return "PersonalSignIn";
+	}
+	//Use case Company Login
+	/*Pre-conditions:
 1.	The system comprising of front-end controller and back-end Database service (aka the System) is running up
 2.	The user is registered in the System
 Login Normal Flow: 
@@ -42,11 +40,11 @@ Pre-Conditions:
 Wrong Password Flow:
 1.	The alert window appears with message: “Wrong password. Type the right password”
 2.	Returns to the Login
-*/
-//
-//
-//Use Case Company Sign up 3.1.2
-/*Pre-conditions:
+	 */
+	//
+	//
+	//Use Case Company Sign up 3.1.2
+	/*Pre-conditions:
 1.	The System is running up
 2.	The company is not registered in the System
 Registration Normal Flow:
@@ -71,12 +69,12 @@ User Registered Flow:
 1.	The alert window appears with message: “The company <username> already registered. Type another company username or go to Login with this one”
 2.	Returns to  the Registration Flow
 
-*/
-//
-//
-//Use case Ordering Test 3.1.3
-//
-/*Pre-Conditions:
+	 */
+	//
+	//
+	//Use case Ordering Test 3.1.3
+	//
+	/*Pre-Conditions:
 1.	The System is running up
 2.	The user is signed in for the proper company
 Normal Flow:
@@ -110,9 +108,9 @@ Normal Flow:
 ...............................
 ..............................
 ...............................
-*/
-//Use case Viewing test results
-/*
+	 */
+	//Use case Viewing test results
+	/*
 3.1.4.	Viewing test results
 Pre-Conditions:
 1.	The System is running up
@@ -137,7 +135,7 @@ Normal Flow:
 •	Number of the wrong answers with the percentage
 •	5 photos made during the test
 
-*/
+	 */
 
 	/*
 	 * 
@@ -191,7 +189,7 @@ Normal Flow:
 	 *
 	 *
 	 */
-	
+
 
 
 }

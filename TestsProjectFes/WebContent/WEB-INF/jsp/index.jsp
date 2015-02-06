@@ -4,8 +4,6 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Choice Step</title>
-</head>
 <style type="text/css">
 *{
 	text-align: center;
@@ -22,16 +20,18 @@ input:HOVER {
 	background-color: yellow;
 }
 </style>
+<title>Index Page</title>
+</head>
 <body>
-<br><a href='http://localhost:8080/TestsProjectFes/'>Home Page</a><br>
-<form action="PersonalSignInAction">
-user name: <input type="text" name="username" size=50/><br>
-password: <input type="password" name="password" size=50/><br>
-<input type="submit" value="PUSH">
-</form>
+<br>
 
-<script type="text/javascript">
-		document.write("${result}");
-	</script>
+<a href="http://localhost:8080/TestsProjectFes/Maintenance">1. Maintenance</a>
+<br>
+<a href="http://localhost:8080/TestsProjectFes/PersonalActions">2. Personal Actions</a>
+<br>
+<a href="http://localhost:8080/TestsProjectFes/CompanyActions">3. Company Actions</a>
+<br>
+<br>
+
 </body>
 </html>
