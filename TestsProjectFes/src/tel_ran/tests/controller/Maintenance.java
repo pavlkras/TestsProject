@@ -18,14 +18,9 @@ public class Maintenance {
 	boolean flAdminAuthorized;
 	@Autowired
 	IMaintenanceService maintenanceService;
-	@RequestMapping({"/Maintenance"})
-	public String authorize(){
-		return "MaintenanceSignIn";
-	}
-	
 	
 	/**когда запускаем аппликации, метод дает домашнюю страницу !! */
-	@RequestMapping({"/"})
+	@RequestMapping({"/Maintenance"})
 	public String homePage() {return "HomePage";}
 
 	/** когда нажимаем на кнопку add question! этот метод только вызывает страницу adding page здесь писать ничего не надо!! */
