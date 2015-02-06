@@ -12,7 +12,7 @@ import tel_ran.tests.services.interfaces.ICompanyActionsService;
 
 
 @Controller
-@Scope("session")
+@Scope("session") /*session timer default = 20min*/
 @RequestMapping({"/","/CompanyActions"})
 public class CompanyActions {
 	int company_id;
