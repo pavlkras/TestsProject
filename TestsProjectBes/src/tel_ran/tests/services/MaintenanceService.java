@@ -1,15 +1,8 @@
 package tel_ran.tests.services;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceContextType;
-
-import org.aspectj.weaver.patterns.TypePatternQuestions.Question;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +15,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW)	// работа с транзакциями 
 	public boolean createQuestion(String questionText,String descriptionText, String category,	int level, List<String> answers, int trueAnswerNumber) {
 		// creating table question and setting data//
-		
+
 		boolean result = false;		
 		List<Question> res = em.createQuery(// searching  if question not exist
 				"SELECT c FROM Question c WHERE c.questionText LIKE :custName").setParameter("custName",questionText).getResultList();
@@ -60,6 +53,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 			temp.setAnswer(false);// adding boolean if true/false this answer 
 		}
 		em.persist(temp);// добавляем данные в БД
+
 	}
 	//////////////////////////////////////////////////////////////////////////////////////
 	/** Метод апдейт , берет вопрос и обновляет его данными полученными от администратора CHANGE Question */
@@ -124,43 +118,6 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		}	
 		str.append("</table><br>");			
 		return str.toString();
-	}	
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	@Override	
-	public boolean AddQuestionsFromFile(String FileName) {//adding in database questions and answers from local file
-		boolean res = false;	
-		try {
-			res = readLocalFile(FileName);			
-		} catch (Exception e) {
-			//e.printStackTrace();
-			System.out.println(" File not FOUND !!!!!");			
-		}
-		return res;
-	}
-
-	@SuppressWarnings("resource")
-	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW)	// работа с транзакциями 
-	private boolean readLocalFile(String fileName) throws Exception {
-		boolean flagAction = false;
-		String[] res = fileName.split(":");
-		if(res.length <= 1){
-			String temp = "D:/developer-workspaces/out_project/repository/tr-project/"+fileName;
-			fileName = temp;
-		}
-		BufferedReader input = new BufferedReader(new FileReader(fileName)); 
-		String line; 
-		while((line = input.readLine()) != null){ 
-			String[] question_Parts = line.split(":;;:"); 	
-
-			Integer trueAnswerNumber = Integer.parseInt(question_Parts[8]); 
-			List<String> answers = new ArrayList<String>();
-			answers.add(question_Parts[4]);		answers.add(question_Parts[5]);
-			answers.add(question_Parts[6]);		answers.add(question_Parts[7]);
-
-			int level = Integer.parseInt(question_Parts[3]);
-			flagAction = createQuestion(question_Parts[0], question_Parts[1], question_Parts[2], level, answers, trueAnswerNumber);			
-		}	
-		return flagAction;
 	}
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	@SuppressWarnings("unchecked")
@@ -180,9 +137,50 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		}			
 		return outRes.toString();	// return to client result of operation
 	}
-	@Override
-	public List<String> GeneratedTestQuestion(String arg0, String arg1) {
-		// TODO Auto-generated method stub
-		return null;
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	@SuppressWarnings("unchecked")
+	@Override  // method for test case group Alex Fox
+	public List<String> GeneratedTestQuestion(String category, String level) {
+		List<String> outRes = new ArrayList<String>();
+		long id = 0;
+		List<Question> question = em.createQuery(
+				"SELECT c FROM Question c WHERE c.category LIKE :custName").setParameter("custName",category).getResultList();
+		for(Question q: question){
+			String temp = q.toString();
+			id = q.getId();
+			temp += getAnswers(id);
+			outRes.add(temp);
+		}
+		return outRes;
 	}
+
+	@SuppressWarnings("unchecked")
+	private String getAnswers(long id) {
+		List<Answer> answers = em.createQuery(
+				"SELECT c FROM Answer c WHERE c.keyQuestion LIKE :custName").setParameter("custName",id).getResultList();	
+		String outRes = null;
+		for(Answer an:answers){
+			outRes += an.toString();
+		}	
+		return outRes;
+	}
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	@Override
+	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW)	// работа с транзакциями
+	public boolean FillDataBaseFromTextResource(List<String> inputParsedText) {//adding in database questions and answers from local file
+		boolean flagAction = false;	
+
+		for(String line: inputParsedText){ 
+			String[] question_Parts = line.split(":;;:"); 
+			Integer trueAnswerNumber = Integer.parseInt(question_Parts[8]); 
+			List<String> answers = new ArrayList<String>();
+			answers.add(question_Parts[4]);		answers.add(question_Parts[5]);
+			answers.add(question_Parts[6]);		answers.add(question_Parts[7]);
+
+			int level = Integer.parseInt(question_Parts[3]);
+			flagAction = createQuestion(question_Parts[0], question_Parts[1], question_Parts[2], level, answers, trueAnswerNumber);			
+		}	
+		return flagAction;
+	}
+
 }

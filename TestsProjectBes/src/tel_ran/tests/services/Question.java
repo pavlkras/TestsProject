@@ -1,4 +1,5 @@
 package tel_ran.tests.services;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -32,28 +33,28 @@ public class Question implements Serializable {
 	public long getId() {
 		return id;
 	}
-	protected String getQuestion() {
+	public String getQuestion() {
 		return questionText;
 	}
-	protected void setQuestion(String question) {
+	public void setQuestion(String question) {
 		this.questionText = question;
 	}
-	protected String getCategory() {
+	public String getCategory() {
 		return category;
 	}
-	protected void setCategory(String category) {
+	public void setCategory(String category) {
 		this.category = category;
 	}
-	protected int getLevel() {
+	public int getLevel() {
 		return level;
 	}
-	protected void setLevel(int level) {
+	public void setLevel(int level) {
 		this.level = level;
 	}	
-	protected String getDescription() {
+	public String getDescription() {
 		return description;
 	}
-	protected void setDescription(String description) {
+	public void setDescription(String description) {
 		this.description = description;
 	}
 	@Override
