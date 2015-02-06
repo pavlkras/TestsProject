@@ -5,18 +5,17 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.*;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceContextType;
 
+import org.aspectj.weaver.patterns.TypePatternQuestions.Question;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import tel_ran.tests.services.interfaces.IMaintenanceService;
 
 public class MaintenanceService extends TestsPersistence implements IMaintenanceService {
-	
-
-	@PersistenceContext(unitName="springHibernate", type=PersistenceContextType.EXTENDED)
-	private EntityManager em;// наш менеджер для работы с добавлением  и обновлением базы данных вопросов и других параметров
 	private int j=1;// счетчик  номера правильного вопроса 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -68,7 +67,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	@Override	
 	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW)	// работа с транзакциями //logger.log(str);
 	public String UpdateQuestionInDataBase(String questionID,String questionText,String descriptionText,String category, int level,List<String> answers,int trueAnswerNumber) {
-		
+
 		StringBuffer str = new StringBuffer();
 		str.append("<p style='border:0.1em solid black;'>This text from WorkActionClass line 76 </p>");
 		// changing Question table attribute
@@ -87,7 +86,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 				// changing table Answer, adding text 
 				List<Answer> answersList = em.createQuery(
 						"SELECT c FROM Answer c WHERE c.keyQuestion LIKE :custName").setParameter("custName",elem.getId()).getResultList();//searching in DB is question not exist
-				
+
 				int i=0;	
 				j=1;// counter for answers ,  
 				for(Answer text:answersList){					
@@ -138,7 +137,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		}
 		return res;
 	}
-	
+
 	@SuppressWarnings("resource")
 	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW)	// работа с транзакциями 
 	private boolean readLocalFile(String fileName) throws Exception {
@@ -152,12 +151,12 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		String line; 
 		while((line = input.readLine()) != null){ 
 			String[] question_Parts = line.split(":;;:"); 	
-			
+
 			Integer trueAnswerNumber = Integer.parseInt(question_Parts[8]); 
 			List<String> answers = new ArrayList<String>();
 			answers.add(question_Parts[4]);		answers.add(question_Parts[5]);
 			answers.add(question_Parts[6]);		answers.add(question_Parts[7]);
-			
+
 			int level = Integer.parseInt(question_Parts[3]);
 			flagAction = createQuestion(question_Parts[0], question_Parts[1], question_Parts[2], level, answers, trueAnswerNumber);			
 		}	
@@ -181,5 +180,9 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		}			
 		return outRes.toString();	// return to client result of operation
 	}
-
+	@Override
+	public List<String> GeneratedTestQuestion(String arg0, String arg1) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
