@@ -26,7 +26,7 @@ input:HOVER {
 </style>
 </head>
 <body>
-	<a href="http://localhost:8080/TestsProjectFes/"> Home Page</a>
+	<a href="http://localhost:8080/Test-tr-project/"> Home Page</a>
 
 	<p>Auto Complete Data Base from external file</p>
 	<br> Please choice specific file to fill data base

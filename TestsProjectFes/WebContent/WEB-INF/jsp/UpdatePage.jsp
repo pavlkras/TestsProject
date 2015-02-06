@@ -72,7 +72,7 @@ display: none;
 	Question N:  <input	type="text" name="questionKey" size="8">&nbsp;&nbsp; 
     <input type="submit" value="Edit ?" >
     </form>	
-<a href="http://localhost:8080/TestsProjectFes/">Home Page</a><br>
+<a href="http://localhost:8080/Test-tr-project/">Home Page</a><br>
 	<p onclick="test('1')">Update - Change  issues</p><!-- test working java script in this jsp file -->
 	<form  name="searchCODE" action="search_actions">
 		 <input  type="text" name="free_question" size="50">
