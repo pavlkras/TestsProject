@@ -1,7 +1,6 @@
 package tel_ran.tests.controller;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,19 +28,19 @@ public class Maintenance {
 
 	@RequestMapping({"/Maintenance"})
 	public String authorize(){
-		return "MaintenanceSignIn";
+		return "MaintenanceSignInPage";
 	}	
 	/** когда нажимаем на кнопку add question! этот метод только вызывает страницу adding page здесь писать ничего не надо!! */
 	@RequestMapping({"/add"})
-	public String addingPage() {return "AddingPage";}	
+	public String addingPage() {return "MaintenanceAddingPage";}	
 
 	/** когда нажимаем на кнопку  update question!  этот метод только вызывает страницу updating view table page здесь писать ничего не надо!! !! */
 	@RequestMapping({"/update"})
-	public String UpdatePage(){return "UpdatePage";}
+	public String UpdatePage(){return "MaintenanceUpdatePage";}
 
 	/** когда нажимаем на кнопку add from file! этот метод только вызывает страницу adding page  здесь писать ничего не надо!!!! */
 	@RequestMapping({"/addfromfile"})
-	public String specificDataPage(){return "AutoComplete";}
+	public String specificDataPage(){return "MaintenanceAutoComplete";}
 	//////////////////////////////////////////////////////////////////////////////////////////
 	@RequestMapping({"/PersonalSignInAction"})
 	public String signIn(Model model,String username,String password){
@@ -59,7 +58,7 @@ public class Maintenance {
 		}
 
 		model.addAttribute("result",links);// вывод текста
-		return "MaintenanceSignIn";
+		return "MaintenanceSignInPage";
 	}
 	//use case 3.3.3 Test Maintenance
 	/*3.3.1.	Adding test question
@@ -111,7 +110,7 @@ public class Maintenance {
 		 * Метод вывода текста на  ХТМЛ  страницу через джава скрипт  model.addAttribute("result",ВАЖНО!! чтобы имя написанное в методе как 1 параметр, 
 		 * И написанное на ХТМЛ странице в скипте имя в фигурных скобках  document.write("${result}"); совпадали полностью !!!
 		 * */
-		return "AddingPage"; // return too page after action
+		return "MaintenanceAddingPage"; // return too page after action
 	}	
 	//use case 3.3.2 Update Test Question
 	/*Pre-Conditions:
@@ -137,7 +136,7 @@ public class Maintenance {
 		answer.add(answer_text_3);		answer.add(answer_text_4);
 		String result = maintenanceService.UpdateQuestionInDataBase(questionID, questionText, descriptionText, category, question_level, answer, trueAnswerNumber);	
 		model.addAttribute("result", result);// text on page for testing
-		return "UpdatePage";// return too page after action		
+		return "MaintenanceUpdatePage";// return too page after action		
 	}	
 	/***  ПОИСК ВОПРОСОВ: действия разрешены Администратору системы  */
 	@RequestMapping({"/search_actions"})
@@ -145,7 +144,7 @@ public class Maintenance {
 		/** это метод обновления вопроса, принимает String free_question: Это текст в свободной форме, для поиска вопроса.*/
 		String result = maintenanceService.SearchQuestionInDataBase(free_question, category);		
 		model.addAttribute("result", result);// text on page for testing
-		return "UpdatePage";// return too page after action		
+		return "MaintenanceUpdatePage";// return too page after action		
 	}
 	/** Промежуточный поиск вопроса для заполнения формы для изменения вопроса : действия системы*/
 	@RequestMapping({"/getArrayFromDB"})
@@ -200,7 +199,7 @@ public class Maintenance {
 		stringBufferOutResult.append("</form>");
 
 		model.addAttribute("result",stringBufferOutResult.toString());// вывод текста	
-		return "UpdatePage";		
+		return "MaintenanceUpdatePage";		
 
 		//Способ общения jsp. страниц с джава кодом напрямую 
 		/*<%= MappingController.getInfoDB() %> */   
@@ -233,7 +232,8 @@ public class Maintenance {
 		String line; 
 		BufferedReader input;
 		try {
-			input = new BufferedReader(new FileReader(file_name));		
+			//input = new BufferedReader(new FileReader(file_name));	// not work correctly in brouser only full path
+			input = new BufferedReader(new FileReader("D:/developer-workspaces/out_project/repository/tr-project/bild.txt"));	
 			while((line = input.readLine()) != null){ 
 				res.add(line);
 			}
@@ -242,6 +242,6 @@ public class Maintenance {
 		} catch (Exception e) {			
 			model.addAttribute("result","File not Found");// вывод текста
 		} 	
-		return 	"MaintenanceSignIn";// return too page after action
+		return 	"MaintenanceSignInPage";// return too page after action
 	}
 }
