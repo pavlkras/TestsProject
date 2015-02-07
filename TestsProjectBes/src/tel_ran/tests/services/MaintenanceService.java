@@ -114,7 +114,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		for( Question questionLine :res){	
 			String line = questionLine.toString();
 			String[] element = line.split(":");
-			str.append("<tr><td onclick='test(value)' value='"+element[0]+"'>"+element[0]+". "+element[1]+"</td></tr>");
+			str.append("<tr onclick='test("+element[0]+")'><td>Category:  "+element[3]+"</td><td>"+element[0]+". "+element[1]+"</td></tr>");
 		}	
 		str.append("</table><br>");			
 		return str.toString();
