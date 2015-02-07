@@ -25,6 +25,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 			qwtemp.setDescription(descriptionText);
 			qwtemp.setCategory(category);
 			qwtemp.setLevel(level);
+			System.out.println(level+"<< level create line 28 Main..Ser..");
 			em.persist(qwtemp);// sending to database (commit)
 
 			long keyQuestion = qwtemp.getId();			
@@ -68,34 +69,35 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		long id = (long)Integer.parseInt(questionID);
 		List<MaintenanceQuestion> res = em.createQuery(
 				"SELECT c FROM MaintenanceQuestion c WHERE c.id LIKE :custName").setParameter("custName",id).getResultList();// element question table getting by ID
-		
-			for(MaintenanceQuestion elem:res){	
-				elem.setQuestion(questionText);
-				elem.setDescription(descriptionText);
-				elem.setCategory(category);
-				elem.setLevel(level);			
-				em.persist(elem);
-				// changing table Answer, adding text 
-				List<MaintenanceAnswer> answersList = em.createQuery(
-						"SELECT c FROM MaintenanceAnswer c WHERE c.keyQuestion LIKE :custName").setParameter("custName",elem.getId()).getResultList();//searching in DB is question not exist
 
-				int i=0;	
-				j=1;// counter for answers   
-				for(MaintenanceAnswer text:answersList){					
-					text.setAnswerText(answers.get(i++));// getting and adding text to column AnswerText 		
-					if(trueAnswerNumber == (int)j++){
-						text.setAnswer(true);// adding boolean if true/false this answer 
-					}else{
-						text.setAnswer(false);// adding boolean if true/false this answer 
-					}				
-					em.persist(text);// добавляем данные в БД
-				}
-				str.delete(0, str.length());
-				str.append("<p>Changed Question successfully added</p>");
-			}		
+		for(MaintenanceQuestion elem:res){	
+			elem.setQuestion(questionText);
+			elem.setDescription(descriptionText);
+			elem.setCategory(category);
+			elem.setLevel(level);
+			System.out.println(level+"<< level update line 77 Main..Serv..");
+			em.persist(elem);
+			// changing table Answer, adding text 
+			List<MaintenanceAnswer> answersList = em.createQuery(
+					"SELECT c FROM MaintenanceAnswer c WHERE c.keyQuestion LIKE :custName").setParameter("custName",elem.getId()).getResultList();//searching in DB is question not exist
+
+			int i=0;	
+			j=1;// counter for answers   
+			for(MaintenanceAnswer text:answersList){					
+				text.setAnswerText(answers.get(i++));// getting and adding text to column AnswerText 		
+				if(trueAnswerNumber == (int)j++){
+					text.setAnswer(true);// adding boolean if true/false this answer 
+				}else{
+					text.setAnswer(false);// adding boolean if true/false this answer 
+				}				
+				em.persist(text);// добавляем данные в БД
+			}
+			str.delete(0, str.length());
+			str.append("<p>Changed Question successfully added</p>");
+		}		
 		return str.toString();
 	}	
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////!!!!!!!!!change output result!!!!!!!!!!//////////////////////////////////////////////
 	/** ЗАПРОС В БД По вопросу, словам из вопроса, или букве(нескольким буквам типа  J2EE) SEARCH Question  */
 	@SuppressWarnings("unchecked")
 	@Override	
@@ -132,31 +134,39 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		return outRes.toString();	// return to client result of operation
 	}
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// method for test case group AlexFoox Company
 	@SuppressWarnings("unchecked")
-	@Override  // method for test case group Alex Fox
+	@Override  	
 	public List<String> GeneratedTestQuestion(String category, String level) {
 		List<String> outRes = new ArrayList<String>();
 		long id = 0;
 		List<MaintenanceQuestion> question = em.createQuery(
 				"SELECT c FROM MaintenanceQuestion c WHERE c.category LIKE :custName").setParameter("custName",category).getResultList();
 		for(MaintenanceQuestion q: question){
+			if(Integer.parseInt(level) == q.getLevel()){
 			String temp = q.toString();
 			id = q.getId();
 			temp += getAnswers(id);
 			outRes.add(temp);
+			}
 		}
 		return outRes;
 	}
-
+	// getting answers for query
 	@SuppressWarnings("unchecked")
 	private String getAnswers(long id) {
 		List<MaintenanceAnswer> answers = em.createQuery(
 				"SELECT c FROM MaintenanceAnswer c WHERE c.keyQuestion LIKE :custName").setParameter("custName",id).getResultList();	
-		String outRes = null;
+		String outRes = "";
 		for(MaintenanceAnswer an:answers){
 			outRes += an.toString();
 		}	
 		return outRes;
+	}
+
+	public List<String> getUniqueSetQuestionsForTest(String category,String level){
+		List<String> result = null;
+		return result;
 	}
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	@Override
