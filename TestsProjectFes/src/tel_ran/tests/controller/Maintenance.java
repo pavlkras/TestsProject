@@ -25,9 +25,8 @@ public class Maintenance {
 	public String Index(){
 		return "index";
 	}
-
 	@RequestMapping({"/Maintenance"})
-	public String authorize(){
+	public String authorize(){		
 		return "MaintenanceSignInPage";
 	}	
 	/** когда нажимаем на кнопку add question! этот метод только вызывает страницу adding page здесь писать ничего не надо!! */
@@ -41,7 +40,7 @@ public class Maintenance {
 	/** когда нажимаем на кнопку add from file! этот метод только вызывает страницу adding page  здесь писать ничего не надо!!!! */
 	@RequestMapping({"/addfromfile"})
 	public String specificDataPage(){return "MaintenanceAutoComplete";}
-	//////////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////AOP/////////////
 	@RequestMapping({"/PersonalSignInAction"})
 	public String signIn(Model model,String username,String password){
 		if(password.equals("12345") && username.equals("root")){

@@ -42,16 +42,16 @@ td:hover {
 }
 
 td {
-	border: 0.01em solid black;
+	border: 0.1em solid black;
 }
 
 table {
-	border: 0.01em solid black;
+	border: 0.1em solid black;
 	width: 100%;
 }
 p{
 	color: blue;
-	border-bottom: 0.01em solid black;	
+	border-bottom: 0.1em solid black;	
 }
 .editingAction{
 display: none;
