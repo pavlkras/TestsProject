@@ -17,10 +17,10 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		// creating table question and setting data//
 
 		boolean result = false;		
-		List<Question> res = em.createQuery(// searching  if question not exist
-				"SELECT c FROM Question c WHERE c.questionText LIKE :custName").setParameter("custName",questionText).getResultList();
+		List<MaintenanceQuestion> res = em.createQuery(// searching  if question not exist
+				"SELECT c FROM MaintenanceQuestion c WHERE c.questionText LIKE :custName").setParameter("custName",questionText).getResultList();
 		if(res.size() == 0){								
-			Question qwtemp = new Question();			
+			MaintenanceQuestion qwtemp = new MaintenanceQuestion();			
 			qwtemp.setQuestion(questionText);
 			qwtemp.setDescription(descriptionText);
 			qwtemp.setCategory(category);
@@ -44,7 +44,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	////////////////////////////////////////////////////////////////////////////////////
 	/** method for Creating Table Answer in DB 	 */
 	private void addAnswersList(String answer, int trueAnswerNumber, long keyQuestion) {		
-		Answer temp = new Answer();// creating table answer		
+		MaintenanceAnswer temp = new MaintenanceAnswer();// creating table answer		
 		temp.setAnswerText(answer);// adding text answer 
 		temp.setKeyQuestion(keyQuestion);
 		if(trueAnswerNumber == (int)j){
@@ -66,24 +66,22 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		str.append("<p style='border:0.1em solid black;'>This text from WorkActionClass line 76 </p>");
 		// changing Question table attribute
 		long id = (long)Integer.parseInt(questionID);
-		List<Question> res = em.createQuery(
-				"SELECT c FROM Question c WHERE c.id LIKE :custName").setParameter("custName",id).getResultList();// element question table getting by ID
-		List<Question> testing = em.createQuery(
-				"SELECT c FROM Question c WHERE c.questionText LIKE :custName").setParameter("custName",questionText).getResultList();//searching in DB is question not exist
-		if(testing.size() == 0){
-			for(Question elem:res){	
+		List<MaintenanceQuestion> res = em.createQuery(
+				"SELECT c FROM MaintenanceQuestion c WHERE c.id LIKE :custName").setParameter("custName",id).getResultList();// element question table getting by ID
+		
+			for(MaintenanceQuestion elem:res){	
 				elem.setQuestion(questionText);
 				elem.setDescription(descriptionText);
 				elem.setCategory(category);
 				elem.setLevel(level);			
 				em.persist(elem);
 				// changing table Answer, adding text 
-				List<Answer> answersList = em.createQuery(
-						"SELECT c FROM Answer c WHERE c.keyQuestion LIKE :custName").setParameter("custName",elem.getId()).getResultList();//searching in DB is question not exist
+				List<MaintenanceAnswer> answersList = em.createQuery(
+						"SELECT c FROM MaintenanceAnswer c WHERE c.keyQuestion LIKE :custName").setParameter("custName",elem.getId()).getResultList();//searching in DB is question not exist
 
 				int i=0;	
-				j=1;// counter for answers ,  
-				for(Answer text:answersList){					
+				j=1;// counter for answers   
+				for(MaintenanceAnswer text:answersList){					
 					text.setAnswerText(answers.get(i++));// getting and adding text to column AnswerText 		
 					if(trueAnswerNumber == (int)j++){
 						text.setAnswer(true);// adding boolean if true/false this answer 
@@ -94,11 +92,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 				}
 				str.delete(0, str.length());
 				str.append("<p>Changed Question successfully added</p>");
-			}
-		}else{
-			str.delete(0, str.length());
-			str.append("<p>ERROR !!!  This Question already exist</p>");
-		}
+			}		
 		return str.toString();
 	}	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -107,14 +101,14 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	@Override	
 	public String SearchQuestionInDataBase(String question, String category) {
 		StringBuffer str;		
-		List<Question> res = em.createQuery(
-				"SELECT c FROM Question c WHERE c.questionText LIKE :custName").setParameter("custName","%"+question+"%").getResultList();// return to client result of operation			
+		List<MaintenanceQuestion> res = em.createQuery(
+				"SELECT c FROM MaintenanceQuestion c WHERE c.questionText LIKE :custName").setParameter("custName","%"+question+"%").getResultList();// return to client result of operation			
 		str = new StringBuffer();
-		str.append("<table>");
-		for( Question questionLine :res){	
+		str.append("<table><tr><td>CATEGORY</td><td>QUESTION</td></tr>");
+		for( MaintenanceQuestion questionLine :res){	
 			String line = questionLine.toString();
 			String[] element = line.split(":");
-			str.append("<tr onclick='test("+element[0]+")'><td>Category:  "+element[3]+"</td><td>"+element[0]+". "+element[1]+"</td></tr>");
+			str.append("<tr onclick='test("+element[0]+")'><td>"+element[3]+"</td><td>"+element[0]+". "+element[1]+"</td></tr>");
 		}	
 		str.append("</table><br>");			
 		return str.toString();
@@ -125,14 +119,14 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	public String getInformation(String questionKey) {// method return all attributes from Question and Answer Tables in string line  
 		StringBuffer  outRes = new StringBuffer();
 		long id = (long)Integer.parseInt(questionKey);
-		List<Question> question = em.createQuery(
-				"SELECT c FROM Question c WHERE c.id LIKE :custName").setParameter("custName",id).getResultList();
-		List<Answer> answers = em.createQuery(
-				"SELECT c FROM Answer c WHERE c.keyQuestion LIKE :custName").setParameter("custName",id).getResultList();	
-		for(Question q: question){
+		List<MaintenanceQuestion> question = em.createQuery(
+				"SELECT c FROM MaintenanceQuestion c WHERE c.id LIKE :custName").setParameter("custName",id).getResultList();
+		List<MaintenanceAnswer> answers = em.createQuery(
+				"SELECT c FROM MaintenanceAnswer c WHERE c.keyQuestion LIKE :custName").setParameter("custName",id).getResultList();	
+		for(MaintenanceQuestion q: question){
 			outRes.append(q);
 		}
-		for(Answer an:answers){
+		for(MaintenanceAnswer an:answers){
 			outRes.append(an);
 		}			
 		return outRes.toString();	// return to client result of operation
@@ -143,9 +137,9 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	public List<String> GeneratedTestQuestion(String category, String level) {
 		List<String> outRes = new ArrayList<String>();
 		long id = 0;
-		List<Question> question = em.createQuery(
-				"SELECT c FROM Question c WHERE c.category LIKE :custName").setParameter("custName",category).getResultList();
-		for(Question q: question){
+		List<MaintenanceQuestion> question = em.createQuery(
+				"SELECT c FROM MaintenanceQuestion c WHERE c.category LIKE :custName").setParameter("custName",category).getResultList();
+		for(MaintenanceQuestion q: question){
 			String temp = q.toString();
 			id = q.getId();
 			temp += getAnswers(id);
@@ -156,10 +150,10 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 
 	@SuppressWarnings("unchecked")
 	private String getAnswers(long id) {
-		List<Answer> answers = em.createQuery(
-				"SELECT c FROM Answer c WHERE c.keyQuestion LIKE :custName").setParameter("custName",id).getResultList();	
+		List<MaintenanceAnswer> answers = em.createQuery(
+				"SELECT c FROM MaintenanceAnswer c WHERE c.keyQuestion LIKE :custName").setParameter("custName",id).getResultList();	
 		String outRes = null;
-		for(Answer an:answers){
+		for(MaintenanceAnswer an:answers){
 			outRes += an.toString();
 		}	
 		return outRes;
