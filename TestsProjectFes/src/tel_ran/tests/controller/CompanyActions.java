@@ -1,8 +1,17 @@
 package tel_ran.tests.controller;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import tel_ran.tests.services.interfaces.ICompanyActionsService;
@@ -137,14 +146,65 @@ Normal Flow:
 
 	 */
 
+	
+	@RequestMapping({"/create_request"})
+	public String createRequest(){
+		return "CompanyTestsResultsStartPage";
+	}
+	 
+	
+	@RequestMapping({"/process_request"})
+	public String processRequest(String request_type, String date_from, String date_until, String user_id, Model model){
+		
+		boolean errorlevel = false;
+		String res = "";
+		List<String> bes_response = null;
+		
+		if(request_type.equals("all")){
+			bes_response = companyService.getTestsResultsAll(company_id);
+		
+		}else if(request_type.equals("time_interval")){
+			Date date_from_ = null;
+			Date date_until_ = null;
+			
+			try {
+				DateFormat df = new SimpleDateFormat ("MM/dd/yyyy"); 
+				date_from_ = df.parse(date_from);
+				date_until_ = df.parse(date_until);
+			} catch (ParseException e) {
+				errorlevel = true;
+			}
+			if(!errorlevel)
+				bes_response = companyService.getTestsResultsForTimeInterval(company_id, date_from_, date_until_);
+			
+		}else if(request_type.equals("user_specific")){
+			int user_ID = 0;
+			try {
+				user_ID = Integer.parseInt(user_id);
+			}catch(NumberFormatException e){
+				errorlevel = true;
+			}
+			if(!errorlevel)
+				bes_response = companyService.getTestsResultsForPersonID(company_id, user_ID);
+		}
+		
+		if (errorlevel){
+			res = "ErrorMessage";
+		}else{
+			res = compile_to_view(bes_response);
+		}
+		model.addAttribute("res", res);
+		
+		return "CompanyTestsDisplayResults";
+	}
+
+
+	private String compile_to_view(List<String> bes_response) {
+		// TODO Method which compiles html output
+		return null;
+	}	
+	
 	/*
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 *
 	 *
 	 *
 	 *
