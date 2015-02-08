@@ -25,7 +25,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 			qwtemp.setDescription(descriptionText);
 			qwtemp.setCategory(category);
 			qwtemp.setLevel(level);
-			System.out.println(level+"<< level create line 28 Main..Ser..");
+		
 			em.persist(qwtemp);// sending to database (commit)
 
 			long keyQuestion = qwtemp.getId();			
@@ -61,26 +61,21 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	@SuppressWarnings("unchecked")
 	@Override	
 	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW)	// работа с транзакциями //logger.log(str);
-	public String UpdateQuestionInDataBase(String questionID,String questionText,String descriptionText,String category, int level,List<String> answers,int trueAnswerNumber) {
-
-		StringBuffer str = new StringBuffer();
-		str.append("<p style='border:0.1em solid black;'>This text from WorkActionClass line 76 </p>");
+	public boolean UpdateQuestionInDataBase(String questionID,String questionText,String descriptionText,String category, int level,List<String> answers,int trueAnswerNumber) {
+		boolean result = false;
 		// changing Question table attribute
 		long id = (long)Integer.parseInt(questionID);
 		List<MaintenanceQuestion> res = em.createQuery(
 				"SELECT c FROM MaintenanceQuestion c WHERE c.id LIKE :custName").setParameter("custName",id).getResultList();// element question table getting by ID
-
 		for(MaintenanceQuestion elem:res){	
 			elem.setQuestion(questionText);
 			elem.setDescription(descriptionText);
 			elem.setCategory(category);
 			elem.setLevel(level);
-			System.out.println(level+"<< level update line 77 Main..Serv..");
-			em.persist(elem);
+						em.persist(elem);
 			// changing table Answer, adding text 
 			List<MaintenanceAnswer> answersList = em.createQuery(
 					"SELECT c FROM MaintenanceAnswer c WHERE c.keyQuestion LIKE :custName").setParameter("custName",elem.getId()).getResultList();//searching in DB is question not exist
-
 			int i=0;	
 			j=1;// counter for answers   
 			for(MaintenanceAnswer text:answersList){					
@@ -91,29 +86,23 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 					text.setAnswer(false);// adding boolean if true/false this answer 
 				}				
 				em.persist(text);// добавляем данные в БД
-			}
-			str.delete(0, str.length());
-			str.append("<p>Changed Question successfully added</p>");
+			}			
+			result = true;
 		}		
-		return str.toString();
+		return result;
 	}	
 	/////////////////////////////!!!!!!!!!change output result!!!!!!!!!!//////////////////////////////////////////////
 	/** ЗАПРОС В БД По вопросу, словам из вопроса, или букве(нескольким буквам типа  J2EE) SEARCH Question  */
 	@SuppressWarnings("unchecked")
 	@Override	
-	public String SearchQuestionInDataBase(String question, String category) {
-		StringBuffer str;		
-		List<MaintenanceQuestion> res = em.createQuery(
-				"SELECT c FROM MaintenanceQuestion c WHERE c.questionText LIKE :custName").setParameter("custName","%"+question+"%").getResultList();// return to client result of operation			
-		str = new StringBuffer();
-		str.append("<table><tr><td>CATEGORY</td><td>QUESTION</td></tr>");
-		for( MaintenanceQuestion questionLine :res){	
-			String line = questionLine.toString();
-			String[] element = line.split(":");
-			str.append("<tr onclick='test("+element[0]+")'><td>"+element[3]+"</td><td>"+element[0]+". "+element[1]+"</td></tr>");
-		}	
-		str.append("</table><br>");			
-		return str.toString();
+	public List<String> SearchQuestionInDataBase(String question, String category) {	
+		List<String> outResult = new ArrayList<String>();
+		List<MaintenanceQuestion> result = em.createQuery(
+				"SELECT c FROM MaintenanceQuestion c WHERE c.questionText LIKE :custName").setParameter("custName","%"+question+"%").getResultList();// return to client result of operation
+			for(MaintenanceQuestion q: result){
+				outResult.add(q.toString());
+			}
+		return outResult;
 	}
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	@SuppressWarnings("unchecked")
@@ -137,7 +126,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	// method for test case group AlexFoox Company
 	@SuppressWarnings("unchecked")
 	@Override  	
-	public List<String> GeneratedTestQuestion(String category, String level) {
+	public List<String> generatedTestQuestion(String category, String level) {
 		List<String> outRes = new ArrayList<String>();
 		long id = 0;
 		List<MaintenanceQuestion> question = em.createQuery(
