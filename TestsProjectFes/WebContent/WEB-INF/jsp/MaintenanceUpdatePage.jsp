@@ -78,7 +78,7 @@ display: none;
 		 <input  type="text" name="free_question" size="50">
 		 <input type="submit"	value="SEARCH"><br> 	
 	</form>	
-    <br><br>
+ 
 	<script type="text/javascript">
 	document.write("${result}");
 	</script>	

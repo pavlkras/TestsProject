@@ -10,16 +10,13 @@
 * {
 	text-align: center;
 }
-
 a {
 	font-size: 1.35em;
 	color: blue;
 }
-
 a:HOVER {
 	color: orange;
 }
-
 input:HOVER {
 	background-color: yellow;
 }
@@ -32,13 +29,15 @@ input:HOVER {
 	<br> Please choice specific file to fill data base
 	<br>
 	<form action="add_from_file_actions">
-		<!-- action='http://localhost...' method=post enctype='multipart/form-data' -->
-		<input type="file" name="file_name"><br> <input
-			type="submit">
+		<!-- input for file not work correctly for this method -->
+		<input type="file" name="fileName"><br>
+		 <!-- this method is input full patch for correct work adding from file on user computer -->
+		<input type="text" name="file_name" value="D:/developer-workspaces/out_project/repository/tr-project/bild.txt" size="100" ><br> 		
+		<input type="submit">
 	</form>
 	<br>
 	<script type="text/javascript">
-		document.write("${result}");//вывод текста
+		document.write("${result}");
 	</script>
 
 </body>

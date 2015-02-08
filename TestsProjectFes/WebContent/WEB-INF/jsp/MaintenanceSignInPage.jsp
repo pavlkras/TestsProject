@@ -24,8 +24,8 @@ input:HOVER {
 </style>
 <body>
 <br><a href='http://localhost:8080/TestsProjectFes/'>Home Page</a><br>
-<form action="PersonalSignInAction">
-user name: <input type="text" name="username" size=50/><br>
+<form action="MaintenanceSignInAction">
+user name: <input type="text" name="username" size=50 value="root"/><br>
 password: <input type="password" name="password" size=50/><br>
 <input type="submit" value="PUSH">
 </form>
