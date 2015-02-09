@@ -26,21 +26,21 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 			qwtemp.setCategory(category);
 			qwtemp.setLevel(level);
 			em.persist(qwtemp);// sending to database (commit)
-                        /**
-                         * получаем Id внесенного вопроса для привязки к ответам, заносим результат в таблицу Ответ-колонку-QuestionKey
-                         * Id get introduced to link the issue to the answers, enter the results in Table A-column-QuestionKey 
-                         * */
+			/**
+			 * получаем Id внесенного вопроса для привязки к ответам, заносим результат в таблицу Answer-колонку-QuestionKey
+			 * Id get introduced to link the issue to the answers, enter the results in Table Answer-column-QuestionKey 
+			 * */
 			long keyQuestion = qwtemp.getId(); 			
 			//обходим лист стрингов который пришел как параметер  List<String> answers и добавляем ответы в БД
-			for (String str : answers) {				
-				addAnswersList(str, trueAnswerNumber, keyQuestion); 
+			for (String answerText : answers) {				
+				addAnswersList(answerText, trueAnswerNumber, keyQuestion); 
 				j++;// счетчик правильного ответа 
 			}
 			j = 1;
 			flagAction = true;
 		}
 		else{
-		em.clear();
+			em.clear();
 		}
 		return flagAction;// return to client 
 	}
@@ -73,7 +73,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 			elem.setDescription(descriptionText);
 			elem.setCategory(category);
 			elem.setLevel(level);
-						em.persist(elem);
+			em.persist(elem);
 			// changing table Answer, adding text 
 			List<MaintenanceAnswer> answersList = em.createQuery(
 					"SELECT c FROM MaintenanceAnswer c WHERE c.keyQuestion LIKE :custName").setParameter("custName",elem.getId()).getResultList();//searching in DB is question not exist
@@ -100,9 +100,9 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		List<String> outResult = new ArrayList<String>();
 		List<MaintenanceQuestion> result = em.createQuery(
 				"SELECT c FROM MaintenanceQuestion c WHERE c.questionText LIKE :custName").setParameter("custName","%"+question+"%").getResultList();// return to client result of operation
-			for(MaintenanceQuestion q: result){
-				outResult.add(q.toString());
-			}
+		for(MaintenanceQuestion q: result){
+			outResult.add(q.toString());
+		}
 		return outResult;// return to client 
 	}
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -134,10 +134,10 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 				"SELECT c FROM MaintenanceQuestion c WHERE c.category LIKE :custName").setParameter("custName",category).getResultList();
 		for(MaintenanceQuestion q: question){
 			if(Integer.parseInt(level) == q.getLevel()){
-			String temp = q.toString();
-			id = q.getId();
-			temp += getAnswers(id);
-			outRes.add(temp);
+				String temp = q.toString();
+				id = q.getId();
+				temp += getAnswers(id);
+				outRes.add(temp);
 			}
 		}
 		return outRes;// return to any application case client, specific query.
@@ -152,8 +152,8 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		}	
 		return outRes;
 	}
-        ////////////////////////!!!!! temporarily unemployed !!!!!!///////////////////////////////////////////////////
-        //@Override  
+	////////////////////////!!!!! temporarily unemployed !!!!!!///////////////////////////////////////////////////
+	//@Override  
 	public List<String> getUniqueSetQuestionsForTest(String category,String level){
 		List<String> result = null;
 		return result;// return to client coming soon
