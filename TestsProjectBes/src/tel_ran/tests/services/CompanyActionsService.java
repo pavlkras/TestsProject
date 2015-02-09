@@ -45,5 +45,11 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 		return null;
 	}
 
+	@Override
+	public String getTestsResultsForTestID(int arg0, int arg1) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }
