@@ -14,6 +14,7 @@ String []getAnySingleQuery(String strQuery);
 List<String> getTestsResultsAll(int currCompanyId);
 List<String> getTestsResultsForTimeInterval(int currCompanyId, Date timeFrom, Date timeUntil);
 List<String> getTestsResultsForPersonID(int currCompanyId, int PersonID);
+String getTestsResultsForTestID(int currCompanyId, int TestID);
 //getPicturesFromTest(int testID);
 
 
