@@ -6,8 +6,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -27,8 +25,13 @@ public class CompanyActions {
 
 	@RequestMapping({"/CompanyActions"})
 	public String signIn(){
-		return "PersonalSignIn";
+		return "CompanySignIn";
 	}
+	// ALEX FOOX	
+		@RequestMapping({"/CompanySignInAction"})
+		public String home(String username,String password ) {
+			return "home_page";
+		}
 	//Use case Company Login
 	/*Pre-conditions:
 1.	The system comprising of front-end controller and back-end Database service (aka the System) is running up
@@ -79,6 +82,37 @@ User Registered Flow:
 2.	Returns to  the Registration Flow
 
 	 */
+	// ALEX FOOX	
+	@RequestMapping({"/input_form"})
+	public String query() {
+		return "input_form";
+	}
+
+	@RequestMapping({"/query_processing"})
+	public String queryProcessing(String jpaStr, Model model) {
+		;
+		String[] result = companyService.getAnySingleQuery(jpaStr);
+		StringBuffer buf = new StringBuffer();
+		for (String str : result)
+			buf.append(str).append("<br>");
+		model.addAttribute("myResult", buf.toString());
+		return "result_view";
+	}
+
+	@RequestMapping({"/companyadd"})
+	public String addCompany() {
+		return "add_form";
+	}
+	
+	@RequestMapping({"/add_processing"})
+	public String addProcessing(String C_Name,String C_Site, String C_Specialization,String C_AmountEmployes,String C_Password) {
+		
+		boolean flag = companyService.createCompany(C_Name, C_Site, C_Specialization, C_AmountEmployes, C_Password);
+		if(flag==true){
+		return "success_adding";
+		}
+		else return "Error";
+	}
 	//
 	//
 	//Use case Ordering Test 3.1.3
@@ -146,7 +180,7 @@ Normal Flow:
 
 	 */
 
-	
+	// IGOR
 	@RequestMapping({"/create_request"})
 	public String createRequest(){
 		return "CompanyTestsResultsStartPage";

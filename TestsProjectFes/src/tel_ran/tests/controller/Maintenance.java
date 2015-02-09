@@ -30,7 +30,7 @@ public class Maintenance {
 		return "MaintenanceSignInPage";
 	}	
 	/** когда нажимаем на кнопку add question! этот метод только вызывает страницу adding page здесь писать ничего не надо!! */
-	@RequestMapping({"/add"})
+	@RequestMapping({"/maintenanceadd"})
 	public String addingPage() {return "MaintenanceAddingPage";}	
 
 	/** когда нажимаем на кнопку  update question!  этот метод только вызывает страницу updating view table page здесь писать ничего не надо!! !! */
@@ -48,7 +48,7 @@ public class Maintenance {
 		}
 		String links = new String();
 		if(flAdminAuthorized){
-			links = "<br><a href='http://localhost:8080/TestsProjectFes/add'>"
+			links = "<br><a href='http://localhost:8080/TestsProjectFes/maintenanceadd'>"
 					+ "1. Create new question</a><br><a href='http://localhost:8080/TestsProjectFes/update'>"
 					+ "2. Update Question</a><br><a href='http://localhost:8080/TestsProjectFes/addfromfile'>"
 					+ "3. Adding questions from file</a><br>";
