@@ -1,5 +1,6 @@
 package tel_ran.tests.services;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -63,27 +64,52 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 // 	
 	@Override
 	public List<String> getTestsResultsAll(int companyID) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		
+		List<String> res = new ArrayList<>();
+		
+		//for testing purpose
+		String divider = "/--/";
+		res.add("FirstName"+divider+"SecondName"+divider+"TestCategory"+divider+"TestName"+divider+"TestDate"+divider+"TestID");
+		res.add("Name1"+divider+"Name1"+divider+"Category1"+divider+"Name1"+divider+"4/23/2014"+divider+"1");
+		res.add("Name2"+divider+"Name2"+divider+"Category3"+divider+"Name2"+divider+"6/30/2014"+divider+"2");
+		return res;
 	}
 
 	@Override
 	public List<String> getTestsResultsForPersonID(int companyID, int personID) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		List<String> res = new ArrayList<>();
+		
+		//for testing purpose
+		String divider = "/--/";
+		res.add("FirstName"+divider+"SecondName"+divider+"TestCategory"+divider+"TestName"+divider+"TestDate"+divider+"TestID");
+		res.add("Name1"+divider+"Name1"+divider+"Category1"+divider+"Name1"+divider+"4/23/2014"+divider+"1");
+		res.add("Name2"+divider+"Name2"+divider+"Category3"+divider+"Name2"+divider+"6/30/2014"+divider+"2");
+		return res;
 	}
 
 	@Override
 	public List<String> getTestsResultsForTimeInterval(int companyID,
 			Date date_from, Date date_until) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		List<String> res = new ArrayList<>();
+		
+		//for testing purpose
+		String divider = "/--/";
+		res.add("FirstName"+divider+"SecondName"+divider+"TestCategory"+divider+"TestName"+divider+"TestDate"+divider+"TestID");
+		res.add("Name1"+divider+"Name1"+divider+"Category1"+divider+"Name1"+divider+"4/23/2014"+divider+"1");
+		res.add("Name2"+divider+"Name2"+divider+"Category3"+divider+"Name2"+divider+"6/30/2014"+divider+"2");
+		return res;
 	}
 
 	@Override
 	public String getTestsResultsForTestID(int arg0, int arg1) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		//for testing purpose
+		String divider = "/--/";
+		// duration Nquestions ComplexityLevel QRightAnsw QWrongAnsw Photo1URL Photo2URL Photo3URL Photo4URL Photo5URL
+		return "duration"+divider+"Nquestions"+divider+"ComplexityLevel"+divider+"QRightAnsw"+divider+"QWrongAnsw"+divider+"http://localhost/";
 	}
 
 
