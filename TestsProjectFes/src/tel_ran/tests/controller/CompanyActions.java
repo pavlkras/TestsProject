@@ -186,9 +186,9 @@ Normal Flow:
 		return "CompanyTestsResultsStartPage";
 	}
 	 
-	
+	// IGOR
 	@RequestMapping({"/process_request"})
-	public String processRequest(String request_type, String date_from, String date_until, String user_id, Model model){
+	public String processRequestTestsCommon(String request_type, String date_from, String date_until, String user_id, Model model){
 		
 		boolean errorlevel = false;
 		String res = "";
@@ -229,14 +229,47 @@ Normal Flow:
 		}
 		model.addAttribute("res", res);
 		
-		return "CompanyTestsDisplayResults";
+		return "CompanyTestsCommon";
 	}
 
+	public final static String delimiter = "/--/";
 
 	private String compile_to_view(List<String> bes_response) {
 		// TODO Method which compiles html output
 		return null;
 	}	
+	
+	@RequestMapping({"/test_details"})
+	public String processRequestTestDetails(String test_ID, Model model){
+		
+		boolean errorlevel = false;
+		String res = "";
+		String bes_response = null;
+		int test_ID_ = 0;
+		
+		try {
+			test_ID_ = Integer.parseInt(test_ID);
+		}catch(NumberFormatException e){
+			errorlevel = true;
+		}
+		if(!errorlevel)
+			bes_response = companyService.getTestsResultsForTestID(company_id, test_ID_);
+	
+		if (errorlevel){
+			res = "ErrorMessage";
+		}else{
+			res = compile_to_view_test_details(bes_response);
+		}
+		model.addAttribute("res", res);
+		
+	return "CompanyTestDetails";
+	}
+	
+	private String compile_to_view_test_details(String bes_response) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 	
 	/*
 	 *
