@@ -6,15 +6,14 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>View tests results</title>
 
-  <script>
-
-  </script>
 
 </head>
 <body>
+<table id="results">
+</table>
 
 <script type="text/javascript">
-	document.write("${res}");
+document.getElementById("results").innerHTML = "${res}";
 </script>
 
 

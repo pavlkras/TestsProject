@@ -16,6 +16,7 @@
 <script type="text/javascript">
 	document.write("${res}");
 </script>
+	<img src=""></img>
 
 
 </body>
