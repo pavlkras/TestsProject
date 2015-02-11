@@ -85,7 +85,7 @@ User Registered Flow:
 	// ALEX FOOX	
 	@RequestMapping({"/input_form"})
 	public String query() {
-		return "input_form";
+		return "Company_input_form";
 	}
 
 	@RequestMapping({"/query_processing"})
@@ -96,12 +96,12 @@ User Registered Flow:
 		for (String str : result)
 			buf.append(str).append("<br>");
 		model.addAttribute("myResult", buf.toString());
-		return "result_view";
+		return "Company_result_view";
 	}
 
 	@RequestMapping({"/companyadd"})
 	public String addCompany() {
-		return "add_form";
+		return "Company_add_form";
 	}
 	
 	@RequestMapping({"/add_processing"})
@@ -109,9 +109,9 @@ User Registered Flow:
 		
 		boolean flag = companyService.createCompany(C_Name, C_Site, C_Specialization, C_AmountEmployes, C_Password);
 		if(flag==true){
-		return "success_adding";
+		return "Company_success_adding";
 		}
-		else return "Error";
+		else return "Company_Error";
 	}
 	//
 	//
