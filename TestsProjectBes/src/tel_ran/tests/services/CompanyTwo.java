@@ -5,6 +5,7 @@ import java.util.*;
 @Entity
 public class CompanyTwo {
 	@Id
+	private int id;
 	private String C_Name;
 	private String C_Site;
 		
@@ -13,7 +14,36 @@ public class CompanyTwo {
 	private String C_AmountEmployes;
 	
 	private String C_Password;
-
+	
+	@OneToOne
+	int company_id;
+	@OneToMany (mappedBy ="")
+	List<Personal_Details>personals;
+	
+	public int getId() {
+		return id;
+	}
+	public List<Personal_Details> getPersonals() {
+		return personals;
+	}
+	public void setPersonals(List<Personal_Details> personals) {
+		this.personals = personals;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getC_Password() {
+		return C_Password;
+	}
+	public void setC_Password(String c_Password) {
+		C_Password = c_Password;
+	}
+	public int getCompany_id() {
+		return company_id;
+	}
+	public void setCompany_id(int company_id) {
+		this.company_id = company_id;
+	}
 	public void setPassword(String password) {
 		C_Password = password;
 	}
@@ -47,10 +77,10 @@ public class CompanyTwo {
 
 	@Override
 	public String toString() {
-		return "Company " + C_Name + ", Site : " + C_Site
-				+ ", Specialization : " + C_Specialization
-				+ ", Amount Employes : " + C_AmountEmployes 
-				;
+		return "CompanyTwo [id=" + id + ", C_Name=" + C_Name + ", C_Site="
+				+ C_Site + ", C_Specialization=" + C_Specialization
+				+ ", C_AmountEmployes=" + C_AmountEmployes + ", C_Password="
+				+ C_Password + "]";
 	}
 
 
