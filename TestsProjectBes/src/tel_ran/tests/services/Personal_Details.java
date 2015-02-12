@@ -11,12 +11,12 @@ public class Personal_Details {
     @ManyToOne
     Company id;
     @ManyToMany (mappedBy = "personal_datas")
-    List<Test_Details>test_detailses;
+    List<Common_Test>test_detailses;
 
     public Personal_Details() {
     }
 
-    public Personal_Details(List<Test_Details> test_detailses, int personal_id, String f_name, String l_name, Company company_id) {
+    public Personal_Details(List<Common_Test> test_detailses, int personal_id, String f_name, String l_name, Company company_id) {
         this.test_detailses = test_detailses;
         this.personal_id = personal_id;
         this.f_name = f_name;
@@ -67,11 +67,11 @@ public class Personal_Details {
         this.id = company_id;
     }
 
-    public List<Test_Details> getTest_detailses() {
+    public List<Common_Test> getTest_detailses() {
         return test_detailses;
     }
 
-    public void setTest_detailses(List<Test_Details> test_detailses) {
+    public void setTest_detailses(List<Common_Test> test_detailses) {
         this.test_detailses = test_detailses;
     }
 }

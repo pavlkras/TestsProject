@@ -1,5 +1,6 @@
 package tel_ran.tests.services;
 
-public class Test_Details {
+public class Common_Test {
+	
 
 }
