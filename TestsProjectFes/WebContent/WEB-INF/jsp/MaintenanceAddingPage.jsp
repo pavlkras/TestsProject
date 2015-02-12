@@ -26,7 +26,7 @@ p{
 <title>ADDING</title>
 </head>
 <body>	
-    <a href="http://localhost:8080/TestsProjectFes/Maintenance"> Home Page</a>
+    <a href="http://localhost:8080/TestsProjectFes/SignInAction?username=amir&password=1.com"> Home Page</a>
 	
     <p>Creating new Question </p>
 	<form action="add_actions">

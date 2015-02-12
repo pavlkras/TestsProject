@@ -22,8 +22,10 @@ input:HOVER {
 }
 </style>
 <body>
-	<script type="text/javascript">
-		document.write("${result}");
-	</script>
+	<br><a href='http://localhost:8080/TestsProjectFes/maintenanceadd'>
+	1. Create new question</a><br><a href='http://localhost:8080/TestsProjectFes/update'>
+	2. Update Question</a><br><a href='http://localhost:8080/TestsProjectFes/addfromfile'>
+	3. Adding questions from file</a><br>
+	<a href='http://localhost:8080/TestsProjectFes/'> Back to Home Page</a>			
 </body>
 </html>

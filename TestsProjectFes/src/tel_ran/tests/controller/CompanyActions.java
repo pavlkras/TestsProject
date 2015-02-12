@@ -22,16 +22,11 @@ public class CompanyActions {
 	int company_id;
 	@Autowired
 	ICompanyActionsService companyService;	
-
+// ALEX FOOX
 	@RequestMapping({"/CompanyActions"})
 	public String signIn(){
 		return "CompanySignIn";
-	}
-	// ALEX FOOX	
-		@RequestMapping({"/CompanySignInAction"})
-		public String home(String username,String password ) {
-			return "home_page";
-		}
+	}	
 	//Use case Company Login
 	/*Pre-conditions:
 1.	The system comprising of front-end controller and back-end Database service (aka the System) is running up
@@ -44,16 +39,19 @@ Login Normal Flow:
 Pre-Conditions:
 1.	The user enters wrong username
 Wrong Username Flow:
-1.	The alert window appears with message: “Company with <username> is not registered. Type the right company username or  go to registration”
+1.	The alert window appears with message: â€œCompany with <username> is not registered. Type the right company username or  go to registrationâ€�
 2.	Returns to the Login
 3.1.1.2.	Wrong Password
 Pre-Conditions:
 1.	The user enters wrong password
 Wrong Password Flow:
-1.	The alert window appears with message: “Wrong password. Type the right password”
+1.	The alert window appears with message: â€œWrong password. Type the right passwordâ€�
 2.	Returns to the Login
 	 */
 	//
+	
+	
+	
 	//
 	//Use Case Company Sign up 3.1.2
 	/*Pre-conditions:
@@ -72,13 +70,13 @@ Registration Normal Flow:
 Pre-Conditions:
 1.	The user enters wrong password confirmation
 Wrong Password Confirmation Flow
-1.	The alert window appears with message: “Wrong password confirmation. Type the same password”
+1.	The alert window appears with message: â€œWrong password confirmation. Type the same passwordâ€�
 2.	Returns to the Registration Flow with #6. That is all filled fields except password confirmation should remain filled
 3.1.2.4.	Company Registered
 Pre-Conditions:
 1.	The user enters company username that already has been registered
 User Registered Flow:
-1.	The alert window appears with message: “The company <username> already registered. Type another company username or go to Login with this one”
+1.	The alert window appears with message: â€œThe company <username> already registered. Type another company username or go to Login with this oneâ€�
 2.	Returns to  the Registration Flow
 
 	 */
@@ -160,23 +158,23 @@ Pre-Conditions:
 2.	The user is signed in for the proper company
 Normal Flow:
 1.	The user selects the details for a test results query. There should be the following queries:
-•	All test results
-•	Test results for the specified time period. There should be start date and end date. The selection should be done using standard calendar gadget 
-•	Test results for the specified person identity number
+â€¢	All test results
+â€¢	Test results for the specified time period. There should be start date and end date. The selection should be done using standard calendar gadget 
+â€¢	Test results for the specified person identity number
 2.	The user fills the proper data for the selected test
 3.	The System runs the query
 4.	 The System shows the list of the test results items. Item should contain: 
-•	Personal data (First and Family names)
-•	Test details (category, name, etc.)
-•	Test date
+â€¢	Personal data (First and Family names)
+â€¢	Test details (category, name, etc.)
+â€¢	Test date
 5.	The user selects an item
 6.	The system shows the following results:
-•	Test duration 
-•	Number of the questions
-•	Complexity level
-•	Number of the right answers with the percentage 
-•	Number of the wrong answers with the percentage
-•	5 photos made during the test
+â€¢	Test duration 
+â€¢	Number of the questions
+â€¢	Complexity level
+â€¢	Number of the right answers with the percentage 
+â€¢	Number of the wrong answers with the percentage
+â€¢	5 photos made during the test
 
 	 */
 
