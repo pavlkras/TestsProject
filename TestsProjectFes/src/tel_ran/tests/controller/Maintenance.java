@@ -20,45 +20,19 @@ public class Maintenance {
 	boolean flAdminAuthorized = false;
 	@Autowired// аннотация делающая автоматический  вызов через тег в бин.хмл файле.
 	IMaintenanceService maintenanceService;// Это связь интерфейсов , эта переменная дает нам все методы общего интерфейса 
-	/**когда запускаем аппликации, метод дает домашнюю страницу !! */
-	@RequestMapping({"/"})
-	public String Index(){
-		return "index";
-	}
-	@RequestMapping({"/Maintenance"})
-	public String authorize(){		
-		return "MaintenanceSignInPage";
-	}	
+	/*@RequestMapping({"/Maintenance"})
+	public String authorize(){return "MaintenanceSignInPage";}	*/
 	/** когда нажимаем на кнопку add question! этот метод только вызывает страницу adding page здесь писать ничего не надо!! */
 	@RequestMapping({"/maintenanceadd"})
-	public String addingPage() {return "MaintenanceAddingPage";}	
-
+	public String addingPage() {return "MaintenanceAddingPage";}
 	/** когда нажимаем на кнопку  update question!  этот метод только вызывает страницу updating view table page здесь писать ничего не надо!! !! */
 	@RequestMapping({"/update"})
-	public String UpdatePage(){return "MaintenanceUpdatePage";}
+	public String UpdatePage(){	return "MaintenanceUpdatePage";}
 
 	/** когда нажимаем на кнопку add from file! этот метод только вызывает страницу adding page  здесь писать ничего не надо!!!! */
 	@RequestMapping({"/addfromfile"})
 	public String specificDataPage(){return "MaintenanceAutoComplete";}
-	/////////////////////////////////////////////////////////////////////////////AOP/////////////
-	@RequestMapping({"/MaintenanceSignInAction"})
-	public String signIn(Model model,String username,String password){
-		if(password.equals("12345") && username.equals("root")){
-			flAdminAuthorized=true;
-		}
-		String links = new String();
-		if(flAdminAuthorized){
-			links = "<br><a href='http://localhost:8080/TestsProjectFes/maintenanceadd'>"
-					+ "1. Create new question</a><br><a href='http://localhost:8080/TestsProjectFes/update'>"
-					+ "2. Update Question</a><br><a href='http://localhost:8080/TestsProjectFes/addfromfile'>"
-					+ "3. Adding questions from file</a><br>";
-		}else{
-			links = "Autorization Incorrect";
-		}
-
-		model.addAttribute("result",links);// вывод текста
-		return "MaintenanceSignInPage";
-	}
+	
 	//use case 3.3.3 Test Maintenance
 	/*3.3.1.	Adding test question
 	Pre-Conditions:

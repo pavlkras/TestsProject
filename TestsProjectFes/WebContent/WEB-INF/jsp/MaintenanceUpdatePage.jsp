@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
-<%@ page import="java.util.*, java.text.*" %>
+<%@ page import="java.util.*, java.text.*,tel_ran.tests.controller.Maintenance" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">    
 <html>
 <head>
@@ -71,7 +71,7 @@ display: none;
 <form name="editing"  class="editingAction" action="getArrayFromDB">
 	Question N:  <input	type="text" name="questionKey" size="8">&nbsp;&nbsp; 
     <input type="submit" value="Edit ?" >
-    </form>	
+    </form>	    
 <a href="http://localhost:8080/TestsProjectFes/Maintenance">Home Page</a><br>
 	<p onclick="test('1')">Update - Change  issues</p><!-- test working java script in this jsp file -->
 	<form  name="searchCODE" action="search_actions">

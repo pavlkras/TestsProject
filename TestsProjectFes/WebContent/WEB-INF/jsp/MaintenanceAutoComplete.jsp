@@ -21,6 +21,11 @@ input:HOVER {
 	background-color: yellow;
 }
 </style>
+<script type="text/javascript">
+function getTextPost(varText){
+	alert(varText);
+}
+</script>
 </head>
 <body>
 	<a href="http://localhost:8080/TestsProjectFes/Maintenance"> Home Page</a>
@@ -28,7 +33,7 @@ input:HOVER {
 	<p>Auto Complete Data Base from external file</p>
 	<br> Please choice specific file to fill data base
 	<br>
-	<form action="add_from_file_actions">
+	<form action="http://localhost:8080/TestsProjectFes/add_from_file_actions" onsubmit="getTextPost(1)">
 		<!-- input for file not work correctly for this method -->
 		<input type="file" name="fileName"><br>
 		 <!-- this method is input full patch for correct work adding from file on user computer -->

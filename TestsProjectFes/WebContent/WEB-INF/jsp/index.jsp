@@ -23,15 +23,19 @@ input:HOVER {
 <title>Index Page</title>
 </head>
 <body>
-<br>
 
-<a href="http://localhost:8080/TestsProjectFes/Maintenance">1. Maintenance</a>
 <br>
-<a href="http://localhost:8080/TestsProjectFes/PersonalActions">2. Personal Actions</a>
+<a href='http://localhost:8080/TestsProjectFes/'>Home Page</a>
 <br>
-<a href="http://localhost:8080/TestsProjectFes/CompanyActions">3. Company Actions</a>
+<form action="SignInAction">
+user name: <input type="text" name="username" size=50 /><br>
+password: <input type="password" name="password" size=50/><br>
+<input type="submit" value="PUSH">
+</form>
 <br>
-<br>
+<script type="text/javascript">    
+		document.write("${result}");
+	</script>
 
 </body>
 </html>
