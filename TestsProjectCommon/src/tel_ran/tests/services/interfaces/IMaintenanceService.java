@@ -4,6 +4,7 @@ import java.util.List;
 
 public interface IMaintenanceService {//общий интерфейс 
 	//Сюда добавляем свои методы для работы с ними через веб. 
+	public void setAutorization(boolean flagAutorized);
 	boolean createQuestion(String questionText,String descriptionText,String category,int level,List<String> answers,int trueAnswerNumber);
 	//Метод обновляет вопрос в БД
 	boolean UpdateQuestionInDataBase(String questionID, String questionText,
