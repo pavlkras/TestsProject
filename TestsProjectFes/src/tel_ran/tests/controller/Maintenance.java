@@ -17,7 +17,6 @@ import tel_ran.tests.services.interfaces.IMaintenanceService;
 @Scope("session")
 @RequestMapping({"/","/Maintenance"})
 public class Maintenance {
-	boolean flAdminAuthorized = false;
 	@Autowired// аннотация делающая автоматический  вызов через тег в бин.хмл файле.
 	IMaintenanceService maintenanceService;// Это связь интерфейсов , эта переменная дает нам все методы общего интерфейса 
 	/*@RequestMapping({"/Maintenance"})

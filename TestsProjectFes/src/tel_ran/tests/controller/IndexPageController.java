@@ -9,11 +9,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import tel_ran.tests.services.interfaces.IMaintenanceService;
+
 
 @Controller
 @Scope("session")
 @RequestMapping({"/"})
 public class IndexPageController {
+	IMaintenanceService maintenanceService;
 	HashMap<String,String>personalDB=new HashMap<String,String>();
 	HashMap<String,String>adminDB=new HashMap<String,String>();
 	HashMap<String,String>companyDB=new HashMap<String,String>();
@@ -45,7 +48,7 @@ public class IndexPageController {
 		Set<Entry<String, String>> tempASet = adminDB.entrySet();
 		for(Entry<String, String> s:tempASet){
 			if(s.getKey().equalsIgnoreCase(username) && s.getValue().equalsIgnoreCase(password)){
-				flAdminAuthorized = true;						
+		//		maintenanceService.setAuthorization(true);						
 			}		
 		}
 		Set<Entry<String, String>> tempUSet = personalDB.entrySet();
