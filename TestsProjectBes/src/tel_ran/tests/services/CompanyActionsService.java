@@ -61,56 +61,39 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 		// TODO Auto-generated method stub
 		
 	}
-// 	
+// 	3.1.4. Viewing test results /// BEGIN ////
 	@Override
 	public List<String> getTestsResultsAll(int companyID) {
+		List<String> res = new ArrayList<String>();
+/*		EntityCompanyTwo company = (EntityCompanyTwo)em.createQuery("SELECT company FROM EntityCompanyTwo WHERE company.c_ID = "+companyID).getSingleResult();
+		List<EntityTestCommon> respose = (List<EntityTestCommon>) em.createQuery(
+				"Select testCommon FROM EntityTestCommon WHERE testCommon.company=").getResultList();
 		
-		
-		List<String> res = new ArrayList<>();
-		
-		//for testing purpose
-		String divider = "/--/";
-		res.add("FirstName"+divider+"SecondName"+divider+"TestCategory"+divider+"TestName"+divider+"TestDate"+divider+"TestID");
-		res.add("Name1"+divider+"Name1"+divider+"Category1"+divider+"Name1"+divider+"4/23/2014"+divider+"1");
-		res.add("Name2"+divider+"Name2"+divider+"Category3"+divider+"Name2"+divider+"6/30/2014"+divider+"2");
+		for(EntityTestCommon etc:respose){
+			res.add(etc.toString());
+		}*/
 		return res;
 	}
 
 	@Override
 	public List<String> getTestsResultsForPersonID(int companyID, int personID) {
 		
-		List<String> res = new ArrayList<>();
 		
-		//for testing purpose
-		String divider = "/--/";
-		res.add("FirstName"+divider+"SecondName"+divider+"TestCategory"+divider+"TestName"+divider+"TestDate"+divider+"TestID");
-		res.add("Name1"+divider+"Name1"+divider+"Category1"+divider+"Name1"+divider+"4/23/2014"+divider+"1");
-		res.add("Name2"+divider+"Name2"+divider+"Category3"+divider+"Name2"+divider+"6/30/2014"+divider+"2");
-		return res;
+		return new ArrayList<String>();
 	}
 
 	@Override
 	public List<String> getTestsResultsForTimeInterval(int companyID,
 			Date date_from, Date date_until) {
 		
-		List<String> res = new ArrayList<>();
 		
-		//for testing purpose
-		String divider = "/--/";
-		res.add("FirstName"+divider+"SecondName"+divider+"TestCategory"+divider+"TestName"+divider+"TestDate"+divider+"TestID");
-		res.add("Name1"+divider+"Name1"+divider+"Category1"+divider+"Name1"+divider+"4/23/2014"+divider+"1");
-		res.add("Name2"+divider+"Name2"+divider+"Category3"+divider+"Name2"+divider+"6/30/2014"+divider+"2");
-		return res;
+		return new ArrayList<String>();
 	}
 
 	@Override
 	public String getTestsResultsForTestID(int arg0, int arg1) {
-		
-		//for testing purpose
-		String divider = "/--/";
-		// duration Nquestions ComplexityLevel QRightAnsw QWrongAnsw Photo1URL Photo2URL Photo3URL Photo4URL Photo5URL
-		return "duration"+divider+"Nquestions"+divider+"ComplexityLevel"+divider+"QRightAnsw"+divider+"QWrongAnsw"+divider+"http://localhost/";
+		return "";
 	}
-
+// 	3.1.4. Viewing test results /// END ////
 
 }
