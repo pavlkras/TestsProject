@@ -10,8 +10,7 @@ public class MaintenanceAnswer {
 	@Id
 	@Column(name="ID")
 	@GeneratedValue
-	long id;
-	private long keyQuestion;
+	long id;	
 
 	private boolean isAnswer;
 	private String answerText;
@@ -19,12 +18,7 @@ public class MaintenanceAnswer {
 	@ManyToOne	
 	MaintenanceQuestion quest;
 
-	protected long getKeyQuestion() {
-		return keyQuestion;
-	}
-	protected void setKeyQuestion(long keyQuestion) {
-		this.keyQuestion = keyQuestion;
-	}
+	
 	public boolean isAnswer() {
 		return isAnswer;
 	}
