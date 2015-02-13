@@ -63,7 +63,7 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 	}
 // 	3.1.4. Viewing test results /// BEGIN ////
 	@Override
-	public List<String> getTestsResultsAll(int companyID) {
+	public List<String> getTestsResultsAll(String companyID) {
 		List<String> res = new ArrayList<String>();
 /*		EntityCompanyTwo company = (EntityCompanyTwo)em.createQuery("SELECT company FROM EntityCompanyTwo WHERE company.c_ID = "+companyID).getSingleResult();
 		List<EntityTestCommon> respose = (List<EntityTestCommon>) em.createQuery(
@@ -76,14 +76,14 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 	}
 
 	@Override
-	public List<String> getTestsResultsForPersonID(int companyID, int personID) {
+	public List<String> getTestsResultsForPersonID(String companyID, int personID) {
 		
 		
 		return new ArrayList<String>();
 	}
 
 	@Override
-	public List<String> getTestsResultsForTimeInterval(int companyID,
+	public List<String> getTestsResultsForTimeInterval(String companyID,
 			Date date_from, Date date_until) {
 		
 		
@@ -91,7 +91,7 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 	}
 
 	@Override
-	public String getTestsResultsForTestID(int arg0, int arg1) {
+	public String getTestsResultsForTestID(String arg0, int arg1) {
 		return "";
 	}
 // 	3.1.4. Viewing test results /// END ////

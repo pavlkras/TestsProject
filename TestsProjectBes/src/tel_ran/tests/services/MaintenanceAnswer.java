@@ -11,7 +11,6 @@ public class MaintenanceAnswer {
 	@Column(name="ID")
 	@GeneratedValue
 	long id;
-	private long keyQuestion;
 
 	private boolean isAnswer;
 	private String answerText;
@@ -19,12 +18,7 @@ public class MaintenanceAnswer {
 	@ManyToOne	
 	MaintenanceQuestion quest;
 
-	protected long getKeyQuestion() {
-		return keyQuestion;
-	}
-	protected void setKeyQuestion(long keyQuestion) {
-		this.keyQuestion = keyQuestion;
-	}
+	
 	public boolean isAnswer() {
 		return isAnswer;
 	}
