@@ -19,7 +19,7 @@ import tel_ran.tests.controller.CompanyTestsResutlsHandler;
 @Scope("session") /*session timer default = 20min*/
 @RequestMapping({"/","/CompanyActions"})
 public class CompanyActions {
-	int company_id;
+	String companyName;
 	@Autowired
 	ICompanyActionsService companyService;	
 // ALEX FOOX
@@ -193,7 +193,7 @@ Normal Flow:
 		List<String> bes_response = null;
 		
 		if(request_type.equals("all")){
-			bes_response = companyService.getTestsResultsAll(company_id);
+			bes_response = companyService.getTestsResultsAll(companyName);
 		
 		}else if(request_type.equals("time_interval")){
 			Date date_from_ = null;
@@ -207,7 +207,7 @@ Normal Flow:
 				errorlevel = true;
 			}
 			if(!errorlevel)
-				bes_response = companyService.getTestsResultsForTimeInterval(company_id, date_from_, date_until_);
+				bes_response = companyService.getTestsResultsForTimeInterval(companyName, date_from_, date_until_);
 			
 		}else if(request_type.equals("user_specific")){
 			int user_ID = 0;
@@ -217,7 +217,7 @@ Normal Flow:
 				errorlevel = true;
 			}
 			if(!errorlevel)
-				bes_response = companyService.getTestsResultsForPersonID(company_id, user_ID);
+				bes_response = companyService.getTestsResultsForPersonID(companyName, user_ID);
 		}
 		
 		if (errorlevel){
@@ -258,7 +258,7 @@ Normal Flow:
 			errorlevel = true;
 		}
 		if(!errorlevel)
-			bes_response = companyService.getTestsResultsForTestID(company_id, test_ID_);
+			bes_response = companyService.getTestsResultsForTestID(companyName, test_ID_);
 	
 		if (errorlevel){
 			res = "ErrorMessage";
