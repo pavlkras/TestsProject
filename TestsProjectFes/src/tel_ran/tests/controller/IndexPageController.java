@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,13 +17,13 @@ import tel_ran.tests.services.interfaces.IMaintenanceService;
 @Scope("session")
 @RequestMapping({"/"})
 public class IndexPageController {
+	@Autowired
 	IMaintenanceService maintenanceService;
 	HashMap<String,String>personalDB=new HashMap<String,String>();
 	HashMap<String,String>adminDB=new HashMap<String,String>();
 	HashMap<String,String>companyDB=new HashMap<String,String>();
 	private static boolean flCompanyAutorized = false;
-	private static boolean flPersonAutorized = false;
-	private static boolean flAdminAuthorized = false;	
+	private static boolean flPersonAutorized = false;	
 	/**когда запускаем аппликации, метод дает домашнюю страницу !! */
 	@RequestMapping({"/"})
 	public String Index(Model model){		
@@ -48,7 +49,8 @@ public class IndexPageController {
 		Set<Entry<String, String>> tempASet = adminDB.entrySet();
 		for(Entry<String, String> s:tempASet){
 			if(s.getKey().equalsIgnoreCase(username) && s.getValue().equalsIgnoreCase(password)){
-		//		maintenanceService.setAuthorization(true);						
+			maintenanceService.setAutorization(true);
+			return "MaintenanceSignInPage";
 			}		
 		}
 		Set<Entry<String, String>> tempUSet = personalDB.entrySet();
@@ -63,12 +65,7 @@ public class IndexPageController {
 				flCompanyAutorized = true;						
 			}		
 		}
-		/////////////////////		
-		if(flAdminAuthorized){				
-			flAdminAuthorized=false;
-			return  "MaintenanceSignInPage";
-		}
-		////////////////////
+	
 		if(flPersonAutorized){
 			flPersonAutorized=false;
 			return "PersonalSignIn";
