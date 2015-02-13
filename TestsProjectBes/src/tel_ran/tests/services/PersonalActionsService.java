@@ -22,7 +22,7 @@ public class PersonalActionsService extends TestsPersistence implements IPersona
 	String query = "SELECT q FROM MaintenanceQuestion q WHERE q.category=?1";
 	Query q = em.createQuery(query);
 	q.setParameter(1, catName);
-	List<MaintenanceQuestion> qlist = q.getResultList();
+	List<EntityQuestion> qlist = q.getResultList();
 	String res = String.valueOf(qlist.size());
 	return res;
 	}

@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tel_ran.tests.services.interfaces.IMaintenanceService;
 
 public class MaintenanceService extends TestsPersistence implements IMaintenanceService {
+	
 	private int j=1;// счетчик правильного ответа 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -17,10 +18,10 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		// creating table question and setting data//
 
 		boolean flagAction = false;		
-		List<MaintenanceQuestion> res = em.createQuery(// searching  if question not exist
+		List<EntityQuestion> res = em.createQuery(// searching  if question not exist
 				"SELECT c FROM MaintenanceQuestion c WHERE c.questionText LIKE :custName").setParameter("custName",questionText).getResultList();
 		if(res.size() == 0){								
-			MaintenanceQuestion qwtemp = new MaintenanceQuestion();			
+			EntityQuestion qwtemp = new EntityQuestion();			
 			qwtemp.setQuestion(questionText);
 			qwtemp.setDescription(descriptionText);
 			qwtemp.setCategory(category);
@@ -48,8 +49,8 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	/** method for Creating Table Answer in DB 	*/
 	private void addAnswersList(String answer, int trueAnswerNumber, long keyQuestion) {// private method		
 
-		MaintenanceAnswer temp = new MaintenanceAnswer();// creating table answer	
-		MaintenanceQuestion quest = em.find(MaintenanceQuestion.class, keyQuestion);
+		EntityAnswer temp = new EntityAnswer();// creating table answer	
+		EntityQuestion quest = em.find(EntityQuestion.class, keyQuestion);
 		temp.setAnswerText(answer);// adding text answer 
 		temp.setQuest(quest);// adding  keyQuestion
 		if(trueAnswerNumber == (int)j){
@@ -68,20 +69,20 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		boolean flagAction = false;
 		// changing Question table attribute
 		long id = (long)Integer.parseInt(questionID);
-		List<MaintenanceQuestion> res = em.createQuery(
+		List<EntityQuestion> res = em.createQuery(
 				"SELECT c FROM MaintenanceQuestion c WHERE c.id LIKE :custName").setParameter("custName",id).getResultList();// element question table getting by ID
-		for(MaintenanceQuestion elem:res){	
+		for(EntityQuestion elem:res){	
 			elem.setQuestion(questionText);
 			elem.setDescription(descriptionText);
 			elem.setCategory(category);
 			elem.setLevel(level);
 			em.persist(elem);
 			// changing table Answer, adding text 
-			List<MaintenanceAnswer> answersList = em.createQuery(
+			List<EntityAnswer> answersList = em.createQuery(
 					"SELECT c FROM MaintenanceAnswer c WHERE c.keyQuestion LIKE :custName").setParameter("custName",elem.getId()).getResultList();//searching in DB is question not exist
 			int i=0;	
 			j=1;// counter for answers   
-			for(MaintenanceAnswer text:answersList){					
+			for(EntityAnswer text:answersList){					
 				text.setAnswerText(answers.get(i++));// getting and adding text to column AnswerText 		
 				if(trueAnswerNumber == (int)j++){
 					text.setAnswer(true);// adding boolean  true if this answer true 
@@ -100,9 +101,9 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	@Override	
 	public List<String> SearchQuestionInDataBase(String question, String category) {	
 		List<String> outResult = new ArrayList<String>();
-		List<MaintenanceQuestion> result = em.createQuery(
+		List<EntityQuestion> result = em.createQuery(
 				"SELECT c FROM MaintenanceQuestion c WHERE c.questionText LIKE :custName").setParameter("custName","%"+question+"%").getResultList();// return to client result of operation
-		for(MaintenanceQuestion q: result){
+		for(EntityQuestion q: result){
 			outResult.add(q.toString());
 		}
 		return outResult;// return to client 
@@ -113,14 +114,14 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	public String getInformation(String questionKey) {// method return all attributes from Question and Answer Tables in string line  
 		StringBuffer  outRes = new StringBuffer();
 		long id = (long)Integer.parseInt(questionKey);
-		List<MaintenanceQuestion> question = em.createQuery(
+		List<EntityQuestion> question = em.createQuery(
 				"SELECT c FROM MaintenanceQuestion c WHERE c.id LIKE :custName").setParameter("custName",id).getResultList();
-		List<MaintenanceAnswer> answers = em.createQuery(
+		List<EntityAnswer> answers = em.createQuery(
 				"SELECT c FROM MaintenanceAnswer c WHERE c.keyQuestion LIKE :custName").setParameter("custName",id).getResultList();	
-		for(MaintenanceQuestion q: question){
+		for(EntityQuestion q: question){
 			outRes.append(q);
 		}
-		for(MaintenanceAnswer an:answers){
+		for(EntityAnswer an:answers){
 			outRes.append(an);
 		}			
 		return outRes.toString();// return to client 
@@ -132,9 +133,9 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	public List<String> generatedTestQuestion(String category, String level) {
 		List<String> outRes = new ArrayList<String>();
 		long id = 0;
-		List<MaintenanceQuestion> question = em.createQuery(
+		List<EntityQuestion> question = em.createQuery(
 				"SELECT c FROM MaintenanceQuestion c WHERE c.category LIKE :custName").setParameter("custName",category).getResultList();
-		for(MaintenanceQuestion q: question){
+		for(EntityQuestion q: question){
 			if(Integer.parseInt(level) == q.getLevel()){
 				String temp = q.toString();
 				id = q.getId();
@@ -146,10 +147,10 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	}
 	@SuppressWarnings("unchecked")
 	private String getAnswers(long id) {// private method 
-		List<MaintenanceAnswer> answers = em.createQuery(
+		List<EntityAnswer> answers = em.createQuery(
 				"SELECT c FROM MaintenanceAnswer c WHERE c.keyQuestion LIKE :custName").setParameter("custName",id).getResultList();	
 		String outRes = "";	
-		for(MaintenanceAnswer an:answers){
+		for(EntityAnswer an:answers){
 			outRes += an.toString();
 		}	
 		return outRes;
@@ -176,5 +177,10 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 			flagAction = createQuestion(question_Parts[0], question_Parts[1], question_Parts[2], level, answers, trueAnswerNumber);			
 		}	
 		return flagAction;
+	}
+	@Override
+	public void setAutorization(boolean arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 }
