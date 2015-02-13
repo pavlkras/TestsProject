@@ -9,10 +9,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 @Entity
-public class MaintenanceQuestion implements Serializable {
+public class EntityQuestion implements Serializable {
 	private static final long serialVersionUID = 1L;
 	// constructor by default
-	public MaintenanceQuestion() {	}
+	public EntityQuestion() {	}
 	//column 1 id (long)
 	@Id
 	@Column(name="ID")
@@ -28,7 +28,7 @@ public class MaintenanceQuestion implements Serializable {
 	private String category;	
 	private int level;	
 	@OneToMany(mappedBy = "quest")	
-	List<MaintenanceAnswer> answers;	
+	List<EntityAnswer> answers;	
 
 	public long getId() {
 		return id;

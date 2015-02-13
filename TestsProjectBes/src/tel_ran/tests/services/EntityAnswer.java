@@ -5,8 +5,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 @Entity
-public class MaintenanceAnswer {
-	public MaintenanceAnswer() {}
+public class EntityAnswer {
+	public EntityAnswer() {}
 	@Id
 	@Column(name="ID")
 	@GeneratedValue
@@ -18,7 +18,7 @@ public class MaintenanceAnswer {
 	private String answerText;
 
 	@ManyToOne	
-	MaintenanceQuestion quest;
+	EntityQuestion quest;
 
 	
 	public boolean isAnswer() {
@@ -33,10 +33,10 @@ public class MaintenanceAnswer {
 	protected void setAnswerText(String answerText) {
 		this.answerText = answerText;
 	}
-	protected MaintenanceQuestion getQuest() {
+	protected EntityQuestion getQuest() {
 		return quest;
 	}
-	protected void setQuest(MaintenanceQuestion quest) {
+	protected void setQuest(EntityQuestion quest) {
 		this.quest = quest;
 	}
 	@Override
