@@ -11,10 +11,10 @@ boolean createCompany(String C_Name,String C_Site, String C_Specialization,Strin
 String []getAnySingleQuery(String strQuery);
 
 //Company actions for 3.1.4. Viewing test results
-List<String> getTestsResultsAll(int currCompanyId);
-List<String> getTestsResultsForTimeInterval(int currCompanyId, Date timeFrom, Date timeUntil);
-List<String> getTestsResultsForPersonID(int currCompanyId, int PersonID);
-String getTestsResultsForTestID(int currCompanyId, int TestID);
+List<String> getTestsResultsAll(String currCompanyId);
+List<String> getTestsResultsForTimeInterval(String currCompanyId, Date timeFrom, Date timeUntil);
+List<String> getTestsResultsForPersonID(String currCompanyId, int PersonID);
+String getTestsResultsForTestID(String currCompanyId, int TestID);
 //getPicturesFromTest(int testID);
 
 
