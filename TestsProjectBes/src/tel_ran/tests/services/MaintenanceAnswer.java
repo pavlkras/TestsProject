@@ -10,7 +10,11 @@ public class MaintenanceAnswer {
 	@Id
 	@Column(name="ID")
 	@GeneratedValue
+<<<<<<< HEAD
 	long id;
+=======
+	long id;	
+>>>>>>> origin/master
 
 	private boolean isAnswer;
 	private String answerText;

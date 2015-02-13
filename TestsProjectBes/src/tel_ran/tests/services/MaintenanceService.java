@@ -47,11 +47,18 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	////////////////////////////////////////////////////////////////////////////////////
 	/** method for Creating Table Answer in DB 	*/
 	private void addAnswersList(String answer, int trueAnswerNumber, long keyQuestion) {// private method		
+<<<<<<< HEAD
 		MaintenanceAnswer temp = new MaintenanceAnswer();
 		// creating table answer	
 		MaintenanceQuestion question=em.find(MaintenanceQuestion.class, keyQuestion);
 		temp.setAnswerText(answer);// adding text answer 
 		temp.setQuest(question);// adding  keyQuestion
+=======
+		MaintenanceAnswer temp = new MaintenanceAnswer();// creating table answer	
+		MaintenanceQuestion quest = em.find(MaintenanceQuestion.class, keyQuestion);
+		temp.setAnswerText(answer);// adding text answer 
+		temp.setQuest(quest);// adding  keyQuestion
+>>>>>>> origin/master
 		if(trueAnswerNumber == (int)j){
 			temp.setAnswer(true);//  adding boolean true if this answer  true
 		}else{
