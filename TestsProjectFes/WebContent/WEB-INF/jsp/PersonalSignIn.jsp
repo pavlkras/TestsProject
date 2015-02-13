@@ -12,5 +12,10 @@ user name: <input type="text" name="username" size=50/><br>
 password: <input type="password" name="password" size=50/><br>
 <input type="submit">
 </form>
+
+<ul>
+<li><a href="Personal_result_view">Choose test's params</a></li>
+</ul>
+
 </body>
 </html>
