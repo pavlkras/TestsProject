@@ -32,7 +32,7 @@ public class Maintenance {
 	/** когда нажимаем на кнопку add from file! этот метод только вызывает страницу adding page  здесь писать ничего не надо!!!! */
 	@RequestMapping({"/addfromfile"})
 	public String specificDataPage(){return "MaintenanceAutoComplete";}
-	
+
 	//use case 3.3.3 Test Maintenance
 	/*3.3.1.	Adding test question
 	Pre-Conditions:
@@ -52,7 +52,7 @@ public class Maintenance {
 	 */
 	/** ДОБАВЛЕНИЕ НОВОГО ВОПРОСА В БАЗУ ДАННЫХ */
 	@RequestMapping({"/add_actions"})
-	public String addProcessingPage(String question_text,String sample_question_text,String category,int question_level,
+	public String addProcessingPage(String questionText,String descriptionText,String category,int question_level,
 			String answer_text_1,String answer_text_2,String answer_text_3,String answer_text_4 ,int trueAnswerNumber,Model model){
 		/**Имена переменных приходящих в этот метод !!! ВАЖНО!!! Это Аттрибут тага: name="" должно быть соответствие полное!!!
 		 * количество неограничено.
@@ -65,7 +65,7 @@ public class Maintenance {
 
 		boolean actionRes = false; // флаг работы апликации
 		try {
-			actionRes = maintenanceService.createQuestion(question_text,sample_question_text,
+			actionRes = maintenanceService.createQuestion(questionText,descriptionText,
 					category, question_level, answer, trueAnswerNumber);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -85,6 +85,7 @@ public class Maintenance {
 		 * */
 		return "MaintenanceAddingPage"; // return too page after action
 	}	
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//use case 3.3.2 Update Test Question
 	/*Pre-Conditions:
 		1.	The System is running up
@@ -118,6 +119,7 @@ public class Maintenance {
 		return "MaintenanceUpdatePage";// return too page after action		
 	}	
 	/***  ПОИСК ВОПРОСОВ: действия разрешены Администратору системы  */
+	private int rowsCounter=0;
 	@RequestMapping({"/search_actions"})
 	public String searchProcessingPage(String category, String free_question, Model model){		
 		/** это метод обновления вопроса, принимает String free_question: Это текст в свободной форме, для поиска вопроса.*/
@@ -126,8 +128,9 @@ public class Maintenance {
 		str.append("<table><tr><td>CATEGORY</td><td>QUESTION</td></tr>");		
 		for( String questionLine :resultDB ){	
 			String line = questionLine.toString();
-			String[] element = line.split(":");
+			String[] element = line.split("----");
 			str.append("<tr onclick='test("+element[0]+")'><td>"+element[3]+"</td><td>"+element[0]+". "+element[1]+"</td></tr>");
+			rowsCounter++;
 		}	
 		str.append("</table><br>");			
 		model.addAttribute("result", str.toString());// text on page for testing
@@ -135,68 +138,75 @@ public class Maintenance {
 	}
 	/** Промежуточный поиск вопроса для заполнения формы для изменения вопроса : действия системы*/
 	@RequestMapping({"/getArrayFromDB"})
-	public String getInformationDB(String questionKey,Model model){	
-		StringBuffer  stringBufferOutResult = new StringBuffer();
-		String tempQueryRessult = maintenanceService.getInformation(questionKey);		
-		String[] dataFromTables = tempQueryRessult.split(":");
+	public String getInformationDB(String questionID,Model model){
+		try{
+		if(rowsCounter > (Integer.parseInt(questionID)-1)){
+			StringBuffer  stringBufferOutResult = new StringBuffer();
+			String tempQueryRessult = maintenanceService.getQuestionById(questionID);		
+			String[] dataFromTables = tempQueryRessult.split("----");
 
-		stringBufferOutResult.append("<form name='formTag' action='update_actions' ><br>Question Number:  "+dataFromTables[0]+".<br>");
-		stringBufferOutResult.append("Question text<br><input type='text' name='questionText' value='"+dataFromTables[1]+"'><br>");
-		stringBufferOutResult.append("Description text<br><input type='text' name='descriptionText' value='"+dataFromTables[2]+"'><br>");
-		stringBufferOutResult.append("Question Category<br> <input type='text' name='category' value='"+dataFromTables[3]+"'><br>");
+			stringBufferOutResult.append("<form name='formTag' action='update_actions' ><br>Question Number:  "+dataFromTables[0]+".<br>");
+			stringBufferOutResult.append("Question text<br><textarea name='questionText' rows='7'>"+dataFromTables[1]+"</textarea><br>");
+			stringBufferOutResult.append("Description text<br><textarea name='descriptionText'>"+dataFromTables[2]+"</textarea><br>");
+			stringBufferOutResult.append("Question Category<br> <input type='text' name='category' value='"+dataFromTables[3]+"'><br>");
 
-		String check = dataFromTables[4];// the true answer number
-		int checkRes = Integer.parseInt(check);// parse string to integer
-		stringBufferOutResult.append("Question Level<br>");		
-		if(checkRes == 1){
-			stringBufferOutResult.append("<input checked='checked' type='radio' name='question_level' value=1>1");
-		}else {stringBufferOutResult.append("<input type='radio' name='question_level' value=1>1");}
-		if(checkRes == 2){
-			stringBufferOutResult.append("<input checked='checked' type='radio' name='question_level' value=2>2");
-		}else {stringBufferOutResult.append("<input type='radio' name='question_level' value=2>2");}
-		if(checkRes == 3){
-			stringBufferOutResult.append("<input checked='checked' type='radio' name='question_level' value=3>3");			
-		}else {stringBufferOutResult.append("<input type='radio' name='question_level' value=3>3");}
-		if(checkRes == 4){
-			stringBufferOutResult.append("<input checked='checked' type='radio' name='question_level' value=4>4");
-		}else {stringBufferOutResult.append("<input type='radio' name='question_level' value=4>4");}
-		if(checkRes == 5){
-			stringBufferOutResult.append("<input checked='checked' type='radio' name='question_level' value=5>5");
-		}else {stringBufferOutResult.append("<input type='radio' name='question_level' value=5>5");}
-		stringBufferOutResult.append("<br> Answers for Question <br>");	
-		stringBufferOutResult.append(" Answer 1 <input type='text' name='answer_text_1' value='"+dataFromTables[5]+"'><br>");
-		stringBufferOutResult.append(" Answer 2 <input type='text' name='answer_text_2' value='"+dataFromTables[7]+"'><br>");
-		stringBufferOutResult.append(" Answer 3 <input type='text' name='answer_text_3' value='"+dataFromTables[9]+"'><br>");
-		stringBufferOutResult.append(" Answer 4 <input type='text' name='answer_text_4' value='"+dataFromTables[11]+"'><br>");		
+			String check = dataFromTables[4];// the true answer number
+			int checkRes = Integer.parseInt(check);// parse string to integer
+			stringBufferOutResult.append("Question Level<br>");		
+			if(checkRes == 1){
+				stringBufferOutResult.append("<input checked='checked' type='radio' name='question_level' value=1>1");
+			}else {stringBufferOutResult.append("<input type='radio' name='question_level' value=1>1");}
+			if(checkRes == 2){
+				stringBufferOutResult.append("<input checked='checked' type='radio' name='question_level' value=2>2");
+			}else {stringBufferOutResult.append("<input type='radio' name='question_level' value=2>2");}
+			if(checkRes == 3){
+				stringBufferOutResult.append("<input checked='checked' type='radio' name='question_level' value=3>3");			
+			}else {stringBufferOutResult.append("<input type='radio' name='question_level' value=3>3");}
+			if(checkRes == 4){
+				stringBufferOutResult.append("<input checked='checked' type='radio' name='question_level' value=4>4");
+			}else {stringBufferOutResult.append("<input type='radio' name='question_level' value=4>4");}
+			if(checkRes == 5){
+				stringBufferOutResult.append("<input checked='checked' type='radio' name='question_level' value=5>5");
+			}else {stringBufferOutResult.append("<input type='radio' name='question_level' value=5>5");}
+			stringBufferOutResult.append("<br> Answers for Question <br>");	
+			stringBufferOutResult.append(" Answer 1 <textarea name='answer_text_1'>"+dataFromTables[5]+"</textarea><br>");
+			stringBufferOutResult.append(" Answer 2 <textarea name='answer_text_2'>"+dataFromTables[7]+"</textarea><br>");
+			stringBufferOutResult.append(" Answer 3 <textarea name='answer_text_3'>"+dataFromTables[9]+"</textarea><br>");
+			stringBufferOutResult.append(" Answer 4 <textarea name='answer_text_4'>"+dataFromTables[11]+"</textarea><br>");		
 
-		stringBufferOutResult.append(" Please input number a right question answer<br>");
-		String trueAnswNum = null; 
-		if(dataFromTables[6].equals("true"))
-			trueAnswNum = "1";
-		if(dataFromTables[8].equals("true")) 
-			trueAnswNum = "2";
-		if(dataFromTables[10].equals("true"))
-			trueAnswNum = "3";
-		if(dataFromTables[12].equals("true"))
-			trueAnswNum = "4";
+			stringBufferOutResult.append(" Please input number a right question answer<br>");
+			String trueAnswNum = "0"; 
+			if(dataFromTables[6].equals("true"))
+				trueAnswNum = "1";
+			if(dataFromTables[8].equals("true")) 
+				trueAnswNum = "2";
+			if(dataFromTables[10].equals("true"))
+				trueAnswNum = "3";
+			if(dataFromTables[12].equals("true"))
+				trueAnswNum = "4";
 
-		stringBufferOutResult.append("<input	type='text' name='trueAnswerNumber' value='"+trueAnswNum +"' size='2'><br>");
-		stringBufferOutResult.append("<input	type='text' name='questionID' value='"+dataFromTables[0]+"' style='visibility: hidden;'><br>");
-		stringBufferOutResult.append("<input type='submit' value='Change Question'>");
-		stringBufferOutResult.append("</form>");
+			stringBufferOutResult.append("<input	type='text' name='trueAnswerNumber' value='"+trueAnswNum +"' size='2'><br>");
+			stringBufferOutResult.append("<input	type='text' name='questionID' value='"+dataFromTables[0]+"' style='visibility: hidden;'><br>");
+			stringBufferOutResult.append("<input type='submit' value='Change Question'>");
+			stringBufferOutResult.append("</form>");
+			stringBufferOutResult.append("<form action='deleteAction'>Delete Question number:<input type='submit' name='questionid' value='"+dataFromTables[0]+"'></form>");
 
-		model.addAttribute("result",stringBufferOutResult.toString());// вывод текста	
+			model.addAttribute("result",stringBufferOutResult.toString());// вывод текста	
+		}else{
+			model.addAttribute("result","Number of Question is Wrong. Input real number of question");// вывод текста wrong number format	
+		}
+		}catch(NumberFormatException e){
+			model.addAttribute("result","Number of Question is Empty. Input number of question");// вывод текста	empty input 
+		}
 		return "MaintenanceUpdatePage";		
-
-		//Способ общения jsp. страниц с джава кодом напрямую 
-		/*<%= MappingController.getInfoDB() %> */   
-		// это строка которая может  (должна) стоять в любом таге, на странице jsp.
-		// в таге выводится только текст (любой) !!! такой записью мы вызываем наш любой метод не имеющий аннотаций!!!
-		//метод может быть написан в любом классе лежащем на веб сервере 
-		// для корректной работы этого способа вызова джава с хтмл напрямую, нужна вот такая аннотация на самом верху страницы jsp.
-		/*<%@ page import="java.util.*, java.text.*, controller.MappingController" %>*/
-		// в импорте мы указываем что бы мы хотели видеть, в нашем jsp файле. 
-		//параметры прописываются через запятую, параметры берем с импортов в джава классах (копипаст)
+	}
+	/////////////////////////////////// method delete from DB Tables Question and Answer By ID /////////////////////////////
+	////////////////////////////////// returned to MaintenanceUpdatePage. ///////////////////////////////////
+	@RequestMapping({"/deleteAction"})
+	public String deleteFromTablesQuestionAndAnswer(String questionid, Model model){
+		String tempQueryRessult = maintenanceService.deleteQuetionById(questionid);
+		model.addAttribute("result",tempQueryRessult);// вывод текста		
+		return "MaintenanceUpdatePage";		
 	}
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//use case 3.3.3 Bulk entering test data

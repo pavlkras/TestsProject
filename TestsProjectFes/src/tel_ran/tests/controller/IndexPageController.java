@@ -23,19 +23,21 @@ public class IndexPageController {
 	/**когда запускаем аппликации, метод дает домашнюю страницу !! */
 	@RequestMapping({"/"})
 	public String Index(Model model){		
-		adminDB.put("amir", "1.com");
-		adminDB.put("cristina", "1.com");
-		adminDB.put("valeriya", "1.com");
-		companyDB.put("alex", "1.com");
-		personalDB.put("person", "1.com");     
-		String description = "<p>for work propertly use name and password<br>"
-				+ "administrators case<br>"
-				+ "names: amir,cristina,valeriya<br>"
+		adminDB.put("amir", "");
+		adminDB.put("cristina", "");
+		adminDB.put("valeriya", "");
+		adminDB.put("Paula", "");
+		companyDB.put("alex", "");
+		personalDB.put("person", ""); 
+		
+		String description = "<p>for LOGIN use name<br>"
+				+ "Maintenace Case<br>"
+				+ "names->: amir,cristina,valeriya,paula,roman<br>"
 				+ "Company case<br>"
-				+ "names: alex<br>"
+				+ "names->: alex<br>"
 				+ "Personal case<br>"
-				+ "names: person<br>"
-				+ "password for all : 1.com</p>";
+				+ "names->: person<br>"
+				+ "password->: NONE PASSWORD</p>";
 		model.addAttribute("result",description);// вывод текста
 		return "index";
 	}
