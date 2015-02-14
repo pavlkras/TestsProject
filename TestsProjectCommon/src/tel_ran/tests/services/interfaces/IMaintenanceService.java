@@ -15,7 +15,9 @@ public interface IMaintenanceService {//общий интерфейс
 	//Метод добавления данных в БД из файла на удаленном компьютере
 	boolean FillDataBaseFromTextResource(List<String> inputParsedText);		
 	//Возвращает 1 вопрос с ответами в стринге: поиск по ID Question
-	public String getInformation(String questionKey);
-	// method for group generate test. AlexFoox
-	public List<String> generatedTestQuestion(String category,String level);
+	public String getQuestionById(String questionID);
+	//
+	public String deleteQuetionById(String questionID);
+	// method for group generate test. AlexFoox returned Long ID of question 
+	public List<Long> getUniqueSetQuestionsForTest(String category,String level,Long nQuestion);
 }
