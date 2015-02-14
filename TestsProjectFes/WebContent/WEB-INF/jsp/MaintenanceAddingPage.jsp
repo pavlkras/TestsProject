@@ -5,9 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <style type="text/css">
-*{
-	text-align: center;
-}
+
 a {
 	font-size: 1.35em;
 	color: blue;
@@ -22,6 +20,13 @@ p{
 	color: blue;
 	border-bottom: 0.01em solid black;		
 }
+table{
+color:white;
+background-color: grey;
+}
+textarea:HOVER {
+	background-color: silver;
+}
 </style>
 <title>ADDING</title>
 </head>
@@ -30,37 +35,49 @@ p{
 	
     <p>Creating new Question </p>
 	<form action="add_actions">
-	Please input Question text<br>
-		<input type="text" name="question_text" value="here"><br> 
-		
-		Please input Description text<br>
-		<input type="text" name="sample_question_text" value="here"><br> 		
-		
-		
-		Please select a Category of Question: <br>
-		C# <input type="checkbox" name="category" value="C#" />
-		Java <input type="checkbox" name="category" value="Java" />
-		C++ <input	type="checkbox" name="category" value="C++" /> <br>	
-		Insert another Category<br>
-		 <input	type="text" name="category" value="" /><br>			
-			 Please	select Level for Question<br>
+	
+	<table>
+	<tr>
+	    <td>Please input Question text</td><td>Please input Description text</td>
+	</tr>
+	<tr>
+	    <td><textarea name="questionText"></textarea></td>
+	    <td><textarea name="descriptionText"></textarea></td>
+    </tr>
+    <tr>
+        <td>Select  Category</td>
+        <td>Select Level</td>
+     </tr>    
+	 <tr>
+	    <td>
+		     C# <input type="checkbox" name="category" value="C#" />
+		     Java <input type="checkbox" name="category" value="Java" />
+		     C++ <input	type="checkbox" name="category" value="C++" /> <br>	
+		     Insert another Category<br>
+		     <input	type="text" name="category" value="" /><br>
+		 </td>
+		 <td>
 			 1<input type="radio" name="question_level" value=1 checked="checked">
 			 2<input type="radio" name="question_level" value=2>
 			 3<input type="radio" name="question_level" value=3>
 			 4<input type="radio" name="question_level" value=4>
-			 5<input type="radio" name="question_level" value=5> <br> 
-			
-			
-			
-		Please input Answer to this Question<br>
-		Answer 1 <input type="text" name="answer_text_1" value="input text"> <br>
-		Answer 2 <input type="text" name="answer_text_2" value="input text"> <br> 
-		Answer 3 <input	type="text" name="answer_text_3" value="input text"> <br>
-		Answer 4 <input type="text" name="answer_text_4"value="input text"> <br>
-		
-		Please input number a right	question answer<br>
-		 <input type="text" name="trueAnswerNumber"	value="1"><br> 
-		 <input type="submit" value="Add To DataBase">
+			 5<input type="radio" name="question_level" value=5>		
+	     </td>
+	 </tr>
+	 <tr>
+	    <td>Input Answer to this Question</td><td>Input number a right question answer</td>
+     </tr>
+	 <tr>
+	    <td>
+	        Answer 1 <textarea name="answer_text_1"></textarea><br>
+		    Answer 2 <textarea name="answer_text_2"></textarea><br>
+		    Answer 3 <textarea name="answer_text_3"></textarea><br>
+		    Answer 4 <textarea name="answer_text_4"></textarea><br>
+	   </td>
+	   <td> <input type="text" name="trueAnswerNumber"	value="1"></td>	          
+	</tr>
+	<tr><td colspan="2"><input type="submit" value="Add To DataBase"></td></tr>
+	</table>	
 	</form>
 	<br>
 	

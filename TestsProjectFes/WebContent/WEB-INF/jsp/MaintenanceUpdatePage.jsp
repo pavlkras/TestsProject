@@ -14,7 +14,7 @@
     	att.value = "display:block";
     	EDIT_Q.setAttributeNode(att);
     	
-    	var FORM_C = document.getElementsByName("questionKey")[0];
+    	var FORM_C = document.getElementsByName("questionID")[0];
     	var att = document.createAttribute("value");
     	att.value = questionId;
     	FORM_C.setAttributeNode(att);	    	
@@ -33,20 +33,24 @@ a:HOVER {
 	color: orange;
 }
 input:HOVER {
-	background-color: yellow;
+	background-color: silver;
 }
 
 td:hover {
-	background-color: yellow;
-	border:none;
+    color:black;
+	background-color: white;	
 }
 
 td {
-	border: 0.1em solid black;
+	border-bottom: 0.1em solid black;
 }
-
+textarea:HOVER{
+background-color: silver;	
+}
 table {
-	border: 0.1em solid black;
+color:white;
+background-color:grey;
+	border: 0.1em solid grey;
 	width: 100%;
 }
 p{
@@ -69,7 +73,7 @@ display: none;
 </head>
 <body onload="actionTypeChange()">	
 <form name="editing"  class="editingAction" action="getArrayFromDB">
-	Question N:  <input	type="text" name="questionKey" size="8">&nbsp;&nbsp; 
+	Question N:  <input	type="text" name="questionID" size="8">&nbsp;&nbsp; 
     <input type="submit" value="Edit ?" >
     </form>	    
 <a href="http://localhost:8080/TestsProjectFes/SignInAction?username=amir&password=1.com">Home Page</a><br>
@@ -78,7 +82,7 @@ display: none;
 		 <input  type="text" name="free_question" size="50">
 		 <input type="submit"	value="SEARCH"><br> 	
 	</form>	
- 
+ <br><br>
 	<script type="text/javascript">
 	document.write("${result}");
 	</script>	

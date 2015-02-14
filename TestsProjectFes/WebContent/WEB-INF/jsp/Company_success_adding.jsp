@@ -8,7 +8,7 @@
 </head>
 <body>
 	<h1>Success!!!!!</h1>
-	<form action="add">
+	<form action="companyadd">
 		<input type="submit" value="Add Company" />
 	</form>
 	<br>
