@@ -27,9 +27,15 @@ public class EntityQuestion implements Serializable {
 
 	private String category;	
 	private int level;	
-	@OneToMany(mappedBy = "quest")	
+	@OneToMany(mappedBy = "questionid")	
 	List<EntityAnswer> answers;	
 
+	public List<EntityAnswer> getAnswers() {
+		return answers;
+	}
+	public void setAnswers(List<EntityAnswer> answers) {
+		this.answers = answers;
+	}
 	public long getId() {
 		return id;
 	}
@@ -57,9 +63,9 @@ public class EntityQuestion implements Serializable {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+	private String DELIMITER = "----";
 	@Override
 	public String toString() {
-		return id + ":" + questionText+ ":" + description + ":" + category	+ ":" + level+ ":";
-	}
-	
+		return id + DELIMITER + questionText+ DELIMITER + description + DELIMITER + category+ DELIMITER + level+ DELIMITER;
+	}	
 }

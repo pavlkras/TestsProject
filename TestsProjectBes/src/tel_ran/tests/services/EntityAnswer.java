@@ -10,17 +10,13 @@ public class EntityAnswer {
 	@Id
 	@Column(name="ID")
 	@GeneratedValue
-
-	long id;	
-
+	long id;
 
 	private boolean isAnswer;
 	private String answerText;
-
 	@ManyToOne	
-	EntityQuestion quest;
+	private EntityQuestion questionid;
 
-	
 	public boolean isAnswer() {
 		return isAnswer;
 	}
@@ -33,15 +29,16 @@ public class EntityAnswer {
 	protected void setAnswerText(String answerText) {
 		this.answerText = answerText;
 	}
-	protected EntityQuestion getQuest() {
-		return quest;
+	protected EntityQuestion getQuestionId() {
+		return questionid;
 	}
-	protected void setQuest(EntityQuestion quest) {
-		this.quest = quest;
+	protected void setQuestionId(EntityQuestion quest) {
+		this.questionid = quest;
 	}
+	private String DELIMITER = "----";
 	@Override
 	public String toString() {
-		return answerText +":"+isAnswer+ ":";
+		return answerText +DELIMITER+isAnswer+DELIMITER;
 	}
 
 
