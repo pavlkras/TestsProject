@@ -13,10 +13,10 @@
 		<button  value="Select c from Company c" name="adding">VIEW ALL</button>
 	</form>
 	<br>
-	<form action="add">
+	<form action="companyadd">
 		<input type="submit" value="Add COMPANY"/>
 	</form>
 	<br>
-	<a href="http://localhost:8080/Company_Project/add">Add COMPANY</a>
+	<a href="http://localhost:8080/TestsProjectFes/companyadd">Add COMPANY</a>
 </body>
 </html>

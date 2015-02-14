@@ -10,7 +10,7 @@
 	<h1>Result</h1>
 	<p>${myResult}</p>
 
-	<form action="add">
+	<form action="companyadd">
 		<input type="submit" value="Add Company" />
 	</form>
 	<br>
