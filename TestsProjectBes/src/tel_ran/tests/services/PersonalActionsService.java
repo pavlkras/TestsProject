@@ -10,7 +10,7 @@ public class PersonalActionsService extends TestsPersistence implements IPersona
 	
 	@Override
 	public List<String> getCategoriesList() {
-	String query = "Select DISTINCT q.category FROM MaintenanceQuestion q ORDER BY q.category";
+	String query = "Select DISTINCT q.category FROM EntityQuestion q ORDER BY q.category";
 	Query q = em.createQuery(query);
 	List<String> allCategories = q.getResultList();
 		
@@ -19,7 +19,7 @@ public class PersonalActionsService extends TestsPersistence implements IPersona
 	
 	@Override
 	public String getMaxCategoryQuestions(String catName) {
-	String query = "SELECT q FROM MaintenanceQuestion q WHERE q.category=?1";
+	String query = "SELECT q FROM EntityQuestion q WHERE q.category=?1";
 	Query q = em.createQuery(query);
 	q.setParameter(1, catName);
 	List<EntityQuestion> qlist = q.getResultList();
