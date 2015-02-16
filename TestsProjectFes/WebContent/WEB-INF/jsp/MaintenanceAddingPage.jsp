@@ -83,6 +83,7 @@ textarea:HOVER {
 	
 	<script type="text/javascript">
 		document.write("${result}");
-	</script>	
+	</script>
+	<a class="myButton" href='http://localhost:8080/TestsProjectFes/'>...</a>	
 </body>
 </html>

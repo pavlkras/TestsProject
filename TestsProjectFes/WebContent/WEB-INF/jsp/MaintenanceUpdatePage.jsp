@@ -110,6 +110,7 @@ visibility: hidden;
 </style>
 </head>
 <body onload="actionTypeChange()">	
+<a class="myButton" href='http://localhost:8080/TestsProjectFes/'>...</a>
 <form name="delete_q" class="displayAction" action='deleteAction' >
     Question N:  <input  type='text' name='questionIDdelete' size="8">&nbsp;&nbsp; 
     <input type="submit" class="myButton" value='Delete ?' >
