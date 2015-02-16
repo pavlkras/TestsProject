@@ -23,7 +23,11 @@ public class Maintenance {
 	/**************************************/
 	@RequestMapping({"/Maintenance"})
 	public String authorize(String usernamem, String passwordm){
-		maintenanceService.setAutorization(true);// setter flAutorization on Service.
+		boolean fl = false;
+		if(usernamem.equalsIgnoreCase("true")){
+		fl = true;
+		}
+		maintenanceService.setAutorization(fl);// setter flAutorization on Service.
 		return "MaintenanceSignInPage";
 	}
 	/**************************************/
