@@ -4,15 +4,17 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Registration</title>
+<title>Point Cat</title>
 </head>
 <body>
-	<form action="input_form">
-		<input type="submit" value="SQL QUERY -to see all" />
+	<form action="CompanyRegistration">
+		<input type="submit" value="Company Registration Start Page" />
 	</form>
 	<br>
-	<form action="companyadd">
-		<input type="submit" value="Add Company"/>
+	<form action="create_request">
+		<input type="submit" value="Company Tests Results Start Page"/>
 	</form>
 </body>
 </html>
+
+

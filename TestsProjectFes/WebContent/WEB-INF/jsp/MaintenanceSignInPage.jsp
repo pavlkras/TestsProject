@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -14,51 +13,81 @@
     	var HOMEP_SW = document.getElementById("homepage");
     	var att = document.createAttribute("style");
     	att.value = "display:none";
-    	HOMEP_SW.setAttributeNode(att); 
-    	
-    	var TITLE_SW = document.getElementsByTagName("title")[0];
-    	alert(TITLE_SW);
-    	var att = document.createAttribute("value");
-    	att.value = "Adding From File";
-    	TITLE_SW.setAttributeNode(att);
-    	
-      }  
+    	HOMEP_SW.setAttributeNode(att);     	
+    	}  
 </script>
-<title>Choice Step</title>
+<title>Maintenance Actions</title>
 </head>
 <style type="text/css">
-
-a {
-	font-size: 1.35em;
-	color: blue;
+ *{
+	text-align: center;
 }
-a:HOVER {
-	color: orange;
-}
-input:HOVER {
-	background-color: silver;
-}
+/** form for adding questions from file switch ****/
 .fileaddform{
 display: none;
 }
+/**** Generated code form, for tag <a>, resurce from code:(http://www.bestcssbuttongenerator.com) *****/
+.myButton {
+    margin:0.1em;
+	-moz-box-shadow: 3px 4px 0px 0px #899599;
+	-webkit-box-shadow: 3px 4px 0px 0px #899599;
+	box-shadow: 3px 4px 0px 0px #899599;
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ededed), color-stop(1, #bab1ba));
+	background:-moz-linear-gradient(top, #ededed 5%, #bab1ba 100%);
+	background:-webkit-linear-gradient(top, #ededed 5%, #bab1ba 100%);
+	background:-o-linear-gradient(top, #ededed 5%, #bab1ba 100%);
+	background:-ms-linear-gradient(top, #ededed 5%, #bab1ba 100%);
+	background:linear-gradient(to bottom, #ededed 5%, #bab1ba 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#bab1ba',GradientType=0);
+	background-color:#ededed;
+	-moz-border-radius:15px;
+	-webkit-border-radius:15px;
+	border-radius:15px;
+	border:1px solid #d6bcd6;
+	display:inline-block;
+	cursor:pointer;
+	color:#3a8a9e;
+	font-family:arial;
+	font-size:17px;
+	padding:7px 25px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #e1e2ed;
+}
+.myButton:hover {
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #bab1ba), color-stop(1, #ededed));
+	background:-moz-linear-gradient(top, #bab1ba 5%, #ededed 100%);
+	background:-webkit-linear-gradient(top, #bab1ba 5%, #ededed 100%);
+	background:-o-linear-gradient(top, #bab1ba 5%, #ededed 100%);
+	background:-ms-linear-gradient(top, #bab1ba 5%, #ededed 100%);
+	background:linear-gradient(to bottom, #bab1ba 5%, #ededed 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#bab1ba', endColorstr='#ededed',GradientType=0);
+	background-color:#bab1ba;
+}
+.myButton:active {
+	position:relative;
+	top:1px;
+}
 </style>
 <body>
-<ul id="homepage">
-<li><a href='http://localhost:8080/TestsProjectFes/maintenanceadd'>1. Create new question</a></li>
-<li><a href='http://localhost:8080/TestsProjectFes/update'>2. Update/Delete Question</a></li>
-<li><a href='#' onclick="ClickLoadFromFile()">3. Adding questions from file</a></li>
-<li><a href='http://localhost:8080/TestsProjectFes/'>4. Back to Home Page</a>	</li>
-</ul>
+<div id="homepage">
+<a class="myButton" href='http://localhost:8080/TestsProjectFes/maintenanceadd'>Create new question</a>
+<br>
+<a class="myButton" href='http://localhost:8080/TestsProjectFes/update'>Update/Delete Question</a>
+<br>
+<a class="myButton" href='#' onclick="ClickLoadFromFile()">Adding questions from file</a>
+<a class="myButton" href='http://localhost:8080/TestsProjectFes/'>...</a>
+</div>
 <div id="fileaddform" class="fileaddform">
 	<p>Auto Complete Data Base from external file</p>
 	<br> Please choice specific file to fill data base
 	<br>
 	<form action="http://localhost:8080/TestsProjectFes/add_from_file_actions" onsubmit="getTextPost(1)">
-		<!-- input for file not work correctly for this method -->
-		<input type="file" name="fileName"><br>
-		 <!-- this method is input full patch for correct work adding from file on user computer -->
-		<input type="text" name="file_name" value="D:/developer-workspaces/out_project/repository/tr-project/bild.txt" size="100" ><br> 		
-		<input type="submit">
+	<!-- input for file not work correctly for this method -->		
+	<!-- this method is input full patch for correct work adding from file on user computer -->
+	<input type="text" name="file_name" value="D:/developer-workspaces/out_project/repository/tr-project/bild.txt" size="100" >
+	<br>
+	<input type="file" name="fileName"><br> 		
+	<input type="submit" class="myButton">
 	</form>
 	</div>
 	<br>

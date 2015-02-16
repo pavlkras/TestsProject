@@ -11,7 +11,7 @@
     function test(questionId) {	    	
     	var EDIT_Q = document.getElementsByName("edit_q")[0];
     	var att = document.createAttribute("style");
-    	att.value = "display:block";
+    	att.value = "display:inline-block";
     	EDIT_Q.setAttributeNode(att);
     	
     	var FORM_C = document.getElementsByName("questionID")[0];
@@ -21,7 +21,7 @@
     	
     	var DELETE_Q = document.getElementsByName("delete_q")[0];
     	var att = document.createAttribute("style");
-    	att.value = "display:block";
+    	att.value = "display:inline-block";
     	DELETE_Q.setAttributeNode(att);
     	
     	var FORM_B = document.getElementsByName("questionIDdelete")[0];
@@ -31,26 +31,17 @@
       }  
 </script>
 <style type="text/css">
-*{
+ *{
 	text-align: center;
-}
-a {
-	font-size: 1.35em;
-	color: blue;
-}
-
-a:HOVER {
-	color: orange;
 }
 input:HOVER {
 	background-color: silver;
+	color:white;
 }
-
 td:hover {
     color:black;
 	background-color: white;	
 }
-
 td {
 	border-bottom: 0.1em solid black;
 }
@@ -67,7 +58,7 @@ p{
 	color: blue;
 	border-bottom: 0.1em solid black;	
 }
-.editingAction{
+.displayAction{
 display: none;
 float: right;
 margin-top: 2em;
@@ -76,26 +67,61 @@ margin-right: 5em;
 .resultTextTag{
 visibility: hidden;
 }
- .getFromDB{
-display: none;
-} 
+.myButton {
+	-moz-box-shadow:inset 0px 1px 0px 0px #f5978e;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #f5978e;
+	box-shadow:inset 0px 1px 0px 0px #f5978e;
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ed9993), color-stop(1, #c62d1f));
+	background:-moz-linear-gradient(top, #ed9993 5%, #c62d1f 100%);
+	background:-webkit-linear-gradient(top, #ed9993 5%, #c62d1f 100%);
+	background:-o-linear-gradient(top, #ed9993 5%, #c62d1f 100%);
+	background:-ms-linear-gradient(top, #ed9993 5%, #c62d1f 100%);
+	background:linear-gradient(to bottom, #ed9993 5%, #c62d1f 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ed9993', endColorstr='#c62d1f',GradientType=0);
+	background-color:#ed9993;
+	-moz-border-radius:8px;
+	-webkit-border-radius:8px;
+	border-radius:8px;
+	border:1px solid #d02718;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:arial;
+	font-size:15px;
+	font-weight:bold;
+	padding:2px 21px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #810e05;
+}
+.myButton:hover {
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #c62d1f), color-stop(1, #ed9993));
+	background:-moz-linear-gradient(top, #c62d1f 5%, #ed9993 100%);
+	background:-webkit-linear-gradient(top, #c62d1f 5%, #ed9993 100%);
+	background:-o-linear-gradient(top, #c62d1f 5%, #ed9993 100%);
+	background:-ms-linear-gradient(top, #c62d1f 5%, #ed9993 100%);
+	background:linear-gradient(to bottom, #c62d1f 5%, #ed9993 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#c62d1f', endColorstr='#ed9993',GradientType=0);
+	background-color:#c62d1f;
+}
+.myButton:active {
+	position:relative;
+	top:1px;
+}
 </style>
 </head>
 <body onload="actionTypeChange()">	
-<form name="delete_q" class="editingAction" action='deleteAction'>
-    Question N:  <input type='text' name='questionIDdelete' size="8">&nbsp;&nbsp; 
-    <input type="submit" value='Delete ?' >
+<form name="delete_q" class="displayAction" action='deleteAction' >
+    Question N:  <input  type='text' name='questionIDdelete' size="8">&nbsp;&nbsp; 
+    <input type="submit" class="myButton" value='Delete ?' >
     </form>
-    <form name="edit_q"  class="editingAction" action="getArrayFromDB">
-	Question N:  <input	type="text" name="questionID" size="8">&nbsp;&nbsp; 
-    <input type="submit" value="Edit ?" >
+    <form name="edit_q"  class="displayAction" action="getArrayFromDB">
+	Question N:  <input	 type="text" name="questionID" size="8">&nbsp;&nbsp; 
+    <input type="submit" class="myButton" value="Edit ?" >
     </form>	  
-         
-    <a href="http://localhost:8080/TestsProjectFes/SignInAction?username=&password=">Back to Home Page</a><br>
-	<p onclick="test('1')">Update - Change/Delete  issues</p><!-- test working java script in this jsp file -->
-	<form  name="searchCODE" action="search_actions">
+    <p onclick="test('1')">Update - Change/Delete  issues</p><!-- test working java script in this jsp file -->
+	<form  name="searchCODE" action="search_actions" >
 		 <input  type="text" name="free_question" size="50">
-		 <input type="submit"	value="SEARCH"><br> 	
+		 <input class="myButton" type="submit"  value="SEARCH"><br> 	
 	</form>	
     <br><br>
 	<script type="text/javascript">

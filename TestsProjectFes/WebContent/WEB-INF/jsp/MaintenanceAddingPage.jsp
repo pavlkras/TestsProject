@@ -5,7 +5,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <style type="text/css">
-
+*{
+text-align: center;
+}
 a {
 	font-size: 1.35em;
 	color: blue;
@@ -30,9 +32,7 @@ textarea:HOVER {
 </style>
 <title>ADDING</title>
 </head>
-<body>	
-    <a href="http://localhost:8080/TestsProjectFes/SignInAction?username=amir&password=1.com"> Home Page</a>
-	
+<body>		
     <p>Creating new Question </p>
 	<form action="add_actions">
 	

@@ -17,22 +17,23 @@ import tel_ran.tests.services.interfaces.IMaintenanceService;
 @Scope("session")
 @RequestMapping({"/","/Maintenance"})
 public class Maintenance {
-	@Autowired// аннотация делающая автоматический  вызов через тег в бин.хмл файле.
-	IMaintenanceService maintenanceService;// Это связь интерфейсов , эта переменная дает нам все методы общего интерфейса 
-	/*@RequestMapping({"/Maintenance"})
-	public String authorize(){return "MaintenanceSignInPage";}	*/
-	/** когда нажимаем на кнопку add question! этот метод только вызывает страницу adding page здесь писать ничего не надо!! */
+	//use case 3.3.3 Test Maintenance
+	@Autowired
+	IMaintenanceService maintenanceService;
+	/**************************************/
+	@RequestMapping({"/Maintenance"})
+	public String authorize(){
+		maintenanceService.setAutorization(true);
+		return "MaintenanceSignInPage";
+	}
+	/**************************************/
 	@RequestMapping({"/maintenanceadd"})
 	public String addingPage() {return "MaintenanceAddingPage";}
-	/** когда нажимаем на кнопку  update question!  этот метод только вызывает страницу updating view table page здесь писать ничего не надо!! !! */
+	/**************************************/
 	@RequestMapping({"/update"})
 	public String UpdatePage(){	return "MaintenanceUpdatePage";}
 
-	/** когда нажимаем на кнопку add from file! этот метод только вызывает страницу adding page  здесь писать ничего не надо!!!! */
-	@RequestMapping({"/addfromfile"})
-	public String specificDataPage(){return "MaintenanceAutoComplete";}
 
-	//use case 3.3.3 Test Maintenance
 	/*3.3.1.	Adding test question
 	Pre-Conditions:
 	1.	The System is running up
@@ -53,35 +54,28 @@ public class Maintenance {
 	@RequestMapping({"/add_actions"})
 	public String addProcessingPage(String questionText,String descriptionText,String category,int question_level,
 			String answer_text_1,String answer_text_2,String answer_text_3,String answer_text_4 ,int trueAnswerNumber,Model model){
-		/**Имена переменных приходящих в этот метод !!! ВАЖНО!!! Это Аттрибут тага: name="" должно быть соответствие полное!!!
-		 * количество неограничено.
-		 * Имя  же самого метода public String addProcessingPage() и других методов этого класса,
-		 * пока нигде не применялось и существенно роль походу не играет//спросить Юрия//
-		 */
+
 		List<String> answer = new ArrayList<String>();
 		answer.add(answer_text_1);		answer.add(answer_text_2);
 		answer.add(answer_text_3);		answer.add(answer_text_4);
 
-		boolean actionRes = false; // флаг работы апликации
+		boolean actionRes = false; // flag work action
 		try {
 			actionRes = maintenanceService.createQuestion(questionText,descriptionText,
 					category, question_level, answer, trueAnswerNumber);
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
+			System.out.println(" hello Class Cast Exception");
 		}
-		// альтернативный путь , если ответа от сервиса небыло по любым причинам.
+		// ==========================================
 		if (actionRes) {
-			// написать альтернативный путь !!!
-			model.addAttribute("result","<p> Question successfully added</p>");// вывод текста
+			// write alternative flow !!!
+			model.addAttribute("result","<p> Question successfully added</p>");// out text to Page
 			actionRes=false;
 		}else{
-			// написать альтернативный путь !!!
-			model.addAttribute("result","<p> Error adding the question, the question already exists. Try again</p>");// вывод текста
-		}
-		/**ВАЖНО!!! Принимает параметер только стринг и стрингБуфер!!!, метод фреймворка Спринг!! 
-		 * Метод вывода текста на  ХТМЛ  страницу через джава скрипт  model.addAttribute("result",ВАЖНО!! чтобы имя написанное в методе как 1 параметр, 
-		 * И написанное на ХТМЛ странице в скипте имя в фигурных скобках  document.write("${result}"); совпадали полностью !!!
-		 * */
+			// write alternative flow !!!
+			model.addAttribute("result","<p> Error adding the question, the question already exists. Try again</p>");// out text to Page
+		}		
 		return "MaintenanceAddingPage"; // return too page after action
 	}	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -121,86 +115,81 @@ public class Maintenance {
 	private int rowsCounter=0;
 	@RequestMapping({"/search_actions"})
 	public String searchProcessingPage(String category, String free_question, Model model){		
-		/** это метод обновления вопроса, принимает String free_question: Это текст в свободной форме, для поиска вопроса.*/
-		try {
-			List<String> resultDB = maintenanceService.SearchQuestionInDataBase(free_question, category);	
-			StringBuffer str = new StringBuffer();
-			str.append("<table><tr><td>CATEGORY</td><td>QUESTION</td></tr>");		
-			for( String questionLine :resultDB ){	
-				String line = questionLine.toString();
-				String[] element = line.split("----");
-				str.append("<tr onclick='test("+element[0]+")'><td>"+element[3]+"</td><td>"+element[0]+". "+element[1]+"</td></tr>");
-				rowsCounter++;
-			}	
-			str.append("</table><br>");			
-			model.addAttribute("result", str.toString()); // text on page for testing
-		} catch (Exception e) {
-			model.addAttribute("result", e.toString()); // text on page for testing
-		//	e.printStackTrace();
-		}
+		/** это метод обновления вопроса, принимает String free_question: Это текст в свободной форме, для поиска вопроса.*/	
+		List<String> resultDB = maintenanceService.SearchQuestionInDataBase(free_question, category);	
+		StringBuffer str = new StringBuffer();
+		str.append("<table><tr><td>CATEGORY</td><td>QUESTION</td></tr>");		
+		for( String questionLine :resultDB ){	
+			String line = questionLine.toString();
+			String[] element = line.split("----");
+			str.append("<tr onclick='test("+element[0]+")'><td>"+element[3]+"</td><td>"+element[0]+". "+element[1]+"</td></tr>");
+			rowsCounter++;
+		}	
+		str.append("</table><br>");			
+		model.addAttribute("result", str.toString()); // text on page for testing		
 		return "MaintenanceUpdatePage";// return too page after action		
 	}
 	/** Промежуточный поиск вопроса для заполнения формы для изменения вопроса : действия системы*/
 	@RequestMapping({"/getArrayFromDB"})
 	public String getInformationDB(String questionID,Model model){
 		try{
-		if(rowsCounter > (Integer.parseInt(questionID)-1)){
-			StringBuffer  stringBufferOutResult = new StringBuffer();
-			String tempQueryRessult = maintenanceService.getQuestionById(questionID);		
-			String[] dataFromTables = tempQueryRessult.split("----");
+			if(rowsCounter > (Integer.parseInt(questionID)-1)){
+				StringBuffer  stringBufferOutResult = new StringBuffer();
+				String tempQueryRessult = maintenanceService.getQuestionById(questionID);		
+				String[] dataFromTables = tempQueryRessult.split("----");
 
-			stringBufferOutResult.append("<form name='formTag' action='update_actions' ><br>Question Number:  "+dataFromTables[0]+".<br>");
-			stringBufferOutResult.append("Question text<br><textarea name='questionText' rows='7'>"+dataFromTables[1]+"</textarea><br>");
-			stringBufferOutResult.append("Description text<br><textarea name='descriptionText'>"+dataFromTables[2]+"</textarea><br>");
-			stringBufferOutResult.append("Question Category<br> <input type='text' name='category' value='"+dataFromTables[3]+"'><br>");
+				stringBufferOutResult.append("<form name='formTag' action='update_actions' ><br>Question Number:  "+dataFromTables[0]+".<br>");
+				stringBufferOutResult.append("Question text<br><textarea name='questionText' rows='7'>"+dataFromTables[1]+"</textarea><br>");
+				stringBufferOutResult.append("Description text<br><textarea name='descriptionText'>"+dataFromTables[2]+"</textarea><br>");
+				stringBufferOutResult.append("Question Category<br> <input type='text' name='category' value='"+dataFromTables[3]+"'><br>");
 
-			String check = dataFromTables[4];// the true answer number
-			int checkRes = Integer.parseInt(check);// parse string to integer
-			stringBufferOutResult.append("Question Level<br>");		
-			if(checkRes == 1){
-				stringBufferOutResult.append("<input checked='checked' type='radio' name='question_level' value=1>1");
-			}else {stringBufferOutResult.append("<input type='radio' name='question_level' value=1>1");}
-			if(checkRes == 2){
-				stringBufferOutResult.append("<input checked='checked' type='radio' name='question_level' value=2>2");
-			}else {stringBufferOutResult.append("<input type='radio' name='question_level' value=2>2");}
-			if(checkRes == 3){
-				stringBufferOutResult.append("<input checked='checked' type='radio' name='question_level' value=3>3");			
-			}else {stringBufferOutResult.append("<input type='radio' name='question_level' value=3>3");}
-			if(checkRes == 4){
-				stringBufferOutResult.append("<input checked='checked' type='radio' name='question_level' value=4>4");
-			}else {stringBufferOutResult.append("<input type='radio' name='question_level' value=4>4");}
-			if(checkRes == 5){
-				stringBufferOutResult.append("<input checked='checked' type='radio' name='question_level' value=5>5");
-			}else {stringBufferOutResult.append("<input type='radio' name='question_level' value=5>5");}
-			stringBufferOutResult.append("<br> Answers for Question <br>");	
-			stringBufferOutResult.append(" Answer 1 <textarea name='answer_text_1'>"+dataFromTables[5]+"</textarea><br>");
-			stringBufferOutResult.append(" Answer 2 <textarea name='answer_text_2'>"+dataFromTables[7]+"</textarea><br>");
-			stringBufferOutResult.append(" Answer 3 <textarea name='answer_text_3'>"+dataFromTables[9]+"</textarea><br>");
-			stringBufferOutResult.append(" Answer 4 <textarea name='answer_text_4'>"+dataFromTables[11]+"</textarea><br>");		
+				String check = dataFromTables[4];// the true answer number
+				int checkRes = Integer.parseInt(check);// parse string to integer
+				stringBufferOutResult.append("Question Level<br>");		
+				if(checkRes == 1){
+					stringBufferOutResult.append("<input checked='checked' type='radio' name='question_level' value=1>1");
+				}else {stringBufferOutResult.append("<input type='radio' name='question_level' value=1>1");}
+				if(checkRes == 2){
+					stringBufferOutResult.append("<input checked='checked' type='radio' name='question_level' value=2>2");
+				}else {stringBufferOutResult.append("<input type='radio' name='question_level' value=2>2");}
+				if(checkRes == 3){
+					stringBufferOutResult.append("<input checked='checked' type='radio' name='question_level' value=3>3");			
+				}else {stringBufferOutResult.append("<input type='radio' name='question_level' value=3>3");}
+				if(checkRes == 4){
+					stringBufferOutResult.append("<input checked='checked' type='radio' name='question_level' value=4>4");
+				}else {stringBufferOutResult.append("<input type='radio' name='question_level' value=4>4");}
+				if(checkRes == 5){
+					stringBufferOutResult.append("<input checked='checked' type='radio' name='question_level' value=5>5");
+				}else {stringBufferOutResult.append("<input type='radio' name='question_level' value=5>5");}
+				stringBufferOutResult.append("<br> Answers for Question <br>");	
+				stringBufferOutResult.append(" Answer 1 <textarea name='answer_text_1'>"+dataFromTables[5]+"</textarea><br>");
+				stringBufferOutResult.append(" Answer 2 <textarea name='answer_text_2'>"+dataFromTables[7]+"</textarea><br>");
+				stringBufferOutResult.append(" Answer 3 <textarea name='answer_text_3'>"+dataFromTables[9]+"</textarea><br>");
+				stringBufferOutResult.append(" Answer 4 <textarea name='answer_text_4'>"+dataFromTables[11]+"</textarea><br>");		
 
-			stringBufferOutResult.append(" Please input number a right question answer<br>");
-			String trueAnswNum = "0"; 
-			if(dataFromTables[6].equals("true"))
-				trueAnswNum = "1";
-			if(dataFromTables[8].equals("true")) 
-				trueAnswNum = "2";
-			if(dataFromTables[10].equals("true"))
-				trueAnswNum = "3";
-			if(dataFromTables[12].equals("true"))
-				trueAnswNum = "4";
+				stringBufferOutResult.append(" Please input number a right question answer<br>");
+				String trueAnswNum = "0"; 
+				if(dataFromTables[6].equals("true"))
+					trueAnswNum = "1";
+				if(dataFromTables[8].equals("true")) 
+					trueAnswNum = "2";
+				if(dataFromTables[10].equals("true"))
+					trueAnswNum = "3";
+				if(dataFromTables[12].equals("true"))
+					trueAnswNum = "4";
 
-			stringBufferOutResult.append("<input	type='text' name='trueAnswerNumber' value='"+trueAnswNum +"' size='2'><br>");
-			stringBufferOutResult.append("<input	type='text' name='questionID' value='"+dataFromTables[0]+"' style='visibility: hidden;'><br>");
-			stringBufferOutResult.append("<input type='submit' value='Change Question'>");
-			stringBufferOutResult.append("</form>");
-			stringBufferOutResult.append("<form action='deleteAction'>Delete Question number:<input type='submit' name='questionID' value='"+dataFromTables[0]+"'></form>");
+				stringBufferOutResult.append("<input	type='text' name='trueAnswerNumber' value='"+trueAnswNum +"' size='2'><br>");
+				stringBufferOutResult.append("<input	type='text' name='questionID' value='"+dataFromTables[0]+"' style='visibility: hidden;'><br>");
+				stringBufferOutResult.append("<input type='submit' value='Change Question'>");
+				stringBufferOutResult.append("</form>");
+				stringBufferOutResult.append("<form action='deleteAction'>Delete Question number:<input type='submit' name='questionID' value='"+dataFromTables[0]+"'></form>");
 
-			model.addAttribute("result",stringBufferOutResult.toString());// вывод текста	
-		}else{
-			model.addAttribute("result","Number of Question is Wrong. Input real number of question");// вывод текста wrong number format	
-		}
+				model.addAttribute("result",stringBufferOutResult.toString());// out text to Page
+			}else{
+				model.addAttribute("result","Number of Question is Wrong. Input real number of question");// out text to Page : wrong number format	
+			}
 		}catch(NumberFormatException e){
-			model.addAttribute("result","Number of Question is Empty. Input number of question");// вывод текста	empty input 
+			model.addAttribute("result","Number of Question is Empty. Input number of question");// out text to Page: empty input 
 		}
 		return "MaintenanceUpdatePage";		
 	}
@@ -209,7 +198,7 @@ public class Maintenance {
 	@RequestMapping({"/deleteAction"})
 	public String deleteFromTablesQuestionAndAnswer(String questionIDdelete, Model model){
 		String tempQueryRessult = maintenanceService.deleteQuetionById(questionIDdelete);
-		model.addAttribute("result",tempQueryRessult);// вывод текста		
+		model.addAttribute("result",tempQueryRessult);// out text to Page	
 		return "MaintenanceUpdatePage";		
 	}
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -240,7 +229,7 @@ public class Maintenance {
 			boolean actionRes = maintenanceService.FillDataBaseFromTextResource(res);	
 			model.addAttribute("result"," Adding Questions is - "+actionRes);// вывод текста
 		} catch (Exception e) {			
-			model.addAttribute("result","File not Found");// вывод текста
+			model.addAttribute("result","File not Found");// out text to Page
 		} 	
 		return 	"MaintenanceSignInPage";// return too page after action
 	}

@@ -23,7 +23,7 @@ public class PersonalActions {
 	IPersonalActionsService personalService;
 
 	@RequestMapping({"/PersonalActions"})
-	public String signIn(){
+	public String signIn(String usernamep,String passwordp){
 		return "PersonalSignIn";
 	}
 	
