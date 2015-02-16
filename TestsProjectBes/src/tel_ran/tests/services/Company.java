@@ -13,6 +13,17 @@ public class Company {
 	private String C_AmountEmployes;
 	
 	private String C_Password;
+	
+	//// Added by Igor ////
+	@OneToMany(mappedBy = "company")
+	private Set<EntityPerson> entityPerson;
+	public Set<EntityPerson> getEntityPerson() {
+	    return entityPerson;
+	}
+	public void setEntityPerson(Set<EntityPerson> param) {
+	    this.entityPerson = param;
+	}
+	//// End of Adding ////
 
 	public void setPassword(String password) {
 		C_Password = password;
