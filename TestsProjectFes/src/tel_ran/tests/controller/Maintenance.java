@@ -122,17 +122,22 @@ public class Maintenance {
 	@RequestMapping({"/search_actions"})
 	public String searchProcessingPage(String category, String free_question, Model model){		
 		/** это метод обновления вопроса, принимает String free_question: Это текст в свободной форме, для поиска вопроса.*/
-		List<String> resultDB = maintenanceService.SearchQuestionInDataBase(free_question, category);	
-		StringBuffer str = new StringBuffer();
-		str.append("<table><tr><td>CATEGORY</td><td>QUESTION</td></tr>");		
-		for( String questionLine :resultDB ){	
-			String line = questionLine.toString();
-			String[] element = line.split("----");
-			str.append("<tr onclick='test("+element[0]+")'><td>"+element[3]+"</td><td>"+element[0]+". "+element[1]+"</td></tr>");
-			rowsCounter++;
-		}	
-		str.append("</table><br>");			
-		model.addAttribute("result", str.toString());// text on page for testing
+		try {
+			List<String> resultDB = maintenanceService.SearchQuestionInDataBase(free_question, category);	
+			StringBuffer str = new StringBuffer();
+			str.append("<table><tr><td>CATEGORY</td><td>QUESTION</td></tr>");		
+			for( String questionLine :resultDB ){	
+				String line = questionLine.toString();
+				String[] element = line.split("----");
+				str.append("<tr onclick='test("+element[0]+")'><td>"+element[3]+"</td><td>"+element[0]+". "+element[1]+"</td></tr>");
+				rowsCounter++;
+			}	
+			str.append("</table><br>");			
+			model.addAttribute("result", str.toString()); // text on page for testing
+		} catch (Exception e) {
+			model.addAttribute("result", e.toString()); // text on page for testing
+		//	e.printStackTrace();
+		}
 		return "MaintenanceUpdatePage";// return too page after action		
 	}
 	/** Промежуточный поиск вопроса для заполнения формы для изменения вопроса : действия системы*/
