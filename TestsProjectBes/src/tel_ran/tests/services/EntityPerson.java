@@ -1,28 +1,32 @@
 package tel_ran.tests.services;
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import tel_ran.tests.services.common.CommonData;
+import tel_ran.tests.services.Company;
+
+import javax.persistence.ManyToOne;
+
+import tel_ran.tests.services.EntityTestCommon;
 
 import java.util.List;
-//@Entity
+
+import javax.persistence.OneToMany;
+@Entity
+@Table(name="PERSON")
 public class EntityPerson {
-/*   
+    @Id
+    @GeneratedValue
     private int person_id;
     private String f_name;
     private String l_name;
-
-    @ManyToOne(targetEntity=EntityCompanyTwo.class)
-    Company company;
-    @OneToMany (mappedBy = "person_data")
-    List<EntityTestCommon> test_details;
-
-    public EntityPerson() {
-    }
-
-    public EntityPerson(List<EntityTestCommon> test_details, int person_id, String f_name, String l_name, Company company) {
-        this.test_details = test_details;
-        this.person_id = person_id;
-        this.f_name = f_name;
-        this.l_name = l_name;
-        this.company = company;
+	@ManyToOne
+	private Company company;
+	@OneToMany(mappedBy = "entityPerson")
+	private List<EntityTestCommon> entityTestCommon;
+	public EntityPerson() {
     }
 
     @Override
@@ -33,9 +37,23 @@ public class EntityPerson {
     	strbuf.append(l_name);
         return strbuf.toString();
     }
-    
-    @Id
-    @GeneratedValue
+
+	public Company getCompany() {
+	    return company;
+	}
+
+	public void setCompany(Company param) {
+	    this.company = param;
+	}
+
+	public List<EntityTestCommon> getEntityTestCommon() {
+	    return entityTestCommon;
+	}
+
+	public void setEntityTestCommon(List<EntityTestCommon> param) {
+	    this.entityTestCommon = param;
+	}
+
 	public int getPerson_id() {
 		return person_id;
 	}
@@ -59,23 +77,7 @@ public class EntityPerson {
 	public void setL_name(String l_name) {
 		this.l_name = l_name;
 	}
-
-	public Company getCompany() {
-		return company;
-	}
-
-	public void setCompany(Company company) {
-		this.company = company;
-	}
-
-	public List<EntityTestCommon> getTest_details() {
-		return test_details;
-	}
-
-	public void setTest_details(List<EntityTestCommon> test_details) {
-		this.test_details = test_details;
-	}
+    
 
 
-*/
 }
