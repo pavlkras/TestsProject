@@ -10,7 +10,7 @@ public class EntityAnswer {
 	@Id
 	@Column(name="ID")
 	@GeneratedValue
-	long id;
+	private long id;
 
 	private boolean isAnswer;
 	private String answerText;
@@ -23,16 +23,16 @@ public class EntityAnswer {
 	public void setAnswer(boolean isAnswer) {
 		this.isAnswer = isAnswer;
 	}
-	protected String getAnswerText() {
+	public String getAnswerText() {
 		return answerText;
 	}
-	protected void setAnswerText(String answerText) {
+	public void setAnswerText(String answerText) {
 		this.answerText = answerText;
 	}
-	protected EntityQuestion getQuestionId() {
+	public EntityQuestion getQuestionId() {
 		return questionid;
 	}
-	protected void setQuestionId(EntityQuestion quest) {
+	public void setQuestionId(EntityQuestion quest) {
 		this.questionid = quest;
 	}
 	private String DELIMITER = "----";
