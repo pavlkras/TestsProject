@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
      xmlns:tx="http://www.springframework.org/schema/tx"
+     xmlns:aop="http://www.springframework.org/schema/aop"
  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd 
-  http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd ">
+  http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd 
+  http://www.springframework.org/schema/aop
+  http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+  
  <bean id="emf"
      class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
   <property name="persistenceUnitName" value="springHibernate" />
@@ -15,5 +19,17 @@ class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcesso
 <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
     <property name="entityManagerFactory" ref="emf"/>
 </bean>
+
+<bean id="adminAuthorizAspect" class="tel_ran.tests.aop.AuthorizedBench" />
+	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
+
+	<aop:config>
+		<aop:aspect ref="adminAuthorizAspect">
+			<aop:pointcut expression="execution(* tel_ran.tests.services.MaintenanceService.*(..)) "  id="myCut" />
+			<aop:around method="correctAuthorized" pointcut-ref="myCut" />
+		</aop:aspect>
+	</aop:config>
+	
+	
 
   </beans>
