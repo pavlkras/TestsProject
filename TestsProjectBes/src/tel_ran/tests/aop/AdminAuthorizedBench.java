@@ -3,9 +3,9 @@ import java.util.List;
 import org.aspectj.lang.ProceedingJoinPoint;
 import tel_ran.tests.services.MaintenanceService;
 
-public class AuthorizedBench {
+public class AdminAuthorizedBench {
 	@SuppressWarnings("unchecked")
-	public Object correctAuthorized(ProceedingJoinPoint point) {		
+	public Object correctAdminAuthorized(ProceedingJoinPoint point) {		
 		Object[]arguments = point.getArgs();
 		Object newObject = new Object();
 		Object outObject="";
