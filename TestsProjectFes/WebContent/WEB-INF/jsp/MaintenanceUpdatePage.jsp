@@ -9,7 +9,7 @@
 
 <script type="text/javascript">	
     function test(questionId) {	    	
-    	var EDIT_Q = document.getElementsByName("editing")[0];
+    	var EDIT_Q = document.getElementsByName("edit_q")[0];
     	var att = document.createAttribute("style");
     	att.value = "display:block";
     	EDIT_Q.setAttributeNode(att);
@@ -17,7 +17,17 @@
     	var FORM_C = document.getElementsByName("questionID")[0];
     	var att = document.createAttribute("value");
     	att.value = questionId;
-    	FORM_C.setAttributeNode(att);	    	
+    	FORM_C.setAttributeNode(att);
+    	
+    	var DELETE_Q = document.getElementsByName("delete_q")[0];
+    	var att = document.createAttribute("style");
+    	att.value = "display:block";
+    	DELETE_Q.setAttributeNode(att);
+    	
+    	var FORM_B = document.getElementsByName("questionIDdelete")[0];
+    	var att = document.createAttribute("value");
+    	att.value = questionId;
+    	FORM_B.setAttributeNode(att);
       }  
 </script>
 <style type="text/css">
@@ -72,17 +82,22 @@ display: none;
 </style>
 </head>
 <body onload="actionTypeChange()">	
-<form name="editing"  class="editingAction" action="getArrayFromDB">
+<form name="delete_q" class="editingAction" action='deleteAction'>
+    Question N:  <input type='text' name='questionIDdelete' size="8">&nbsp;&nbsp; 
+    <input type="submit" value='Delete ?' >
+    </form>
+    <form name="edit_q"  class="editingAction" action="getArrayFromDB">
 	Question N:  <input	type="text" name="questionID" size="8">&nbsp;&nbsp; 
     <input type="submit" value="Edit ?" >
-    </form>	    
-<a href="http://localhost:8080/TestsProjectFes/SignInAction?username=amir&password=1.com">Home Page</a><br>
-	<p onclick="test('1')">Update - Change  issues</p><!-- test working java script in this jsp file -->
+    </form>	  
+         
+    <a href="http://localhost:8080/TestsProjectFes/SignInAction?username=&password=">Back to Home Page</a><br>
+	<p onclick="test('1')">Update - Change/Delete  issues</p><!-- test working java script in this jsp file -->
 	<form  name="searchCODE" action="search_actions">
 		 <input  type="text" name="free_question" size="50">
 		 <input type="submit"	value="SEARCH"><br> 	
 	</form>	
- <br><br>
+    <br><br>
 	<script type="text/javascript">
 	document.write("${result}");
 	</script>	

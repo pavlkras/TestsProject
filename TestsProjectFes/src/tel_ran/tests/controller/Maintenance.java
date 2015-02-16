@@ -17,7 +17,6 @@ import tel_ran.tests.services.interfaces.IMaintenanceService;
 @Scope("session")
 @RequestMapping({"/","/Maintenance"})
 public class Maintenance {
-	boolean flAdminAuthorized = false;
 	@Autowired// аннотация делающая автоматический  вызов через тег в бин.хмл файле.
 	IMaintenanceService maintenanceService;// Это связь интерфейсов , эта переменная дает нам все методы общего интерфейса 
 	/*@RequestMapping({"/Maintenance"})
@@ -123,17 +122,22 @@ public class Maintenance {
 	@RequestMapping({"/search_actions"})
 	public String searchProcessingPage(String category, String free_question, Model model){		
 		/** это метод обновления вопроса, принимает String free_question: Это текст в свободной форме, для поиска вопроса.*/
-		List<String> resultDB = maintenanceService.SearchQuestionInDataBase(free_question, category);	
-		StringBuffer str = new StringBuffer();
-		str.append("<table><tr><td>CATEGORY</td><td>QUESTION</td></tr>");		
-		for( String questionLine :resultDB ){	
-			String line = questionLine.toString();
-			String[] element = line.split("----");
-			str.append("<tr onclick='test("+element[0]+")'><td>"+element[3]+"</td><td>"+element[0]+". "+element[1]+"</td></tr>");
-			rowsCounter++;
-		}	
-		str.append("</table><br>");			
-		model.addAttribute("result", str.toString());// text on page for testing
+		try {
+			List<String> resultDB = maintenanceService.SearchQuestionInDataBase(free_question, category);	
+			StringBuffer str = new StringBuffer();
+			str.append("<table><tr><td>CATEGORY</td><td>QUESTION</td></tr>");		
+			for( String questionLine :resultDB ){	
+				String line = questionLine.toString();
+				String[] element = line.split("----");
+				str.append("<tr onclick='test("+element[0]+")'><td>"+element[3]+"</td><td>"+element[0]+". "+element[1]+"</td></tr>");
+				rowsCounter++;
+			}	
+			str.append("</table><br>");			
+			model.addAttribute("result", str.toString()); // text on page for testing
+		} catch (Exception e) {
+			model.addAttribute("result", e.toString()); // text on page for testing
+		//	e.printStackTrace();
+		}
 		return "MaintenanceUpdatePage";// return too page after action		
 	}
 	/** Промежуточный поиск вопроса для заполнения формы для изменения вопроса : действия системы*/
@@ -189,7 +193,7 @@ public class Maintenance {
 			stringBufferOutResult.append("<input	type='text' name='questionID' value='"+dataFromTables[0]+"' style='visibility: hidden;'><br>");
 			stringBufferOutResult.append("<input type='submit' value='Change Question'>");
 			stringBufferOutResult.append("</form>");
-			stringBufferOutResult.append("<form action='deleteAction'>Delete Question number:<input type='submit' name='questionid' value='"+dataFromTables[0]+"'></form>");
+			stringBufferOutResult.append("<form action='deleteAction'>Delete Question number:<input type='submit' name='questionID' value='"+dataFromTables[0]+"'></form>");
 
 			model.addAttribute("result",stringBufferOutResult.toString());// вывод текста	
 		}else{
@@ -203,8 +207,8 @@ public class Maintenance {
 	/////////////////////////////////// method delete from DB Tables Question and Answer By ID /////////////////////////////
 	////////////////////////////////// returned to MaintenanceUpdatePage. ///////////////////////////////////
 	@RequestMapping({"/deleteAction"})
-	public String deleteFromTablesQuestionAndAnswer(String questionid, Model model){
-		String tempQueryRessult = maintenanceService.deleteQuetionById(questionid);
+	public String deleteFromTablesQuestionAndAnswer(String questionIDdelete, Model model){
+		String tempQueryRessult = maintenanceService.deleteQuetionById(questionIDdelete);
 		model.addAttribute("result",tempQueryRessult);// вывод текста		
 		return "MaintenanceUpdatePage";		
 	}
