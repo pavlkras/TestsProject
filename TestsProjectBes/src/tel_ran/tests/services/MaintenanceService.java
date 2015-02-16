@@ -9,7 +9,14 @@ import org.springframework.transaction.annotation.Transactional;
 import tel_ran.tests.services.interfaces.IMaintenanceService;
 
 public class MaintenanceService extends TestsPersistence implements IMaintenanceService {
-
+    private static boolean flAdminAuthorized = false;
+     @Override
+	public void setAutorization(boolean auth) {
+		MaintenanceService.flAdminAuthorized = auth;
+    }
+     public static boolean isAuthorized(){
+    	 return flAdminAuthorized;
+     }
 	private int j=1;// счетчик правильного ответа 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -178,9 +185,5 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		}	
 		return flagAction;
 	}
-	@Override
-	public void setAutorization(boolean arg0) {
-		// TODO Auto-generated method stub
-
-	}
+	
 }
