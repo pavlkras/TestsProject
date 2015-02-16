@@ -12,6 +12,7 @@ import tel_ran.tests.services.EntityTestDetails;
 import javax.persistence.Embedded;
 
 import tel_ran.tests.services.EntityPerson;
+import tel_ran.tests.services.common.CommonData;
 
 import javax.persistence.ManyToOne;
 @Entity
@@ -57,7 +58,6 @@ public class EntityTestCommon {
 		this.testDate = testDate;
 	}
 	
-	/*
 	@Override
 	public String toString() {
 		StringBuffer strbuf = new StringBuffer();
@@ -69,11 +69,12 @@ public class EntityTestCommon {
 		strbuf.append(CommonData.delimiter);
 		strbuf.append(testDate);
 		strbuf.append(CommonData.delimiter);
-		strbuf.append(person.toString());
+		strbuf.append(entityPerson.toString());
 		strbuf.append(CommonData.delimiter);
-		strbuf.append(testDetails);
+		strbuf.append(entityTestDetails);
 		return strbuf.toString();
-	}*/
+	}
+	
 	public EntityTestDetails getEntityTestDetails() {
 	    return entityTestDetails;
 	}

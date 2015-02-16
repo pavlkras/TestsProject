@@ -3,6 +3,7 @@ package tel_ran.tests.services;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Query;
 
@@ -63,27 +64,29 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 	}
 // 	3.1.4. Viewing test results /// BEGIN ////
 	@Override
-	public List<String> getTestsResultsAll(String companyID) {
+	public List<String> getTestsResultsAll(String companyName) {
 		List<String> res = new ArrayList<String>();
-/*		EntityCompanyTwo company = (EntityCompanyTwo)em.createQuery("SELECT company FROM EntityCompanyTwo WHERE company.c_ID = "+companyID).getSingleResult();
-		List<EntityTestCommon> respose = (List<EntityTestCommon>) em.createQuery(
-				"Select testCommon FROM EntityTestCommon WHERE testCommon.company=").getResultList();
 		
-		for(EntityTestCommon etc:respose){
-			res.add(etc.toString());
-		}*/
+		Company company = (Company) em.createQuery("SELECT c FROM Company c WHERE c.C_Name="+companyName).getSingleResult();
+		Set<EntityPerson> persons = company.getEntityPerson();
+		for(EntityPerson person: persons){
+			List<EntityTestCommon> test_data = (List<EntityTestCommon>) em.createQuery("SELECT t FROM EntityTestCommon WHERE t.entityPerson LIKE :pers").setParameter("pers", person).getResultList();
+			for(EntityTestCommon test:test_data){
+				res.add(test.toString());
+			}
+		}
 		return res;
 	}
 
 	@Override
-	public List<String> getTestsResultsForPersonID(String companyID, int personID) {
+	public List<String> getTestsResultsForPersonID(String companyName, int personID) {
 		
 		
 		return new ArrayList<String>();
 	}
 
 	@Override
-	public List<String> getTestsResultsForTimeInterval(String companyID,
+	public List<String> getTestsResultsForTimeInterval(String companyName,
 			Date date_from, Date date_until) {
 		
 		
@@ -91,7 +94,7 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 	}
 
 	@Override
-	public String getTestsResultsForTestID(String arg0, int arg1) {
+	public String getTestsResultsForTestID(String companyName, int testID) {
 		return "";
 	}
 // 	3.1.4. Viewing test results /// END ////

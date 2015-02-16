@@ -1,6 +1,8 @@
 package tel_ran.tests.services;
 
 import javax.persistence.Embeddable;
+
+import tel_ran.tests.services.common.CommonData;
 @Embeddable
 public class EntityTestDetails {	
 /*
@@ -20,6 +22,21 @@ public class EntityTestDetails {
 	public EntityTestDetails() {
 	}
 
+	@Override
+	public String toString() {
+		StringBuffer strbuf = new StringBuffer();
+		strbuf.append(duration);
+		strbuf.append(CommonData.delimiter);
+		strbuf.append(complexityLevel);
+		strbuf.append(CommonData.delimiter);
+		strbuf.append(quantityRight);
+		strbuf.append(CommonData.delimiter);
+		strbuf.append(quantityWrong);
+		strbuf.append(CommonData.delimiter);
+		strbuf.append(pictures);
+		return strbuf.toString();
+	}
+	
 	public int getDuration() {
 		return duration;
 	}
@@ -60,5 +77,12 @@ public class EntityTestDetails {
 		this.pictures = pictures;
 	}
 	
-	
+	public void addPicture(String picture) { //http-links with delimiters
+		if(this.pictures.length() == 0){
+			this.pictures = picture;
+		}
+		else{
+			this.pictures += CommonData.delimiter + picture;
+		}
+	}
 }
