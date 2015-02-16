@@ -9,23 +9,28 @@ import org.springframework.transaction.annotation.Transactional;
 import tel_ran.tests.services.interfaces.IMaintenanceService;
 
 public class MaintenanceService extends TestsPersistence implements IMaintenanceService {
-    private static boolean flAdminAuthorized = false;
-     @Override
+	private static boolean flAdminAuthorized = false;
+	@Override
 	public void setAutorization(boolean auth) {
 		MaintenanceService.flAdminAuthorized = auth;
-    }
-     public static boolean isAuthorized(){
-    	 return flAdminAuthorized;
-     }
+	}
+	public static boolean isAuthorized(){
+		return flAdminAuthorized;
+	}
 	private int j=1;// счетчик правильного ответа 
 	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW) //аннотация для правильной обработки транзакций между Клиентом и БД
 	public boolean createQuestion(String questionText,String descriptionText, String category,	int level, List<String> answers, int trueAnswerNumber) {
 		boolean flagAction = false;		
-		List<EntityQuestion> res = em.createQuery(// searching  if question not exist
-				"SELECT c FROM EntityQuestion c WHERE c.questionText LIKE :custName").setParameter("custName",questionText).getResultList();
-		if(res.size() == 0){
+		List<EntityQuestion> res;
+		try{
+			res = em.createQuery(// searching  if question not exist	
+					"SELECT c FROM EntityQuestion c WHERE c.questionText LIKE :custName").setParameter("custName",questionText).getResultList();
+		}catch(Exception e){
+			res = null;
+		}
+		if(res == null || res.size() == 0){
 			// creating table question and setting data//
 			EntityQuestion qwtemp = new EntityQuestion();			
 			qwtemp.setQuestion(questionText);
@@ -37,12 +42,15 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 			 * получаем Id внесенного вопроса для привязки к ответам, заносим результат в таблицу Answer-колонку-QuestionKey
 			 * Id get introduced to link the issue to the answers, enter the results in Table Answer-column-QuestionKey 
 			 * */
+			List<EntityAnswer> answersList = new ArrayList<EntityAnswer>();
 			long keyQuestion = qwtemp.getId(); 			
 			//обходим лист стрингов который пришел как параметер  List<String> answers и добавляем ответы в БД
 			for (String answerText : answers) {				
-				addAnswersList(answerText, trueAnswerNumber, keyQuestion); 
+				EntityAnswer ans = addAnswersList(answerText, trueAnswerNumber, keyQuestion); 
+				answersList.add(ans);
 				j++;// счетчик правильного ответа 
 			}
+			qwtemp.setAnswers(answersList);
 			j = 1;
 			flagAction = true;
 		}
@@ -52,8 +60,9 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		return flagAction;// return to client 
 	}
 	////////////////////////////////////////////////////////////////////////////////////
-	/** method for Creating Table Answer in DB 	*/
-	private void addAnswersList(String answer, int trueAnswerNumber, long keyQuestion) {
+	/** method for Creating Table Answer in DB 	
+	 * @return */
+	private EntityAnswer addAnswersList(String answer, int trueAnswerNumber, long keyQuestion) {
 		// creating table answer and setting data//
 		EntityAnswer temp = new EntityAnswer();
 		EntityQuestion quest = em.find(EntityQuestion.class, keyQuestion);		
@@ -65,6 +74,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 			temp.setAnswer(false);//  adding boolean false if this answer not true
 		}
 		em.persist(temp);// sending to DB добавляем данные в БД
+		return temp;
 	}
 	//////////////////////////////////////////////////////////////////////////////////////
 	/** Метод апдейт , берет вопрос и обновляет его данными полученными от администратора CHANGE Question */
@@ -83,8 +93,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		elem.setLevel(level);
 		em.persist(elem);
 		// changing table Answer, adding text 
-		List<EntityAnswer> answersList = em.createQuery(
-				"SELECT c FROM EntityAnswer c WHERE c.questionid="+elem.getId()).getResultList();//searching in DB is question not exist
+		List<EntityAnswer> answersList = elem.getAnswers();//em.createQuery("SELECT c FROM EntityAnswer c WHERE c.questionid="+elem.getId()).getResultList();//searching in DB is question not exist
 		int i=0;	
 		j=1;// counter for answers   
 		for(EntityAnswer text:answersList){					
@@ -120,10 +129,9 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	public String getQuestionById(String questionID) {// method return all attributes from Question and Answer Tables in string line  
 		StringBuffer  outRes = new StringBuffer();
 		long id = (long)Integer.parseInt(questionID);
-		Object question = em.createQuery("SELECT c FROM EntityQuestion c WHERE c.id="+id).getSingleResult();
-		outRes.append(((EntityQuestion) question));
-		List<EntityAnswer> answers = em.createQuery(
-				"SELECT c FROM EntityAnswer c WHERE c.questionid="+id).getResultList();// return to client result of operation
+		EntityQuestion question = (EntityQuestion) em.createQuery("SELECT c FROM EntityQuestion c WHERE c.id="+id).getSingleResult();
+		outRes.append(question);
+		List<EntityAnswer> answers = question.getAnswers(); //em.createQuery("SELECT c FROM EntityAnswer c WHERE c.questionid="+id).getResultList();// return to client result of operation
 		for(EntityAnswer tAn :answers)
 			outRes.append(tAn);			
 		return outRes.toString();// return to client 
@@ -151,7 +159,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		return outMessageTextToJSP_Page ;// return to client 
 	}
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// method for test case group AlexFoox Company
+	// method for test case group AlexFoox Company return id of unique set questions 
 	@SuppressWarnings("unchecked")	
 	@Override  
 	public List<Long> getUniqueSetQuestionsForTest(String category,String level,Long nQuestion){
@@ -174,7 +182,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	public boolean FillDataBaseFromTextResource(List<String> inputParsedText) {//adding in database questions and answers from local file
 		boolean flagAction = false;
 		for(String line: inputParsedText){ 
-			String[] question_Parts = line.split("----"); 
+			String[] question_Parts = line.split("----"); //delimiter for text
 			Integer trueAnswerNumber = Integer.parseInt(question_Parts[8]); 
 			List<String> answers = new ArrayList<String>();
 			answers.add(question_Parts[4]);		answers.add(question_Parts[5]);
@@ -185,5 +193,5 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		}	
 		return flagAction;
 	}
-	
+
 }
