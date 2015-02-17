@@ -16,7 +16,11 @@ public class EntityAnswer {
 	private String answerText;
 	@ManyToOne	
 	private EntityQuestion questionid;
-
+	
+	public long getId() {
+		return id;
+	}
+	
 	public boolean isAnswer() {
 		return isAnswer;
 	}

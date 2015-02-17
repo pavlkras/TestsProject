@@ -2,6 +2,7 @@ package tel_ran.tests.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,6 +60,10 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		}
 		return flagAction;// return to client 
 	}
+	
+
+	
+	
 	////////////////////////////////////////////////////////////////////////////////////
 	/** method for Creating Table Answer in DB 	
 	 * @return */
@@ -182,7 +187,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	public boolean FillDataBaseFromTextResource(List<String> inputParsedText) {//adding in database questions and answers from local file
 		boolean flagAction = false;
 		for(String line: inputParsedText){ 
-			String[] question_Parts = line.split("----"); //delimiter for text
+			String[] question_Parts = line.split(":;;:"); //delimiter for text
 			Integer trueAnswerNumber = Integer.parseInt(question_Parts[8]); 
 			List<String> answers = new ArrayList<String>();
 			answers.add(question_Parts[4]);		answers.add(question_Parts[5]);

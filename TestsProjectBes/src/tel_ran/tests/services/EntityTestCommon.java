@@ -19,8 +19,6 @@ import javax.persistence.ManyToOne;
 
 import org.json.simple.JSONObject;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 @Entity
 @Table(name="TEST_COMMON")
 public class EntityTestCommon {
@@ -81,18 +79,18 @@ public class EntityTestCommon {
 		strbuf.append(entityTestDetails);
 		return strbuf.toString();
 	}
-	public JSONObject toJson()
-	{
-		JSONObject json = new JSONObject();
-		json.put("testid",testID);
-		json.put("testCategory",testCategory);
-		json.put("testName", testName);
-		json.put("testDate", testDate);
-		json.put("entityPerson", entityPerson);
-		json.put("entityTestDetails", entityTestDetails);
-		System.out.println(json);
-		return json;
-	}
+//	public JSONObject toJson()
+//	{
+//		JSONObject json = new JSONObject();
+//		json.put("testid",testID);
+//		json.put("testCategory",testCategory);
+//		json.put("testName", testName);
+//		json.put("testDate", testDate);
+//		json.put("entityPerson", entityPerson);
+//		json.put("entityTestDetails", entityTestDetails);
+//		System.out.println(json);
+//		return json;
+//	}
 	public EntityTestDetails getEntityTestDetails() {
 	    return entityTestDetails;
 	}
