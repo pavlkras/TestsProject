@@ -17,49 +17,26 @@ public class PersonalActionsService extends TestsPersistence implements IPersona
 	return allCategories;
 	}
 	
-	@Override
-	public String getMaxCategoryQuestions(String catName) {
-	String query = "SELECT q FROM EntityQuestion q WHERE q.category=?1";
-	Query q = em.createQuery(query);
-	q.setParameter(1, catName);
-	List<EntityQuestion> qlist = q.getResultList();
-	String res = String.valueOf(qlist.size());
-	return res;
-	}
 	
 	@Override
-	public int testCreationService(String userId) {
-	return 0;
+	public List<String> getComplexityLevelList() {
+		String query = "Select DISTINCT q.level FROM EntityQuestion q ORDER BY q.level";
+		Query q = em.createQuery(query);
+		List<String> allLevels = q.getResultList();
+		
+		return allLevels;
 	}
-	
+
 	@Override
-	public boolean saveUserService(String[] args) {
-	return false;
-	}
-	
-	@Override
-	public String[] loadUserservice(String userId) {
-	return null;
-	}
-	
-	@Override
-	public int testCreationByCategory(String userId, String category, int level, int qAmount) {
-	return 0;
-	}
-	
-	@Override
-	public String[] loadTestService(int id) {
-	return null;
-	}
-	
-	@Override
-	public List<Integer> getLevelsList() {
-	return null;
-	}
-	
-	@Override
-	public String loadXMLTest(int id) {
-	return null;
+	public String getMaxCategoryLevelQuestions(String catName,
+			String complexityLevel) {
+		String query = "SELECT q FROM EntityQuestion q WHERE q.category=?1 AND q.level=?2";
+		Query q = em.createQuery(query);
+		q.setParameter(1, catName);
+		q.setParameter(2, Integer.parseInt(complexityLevel));
+		List<EntityQuestion> qlist = q.getResultList();
+		String res = String.valueOf(qlist.size());
+		return res;
 	}
 	
 }
