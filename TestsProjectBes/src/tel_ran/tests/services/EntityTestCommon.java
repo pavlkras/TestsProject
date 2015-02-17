@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 
 import tel_ran.tests.services.EntityTestDetails;
@@ -21,13 +22,14 @@ public class EntityTestCommon {
 	@Id
 	@GeneratedValue
 	private int testID;
-	private String testCategory;
-	private String testName;
+	private String testCategory = "";
+	private String testName = "";
 	private Date testDate;
 	
 	@Embedded
 	private EntityTestDetails entityTestDetails;
 	@ManyToOne
+	@JoinColumn(name="personID")
 	private EntityPerson entityPerson;
 	
 	public EntityTestCommon() {

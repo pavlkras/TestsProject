@@ -78,7 +78,7 @@ public class EntityTestDetails {
 	}
 	
 	public void addPicture(String picture) { //http-links with delimiters
-		if(this.pictures.length() == 0){
+		if(this.pictures==null||this.pictures.length() == 0){
 			this.pictures = picture;
 		}
 		else{

@@ -1,7 +1,9 @@
 package tel_ran.tests.services;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 
 import tel_ran.tests.services.common.CommonData;
@@ -11,6 +13,7 @@ import javax.persistence.ManyToOne;
 
 import tel_ran.tests.services.EntityTestCommon;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.OneToMany;
@@ -20,12 +23,15 @@ public class EntityPerson {
     @Id
     @GeneratedValue
     private int person_id;
-    private String f_name;
-    private String l_name;
+    @Column(name="firstName")
+    private String f_name = "";
+    @Column(name="lastName")
+    private String l_name = "";
 	@ManyToOne
+	@JoinColumn(name="CompanyName")
 	private Company company;
 	@OneToMany(mappedBy = "entityPerson")
-	private List<EntityTestCommon> entityTestCommon;
+	private List<EntityTestCommon> entityTestCommon = new ArrayList<EntityTestCommon>();
 	public EntityPerson() {
     }
 

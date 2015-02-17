@@ -16,12 +16,13 @@ public class Company {
 	
 	//// Added by Igor ////
 	@OneToMany(mappedBy = "company")
-	private Set<EntityPerson> entityPerson;
+	private Set<EntityPerson> personsSet = new HashSet<EntityPerson>();
+	
 	public Set<EntityPerson> getEntityPerson() {
-	    return entityPerson;
+	    return personsSet;
 	}
 	public void setEntityPerson(Set<EntityPerson> param) {
-	    this.entityPerson = param;
+	    this.personsSet = param;
 	}
 	//// End of Adding ////
 
