@@ -2,16 +2,18 @@ package tel_ran.tests.services;
 
 import javax.persistence.Embeddable;
 
+import org.json.simple.JSONObject;
+
 import tel_ran.tests.services.common.CommonData;
 @Embeddable
 public class EntityTestDetails {	
 /*
- 	•	Test duration  
-	•	Number of the questions
-	•	Complexity level
-	•	Number of the right answers with the percentage 
-	•	Number of the wrong answers with the percentage
-	•	5 photos made during the test
+ 	ï¿½	Test duration  
+	ï¿½	Number of the questions
+	ï¿½	Complexity level
+	ï¿½	Number of the right answers with the percentage 
+	ï¿½	Number of the wrong answers with the percentage
+	ï¿½	5 photos made during the test
 	*/
 	private int duration;
 	private int complexityLevel;
@@ -36,7 +38,18 @@ public class EntityTestDetails {
 		strbuf.append(pictures);
 		return strbuf.toString();
 	}
-	
+	public JSONObject toJson()
+	{
+		JSONObject json = new JSONObject();
+		json.put("duration",duration);
+		json.put("complexityLevel",complexityLevel);
+		json.put("quantityRight", quantityRight);
+		json.put("quantityWrong", quantityWrong);
+		json.put("pictures", pictures);
+		
+		System.out.println(json);
+		return json;
+	}
 	public int getDuration() {
 		return duration;
 	}

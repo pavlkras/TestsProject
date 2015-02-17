@@ -6,6 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 
+
 import tel_ran.tests.services.common.CommonData;
 import tel_ran.tests.services.Company;
 
