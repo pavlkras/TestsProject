@@ -76,25 +76,26 @@ display: none;
 <br>
 <a class="myButton" href='#' onclick="ClickLoadFromFile()">Adding questions from file</a>
 <a class="myButton" href='http://localhost:8080/TestsProjectFes/'>...</a>
-</div>
+ </div>
 <div id="fileaddform" class="fileaddform">
 	<p>Auto Complete Data Base from external file</p>
 	<br> Please choice specific file to fill data base
 	<br>
-	<form action="http://localhost:8080/TestsProjectFes/add_from_file_actions" onsubmit="getTextPost(1)">
-	<!-- input for file not work correctly for this method -->		
-	<!-- this method is input full patch for correct work adding from file on user computer -->
-	<input type="text" name="file_name" value="D:/developer-workspaces/out_project/repository/tr-project/bild.txt" size="100" >
-	<br>
-	<input type="file" name="fileName"><br> 		
-	<input type="submit" class="myButton">
-	</form>
-	</div>
+	<form action="add_from_file_actions">
+ 	 <input type="file" name="file_name" id="loaded_file" multiple>
+  	 <br>   
+  	<input type="submit">
+ 	</form>
+ <br>
+</div>
 	<br>
 	<p>
 	<script type="text/javascript">
 		document.write("${result}");
 	</script>
 	</p>
+<script>
+var control = document.getElementById("loaded_file");
+</script>
 </body>
 </html>
