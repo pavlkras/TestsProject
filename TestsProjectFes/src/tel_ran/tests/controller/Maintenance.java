@@ -1,9 +1,7 @@
 package tel_ran.tests.controller;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -25,7 +23,7 @@ public class Maintenance {
 	public String authorize(String usernamem, String passwordm){
 		boolean fl = false;
 		if(usernamem.equalsIgnoreCase("true")){
-		fl = true;
+			fl = true;
 		}
 		maintenanceService.setAutorization(fl);// setter flAutorization on Service.
 		return "MaintenanceSignInPage";
@@ -240,5 +238,5 @@ public class Maintenance {
 			model.addAttribute("result","Exception: can't read from file");
 		}
 		return 	"MaintenanceSignInPage";// return too page after action
-	}
+	}	
 }
