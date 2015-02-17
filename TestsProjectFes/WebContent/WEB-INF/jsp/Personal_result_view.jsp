@@ -10,11 +10,16 @@
 <title>Category choice</title>
 <script type="text/javascript">
 
-function checkCategory(){
+function checkCategoryAndLevel(){
     var category = document.getElementById("catname").selectedIndex;
+    var clevel = document.getElementById("level").selectedIndex;
     if(category == 0 || category == -1){
-       alert("Please, choose category!!!");
+       alert("Please, choose category of questions!!!");
        return false;
+    }
+    else if(clevel == 0 || clevel == -1){
+    	alert("Please, choose complexity level of questions!!!");
+    	return false;
     }
     else
        return true;
@@ -25,16 +30,25 @@ function checkCategory(){
 
 <body>
 
-<form action="add_questions_count" onsubmit="return checkCategory()">
+<form action="add_questions_count" onsubmit="return checkCategoryAndLevel()">
 
     <table class="tab">
 
     <tr>
     <th>Select category:</th>
     <td>
-    <form:select id="catname" name="catName" path="categoryNames">
+    <form:select id="catname" name="catName" path="categoryNames" >
     <form:option value="NONE" label="-SELECT-"></form:option>
     <form:options items="${categoryNames}" />
+    </form:select>
+    </td>
+    </tr>
+    <tr>
+    <th>Select complexity level:</th>
+    <td>
+    <form:select id="level" name="levelName" path="cLevels">
+    <form:option value="NONE" label="-SELECT-"></form:option>
+    <form:options items="${cLevels}" />
     </form:select>
     </td>
     </tr>

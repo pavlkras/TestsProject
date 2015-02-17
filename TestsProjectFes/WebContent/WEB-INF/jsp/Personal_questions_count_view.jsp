@@ -27,8 +27,9 @@ function checkQuestionsNumber(){
 <body>
 <div>
 <pre id="info">
-You have chosen category <span id="cname">${catName}</span> 
-with maximal number of questions <span id="maxnum">${questionsCountByCategory}</span>
+You have chosen category <span id="cname">${catName}</span>
+                complexity level <span id="clevel">${levelName}</span> 
+with maximal number of questions <span id="maxnum">${questionsCountByCategoryLevel}</span>
 </pre>
 </div>
 <br>
