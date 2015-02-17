@@ -11,24 +11,25 @@
 <link href="<c:url value="/static/css/general.css" />" rel="stylesheet">
 <link href="<c:url value="/static/css/choose.css" />" rel="stylesheet">
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Test's params</title>
+<title>Result mode</title>
 </head>
 <body>
-	<div class="header">
-		<h1 class="title">Test's params</h1>
-		<h3 class="subtitle">Choose your test</h3>
-	</div>
-
 	<p>User in session: ${logedUserId}</p>
+	<h1>Result Mode</h1>
+	
+	<p>Test duration: ${time}</p>
+	<p>Results: </p><br>
+     <c:forEach items="${resultsList}" var="element">
+			<p>"${element}"</p>
+	</c:forEach>
+	<br>
+	<p>Number of right answers: "${rightAnswers}"</p>
+	<p>Number of wrong answers: "${wrongAnswers}"</p>
 
-	<ul>
-		<li>some user's actions</li>
-		<li><p>Created test with ID: ${testId}</p></li>
-		<li><p>Category: ${category}</p></li>
-		<li><p>Questions level: ${level}</p></li>
-		<li><p>Questions quantity: ${quantity}</p></li>
-		<li><a href="test_run">Start test</a></li>
+<ul>
+<li><a href="Personal_result_view">Try again</a></li>
 
-	</ul>
+</ul>	
+	 
 </body>
 </html>
