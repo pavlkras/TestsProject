@@ -17,6 +17,7 @@ public class PersonalActions {
 	
 	int personId;
 	private String categoryName = null;
+	private String level = null;
 	private String chosenQuestionsQuantity = null;
 	
 	@Autowired
@@ -28,19 +29,23 @@ public class PersonalActions {
 	}
 	
 	@RequestMapping(value = "/Personal_result_view")
-	public String allCategoriesSelection(Model model){
+    public String allCategoriesAndLevelsSelection(Model model){
 		
 		List<String> allCategories = personalService.getCategoriesList();
-		model.addAttribute("categoryNames", allCategories);		
+		List<String> allLevels = personalService.getComplexityLevelList();
+		model.addAttribute("categoryNames", allCategories);
+		model.addAttribute("cLevels", allLevels);
 		return "Personal_result_view";
 	}
 	
 	@RequestMapping({"add_questions_count"})
-	public String addCategoryMaxQuestionsNumber(String catName, Model model){
+	public String addCategoryLevelMaxQuestionsNumber(String catName, String levelName, Model model){
 		categoryName = catName;
-		String questionsCountByCategory = personalService.getMaxCategoryQuestions(catName);
+		level = levelName;
+		String questionsCountByCategoryLevel = personalService.getMaxCategoryLevelQuestions(categoryName, level);
 		model.addAttribute("catName", categoryName);
-		model.addAttribute("questionsCountByCategory", questionsCountByCategory);
+		model.addAttribute("levelName", level);
+		model.addAttribute("questionsCountByCategoryLevel", questionsCountByCategoryLevel);
 		return "Personal_questions_count_view";
 	}
 	
@@ -48,7 +53,8 @@ public class PersonalActions {
 	public String testPreparing(String qnumber, Model model){
 		chosenQuestionsQuantity = qnumber;
 		model.addAttribute("param1", categoryName);
-		model.addAttribute("param2", chosenQuestionsQuantity);
+		model.addAttribute("param2", level);
+		model.addAttribute("param3", chosenQuestionsQuantity);
 		return "Personal_test_preparing_view";
 	}
 }

@@ -21,8 +21,12 @@
 <td>${param1}</td>
 </tr>
 <tr>
-<td>Questions quantity:</td>
+<td>Complexity level:</td>
 <td>${param2}</td>
+</tr>
+<tr>
+<td>Questions quantity:</td>
+<td>${param3}</td>
 </tr>
 <tr>
 <td colspan="2"><input class="button" type="submit" value="Create test"/></td>
