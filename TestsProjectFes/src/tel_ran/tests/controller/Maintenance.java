@@ -218,10 +218,10 @@ public class Maintenance {
 		4.	The user choose the file with questions data and press button “Add”
 		5.	The System reads the selected file, parsers data and adds new questions to Database. 
 		6.	The System shows the number of the added questions. Note: Added questions  may be seen in the table after browser refresh*/
-	/** ДОБАВЛЕНИЕ БОЛЬШОГО КОЛИЧЕСТВА ВОПРОСОВ ОДНОВРЕМЕННО С ПОМОЩЬЮ ФАЙЛА :действия разрешены Администратору системы */
+/** ДОБАВЛЕНИЕ БОЛЬШОГО КОЛИЧЕСТВА ВОПРОСОВ ОДНОВРЕМЕННО С ПОМОЩЬЮ ФАЙЛА :действия разрешены Администратору системы */
 	@SuppressWarnings("resource")
 	@RequestMapping({"/add_from_file_actions"})
-	public String addFromFileProcessingPage(String file_name, Model model){		
+	public String addFromFileProcessingPage(String file_name, Model model){	
 		List<String> res = new ArrayList<String>();
 		String line; 
 		BufferedReader input;
@@ -232,9 +232,13 @@ public class Maintenance {
 			}
 			boolean actionRes = maintenanceService.FillDataBaseFromTextResource(res);	
 			model.addAttribute("result"," Adding Questions is - "+actionRes);// вывод текста
-		} catch (Exception e) {			
-			model.addAttribute("result","File not Found");// out text to Page
-		} 	
+		} catch (ClassCastException e) {			
+			model.addAttribute("result","User is not authorized"); // out text to Page
+		} catch (FileNotFoundException e){
+			model.addAttribute("result","Exception: file not found");
+		} catch (IOException e) {
+			model.addAttribute("result","Exception: can't read from file");
+		}
 		return 	"MaintenanceSignInPage";// return too page after action
 	}
 }
