@@ -10,6 +10,9 @@ class CompanyTestsResutlsHandler {
 	//parser of bes response for common tests results
 	static String compileToViewTestCommon(List<String> bes_response) {
 		String defaultColumnName = "Column"; // the default name for columns in the output table. Will apply if bes_response contains one string only
+		
+		if(bes_response.size() < 1) return "Error";
+		
 		String rowAr [] = bes_response.get(0).split(delimiter);
 		int columnCount = rowAr.length;
 		StringBuffer output = new StringBuffer();
