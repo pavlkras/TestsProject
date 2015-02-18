@@ -65,13 +65,21 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 // 	3.1.4. Viewing test results /// BEGIN ////
 	@Override
 	public List<String> getTestsResultsAll(String companyName) {
-		List<String> res = new ArrayList<String>();
+		Company company = null;
+		try{
+			company = (Company)em.createQuery("SELECT c FROM Company c WHERE c.C_Name = '"+companyName+"'").getSingleResult();
+		}catch(Exception e){
+			List <String> error = new ArrayList<String>();
+			error.add("Error: Company with the name "+companyName+" wasn't found"); 
+			return error;
+		}
 		
-		Company company = (Company) em.createQuery("SELECT c FROM Company c WHERE c.C_Name="+companyName).getSingleResult();
-		Set<EntityPerson> persons = company.getEntityPerson();
-		for(EntityPerson person: persons){
-			List<EntityTestCommon> test_data = (List<EntityTestCommon>) em.createQuery("SELECT t FROM EntityTestCommon WHERE t.entityPerson LIKE :pers").setParameter("pers", person).getResultList();
-			for(EntityTestCommon test:test_data){
+		System.out.println("Site: "+company.getC_Site());
+		List<EntityTestCommon> testsData = (List<EntityTestCommon>) em.createQuery("SELECT t FROM EntityPerson p JOIN p.entityTestCommon t WHERE p.company = :company").setParameter("company", company).getResultList();
+		System.out.println("Number of tests gotten from DB: "+testsData.size());
+		List<String> res = new ArrayList<String>();
+		if( testsData.size() > 0 ){
+			for(EntityTestCommon test:testsData){
 				res.add(test.toString());
 			}
 		}
