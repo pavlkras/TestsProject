@@ -82,7 +82,7 @@ display: none;
 	<br> Please choice specific file to fill data base
 	<br>
 	<form action="add_from_file_actions">
- 	 <input type="file" name="file_name" id="loaded_file">
+ 	 <input type="file" name="file_name" id="loaded_file" required="required">
   	 <br>   
   	<input type="submit">
  	</form>
