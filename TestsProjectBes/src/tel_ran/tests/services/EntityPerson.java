@@ -1,4 +1,5 @@
 package tel_ran.tests.services;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -31,7 +32,7 @@ public class EntityPerson {
 	@ManyToOne
 	@JoinColumn(name="CompanyName")
 	private Company company;
-	@OneToMany(mappedBy = "entityPerson")
+	@OneToMany(targetEntity = EntityTestCommon.class, mappedBy = "entityPerson", cascade = CascadeType.ALL)
 	private List<EntityTestCommon> entityTestCommon = new ArrayList<EntityTestCommon>();
 	public EntityPerson() {
     }
