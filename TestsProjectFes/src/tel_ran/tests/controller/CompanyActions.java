@@ -3,6 +3,7 @@ package tel_ran.tests.controller;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -196,10 +197,14 @@ Normal Flow:
 
 		boolean errorlevel = false;
 		String res = "";
-		List<String> bes_response = null;
+		List<String> bes_response = new ArrayList<String>();
 
 		if(request_type.equals("all")){
-			bes_response = companyService.getTestsResultsAll(companyName);
+			List<String> temp = companyService.getTestsResultsAll("Comp2");  //Changed for test
+			//List<String> temp = companyService.getTestsResultsAll(companyName);  //Above is changed for test
+			if(temp != null){
+				bes_response = temp; 
+			}
 
 		}else if(request_type.equals("time_interval")){
 			Date date_from_ = null;
