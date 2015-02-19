@@ -168,18 +168,50 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	@SuppressWarnings("unchecked")	
 	@Override  
 	public List<Long> getUniqueSetQuestionsForTest(String category,String level,Long nQuestion){
-		List<Long> outRes = new ArrayList<Long>();	
-		List<EntityQuestion> question = em.createQuery(
-				"SELECT c FROM EntityQuestion c WHERE c.category LIKE :custName").setParameter("custName",category).getResultList();
-		for(EntityQuestion q: question){
-			if(Integer.parseInt(level) == q.getLevel()){
-				if(nQuestion >=0 ){
-					outRes.add(q.getId());
-					nQuestion--;
+	List<Long> outRes = new ArrayList<Long>();	
+		if(nQuestion > 0){
+			try{
+				int levelQuestion = Integer.parseInt(level);
+				int numbQuestions = nQuestion.intValue();
+				String[] categories = category.split(",");
+				StringBuffer[] categories1 = new StringBuffer[categories.length];
+				StringBuffer condition = new StringBuffer();
+				for(int i=0; i<categories.length; i++){
+					String str = "%" + categories[i] + "%";
+					categories1[i] = new StringBuffer(str);
+					if(i < (categories.length - 1)){
+						condition.append("(c.category LIKE ?" + (i+2) + ") OR "); 
+					}
+					else{
+						condition.append("(c.category LIKE ?" + (i+2) + ")");
+					}
 				}
+				Query query = em.createQuery("SELECT c.id FROM EntityQuestion c WHERE (c.level=?1) AND (" + condition.toString() + ")");
+				System.out.println("qyery: " + "SELECT c.id FROM EntityQuestion c WHERE (c.level=?1) AND (" + condition.toString()+")");
+				query.setParameter(1, levelQuestion);
+				for(int i=0; i<categories.length; i++){
+					query.setParameter((i+2), categories1[i].toString());
+					System.out.println("parametr "+ (i+2) + " " + categories1[i].toString());
+				}
+				List<Long> res = query.getResultList();
+				if(res.size() > 0){ 
+					if(res.size() <= numbQuestions){
+						outRes = res;
+					}
+					else{
+						for(int i=0; i<numbQuestions; i++){
+							Random rnd = new Random();
+							int rand =  rnd.nextInt(res.size()) + 1;
+							System.out.println("random = " + rand);
+							outRes.add(res.get(rand));
+						}
+					}
+				}
+			}catch (NumberFormatException ex){
+				outRes = null;
 			}
 		}
-		return outRes;// return to any application case client, specific query.
+		return outRes;      // return to any application case client, specific id question
 	}
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	@Override
