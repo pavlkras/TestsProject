@@ -187,11 +187,9 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 					}
 				}
 				Query query = em.createQuery("SELECT c.id FROM EntityQuestion c WHERE (c.level=?1) AND (" + condition.toString() + ")");
-				System.out.println("qyery: " + "SELECT c.id FROM EntityQuestion c WHERE (c.level=?1) AND (" + condition.toString()+")");
 				query.setParameter(1, levelQuestion);
 				for(int i=0; i<categories.length; i++){
 					query.setParameter((i+2), categories1[i].toString());
-					System.out.println("parametr "+ (i+2) + " " + categories1[i].toString());
 				}
 				List<Long> res = query.getResultList();
 				if(res.size() > 0){ 
@@ -202,7 +200,6 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 						for(int i=0; i<numbQuestions; i++){
 							Random rnd = new Random();
 							int rand =  rnd.nextInt(res.size()) + 1;
-							System.out.println("random = " + rand);
 							outRes.add(res.get(rand));
 						}
 					}
