@@ -13,6 +13,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -23,6 +25,39 @@ import tel_ran.tests.services.interfaces.IPersonalActionsService;
 public class PersonalActionsService extends TestsPersistence implements
 		IPersonalActionsService {
 
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+	public boolean saveUserService(String[] userArgs) {
+		boolean result = false;
+
+		if (em.find(EntityUser.class, userArgs[ID]) == null) {
+			EntityUser user = new EntityUser();
+			user.setId(userArgs[ID]);
+			user.setName(userArgs[NAME]);
+			user.setPassword(userArgs[PASSWORD]);
+			user.setEmail(userArgs[EMAIL]);
+			em.persist(user);
+
+			result = true;
+		}
+		return result;
+	}
+	
+	@Override
+	public String[] loadUserservice(String userId) {
+		String[] result = new String[USER_FIELDS];
+		EntityUser resUser = new EntityUser();
+		if ((resUser = em.find(EntityUser.class, userId)) != null) {
+			result[ID] = resUser.getId();
+			result[NAME] = resUser.getName();
+			result[PASSWORD] = resUser.getPassword();
+			result[EMAIL] = resUser.getEmail();
+		} else
+			result = null;
+
+		return result;
+	}
+	
 	@Override
 	public List<String> getCategoriesList() {
 		String query = "Select DISTINCT q.category FROM EntityQuestion q ORDER BY q.category";
@@ -185,22 +220,11 @@ public class PersonalActionsService extends TestsPersistence implements
 		return node;
 	}
 
-	@Override
-	public String[] loadUserservice(String arg0) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public String loadXMLTest(int arg0) {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public boolean saveUserService(String[] arg0) {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 }
