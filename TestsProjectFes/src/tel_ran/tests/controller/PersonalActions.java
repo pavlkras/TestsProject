@@ -3,6 +3,7 @@ package tel_ran.tests.controller;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.DocumentBuilder;
@@ -12,8 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -23,12 +26,16 @@ import org.xml.sax.InputSource;
 import tel_ran.tests.model.Answer;
 import tel_ran.tests.model.Question;
 import tel_ran.tests.model.Test;
+import tel_ran.tests.model.User;
 import tel_ran.tests.services.interfaces.IPersonalActionsService;
 
 @Controller
 @Scope("session")
 @RequestMapping({"/","/PersonalActions"})
 public class PersonalActions {
+	
+	@Autowired
+	IPersonalActionsService personalService;
 	
 	int personId;
 	private String categoryName = null;
@@ -45,14 +52,85 @@ public class PersonalActions {
 	
 	private List<Answer> receivedAnswers = new ArrayList<Answer>();
 	
-	@Autowired
-	IPersonalActionsService personalService;
+//
+//	@RequestMapping({"/PersonalActions"})
+//	public String signIn(String usernamep,String passwordp){
+//		
+//		return "PersonalSignIn";
+//	}
+	
+	@RequestMapping({ "/PersonalActions" })
+	public String login_page(Map<String, Object> model,
+			HttpServletRequest request, Model pageModel) {
+		User sessionUser = (User) request.getSession()
+				.getAttribute("logedUser");
+		if (sessionUser != null) {
 
-	@RequestMapping({"/PersonalActions"})
-	public String signIn(String usernamep,String passwordp){
+			return "Personal_user_home";
+		}
+		User userForm = new User();
+		model.put("userForm", userForm);
+
+		String login = request.getParameter("login");
 		
-		return "PersonalSignIn";
+		
+		return login != null ? "Personal_login_page" : "Personal_sign_up";
 	}
+	
+	@RequestMapping(value = "/login_action", method = {RequestMethod.POST, RequestMethod.GET})
+	public String login_action(@ModelAttribute("userForm") User user, HttpServletRequest request,
+			Map<String, Object> model, Model pageModel) {
+		String sign_up = request.getParameter("sign_up");
+		if(sign_up != null){
+			return "Personal_sign_up";
+		}
+		String[] getUser = personalService.loadUserservice(user.getId());
+		if (getUser != null) {
+			User inDB = new User(getUser);
+			if (user.getPassword().equals(inDB.getPassword())) {
+				pageModel.addAttribute("logedUser", user);
+				return "Personal_user_home";
+			} else
+				return "Personal_wrong_password";
+		}
+		pageModel.addAttribute("logedUser", "user's not found");
+
+		return "Personal_login_page";
+	}
+
+	@RequestMapping(value = "/signup_action", method = RequestMethod.POST)
+	public String signup_action(@ModelAttribute("userForm") User user, HttpServletRequest request,
+			Map<String, Object> model, Model pageModel) {
+		String login = request.getParameter("login");
+		if(login != null){
+			return "Personal_login_page";
+		}
+		if (personalService.loadUserservice(user.getId()) == null) {
+			String id = user.getId();
+			String name = user.getName();
+			String password = user.getPassword();
+			String email = user.getEmail();
+			String[] userArgs = { id, name, password, email };
+			personalService.saveUserService(userArgs);
+			pageModel.addAttribute("logedUser", user);
+
+			return "Personal_user_home";
+		}
+
+		else if (user.getId() != null)
+			return "Personal_existing_user";
+
+		return "Personal_signup_failure";
+	}
+
+	@RequestMapping({ "/web_cam" })
+	public String web_cam(Map<String, Object> model) {
+		User userForm = new User();
+		model.put("userForm", userForm);
+
+		return "web_cam";
+	}
+	
 	
 	@RequestMapping(value = "/Personal_result_view")
     public String allCategoriesAndLevelsSelection(Model model){
