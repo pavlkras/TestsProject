@@ -20,6 +20,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import tel_ran.tests.services.interfaces.IPersonalActionsService;
 
 public class PersonalActionsService extends TestsPersistence implements
@@ -38,6 +41,7 @@ public class PersonalActionsService extends TestsPersistence implements
 			user.setEmail(userArgs[EMAIL]);
 			em.persist(user);
 
+			
 			result = true;
 		}
 		return result;
@@ -128,8 +132,18 @@ public class PersonalActionsService extends TestsPersistence implements
 			}
 			questionList = setQuestList(newQuestList);
 		}
-
-		return loadXMLQuestions(questionList);
+		
+		ObjectMapper mapper = new ObjectMapper();
+		String text = "";
+		try {
+			text = mapper.writeValueAsString(questionList);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println(text);
+//		loadXMLQuestions(questionList);
+		return text;
 	}
 	
 	private List<EntityQuestion> setQuestList(List<EntityQuestion> newQuestList) {
