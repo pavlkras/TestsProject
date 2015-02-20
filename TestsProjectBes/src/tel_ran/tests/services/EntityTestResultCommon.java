@@ -2,22 +2,13 @@ package tel_ran.tests.services;
 
 import java.util.Date;
 
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Table;
-
-import tel_ran.tests.services.EntityTestResultDetails;
-
-import javax.persistence.Embedded;
-
-import tel_ran.tests.services.EntityPerson;
-import tel_ran.tests.services.common.CommonData;
-
 import javax.persistence.ManyToOne;
-
-import org.json.simple.JSONObject;
+import javax.persistence.Table;
 
 @Entity
 @Table(name="TEST_RESULTS")
@@ -79,7 +70,7 @@ public class EntityTestResultCommon {
 		return this.toJson().toJSONString();
 	}*/
 
-public JSONObject toJson()
+/*public JSONObject toJson()
 	{
 		JSONObject json = new JSONObject();
 		json.put("testid",testID);
@@ -90,7 +81,7 @@ public JSONObject toJson()
 		json.put("entityTestDetails", entityTestDetails);
 		System.out.println(json);
 		return json;
-	}
+	}*/
 	public EntityTestResultDetails getEntityTestDetails() {
 	    return entityTestDetails;
 	}

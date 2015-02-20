@@ -63,9 +63,13 @@ public class EntityQuestion implements Serializable {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	private String DELIMITER = "----";
+
 	@Override
 	public String toString() {
-		return id + DELIMITER + questionText+ DELIMITER + description + DELIMITER + category+ DELIMITER + level+ DELIMITER;
+		return id + MaintenanceService.DELIMITER + 
+				questionText+ MaintenanceService.DELIMITER + 
+				description + MaintenanceService.DELIMITER + 
+				category+ MaintenanceService.DELIMITER + 
+				level+ MaintenanceService.DELIMITER;
 	}	
 }

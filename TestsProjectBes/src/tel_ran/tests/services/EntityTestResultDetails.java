@@ -2,8 +2,6 @@ package tel_ran.tests.services;
 
 import javax.persistence.Embeddable;
 
-import org.json.simple.JSONObject;
-
 import tel_ran.tests.services.common.CommonData;
 @Embeddable
 public class EntityTestResultDetails {	
@@ -38,7 +36,7 @@ public class EntityTestResultDetails {
 		strbuf.append(pictures);
 		return strbuf.toString();
 	}
-	public JSONObject toJson()
+/*	public JSONObject toJson()
 	{
 		JSONObject json = new JSONObject();
 		json.put("duration",duration);
@@ -49,7 +47,7 @@ public class EntityTestResultDetails {
 
 		System.out.println(json);
 		return json;
-	}
+	}*/
 	public int getDuration() {
 		return duration;
 	}

@@ -16,11 +16,11 @@ public class EntityAnswer {
 	private String answerText;
 	@ManyToOne	
 	private EntityQuestion questionid;
-	
+
 	public long getId() {
 		return id;
 	}
-	
+
 	public boolean isAnswer() {
 		return isAnswer;
 	}
@@ -39,10 +39,11 @@ public class EntityAnswer {
 	public void setQuestionId(EntityQuestion quest) {
 		this.questionid = quest;
 	}
-	private String DELIMITER = "----";
+
 	@Override
 	public String toString() {
-		return answerText +DELIMITER+isAnswer+DELIMITER;
+		return answerText + MaintenanceService.DELIMITER +
+				isAnswer+ MaintenanceService.DELIMITER;
 	}
 
 
