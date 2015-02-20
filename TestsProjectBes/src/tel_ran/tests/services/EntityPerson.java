@@ -35,6 +35,7 @@ public class EntityPerson {
 	@OneToMany(targetEntity = EntityTestCommon.class, mappedBy = "entityPerson", cascade = CascadeType.ALL)
 	private List<EntityTestCommon> entityTestCommon = new ArrayList<EntityTestCommon>();
 	public EntityPerson() {
+		
     }
 
     @Override
