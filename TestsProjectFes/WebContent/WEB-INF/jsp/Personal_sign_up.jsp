@@ -17,10 +17,6 @@
 <h1 class= "title">Sign up page</h1>
 <h3 class = "subtitle">Testing sign up</h3>
 </div>
-<div>
-
-<ul>
-
 <div id ="signUpForm">
 <form:form action="signup_action" method="post" commandName="userForm" >
  <table border="0">
@@ -50,18 +46,12 @@
                 <tr>
                     <td colspan="2" align="center"><input type="submit" value="SignUp" /></td>
                     
-                </tr>
-                
-               
-            </table>
- <tr>
- <td><input type="submit" name="login" value="Login" />
- </td>
- </tr>           
+                </tr>           
+                <tr>
+                <td><input type="submit" name="login" value="Login" /> </td>
+                </tr>   
+</table>        
 </form:form>
-</div>
-</li>
-</ul>
 </div>
 <p id = 'logedUser'>User in session: ${logedUser}</p>
 </body>

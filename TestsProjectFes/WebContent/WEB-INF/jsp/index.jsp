@@ -39,7 +39,7 @@
 	text-decoration: none;
 	text-shadow: 0px 1px 0px #810e05;
 }
-
+.bsize{font-size: 24px;}
 .myButton:hover {
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #c62d1f
 		), color-stop(1, #ed9993));
@@ -61,36 +61,28 @@
 <title>Index Page</title>
 </head>
 <body>
-	<a class="myButton" href='http://localhost:8080/TestsProjectFes/'>Reload
-		Page</a>
+	<a class="myButton bsize" href='http://localhost:8080/TestsProjectFes/'>Reload Page</a>
 	<br> Maintenance SignIn
 	<br>
+	
 	<form action="Maintenance">
-		user name: <input type="text" name="usernamem" size=50 /><br>
-		password: <input type="password" name="passwordm" size=50 /><br>
-		<input type="submit" class="myButton" value="PUSH">
+		<input type="submit" class="myButton" name="inputString"  value="Login"/>
+		<input type="submit" class="myButton" name="inputString" value="SignUp" />		
 	</form>
 	<br> Company SignIn
 	<br>
+	
 	<form action="CompanyActions">
-		user name: <input type="text" name="usernamec" size=50 /><br>
-		password: <input type="password" name="passwordc" size=50 /><br>
-		<input type="submit" class="myButton" value="PUSH">
+		<input type="submit" class="myButton" name="usernamec" value="Login" />
+		<input type="submit" class="myButton" name="passwordc" value="SignUp" />
 	</form>
 	
 	<br> Personal SignIn
 	<br>
-
-	<form action = "PersonalActions" name="loginForm" method = "post">
-		
-		<input type="submit" class="myButton" name="login" value="Login""> 
-		<input type="submit" class="myButton" name="sign_up" value="SignUp"">
-
-	</form>
-	<form action="PersonalActions"></form>
-	<br>
-	<p>
-		Name NONE <br>Password NONE
-	</p>
+	
+	<form action = "PersonalActions" name="loginForm" method = "post">		
+		<input type="submit" class="myButton" name="login" value="Login"> 
+		<input type="submit" class="myButton" name="sign_up" value="SignUp">
+    </form>	
 </body>
 </html>

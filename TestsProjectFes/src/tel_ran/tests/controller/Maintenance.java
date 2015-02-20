@@ -24,9 +24,9 @@ public class Maintenance {
 	IMaintenanceService maintenanceService;
 	/**************************************/
 	@RequestMapping({"/Maintenance"})
-	public String authorize(String usernamem, String passwordm){
+	public String authorize(String inputString){
 		boolean fl = false;
-		if(usernamem.equalsIgnoreCase("true")){
+		if(inputString.equalsIgnoreCase("Login") || inputString.equalsIgnoreCase("SignUp")){
 			fl = true;
 		}
 		maintenanceService.setAutorization(fl);// setter flAutorization on Service.
