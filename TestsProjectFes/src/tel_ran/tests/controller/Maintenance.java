@@ -26,10 +26,12 @@ public class Maintenance {
 	@RequestMapping({"/Maintenance"})
 	public String authorize(String inputString){
 		boolean fl = false;
-		if(inputString.equalsIgnoreCase("Login") || inputString.equalsIgnoreCase("SignUp")){
+		if(inputString.equalsIgnoreCase("Login")){
 			fl = true;
 		}
 		maintenanceService.setAutorization(fl);// setter flAutorization on Service.
+		if(inputString.equalsIgnoreCase("Cam_Test"))
+			return "web_cam";
 		return "MaintenanceSignInPage";
 	}
 	/**************************************/
@@ -220,7 +222,7 @@ public class Maintenance {
 		4.	The user choose the file with questions data and press button “Add”
 		5.	The System reads the selected file, parsers data and adds new questions to Database. 
 		6.	The System shows the number of the added questions. Note: Added questions  may be seen in the table after browser refresh*/
-/** ДОБАВЛЕНИЕ БОЛЬШОГО КОЛИЧЕСТВА ВОПРОСОВ ОДНОВРЕМЕННО С ПОМОЩЬЮ ФАЙЛА :действия разрешены Администратору системы */
+	/** ДОБАВЛЕНИЕ БОЛЬШОГО КОЛИЧЕСТВА ВОПРОСОВ ОДНОВРЕМЕННО С ПОМОЩЬЮ ФАЙЛА :действия разрешены Администратору системы */
 	@SuppressWarnings("resource")
 	@RequestMapping({"/add_from_file_actions"})
 	public String addFromFileProcessingPage(String file_name, Model model){	

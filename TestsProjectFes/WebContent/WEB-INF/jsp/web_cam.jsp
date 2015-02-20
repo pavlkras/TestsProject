@@ -2,7 +2,8 @@
     pageEncoding="ISO-8859-1"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%> 
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!-- <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> -->
+<!DOCTYPE html>
 <html>
 <head>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
@@ -45,7 +46,7 @@ $("#start_test").click(function(){
 	hideE("button_test_video");
 	hideE('start_test');
 	show();
-	window.open('test_run','_blank');
+	//window.open('test_run_page','_blank');
 });
 if (hasGetUserMedia()) { // check cam support , if ok - true
 	  flagMediaSupported = true;
@@ -253,7 +254,9 @@ img{
 <canvas id="canvas" width="320" height="240" ></canvas>
 </div>
 <h1 class= "title" id = "message">To continue , needed the web camera.  Please let use the camera at the top of the page.</h1> 
-<input type="button" id = "start_test" class = "buttons" value="Start test" onclick="window.location.href='test_run'"  />
+
+<!-- <input type="button" id = "start_test" class = "buttons" value="Start test" onclick="window.location.href='test_run'"/> -->
+<input type="button" id = "start_test" class = "buttons" value="Start test" onclick="window.location.href='Personal_result_view'"/>
 
 </body>
 </html>

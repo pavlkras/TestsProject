@@ -33,32 +33,32 @@ import tel_ran.tests.services.interfaces.IPersonalActionsService;
 @Scope("session")
 @RequestMapping({"/","/PersonalActions"})
 public class PersonalActions {
-	
+
 	@Autowired
 	IPersonalActionsService personalService;
-	
+
 	int personId;
 	private String categoryName = null;
 	private String level = null;
 	private String chosenQuestionsQuantity = null;
-	
+
 	private Test mTest = null;
-	
+
 	private List<Question> mQstnList = null;
 
 	private List<Answer> mAnswList = null;
 
 	private int counter = 0;
-	
+
 	private List<Answer> receivedAnswers = new ArrayList<Answer>();
-	
-//
-//	@RequestMapping({"/PersonalActions"})
-//	public String signIn(String usernamep,String passwordp){
-//		
-//		return "PersonalSignIn";
-//	}
-	
+
+	//
+	//	@RequestMapping({"/PersonalActions"})
+	//	public String signIn(String usernamep,String passwordp){
+	//		
+	//		return "PersonalSignIn";
+	//	}
+
 	@RequestMapping({ "/PersonalActions" })
 	public String login_page(Map<String, Object> model,
 			HttpServletRequest request, Model pageModel) {
@@ -72,11 +72,11 @@ public class PersonalActions {
 		model.put("userForm", userForm);
 
 		String login = request.getParameter("login");
-		
-		
+
+
 		return login != null ? "Personal_login_page" : "Personal_sign_up";
 	}
-	
+
 	@RequestMapping(value = "/login_action", method = {RequestMethod.POST, RequestMethod.GET})
 	public String login_action(@ModelAttribute("userForm") User user, HttpServletRequest request,
 			Map<String, Object> model, Model pageModel) {
@@ -122,7 +122,7 @@ public class PersonalActions {
 
 		return "Personal_signup_failure";
 	}
-
+	/////////////////////////////////////////////////////
 	@RequestMapping({ "/web_cam" })
 	public String web_cam(Map<String, Object> model) {
 		User userForm = new User();
@@ -130,24 +130,24 @@ public class PersonalActions {
 
 		return "web_cam";
 	}
-	
-	
+	///////////////////////////////////////////////
+
 	@RequestMapping(value = "/Personal_result_view")
-    public String allCategoriesAndLevelsSelection(Model model){
-		
+	public String allCategoriesAndLevelsSelection(Model model){
+
 		List<String> allCategories = personalService.getCategoriesList();
 		List<String> allLevels = personalService.getComplexityLevelList();
 		model.addAttribute("categoryNames", allCategories);
 		model.addAttribute("cLevels", allLevels);
 		return "Personal_result_view";
 	}
-	
+
 	@RequestMapping({"add_questions_count"})
 	public String addCategoryLevelMaxQuestionsNumber(String catName, String levelName, Model model){
 		mTest = new Test();
 		categoryName = catName;
 		level = levelName;
-		
+
 		String questionsCountByCategoryLevel = personalService.getMaxCategoryLevelQuestions(categoryName, level);
 		model.addAttribute("catName", categoryName);
 		model.addAttribute("levelName", level);
@@ -156,19 +156,19 @@ public class PersonalActions {
 		mTest.setLevel(Integer.parseInt(level));
 		return "Personal_questions_count_view";
 	}
-	
+
 	@RequestMapping({ "/test_preparing" })
 	public String starting_test(String qnumber, HttpServletRequest request, Model pageModel) {
-		
+
 		//setting received number of question in Test
 		mTest.setqNum(Integer.parseInt(qnumber));
-		
+
 		//test creation
 		String xmlStr = personalService.getTraineeQuestions(mTest.getCategoryName(), mTest.getLevel(), mTest.getqNum());
 		// JSONObject jsonObject = service.loadJSONTest(testId);
 
 		getDataFromXML(xmlStr);
-		
+
 		pageModel.addAttribute("category", mTest.getCategoryName());
 		pageModel.addAttribute("level", mTest.getLevel());
 		pageModel.addAttribute("quantity", mTest.getqNum());
@@ -189,7 +189,7 @@ public class PersonalActions {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	
+
 		List<Long> qstnIDsList = new ArrayList<Long>();
 		List<String> answIDsList = new ArrayList<String>();
 		mQstnList = new ArrayList<Question>();
@@ -226,13 +226,13 @@ public class PersonalActions {
 
 						Element aElement = (Element) aNode;
 						answ.setQuestionAnswer(question);
-						
+
 						answ.setQuestionAnswer(question);
 						answ.setId(aElement.getAttribute("answerID"));
 						answIDsList.add(aElement.getAttribute("answerID"));
-						
-					
-						
+
+
+
 						String ansText = aElement
 								.getElementsByTagName("answerText").item(0)
 								.getFirstChild().getNodeValue();
@@ -256,14 +256,14 @@ public class PersonalActions {
 
 	}
 
-//	@RequestMapping("/get_link/{id}")
-//	public String get_link(@PathVariable int id, Model pageModel) {
-//		String test = service.loadTestService(id)[IUserService.TEST_ID];
-//		System.out.println(test);
-//		// pageModel.addAttribute("testId", test.getTestId());
-//		counter = 0;
-//		return "choose_test";
-//	}
+	//	@RequestMapping("/get_link/{id}")
+	//	public String get_link(@PathVariable int id, Model pageModel) {
+	//		String test = service.loadTestService(id)[IUserService.TEST_ID];
+	//		System.out.println(test);
+	//		// pageModel.addAttribute("testId", test.getTestId());
+	//		counter = 0;
+	//		return "choose_test";
+	//	}
 
 	@RequestMapping({ "/test_run" })
 	public String test_run(HttpServletRequest request, Model pageModel) {
@@ -284,15 +284,15 @@ public class PersonalActions {
 		if (counter >= mQstnList.size()) {
 			String durTime = getTestDurationTime(mTest);
 
-			 mTest = getTestResults(receivedAnswers, mTest);
+			mTest = getTestResults(receivedAnswers, mTest);
 
-		  	 pageModel.addAttribute("time", durTime);
-			 pageModel.addAttribute("resultsList", mTest.getTestResultList());
-			 pageModel.addAttribute("wrongAnswers",
-			 mTest.getWrongAnswerCounter());
-			 pageModel.addAttribute("rightAnswers",
-			 mTest.getRightAnswerCounter());
-			 clearTest();
+			pageModel.addAttribute("time", durTime);
+			pageModel.addAttribute("resultsList", mTest.getTestResultList());
+			pageModel.addAttribute("wrongAnswers",
+					mTest.getWrongAnswerCounter());
+			pageModel.addAttribute("rightAnswers",
+					mTest.getRightAnswerCounter());
+			clearTest();
 			return "Personal_result_mode";
 		}
 		quest = mQstnList.get(counter);
@@ -300,11 +300,11 @@ public class PersonalActions {
 		List<String> strAnswers = new ArrayList<String>();
 		for (int i = 0; i < answersList.size(); i++) {
 			String my_new_str = answersList.get(i).getAnswerText().replaceAll("<", "&lt;").replaceAll(">", "&gt;");
-			
+
 			strAnswers.add(my_new_str);
-			
+
 		}
-		
+
 		pageModel.addAttribute("testId", mTest.getTestId());
 		pageModel.addAttribute("test", mTest);
 		pageModel.addAttribute("question", quest.getQuestion());
@@ -316,11 +316,11 @@ public class PersonalActions {
 	}
 
 	private void clearTest() {
-		 counter = 0;
-		 mTest.setWrongAnswerCounter(0);
-		 mTest.setRightAnswerCounter(0);
-		
-		
+		counter = 0;
+		mTest.setWrongAnswerCounter(0);
+		mTest.setRightAnswerCounter(0);
+
+
 	}
 
 	private List<Answer> getAnswersList(Question quest) {
@@ -359,14 +359,14 @@ public class PersonalActions {
 	private Test getTestResults(List<Answer> answersList, Test test) {
 		int wrongAnswerCounter = 0;
 		int rightAnswerCounter = 0;
-//		mTest.clearTestResultList();
+		//		mTest.clearTestResultList();
 		List<String> resultList = new ArrayList<String>();
 		String result = "";
 
 		for (int i = 0; i < answersList.size(); i++) {
 			Answer answer = answersList.get(i);
 			Question question = answer.getQuestionAnswer();
-			
+
 			rightAnswerCounter  = answer.getIsAnswerRight() ? rightAnswerCounter + 1 : rightAnswerCounter;
 			wrongAnswerCounter = answersList.size() - rightAnswerCounter;
 			result = question.getQuestion() + ": " + answer.getIsAnswerRight()
@@ -385,5 +385,5 @@ public class PersonalActions {
 
 		return "Personal_result_mode";
 	}
-	
+
 }

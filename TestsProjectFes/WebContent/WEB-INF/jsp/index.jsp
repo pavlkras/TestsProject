@@ -62,12 +62,11 @@
 </head>
 <body>
 	<a class="myButton bsize" href='http://localhost:8080/TestsProjectFes/'>Reload Page</a>
-	<br> Maintenance SignIn
-	<br>
+	<br> Maintenance SignIn	<br>
 	
 	<form action="Maintenance">
-		<input type="submit" class="myButton" name="inputString"  value="Login"/>
-		<input type="submit" class="myButton" name="inputString" value="SignUp" />		
+		<input type="submit" class="myButton" name="inputString"  value="Login"/><br><br>
+		<input type="submit" class="myButton" name="inputString" value="Cam_Test" />		
 	</form>
 	<br> Company SignIn
 	<br>
@@ -84,6 +83,8 @@
 		<input type="submit" class="myButton" name="login" value="Login"> 
 		<input type="submit" class="myButton" name="sign_up" value="SignUp">
     </form>	
-
+    
+<br>Testovaya ssilka, prislannaya ot company coah-adam (generated)<br>
+<a  href='http://localhost:8080/TestsProjectFes/'>test link</a>
 </body>
 </html>

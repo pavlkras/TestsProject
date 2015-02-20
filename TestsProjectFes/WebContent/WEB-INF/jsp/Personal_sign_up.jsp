@@ -17,9 +17,10 @@
 <h1 class= "title">Sign up page</h1>
 <h3 class = "subtitle">Testing sign up</h3>
 </div>
-<div id ="signUpForm">
+
+<div id ="signUpForm"> 
 <form:form action="signup_action" method="post" commandName="userForm" >
- <table border="0">
+<table border="0">
                 <tr>
                     <td colspan="2" align="center"><h2>SignUp form</h2></td>
                 </tr>
@@ -37,7 +38,7 @@
                 </tr>
                  <tr>
                     <td>Confirm Password:</td>
-                    <td><form:password path="confirm_password" id="confirm_password"/></td>
+                   <%--  <td><form:password path="confirm_password" id="confirm_password"/></td> --%>
                 </tr>
                 <tr>
                     <td>E-mail:</td> 
@@ -50,8 +51,9 @@
                 <tr>
                 <td><input type="submit" name="login" value="Login" /> </td>
                 </tr>   
-</table>        
-</form:form>
+                </table> 
+                </form:form>
+       
 </div>
 <p id = 'logedUser'>User in session: ${logedUser}</p>
 </body>
