@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Point Cat Tests</title>
+<title>Point Cat Tests</title> 
 </head>
 <body>
 <ul>

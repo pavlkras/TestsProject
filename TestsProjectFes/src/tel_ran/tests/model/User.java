@@ -20,9 +20,8 @@ public class User {
 		this.name = args[IPersonalActionsService.NAME];
 		this.password = args[IPersonalActionsService.PASSWORD];
 		this.email = args[IPersonalActionsService.EMAIL];
-	}
+	} 
 	
-	private String confirm_password;
 	private String email;	
 		
 
@@ -50,17 +49,11 @@ public class User {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public String getConfirm_password() {
-		return confirm_password;
-	}
-	public void setConfirm_password(String confirm_password) {
-		this.confirm_password = confirm_password;
-	}
+
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", name=" + name + ", password=" + password
-				+ ", confirm_password=" + confirm_password + ", email=" + email
-				+  "]";
+				+ ", email=" + email +  "]";
 	}
 	
 

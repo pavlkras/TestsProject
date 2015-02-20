@@ -40,7 +40,7 @@
                     <td><form:password path="confirm_password" id="confirm_password"/></td>
                 </tr>
                 <tr>
-                    <td>E-mail:</td>
+                    <td>E-mail:</td> 
                     <td><form:input path="email" id="email"/></td>
                 </tr>               
                 <tr>

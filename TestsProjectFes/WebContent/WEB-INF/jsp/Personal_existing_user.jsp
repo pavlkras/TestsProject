@@ -19,7 +19,7 @@
 </div>
 <div>
 <h3 class = "subtitle">Choose action</h3>
-<h1>The user is already registered!!!</h1>
+<h1>The user is already registered!!!</h1> 
 <a href="PersonalActions">Return to login page</a>
 </div>
 </body>

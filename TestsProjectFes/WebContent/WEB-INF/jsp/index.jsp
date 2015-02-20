@@ -84,5 +84,6 @@
 		<input type="submit" class="myButton" name="login" value="Login"> 
 		<input type="submit" class="myButton" name="sign_up" value="SignUp">
     </form>	
+
 </body>
 </html>
