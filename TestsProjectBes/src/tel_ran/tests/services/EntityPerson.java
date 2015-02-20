@@ -13,7 +13,7 @@ import tel_ran.tests.services.Company;
 
 import javax.persistence.ManyToOne;
 
-import tel_ran.tests.services.EntityTestCommon;
+import tel_ran.tests.services.EntityTestResultCommon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +32,8 @@ public class EntityPerson {
 	@ManyToOne
 	@JoinColumn(name="CompanyName")
 	private Company company;
-	@OneToMany(targetEntity = EntityTestCommon.class, mappedBy = "entityPerson", cascade = CascadeType.ALL)
-	private List<EntityTestCommon> entityTestCommon = new ArrayList<EntityTestCommon>();
+	@OneToMany(targetEntity = EntityTestResultCommon.class, mappedBy = "entityPerson", cascade = CascadeType.ALL)
+	private List<EntityTestResultCommon> entityTestResultCommon = new ArrayList<EntityTestResultCommon>();
 	public EntityPerson() {
     }
 
@@ -54,12 +54,12 @@ public class EntityPerson {
 	    this.company = param;
 	}
 
-	public List<EntityTestCommon> getEntityTestCommon() {
-	    return entityTestCommon;
+	public List<EntityTestResultCommon> getEntityTestResultCommon() {
+	    return entityTestResultCommon;
 	}
 
-	public void setEntityTestCommon(List<EntityTestCommon> param) {
-	    this.entityTestCommon = param;
+	public void setEntityTestResultCommon(List<EntityTestResultCommon> param) {
+	    this.entityTestResultCommon = param;
 	}
 
 	public int getPerson_id() {
