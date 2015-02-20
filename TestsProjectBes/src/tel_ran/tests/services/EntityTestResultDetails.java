@@ -38,18 +38,18 @@ public class EntityTestResultDetails {
 		strbuf.append(pictures);
 		return strbuf.toString();
 	}
-//	public JSONObject toJson()
-//	{
-//		JSONObject json = new JSONObject();
-//		json.put("duration",duration);
-//		json.put("complexityLevel",complexityLevel);
-//		json.put("quantityRight", quantityRight);
-//		json.put("quantityWrong", quantityWrong);
-//		json.put("pictures", pictures);
-//		
-//		System.out.println(json);
-//		return json;
-//	}
+	public JSONObject toJson()
+	{
+		JSONObject json = new JSONObject();
+		json.put("duration",duration);
+		json.put("complexityLevel",complexityLevel);
+		json.put("quantityRight", quantityRight);
+		json.put("quantityWrong", quantityWrong);
+		json.put("pictures", pictures);
+
+		System.out.println(json);
+		return json;
+	}
 	public int getDuration() {
 		return duration;
 	}

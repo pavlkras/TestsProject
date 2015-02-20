@@ -78,7 +78,8 @@ public class EntityTestResultCommon {
 		return strbuf.toString();
 		return this.toJson().toJSONString();
 	}*/
-/*	public JSONObject toJson()
+
+public JSONObject toJson()
 	{
 		JSONObject json = new JSONObject();
 		json.put("testid",testID);
@@ -89,7 +90,7 @@ public class EntityTestResultCommon {
 		json.put("entityTestDetails", entityTestDetails);
 		System.out.println(json);
 		return json;
-	}*/
+	}
 	public EntityTestResultDetails getEntityTestDetails() {
 	    return entityTestDetails;
 	}
