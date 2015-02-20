@@ -18,7 +18,7 @@
 <h3 class = "subtitle">Testing login and sign up</h3>
 </div>
 <div>
-<h3 class = "subtitle">Choose action</h3>
+<h3 class = "subtitle">Choose action</h3> 
 <h1>Registration Success!!!</h1>
 <a href="PersonalActions">Return to login page</a>
 </div>

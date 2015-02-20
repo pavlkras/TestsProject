@@ -25,7 +25,7 @@
 		<p>User in session: ${logedUserId}</p>
 		<p>We are ready to start test: ${testId}</p>
 		<div>
-			Question field<br>
+			Question field<br> 
 		</div>
 	</div>
 	<!-- creating table headers -->

@@ -36,7 +36,7 @@
                     <td><form:password path="password" /></td>
                 </tr>                           
                 <tr>
-                    <td colspan="2" align="center">
+                    <td colspan="2" align="center">  
                     <input type="submit" name="login" value="Login" />
                     <input type="submit" name="sign_up" value="Sign UP" />
                     </td>

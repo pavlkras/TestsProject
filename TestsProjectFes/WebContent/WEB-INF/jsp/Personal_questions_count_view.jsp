@@ -10,7 +10,7 @@
 <script type="text/javascript">
 
 function checkQuestionsNumber(){
-    var maxNumber = parseInt(document.getElementById("maxnum").innerHTML);
+    var maxNumber = parseInt(document.getElementById("maxnum").innerHTML); 
     var qnumber = parseInt(document.getElementById('qnum').value);
     if(isNaN(qnumber) || qnumber <= 0 || qnumber > maxNumber){
            alert("Wrong number of the questions. " +

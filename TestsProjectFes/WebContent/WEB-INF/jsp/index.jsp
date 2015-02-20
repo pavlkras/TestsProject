@@ -83,6 +83,7 @@
 
 	<form action = "PersonalActions" name="loginForm" method = "post">
 		
+		
 		<input type="submit" class="myButton" name="login" value="Login""> 
 		<input type="submit" class="myButton" name="sign_up" value="SignUp"">
 

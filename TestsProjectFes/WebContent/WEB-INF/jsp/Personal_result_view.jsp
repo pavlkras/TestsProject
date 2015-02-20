@@ -39,7 +39,7 @@ function checkCategoryAndLevel(){
     <td>
     <form:select id="catname" name="catName" path="categoryNames" >
     <form:option value="NONE" label="-SELECT-"></form:option>
-    <form:options items="${categoryNames}" />
+    <form:options items="${categoryNames}" />  
     </form:select>
     </td>
     </tr>
