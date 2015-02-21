@@ -34,8 +34,7 @@ import tel_ran.tests.services.interfaces.IPersonalActionsService;
 @RequestMapping({"/","/PersonalActions"})
 public class PersonalActions {
 	@Autowired
-	IPersonalActionsService personalService;
-        /**когда запускаем аппликации, метод дает домашнюю страницу !! */
+	IPersonalActionsService personalService;       
         @RequestMapping({"/"})
         public String Index(){     return "index";       }
         //--------------------- fields of this class ---------------------------
