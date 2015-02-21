@@ -23,17 +23,40 @@ public class Maintenance {
 	@Autowired
 	IMaintenanceService maintenanceService;
 	/**************************************/
+	private String loginForm = "<form class='myButton' action = 'maintenance_login_action' name='loginForm' method = 'get'>"
+			+ "Name: <input type='text'  name='username'>"
+			+ "Password: <input type='password'  name='password'>"
+			+ "<input type='submit' class='myButton' value='Administrators Login'></form>"
+			+ "<br><br><form action = 'PersonalActions' name='loginForm' method = 'post'>"
+			+"<input type='submit' class='myButton' name='login' value='Users Login'> </form>";  
 	@RequestMapping({"/Maintenance"})
-	public String authorize(String inputString){
-		boolean fl = false;
-		if(inputString.equalsIgnoreCase("Login")){
-			fl = true;
-		}
-		maintenanceService.setAutorization(fl);// setter flAutorization on Service.
-		if(inputString.equalsIgnoreCase("Cam_Test"))
-			return "web_cam";
+	public String mappingFromIndexPage(Model model){				
+		model.addAttribute("loginText", loginForm);
+		model.addAttribute("result", "for login User name and Password is EMPTY." );
 		return "MaintenanceSignInPage";
 	}
+	/*************************************/
+	@RequestMapping({"/maintenance_login_action"})
+	public String authorize(String username , String password,Model model){
+		boolean fl = false;
+		if(username.equalsIgnoreCase("") && password.equalsIgnoreCase("")){
+			fl = true;
+		
+		maintenanceService.setAutorization(fl);// setter flAutorization on Service.	
+		String buttonsMainPage = "<div id='homepage'>"
+				+ "<a class='myButton' href='http://localhost:8080/TestsProjectFes/maintenanceadd'>Create new question</a><br>"
+				+ "<a class='myButton' href='http://localhost:8080/TestsProjectFes/update'>Update/Delete Question</a><br>"
+				+ "<a class='myButton' href='#' onclick='ClickLoadFromFile()'>Adding questions from file</a>"
+				+ "<a class='myButton' href='http://localhost:8080/TestsProjectFes/'>...</a> </div>";
+		model.addAttribute("loginText", buttonsMainPage);
+		}else{			
+			model.addAttribute("loginText", loginForm);
+			model.addAttribute("result", "User name or Password incorrect!<br> Try again." );
+		}
+		return "MaintenanceSignInPage";
+	}
+
+
 	/**************************************/
 	@RequestMapping({"/maintenanceadd"})
 	public String addingPage() {return "MaintenanceAddingPage";}
@@ -243,6 +266,12 @@ public class Maintenance {
 		} catch (IOException e) {
 			model.addAttribute("result","Exception: can't read from file");
 		}
+		String buttonsMainPage = "<div id='homepage'>"
+				+ "<a class='myButton' href='http://localhost:8080/TestsProjectFes/maintenanceadd'>Create new question</a><br>"
+				+ "<a class='myButton' href='http://localhost:8080/TestsProjectFes/update'>Update/Delete Question</a><br>"
+				+ "<a class='myButton' href='#' onclick='ClickLoadFromFile()'>Adding questions from file</a>"
+				+ "<a class='myButton' href='http://localhost:8080/TestsProjectFes/'>...</a> </div>";
+		model.addAttribute("loginText", buttonsMainPage);
 		return 	"MaintenanceSignInPage";// return too page after action
 	}	
 }

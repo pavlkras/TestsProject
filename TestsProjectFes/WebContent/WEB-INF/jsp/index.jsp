@@ -2,89 +2,321 @@
 	pageEncoding="ISO-8859-1"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<script type="text/javascript">
+	function feedAltText() {
+		for (var i = 0; i < document.getElementsByTagName("img").length; i++) {
+			var EDIT_Q = document.getElementsByTagName("img")[i];
+			var att = document.createAttribute("alt");
+			att.value = ".";
+			EDIT_Q.setAttributeNode(att);
+		}
+	}
+</script>
 <style type="text/css">
-* {
-	text-align: center;
+.firsthomecontent a {
+	float: left;
 }
 
-.myButton {
-	-moz-box-shadow: inset 0px 1px 0px 0px #f5978e;
-	-webkit-box-shadow: inset 0px 1px 0px 0px #f5978e;
-	box-shadow: inset 0px 1px 0px 0px #f5978e;
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ed9993
-		), color-stop(1, #c62d1f));
-	background: -moz-linear-gradient(top, #ed9993 5%, #c62d1f 100%);
-	background: -webkit-linear-gradient(top, #ed9993 5%, #c62d1f 100%);
-	background: -o-linear-gradient(top, #ed9993 5%, #c62d1f 100%);
-	background: -ms-linear-gradient(top, #ed9993 5%, #c62d1f 100%);
-	background: linear-gradient(to bottom, #ed9993 5%, #c62d1f 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ed9993',
-		endColorstr='#c62d1f', GradientType=0);
-	background-color: #ed9993;
-	-moz-border-radius: 8px;
-	-webkit-border-radius: 8px;
-	border-radius: 8px;
-	border: 1px solid #d02718;
-	display: inline-block;
-	cursor: pointer;
-	color: #ffffff;
-	font-family: arial;
-	font-size: 15px;
-	font-weight: bold;
-	padding: 2px 21px;
-	text-decoration: none;
-	text-shadow: 0px 1px 0px #810e05;
-}
-.bsize{font-size: 24px;}
-.myButton:hover {
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #c62d1f
-		), color-stop(1, #ed9993));
-	background: -moz-linear-gradient(top, #c62d1f 5%, #ed9993 100%);
-	background: -webkit-linear-gradient(top, #c62d1f 5%, #ed9993 100%);
-	background: -o-linear-gradient(top, #c62d1f 5%, #ed9993 100%);
-	background: -ms-linear-gradient(top, #c62d1f 5%, #ed9993 100%);
-	background: linear-gradient(to bottom, #c62d1f 5%, #ed9993 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#c62d1f',
-		endColorstr='#ed9993', GradientType=0);
-	background-color: #c62d1f;
+.homecontent {
+	background-color: #fff;
+	border: 1px solid #ffc0cb;
+	margin: 5px;
+	padding: 10px;
+	width: 150px;
+	border-radius: 10px
 }
 
-.myButton:active {
-	position: relative;
-	top: 1px;
+.h2 {
+	font-family: erdana, helvetica, arial, sans-serif;
+	font-size: 25px;
+	color: #610B38;
+	font-weight: 400;
+}
+
+a {
+	color: green;
+	text-decoration: none
+}
+
+a:hover {
+	text-decoration: underline;
+	color: red;
+}
+
+.homespan {
+	font: 21px times new roman;
+	padding: 5px;
+	float: right;
+}
+
+.gra1 {
+	border: 1px solid #ffc0cb;
+	border-radius: 10px;
+	background: -webkit-linear-gradient(#FAFAE5, white);
+	background: -o-linear-gradient(#FAFAE5, white);
+	background: -moz-linear-gradient(#FAFAE5, white);
+	background: linear-gradient(#FAFAE5, white);
+	height: 11em;
+}
+.gra2 {
+	border: 1px solid #ffc0cb;
+	border-radius: 10px;
+	background: -webkit-linear-gradient(#FAFAE5, white);
+	background: -o-linear-gradient(#FAFAE5, white);
+	background: -moz-linear-gradient(#FAFAE5, white);
+	background: linear-gradient(#FAFAE5, white);
+	height: 23em;
+}
+
+img {
+	max-width: 100%;
+	height: auto;
 }
 </style>
 <title>Index Page</title>
 </head>
-<body>
-	<a class="myButton bsize" href='http://localhost:8080/TestsProjectFes/'>Reload Page</a>
-	<br> Maintenance SignIn	<br>
-	
-	<form action="Maintenance">
-		<input type="submit" class="myButton" name="inputString"  value="Login"/><br><br>
-		<input type="submit" class="myButton" name="inputString" value="Cam_Test" />		
-	</form>
-	<br> Company SignIn
-	<br>
-	
-	<form action="CompanyActions">
-		<input type="submit" class="myButton" name="usernamec" value="Login" />
-		<input type="submit" class="myButton" name="passwordc" value="SignUp" />
-	</form>
-	
-	<br> Personal SignIn
-	<br>
-	
-	<form action = "PersonalActions" name="loginForm" method = "post">		
-		<input type="submit" class="myButton" name="login" value="Login"> 
-		<input type="submit" class="myButton" name="sign_up" value="SignUp">
-    </form>	
-    
-<br>Testovaya ssilka, prislannaya ot company coah-adam (generated)<br>
-<a  href='http://localhost:8080/TestsProjectFes/'>test link</a>
+<body onload="feedAltText()">
+	<table>
+		<tr>
+			<td>
+				<h2 class="h2">Library of popular programming languages Links</h2>				
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<div class="gra1">
+					<h2 class="h2">Popular Tutorials</h2>
+					<div class="firsthomecontent">
+						<a href="http://docs.oracle.com/javase/tutorial/">
+							<div class="homecontent">
+								<img src="images/logo/javahome.png" alt="Java tutorial"><span
+									class="homespan">Java</span>
+							</div>
+						</a> <a href="http://www.w3schools.com/js/">
+							<div class="homecontent">
+								<img src="images/logo/javascripthome.png"
+									alt="JavaScript tutorial"><span class="homespan">JavaScript</span>
+							</div>
+						</a> <a href="http://www.w3schools.com/sql/">
+							<div class="homecontent">
+								<img src="images/logo/sqlhome.png" alt="SQL tutorial"><span
+									class="homespan">SQL</span>
+							</div>
+						</a> <a href="http://startandroid.ru/ru/">
+							<div class="homecontent">
+								<img src="images/logo/androidhome.png" alt="Android tutorial"><span
+									class="homespan">Android</span>
+							</div>
+						</a> <a href="http://www.cprogramming.com/tutorial/c-tutorial.html">
+							<div class="homecontent">
+								<img src="images/logo/clanguagehome.png"
+									alt="C Language tutorial"><span class="homespan">C
+									Lang-</span>
+							</div>
+						</a><a href="http://www.w3schools.com/html/">
+							<div class="homecontent">
+								<img src="images/logo/html-tutorial.png" alt="html tutorial"><span
+									class="homespan">HTML</span>
+							</div>
+						</a> <a href="http://www.w3schools.com/css/">
+							<div class="homecontent">
+								<img src="images/logo/css3.jpg" alt="css tutorial"><span
+									class="homespan">CSS</span>
+							</div>
+						</a> <a href="https://docs.python.org/2/tutorial/">
+							<div class="homecontent">
+								<img src="images/logo/pythonhome.png" alt="Python tutorial"><span
+									class="homespan">Python</span>
+							</div>
+						</a> <a href="http://www.w3schools.com/ajax/">
+							<div class="homecontent">
+								<img src="images/logo/ajaxhome.png" alt="AJAX tutorial"><span
+									class="homespan">AJAX</span>
+							</div>
+						</a> <a href="http://www.tutorialspoint.com/cloud_computing/">
+							<div class="homecontent">
+								<img src="images/logo/cloudhome.png" alt="Cloud tutorial"><span
+									class="homespan">Cloud</span>
+							</div>
+						</a> <a href="http://www.w3schools.com/webservices/">
+							<div class="homecontent">
+								<img src="images/logo/web-services.png"
+									alt="Web Services tutorial"><span class="homespan">Web
+									Serv-</span>
+							</div>
+						</a>
+					</div>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<div class="gra1">
+					<h2 class="h2">Java Technology Tutorials</h2>
+					<div class="firsthomecontent">
+						<a href="http://docs.oracle.com/javase/tutorial/">
+							<div class="homecontent">
+								<img src="images/logo/javahome.png" alt="Core Java tutorial"><span
+									class="homespan">Core Java</span>
+							</div>
+						</a> <a href="http://docs.oracle.com/javaee/6/tutorial/doc/bnafd.html">
+							<div class="homecontent">
+								<img src="images/logo/javahome.png" alt="Java Servlet tutorial"><span
+									class="homespan">Servlet</span>
+							</div>
+						</a> <a href="http://docs.oracle.com/javaee/5/tutorial/doc/bnagx.html">
+							<div class="homecontent">
+								<img src="images/logo/jsphome.png" alt="Java JSP tutorial"><span
+									class="homespan">JSP</span>
+							</div>
+						</a> <a href="http://docs.oracle.com/javaee/5/tutorial/doc/bnblr.html">
+							<div class="homecontent">
+								<img src="images/logo/javahome.png" alt="EJB tutorial"><span
+									class="homespan">EJB</span>
+							</div>
+						</a> <a href="http://docs.oracle.com/javaee/6/tutorial/doc/gijti.html">
+							<div class="homecontent">
+								<img src="images/logo/web-services.png"
+									alt="Java Web Services tutorial"><span class="homespan">Java
+									WS</span>
+							</div>
+						</a><a href="http://struts.apache.org/docs/getting-started.html">
+							<div class="homecontent">
+								<img src="images/logo/strutshome.png" alt="Struts tutorial"><span
+									class="homespan">Struts</span>
+							</div>
+						</a> <a
+							href="https://docs.jboss.org/hibernate/orm/3.3/reference/en/html/tutorial.html">
+							<div class="homecontent">
+								<img src="images/logo/hibernatehome.png"
+									alt="Hibernate tutorial"><span class="homespan">Hibernate</span>
+							</div>
+						</a> <a href="https://spring.io/guides">
+							<div class="homecontent">
+								<img src="images/logo/springhome.png" alt="Spring tutorial"><span
+									class="homespan">Spring</span>
+							</div>
+						</a> <a
+							href="http://www.oracle.com/technetwork/java/index-138643.html">
+							<div class="homecontent">
+								<img src="images/logo/javahome.png" alt="Java Mail tutorial"><span
+									class="homespan">Java Mail</span>
+							</div>
+						</a> <a href="http://www.tutorialspoint.com/design_pattern/">
+							<div class="homecontent">
+								<img src="images/logo/javahome.png"
+									alt="Java Design Pattern tutorial"><span class="homespan">D
+									Pattern</span>
+							</div>
+						</a><a href="http://www.tutorialspoint.com/junit/">
+							<div class="homecontent">
+								<img src="images/logo/javahome.png" alt="JUnit tutorial"><span
+									class="homespan">Junit</span>
+							</div>
+						</a> <a
+							href="http://maven.apache.org/guides/getting-started/maven-in-five-minutes.html">
+							<div class="homecontent">
+								<img src="images/logo/strutshome.png" alt="Maven tutorial"><span
+									class="homespan">Maven</span>
+							</div>
+						</a> <a href="http://jsoup.org/cookbook/">
+							<div class="homecontent">
+								<img src="images/logo/javahome.png" alt="Maven tutorial"><span
+									class="homespan">Jsoup</span>
+							</div>
+						</a> <a href="http://docs.oracle.com/javase/tutorial/jaxb/intro/">
+							<div class="homecontent">
+								<img src="images/logo/javahome.png" alt="JAXB tutorial"><span
+									class="homespan">JAXB</span>
+							</div>
+						</a>
+					</div>
+				</div>
+			</td>
+			<td rowspan="2">
+				<div class="gra2">
+				<h2 class="h2">Application Resources</h2>
+					<a href="Personal_result_view">
+						<div class="homecontent">
+							<img src="images/logo/interviewhome.png"><span
+								class="homespan">Interview</span>
+						</div>
+					</a><a href="Maintenance" name="inputString" value="Login">
+						<div class="homecontent">
+							<img src="images/logo/interviewhome.png"><span
+								class="homespan">Login</span>
+						</div>
+					</a><a href="PersonalActions">
+						<div class="homecontent">
+							<img src="images/logo/interviewhome.png"><span
+								class="homespan">Sign Up</span>
+						</div>
+					</a><a href="CompanyActions">
+						<div class="homecontent">
+							<img src="images/logo/interviewhome.png"><span
+								class="homespan">Company</span>
+						</div>
+					</a> <a href="web_cam">
+						<div class="homecontent">
+							<img src="images/logo/interviewhome.png"> <span
+								class="homespan">Cam Test</span>
+						</div>
+					</a>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<div class="gra1">
+					<h2 class="h2">Miscellaneous Topics</h2>
+					<div class="firsthomecontent">
+						<a href="http://stackoverflow.com/">
+							<div class="homecontent">
+								<img src="images/logo/forumhome3.png" alt="Forum tutorial"><span
+									class="homespan">Java Forum</span>
+							</div>
+						</a> <a
+							href="http://tomcat.apache.org/tomcat-7.0-doc/jasper-howto.html">
+							<div class="homecontent">
+								<img src="images/logo/javacompiler.png"
+									alt="Online java compiler"> <span class="homespan">J
+									Compiler</span>
+							</div>
+						</a><a href="http://stackoverflow.com/">
+							<div class="homecontent">
+								<img src="images/logo/quizhome.png" alt="Online forum"><span
+									class="homespan">Forum</span>
+							</div>
+						</a> <a href="Personal_result_view">
+							<div class="homecontent">
+								<img src="images/logo/interviewhome.png"
+									alt="Interview Questions"><span class="homespan">Interview</span>
+							</div>
+						</a> <a href="http://www.javatpoint.com/free-java-projects">
+							<div class="homecontent">
+								<img src="images/logo/projecthome.png" alt="Free Projects"><span
+									class="homespan">Projects</span>
+							</div>
+						</a> <a href="http://www.javatpoint.com/full-form">
+							<div class="homecontent">
+								<img src="images/logo/full-form.jpg" alt="Full Form"><span
+									class="homespan">Acronyms</span>
+							</div>
+						</a>
+					</div>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td>&nbsp;&nbsp;&nbsp;</td>
+		</tr>
+	</table>
 </body>
 </html>
+
+
+
+
