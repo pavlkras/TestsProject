@@ -62,14 +62,9 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 			em.clear();
 		}
 		return flagAction;// return to client 
-	}
-	
-
-	
-	
+	}	
 	////////////////////////////////////////////////////////////////////////////////////
-	/** method for Creating Table Answer in DB 	
-	 * @return */
+	/** method for Creating Table Answer in DB 	 */
 	private EntityAnswer addAnswersList(String answer, int trueAnswerNumber, long keyQuestion) {
 		// creating table answer and setting data//
 		EntityAnswer temp = new EntityAnswer();
@@ -85,8 +80,6 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		return temp;
 	}
 	//////////////////////////////////////////////////////////////////////////////////////
-	/** Метод апдейт , берет вопрос и обновляет его данными полученными от администратора CHANGE Question */
-	@SuppressWarnings("unchecked")
 	@Override	
 	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW)	
 	public boolean UpdateQuestionInDataBase(String questionID,String questionText,String descriptionText,String category, int level,List<String> answers,int trueAnswerNumber) {
@@ -131,8 +124,6 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		return outResult;// return to client 
 	}
 	///////////////////////////////internal method for filling in the form update issue/////////////////////////////////////
-	///////////////////////////////внутренний метод для заполнения формы обновления вопроса/////////////////////////////////////
-	@SuppressWarnings("unchecked")
 	@Override
 	public String getQuestionById(String questionID) {// method return all attributes from Question and Answer Tables in string line  
 		StringBuffer  outRes = new StringBuffer();
@@ -171,7 +162,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	@SuppressWarnings("unchecked")	
 	@Override  
 	public List<Long> getUniqueSetQuestionsForTest(String category,String level,Long nQuestion){
-	List<Long> outRes = new ArrayList<Long>();	
+		List<Long> outRes = new ArrayList<Long>();	
 		if(nQuestion > 0){
 			try{
 				int levelQuestion = Integer.parseInt(level);
