@@ -33,31 +33,22 @@ import tel_ran.tests.services.interfaces.IPersonalActionsService;
 @Scope("session")
 @RequestMapping({"/","/PersonalActions"})
 public class PersonalActions {
-
 	@Autowired
 	IPersonalActionsService personalService;
-
+        /**когда запускаем аппликации, метод дает домашнюю страницу !! */
+        @RequestMapping({"/"})
+        public String Index(){     return "index";       }
+        //--------------------- fields of this class ---------------------------
 	int personId;
 	private String categoryName = null;
 	private String level = null;
 	private String chosenQuestionsQuantity = null;
-
 	private Test mTest = null;
-
 	private List<Question> mQstnList = null;
-
 	private List<Answer> mAnswList = null;
-
 	private int counter = 0;
-
 	private List<Answer> receivedAnswers = new ArrayList<Answer>();
-
-	//
-	//	@RequestMapping({"/PersonalActions"})
-	//	public String signIn(String usernamep,String passwordp){
-	//		
-	//		return "PersonalSignIn";
-	//	}
+        //---------------------------------------------------------------------
 
 	@RequestMapping({ "/PersonalActions" })
 	public String login_page(Map<String, Object> model,
@@ -72,8 +63,6 @@ public class PersonalActions {
 		model.put("userForm", userForm);
 
 		String login = request.getParameter("login");
-
-
 		return login != null ? "Personal_login_page" : "Personal_sign_up";
 	}
 
@@ -122,15 +111,15 @@ public class PersonalActions {
 
 		return "Personal_signup_failure";
 	}
-	/////////////////////////////////////////////////////
+	
+	/////////////web cam verify action mapping/////////////////////
 	@RequestMapping({ "/web_cam" })
 	public String web_cam(Map<String, Object> model) {
 		User userForm = new User();
 		model.put("userForm", userForm);
-
 		return "web_cam";
 	}
-	///////////////////////////////////////////////
+	////////////END web cam verify action mapping////////////////////
 
 	@RequestMapping(value = "/Personal_result_view")
 	public String allCategoriesAndLevelsSelection(Model model){
@@ -230,9 +219,6 @@ public class PersonalActions {
 						answ.setQuestionAnswer(question);
 						answ.setId(aElement.getAttribute("answerID"));
 						answIDsList.add(aElement.getAttribute("answerID"));
-
-
-
 						String ansText = aElement
 								.getElementsByTagName("answerText").item(0)
 								.getFirstChild().getNodeValue();
@@ -242,20 +228,16 @@ public class PersonalActions {
 								.getElementsByTagName("answerStatus").item(0)
 								.getFirstChild().getNodeValue()));
 					} // end if (aNode.getNodeType() == Node.ELEMENT_NODE)
-
 					mAnswList.add(answ);
-
 				} // end for (int j = 0; j < aList.getLength(); j++)
 			}// end if (qNode.getNodeType() == Node.ELEMENT_NODE)
 			question.setAnswrIDsList(answIDsList);
-
 			mQstnList.add(question);
 			answIDsList.clear();
 		}// end for (int temp = 0; temp < qList.getLength(); temp++)
 		mTest.setQstnNmList(qstnIDsList);
-
-	}
-
+		}
+		
 	//	@RequestMapping("/get_link/{id}")
 	//	public String get_link(@PathVariable int id, Model pageModel) {
 	//		String test = service.loadTestService(id)[IUserService.TEST_ID];
@@ -276,16 +258,14 @@ public class PersonalActions {
 				if (ans.getAnswerText().compareTo(answer) == 0) {
 					receivedAnswers.add(ans);
 					break;
-				}
+					}
 			}
 			counter++;
 		}
 		// pageModel.addAttribute("test", test);
 		if (counter >= mQstnList.size()) {
 			String durTime = getTestDurationTime(mTest);
-
 			mTest = getTestResults(receivedAnswers, mTest);
-
 			pageModel.addAttribute("time", durTime);
 			pageModel.addAttribute("resultsList", mTest.getTestResultList());
 			pageModel.addAttribute("wrongAnswers",
@@ -300,18 +280,14 @@ public class PersonalActions {
 		List<String> strAnswers = new ArrayList<String>();
 		for (int i = 0; i < answersList.size(); i++) {
 			String my_new_str = answersList.get(i).getAnswerText().replaceAll("<", "&lt;").replaceAll(">", "&gt;");
-
 			strAnswers.add(my_new_str);
-
 		}
 
 		pageModel.addAttribute("testId", mTest.getTestId());
 		pageModel.addAttribute("test", mTest);
 		pageModel.addAttribute("question", quest.getQuestion());
 		pageModel.addAttribute("answersList", strAnswers);
-
 		mTest.setStartTimeMillis(System.currentTimeMillis());
-
 		return "Personal_test_mode";
 	}
 
@@ -319,8 +295,6 @@ public class PersonalActions {
 		counter = 0;
 		mTest.setWrongAnswerCounter(0);
 		mTest.setRightAnswerCounter(0);
-
-
 	}
 
 	private List<Answer> getAnswersList(Question quest) {
@@ -382,8 +356,6 @@ public class PersonalActions {
 	@RequestMapping("/result_mod")
 	public String result_mode(@PathVariable int id, HttpServletRequest request,
 			Model pageModel) {
-
 		return "Personal_result_mode";
 	}
-
 }
