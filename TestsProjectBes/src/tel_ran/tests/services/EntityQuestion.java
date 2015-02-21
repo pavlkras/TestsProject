@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+
+import tel_ran.tests.services.interfaces.IMaintenanceService;
 @Entity
 public class EntityQuestion implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -66,10 +68,10 @@ public class EntityQuestion implements Serializable {
 
 	@Override
 	public String toString() {
-		return id + MaintenanceService.DELIMITER + 
-				questionText+ MaintenanceService.DELIMITER + 
-				description + MaintenanceService.DELIMITER + 
-				category+ MaintenanceService.DELIMITER + 
-				level+ MaintenanceService.DELIMITER;
+		return id + IMaintenanceService.DELIMITER + 
+				questionText+ IMaintenanceService.DELIMITER + 
+				description + IMaintenanceService.DELIMITER + 
+				category+ IMaintenanceService.DELIMITER + 
+				level+ IMaintenanceService.DELIMITER;
 	}	
 }

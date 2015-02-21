@@ -4,6 +4,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+
+import tel_ran.tests.services.interfaces.IMaintenanceService;
 @Entity
 public class EntityAnswer {
 	public EntityAnswer() {}
@@ -42,8 +44,8 @@ public class EntityAnswer {
 
 	@Override
 	public String toString() {
-		return answerText + MaintenanceService.DELIMITER +
-				isAnswer+ MaintenanceService.DELIMITER;
+		return answerText + IMaintenanceService.DELIMITER +
+				isAnswer+ IMaintenanceService.DELIMITER;
 	}
 
 

@@ -13,7 +13,7 @@ import tel_ran.tests.services.interfaces.IMaintenanceService;
 
 public class MaintenanceService extends TestsPersistence implements IMaintenanceService {
 	private static boolean flAdminAuthorized = false;
-	public static final String DELIMITER = "----";// delimiter for entity's and filling from file
+
 	@Override
 	public void setAutorization(boolean auth) {
 		MaintenanceService.flAdminAuthorized = auth;
@@ -210,7 +210,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	public boolean FillDataBaseFromTextResource(List<String> inputParsedText) {//adding in database questions and answers from local file
 		boolean flagAction = false;
 		for(String line: inputParsedText){ 
-			String[] question_Parts = line.split(DELIMITER); //delimiter for text
+			String[] question_Parts = line.split(DELIMITER); //delimiter for text, from interface IMaintenanceService
 			Integer trueAnswerNumber = Integer.parseInt(question_Parts[8]); 
 			List<String> answers = new ArrayList<String>();
 			answers.add(question_Parts[4]);		answers.add(question_Parts[5]);
