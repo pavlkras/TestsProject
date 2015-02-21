@@ -3,6 +3,7 @@ package tel_ran.tests.services.interfaces;
 import java.util.List;
 
 public interface IMaintenanceService {//общий интерфейс 
+	public static final String DELIMITER = "----";// delimiter for entity's and filling from file
 	//Сюда добавляем свои методы для работы с ними через веб. 
 	public void setAutorization(boolean flagAutorized);
 	boolean createQuestion(String questionText,String descriptionText,String category,int level,List<String> answers,int trueAnswerNumber);
