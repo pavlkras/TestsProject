@@ -40,10 +40,7 @@ public class CompanyActions {
 	}
 
 	
-	//Use case Company Login
-	/*Pre-conditions:
-1.	The system comprising of front-end controller and back-end Database service (aka the System) is running up
-2.	The user is registered in the System
+/* ----------Use case Company Login--------------
 Login Normal Flow: 
 1.	The user enters a company username and password. 
 2.	The user presses a submit button
@@ -59,14 +56,14 @@ Pre-Conditions:
 1.	The user enters wrong password
 Wrong Password Flow:
 1.	The alert window appears with message: â€œWrong password. Type the right passwordâ€�
-2.	Returns to the Login
-	 */
+2.	Returns to the Login */
 	//
 
+        // TO DO stub Method 
 
-
-	//
-	//Use Case Company Sign up 3.1.2
+	// END  --------------- Use case Company Login--------------
+	
+/* -------------Use Case Company Sign up 3.1.2-----------
 	/*Pre-conditions:
 1.	The System is running up
 2.	The company is not registered in the System
@@ -91,9 +88,7 @@ Pre-Conditions:
 User Registered Flow:
 1.	The alert window appears with message: â€œThe company <username> already registered. Type another company username or go to Login with this oneâ€�
 2.	Returns to  the Registration Flow
-
-	 */
-	// ALEX FOOX	
+        	----------Company  ALEX FOOX -----------*/
 	@RequestMapping({"/input_form"})
 	public String query() {
 		return "Company_input_form";
@@ -124,11 +119,10 @@ User Registered Flow:
 		}
 		else return "Company_Error";
 	}
-	//
-	//
-	//Use case Ordering Test 3.1.3
-	//
-	/*Pre-Conditions:
+	//-------------Use Case Company Sign up 3.1.2-----------
+
+	/*-------------Use case Ordering Test 3.1.3-------------
+Pre-Conditions:
 1.	The System is running up
 2.	The user is signed in for the proper company
 Normal Flow:
@@ -137,61 +131,38 @@ Normal Flow:
 3.	The user enters an identity number of the tested person 
 4.	The user enters the person personal data (First Name, Family Name)
 5.	The System generates a test and a link for that test
-6.	The System presents the link for performing the test in the control mode 
-..............................
-...............................
-..............................
-...............................
-..............................
-...............................
-..............................
-...............................
-..............................
-...............................
-..............................
-...............................
-..............................
-...............................
-..............................
-...............................
-..............................
-...............................
-..............................
-...............................
-..............................
-...............................
-..............................
-...............................
-	 */
-	//Use case Viewing test results
-	/*
+6.	The System presents the link for performing the test in the control mode  */
+//
+
+//TO DO stub method
+	 
+//------------END  Use case Ordering Test 3.1.3-------------
+
+/*-------------Use case Viewing test results----------------
 3.1.4.	Viewing test results
 Pre-Conditions:
 1.	The System is running up
 2.	The user is signed in for the proper company
 Normal Flow:
 1.	The user selects the details for a test results query. There should be the following queries:
-â€¢	All test results
-â€¢	Test results for the specified time period. There should be start date and end date. The selection should be done using standard calendar gadget 
-â€¢	Test results for the specified person identity number
+a)	All test results
+b)	Test results for the specified time period. There should be start date and end date. The selection should be done using standard calendar gadget 
+c)	Test results for the specified person identity number
 2.	The user fills the proper data for the selected test
 3.	The System runs the query
 4.	 The System shows the list of the test results items. Item should contain: 
-â€¢	Personal data (First and Family names)
-â€¢	Test details (category, name, etc.)
-â€¢	Test date
+a)	Personal data (First and Family names)
+b)	Test details (category, name, etc.)
+c)	Test date
 5.	The user selects an item
 6.	The system shows the following results:
-â€¢	Test duration 
-â€¢	Number of the questions
-â€¢	Complexity level
-â€¢	Number of the right answers with the percentage 
-â€¢	Number of the wrong answers with the percentage
-â€¢	5 photos made during the test
+a)	Test duration 
+b)	Number of the questions
+c)	Complexity level
+d)	Number of the right answers with the percentage 
+e)	Number of the wrong answers with the percentage
+f)	5 photos made during the test	------ IGOR ------*/
 
-	 */
-
-	// IGOR
 	@RequestMapping({"/process_request"})
 	public String processRequestTestsCommon(String request_type, String date_from, String date_until, String user_id, Model model){
 
@@ -240,10 +211,6 @@ Normal Flow:
 
 		return "CompanyTestsCommon";
 	}
-
-
-
-
 	/*In order to use output string from method "compile_to_view" you should surround the code generated by method with <table></table> tags.
 	 Exanple:
 	 <table style="width: 100%" border=1>${Result}</table>
@@ -252,17 +219,12 @@ Normal Flow:
 	 In case of the list has only one string the header will build using default column name initiliazed in defaultColumnName string + coulumn count.
 	 In case of the empty list the method will return null string.
 	 */
-
-
-
 	@RequestMapping({"/test_details"})
 	public String processRequestTestDetails(String test_ID, Model model){
-
 		boolean errorlevel = false;
 		String res = "";
 		String bes_response = null;
 		int test_ID_ = 0;
-
 		try {
 			test_ID_ = Integer.parseInt(test_ID);
 		}catch(NumberFormatException e){
@@ -280,83 +242,6 @@ Normal Flow:
 
 		return "CompanyTestDetails";
 	}
-
-
-
-
-	/*
-	 *
-	 *
-=======
-	/*	*********** Stub method for test list generation ********************
-	static List<String> stubList(int rowsCount, int colunmsCount, String delimiter){
-	List<String> res = new ArrayList<String>();
-	String row ="";
-		for(int i = 0; i < rowsCount; i++){
-			for (int j = 0; j < colunmsCount; j++){
-				row += ("Row " + i + " " + "Column " + j + delimiter);
-			}
-			res.add(row);
-			row="";
-		}
-		return res;
-	}
->>>>>>> origin/master
-	 *
-	 *   ***************** Sample method for test *********************
-	@RequestMapping({"/"})
-	String calcProccessing(String line, Model model){
-		int rowsCount = 10;
-		int colunmsCount = 7;
-		String delimiter = "%";
-		List <String> tableData = stubList(rowsCount, colunmsCount, delimiter);
-
-		String res = compile_to_view(tableData);
-
-		model.addAttribute("Result", res);
-		return "viewResult";
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 *
-	 */
-
-
+// -----------------END  Use case Viewing test results-----------------
 
 }
