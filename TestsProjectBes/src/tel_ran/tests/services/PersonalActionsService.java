@@ -138,8 +138,7 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 			e.printStackTrace();
 		}
 		System.out.println(text);*/
-//		loadXMLQuestions(questionList);
-		return null;
+        return loadXMLQuestions(questionList);	
 	}
 	
 	private List<EntityQuestion> setQuestList(List<EntityQuestion> newQuestList) {
