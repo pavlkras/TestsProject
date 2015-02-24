@@ -22,11 +22,12 @@ public class EntityPerson {
     }
 
 
-	public void fillJsonObject(JSONObject jsonObj) {
+	public JSONObject fillJsonObject(JSONObject jsonObj) {
 		try {
 			jsonObj.put("firstName",f_name);
 			jsonObj.put("lastName",l_name);
-		} catch (JSONException e) {}		
+		} catch (JSONException e) {}
+		return jsonObj;
 	}
 	
     @Override

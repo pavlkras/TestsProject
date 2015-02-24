@@ -1,5 +1,7 @@
 package tel_ran.tests.services;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.Embedded;
@@ -34,14 +36,15 @@ public class EntityTestResultCommon {
 	}
 	
 
-	public void fillJsonObject(JSONObject jsonObj) {
+	public JSONObject fillJsonObject(JSONObject jsonObj) {
 		try {
 			jsonObj.put("testid",testID);
 			jsonObj.put("testCategory",testCategory);
 			jsonObj.put("testName", testName);
-			jsonObj.put("testDate", testDate);
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+			jsonObj.put("testDate", df.format(testDate));
 		} catch (JSONException e) {}
-		System.out.println(jsonObj);
+		return jsonObj;
 	}
 	
 	public int getTestID() {

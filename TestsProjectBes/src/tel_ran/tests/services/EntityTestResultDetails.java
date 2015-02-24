@@ -1,7 +1,10 @@
 package tel_ran.tests.services;
 
+import java.util.Arrays;
+
 import javax.persistence.Embeddable;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -25,18 +28,27 @@ public class EntityTestResultDetails {
 	public EntityTestResultDetails() {
 	}
 
-	public void fillJsonObject(JSONObject jsonObj) {
+	public JSONObject fillJsonObject(JSONObject jsonObj) {
 		try {
 			jsonObj.put("duration",duration);
 			jsonObj.put("complexityLevel",complexityLevel);
 			jsonObj.put("quantityRight", quantityRight);
 			jsonObj.put("quantityWrong", quantityWrong);
-			String [] picturesArray = pictures.split(CommonData.delimiter);
-			int i=1;
-			for(String picture:picturesArray){
-				jsonObj.put("pictureURL"+i++, picture);
+			
+			JSONArray picturesURLArray = new JSONArray();
+			if(pictures.length() > 0){
+				String [] picturesSplittedURLs = pictures.split(CommonData.delimiter);
+				System.out.println(Arrays.toString(picturesSplittedURLs));
+				int i=0;
+				for(String picture:picturesSplittedURLs){
+					picturesURLArray.put(i++, picture);
+				}
 			}
-		} catch (JSONException e) {}	
+			if(picturesURLArray.length() > 0){
+				jsonObj.put("picturesURL", picturesURLArray);
+			}
+		} catch (JSONException e) {}
+		return jsonObj;
 	}
 	
 	public int getDuration() {

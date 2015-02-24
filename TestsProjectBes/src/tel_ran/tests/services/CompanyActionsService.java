@@ -99,7 +99,7 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 				test.fillJsonObject(jsonObj);
 				test.getEntityTestResultDetails().fillJsonObject(jsonObj);
 				test.getEntityPerson().fillJsonObject(jsonObj);
-				
+				System.out.println(jsonObj.toString());
 				res.add(jsonObj.toString());
 			}
 		}
