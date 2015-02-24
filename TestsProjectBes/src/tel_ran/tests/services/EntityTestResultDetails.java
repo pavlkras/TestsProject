@@ -2,6 +2,9 @@ package tel_ran.tests.services;
 
 import javax.persistence.Embeddable;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import tel_ran.tests.services.common.CommonData;
 @Embeddable
 public class EntityTestResultDetails {	
@@ -17,37 +20,25 @@ public class EntityTestResultDetails {
 	private int complexityLevel;
 	private int quantityRight;
 	private int quantityWrong;
-	private String pictures;
+	private String pictures = "";
 
 	public EntityTestResultDetails() {
 	}
 
-	@Override
-	public String toString() {
-		StringBuffer strbuf = new StringBuffer();
-		strbuf.append(duration);
-		strbuf.append(CommonData.delimiter);
-		strbuf.append(complexityLevel);
-		strbuf.append(CommonData.delimiter);
-		strbuf.append(quantityRight);
-		strbuf.append(CommonData.delimiter);
-		strbuf.append(quantityWrong);
-		strbuf.append(CommonData.delimiter);
-		strbuf.append(pictures);
-		return strbuf.toString();
+	public void fillJsonObject(JSONObject jsonObj) {
+		try {
+			jsonObj.put("duration",duration);
+			jsonObj.put("complexityLevel",complexityLevel);
+			jsonObj.put("quantityRight", quantityRight);
+			jsonObj.put("quantityWrong", quantityWrong);
+			String [] picturesArray = pictures.split(CommonData.delimiter);
+			int i=1;
+			for(String picture:picturesArray){
+				jsonObj.put("pictureURL"+i++, picture);
+			}
+		} catch (JSONException e) {}	
 	}
-/*	public JSONObject toJson()
-	{
-		JSONObject json = new JSONObject();
-		json.put("duration",duration);
-		json.put("complexityLevel",complexityLevel);
-		json.put("quantityRight", quantityRight);
-		json.put("quantityWrong", quantityWrong);
-		json.put("pictures", pictures);
-
-		System.out.println(json);
-		return json;
-	}*/
+	
 	public int getDuration() {
 		return duration;
 	}
@@ -89,7 +80,7 @@ public class EntityTestResultDetails {
 	}
 	
 	public void addPictureLink(String pictureLink) { //http-links with delimiters
-		if(this.pictures==null||this.pictures.length() == 0){
+		if(this.pictures.length() == 0){
 			this.pictures = pictureLink;
 		}
 		else{

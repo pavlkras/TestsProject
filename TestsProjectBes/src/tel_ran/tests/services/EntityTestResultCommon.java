@@ -10,6 +10,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 @Entity
 @Table(name="TEST_RESULTS")
 public class EntityTestResultCommon {
@@ -19,16 +22,28 @@ public class EntityTestResultCommon {
 	private String testCategory = "";
 	private String testName = "";
 	private Date testDate;
-	
 	@Embedded
-	private EntityTestResultDetails entityTestDetails;
+	private EntityTestResultDetails entityTestResultDetails;
 	@ManyToOne
-	@JoinColumn(name="personID")
 	private EntityPerson entityPerson;
-	
+	@ManyToOne
+	private Company company;
+
 	public EntityTestResultCommon() {
 		
 	}
+	
+
+	public void fillJsonObject(JSONObject jsonObj) {
+		try {
+			jsonObj.put("testid",testID);
+			jsonObj.put("testCategory",testCategory);
+			jsonObj.put("testName", testName);
+			jsonObj.put("testDate", testDate);
+		} catch (JSONException e) {}
+		System.out.println(jsonObj);
+	}
+	
 	public int getTestID() {
 		return testID;
 	}
@@ -53,40 +68,11 @@ public class EntityTestResultCommon {
 	public void setTestDate(Date testDate) {
 		this.testDate = testDate;
 	}
-	
-/*	@Override
-	public String toString() {
-		StringBuffer strbuf = new StringBuffer();
-		strbuf.append(testID);
-		strbuf.append(CommonData.delimiter);
-		strbuf.append(testCategory);
-		strbuf.append(CommonData.delimiter);
-		strbuf.append(testName);
-		strbuf.append(CommonData.delimiter);
-		strbuf.append(testDate);
-		strbuf.append(CommonData.delimiter);
-		strbuf.append(entityTestDetails);
-		return strbuf.toString();
-		return this.toJson().toJSONString();
-	}*/
-
-/*public JSONObject toJson()
-	{
-		JSONObject json = new JSONObject();
-		json.put("testid",testID);
-		json.put("testCategory",testCategory);
-		json.put("testName", testName);
-		json.put("testDate", testDate);
-		json.put("entityPerson", entityPerson);
-		json.put("entityTestDetails", entityTestDetails);
-		System.out.println(json);
-		return json;
-	}*/
-	public EntityTestResultDetails getEntityTestDetails() {
-	    return entityTestDetails;
+	public EntityTestResultDetails getEntityTestResultDetails() {
+	    return entityTestResultDetails;
 	}
-	public void setEntityTestDetails(EntityTestResultDetails param) {
-	    this.entityTestDetails = param;
+	public void setEntityTestResultDetails(EntityTestResultDetails param) {
+	    this.entityTestResultDetails = param;
 	}
 	public EntityPerson getEntityPerson() {
 	    return entityPerson;
@@ -94,5 +80,10 @@ public class EntityTestResultCommon {
 	public void setEntityPerson(EntityPerson param) {
 	    this.entityPerson = param;
 	}
-
+	public Company getCompany() {
+	    return company;
+	}
+	public void setCompany(Company param) {
+	    this.company = param;
+	}
 }

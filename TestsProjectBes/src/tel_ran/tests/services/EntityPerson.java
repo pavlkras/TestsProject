@@ -1,42 +1,34 @@
 package tel_ran.tests.services;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import tel_ran.tests.services.common.CommonData;
-import tel_ran.tests.services.Company;
-
-import javax.persistence.ManyToOne;
-
-import tel_ran.tests.services.EntityTestResultCommon;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.OneToMany;
 @Entity
 @Table(name="PERSON")
 public class EntityPerson {
     @Id
-    @GeneratedValue
-    private int person_id;
+    private String person_id;
     @Column(name="firstName")
     private String f_name = "";
     @Column(name="lastName")
     private String l_name = "";
-	@ManyToOne
-	@JoinColumn(name="CompanyName")
-	private Company company;
-	@OneToMany(targetEntity = EntityTestResultCommon.class, mappedBy = "entityPerson", cascade = CascadeType.ALL)
-	private List<EntityTestResultCommon> entityTestResultCommon = new ArrayList<EntityTestResultCommon>();
+	
 	public EntityPerson() {
     }
 
+
+	public void fillJsonObject(JSONObject jsonObj) {
+		try {
+			jsonObj.put("firstName",f_name);
+			jsonObj.put("lastName",l_name);
+		} catch (JSONException e) {}		
+	}
+	
     @Override
     public String toString() {
     	StringBuffer strbuf = new StringBuffer ();
@@ -46,27 +38,11 @@ public class EntityPerson {
         return strbuf.toString();
     }
 
-	public Company getCompany() {
-	    return company;
-	}
-
-	public void setCompany(Company param) {
-	    this.company = param;
-	}
-
-	public List<EntityTestResultCommon> getEntityTestResultCommon() {
-	    return entityTestResultCommon;
-	}
-
-	public void setEntityTestResultCommon(List<EntityTestResultCommon> param) {
-	    this.entityTestResultCommon = param;
-	}
-
-	public int getPerson_id() {
+	public String getPerson_id() {
 		return person_id;
 	}
 
-	public void setPerson_id(int person_id) {
+	public void setPerson_id(String person_id) {
 		this.person_id = person_id;
 	}
 
