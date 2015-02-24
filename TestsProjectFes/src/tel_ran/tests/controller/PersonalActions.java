@@ -126,7 +126,7 @@ public class PersonalActions {
 
 			returnPage = "Personal_test_preparing_view";// witch parameters of test 
 		}		
-		model.addAttribute("logedUser","test from /// this action is click on the link provided in the mail /////////");
+		model.addAttribute("logedUser","You must by register to take the test");
 		return returnPage;
 	}
 	//---- page login for synchronize application after click the link for testing ---//
