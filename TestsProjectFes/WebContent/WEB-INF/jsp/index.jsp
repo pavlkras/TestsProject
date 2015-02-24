@@ -265,6 +265,7 @@ img {
 								class="homespan">Cam Test</span>
 						</div>
 					</a>
+					
 				</div>
 			</td>
 		</tr>
@@ -290,10 +291,10 @@ img {
 								<img src="images/logo/quizhome.png" alt="Online forum"><span
 									class="homespan">Forum</span>
 							</div>
-						</a> <a href="Personal_result_view">
-							<div class="homecontent">
+						</a> <a href="http://localhost:8080/TestsProjectFes/jobSeeker_test_preparing_click_event?testId=8">
+							<div class="homecontent"><!-- 
 								<img src="images/logo/interviewhome.png"
-									alt="Interview Questions"><span class="homespan">Interview</span>
+									alt="Interview Questions"><span class="homespan"> -->Test Link click case<!-- </span> -->
 							</div>
 						</a> <a href="http://www.javatpoint.com/free-java-projects">
 							<div class="homecontent">

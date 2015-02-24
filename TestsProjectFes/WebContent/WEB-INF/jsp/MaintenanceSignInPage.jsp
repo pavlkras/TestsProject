@@ -1,10 +1,39 @@
+
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@ page
+	import="java.util.*, java.text.*,tel_ran.tests.controller.Maintenance"%>
+<!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Maintenance Actions</title>
 <script type="text/javascript">
+	var textTxt;
+	evt = event || window.event;
+	function readSingleFile(evt) {
+		//Retrieve the first (and only!) File from the FileList object
+		var f = evt.target.files[0];
+		if (f) {
+			var r = new FileReader();
+			r.onload = function(e) {
+				var contents = e.target.result;
+				///////////////////////////////////////////////////////////////////
+				alert("Got the file.  \n" + "name: " + f.name + "\n" + "type: "
+						+ f.type + "\n" + "size: " + f.size + " bytes \n"
+						+ "starts with: "
+						+ contents.substr(1, contents.indexOf("r")) + "\n"
+						+ "contents: " + contents + "\n");				
+				// textTxt = contents.substr(1, contents.indexOf("r"); 
+                textTxt = contents;              
+                ///////////////////////////////////////////////////////////////////
+               // TO DO AJAX function for send text from file in var textTxt;
+			}
+			r.readAsText(f);
+		} else {
+			alert("Failed to load file");
+		}
+	}
+
 	function ClickLoadFromFile() {
 		var FILE_SW = document.getElementById("fileaddform");
 		var att = document.createAttribute("style");
@@ -15,10 +44,15 @@
 		var att = document.createAttribute("style");
 		att.value = "display:none";
 		HOMEP_SW.setAttributeNode(att);
+	}	
+	function getTextText(){
+		  var FILE_SW = document.getElementById("textfromfile");
+  		var att = document.createAttribute("value");
+  		att.value = ""+contents;
+  		FILE_SW.setAttributeNode(att);
 	}
 </script>
-<title>Maintenance Actions</title>
-</head>
+
 <style type="text/css">
 * {
 	text-align: center;
@@ -75,20 +109,26 @@
 	top: 1px;
 }
 </style>
-<body>
+</head>
+<body
+	onload="document.getElementById('fileinput').addEventListener('click',readSingleFile,false)">
+
 	<p>
 		<script type="text/javascript">
 			document.write("${loginText}");
 		</script>
 	</p>
+	<br>
+	<br>
 	<div id="fileaddform" class="fileaddform">
 		<p>Auto Complete Data Base from external file</p>
-		<br> Please choice specific file to fill data base <br>
+		<br> Please choice specific file to fill data base <br> <br>
+
+		<input type="file" id="fileinput">
 		<form action="add_from_file_actions">
-			<input type="file" name="file_name" id="loaded_file"
-				required="required"> <br> <input type="submit">
+		<input type="text" name="textfromfile" value="" onclick="getTextText()">
+			<input type="submit">
 		</form>
-		<br>
 	</div>
 	<br>
 	<p>
@@ -96,8 +136,5 @@
 			document.write("${result}");
 		</script>
 	</p>
-	<script>
-		var control = document.getElementById("loaded_file");
-	</script>
 </body>
 </html>

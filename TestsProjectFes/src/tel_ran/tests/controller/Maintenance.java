@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -246,14 +248,16 @@ public class Maintenance {
 		5.	The System reads the selected file, parsers data and adds new questions to Database. 
 		6.	The System shows the number of the added questions. Note: Added questions  may be seen in the table after browser refresh*/
 	/** ДОБАВЛЕНИЕ БОЛЬШОГО КОЛИЧЕСТВА ВОПРОСОВ ОДНОВРЕМЕННО С ПОМОЩЬЮ ФАЙЛА :действия разрешены Администратору системы */
+
 	@SuppressWarnings("resource")
 	@RequestMapping({"/add_from_file_actions"})
-	public String addFromFileProcessingPage(String file_name, Model model){	
+	public String addFromFileProcessingPage(String textfromfile, Model model){	
+		System.out.println(textfromfile);
 		List<String> res = new ArrayList<String>();
 		String line; 
 		BufferedReader input;
 		try {
-			input = new BufferedReader(new FileReader(file_name));			
+			input = new BufferedReader(new FileReader("D:/developer-workspaces/GitHub/repository/tr-project/text.txt"));			
 			while((line = input.readLine()) != null){ 
 				res.add(line);
 			}

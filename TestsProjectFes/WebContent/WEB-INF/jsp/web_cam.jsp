@@ -1,18 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+	pageEncoding="ISO-8859-1"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%> 
-<!-- <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> -->
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <!DOCTYPE html>
 <html>
 <head>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<link href="<c:url value="/static/css/general.css" />" rel="stylesheet">
+<link href="<c:url value="/static/css/choose.css" />" rel="stylesheet">
+<script
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="<c:url value="/static/js/add.js" />"></script>
-
-
-
 <script>
-
 var flagTestVideo = false;
 var flagMediaSupported = false;
 var flagCameraOn = false;
@@ -90,8 +89,6 @@ function hideE(id){
 }
 ///////////////////////////////////////////
 
-
-
 function hasGetUserMedia() {
 	  // Note: Opera builds are unprefixed.
 	  return !!(navigator.getUserMedia || navigator.webkitGetUserMedia ||
@@ -123,140 +120,145 @@ var captureMe = function () {
     document.getElementById("message").innerHTML="Test started, do not close this window!!! " + imagesCount;
     imagesCount = imagesCount + 1; 
 }
-	
-</script>
+	</script>
 
-
-
-<link href="<c:url value="/static/css/general.css" />" rel="stylesheet">
-<link href="<c:url value="/static/css/choose.css" />" rel="stylesheet">
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title >Test page, DO NOT CLOSE!</title>
-</head>
-<body>
-<div class = "header">
-<h1 class= "title">camera page</h1>
-<h3 class = "subtitle">Checking web camera features, if OK, then pass to the next page,  in the  new tab  (this page  must be online during test )</h3>
-</div>
 <style>
 .buttons {
-    border: 1px solid #0a3c59;
-    background: #3e779d;
-    background: -webkit-gradient(linear, left top, left bottom, from(#65a9d7), to(#3e779d));
-    background: -webkit-linear-gradient(top, #65a9d7, #3e779d);
-    background: -moz-linear-gradient(top, #65a9d7, #3e779d);
-    background: -ms-linear-gradient(top, #65a9d7, #3e779d);
-    background: -o-linear-gradient(top, #65a9d7, #3e779d);
-    background-image: -ms-linear-gradient(top, #65a9d7 0%, #3e779d 100%);
-    padding: 3px 3px;
-    -webkit-border-radius: 7px;
-    -moz-border-radius: 7px;
-    border-radius: 7px;
-    -webkit-box-shadow: rgba(255,255,255,0.4) 0 1px 0, inset rgba(255,255,255,0.4) 0 0px 0;
-    -moz-box-shadow: rgba(255,255,255,0.4) 0 1px 0, inset rgba(255,255,255,0.4) 0 0px 0;
-    box-shadow: rgba(255,255,255,0.4) 0 1px 0, inset rgba(255,255,255,0.4) 0 0px 0;
-    text-shadow: #7ea4bd 0 1px 0;
-    color: #06426c;
-    font-size: 14px;
-    font-family: helvetica, serif;
-    text-decoration: none;
-    vertical-align: middle;
-    width: 100px;
-    margin: 20px;
-}
-.buttons:hover {
-    border: 1px solid #0a3c59;
-    text-shadow: #1e4158 0 1px 0;
-    background: #3e779d;
-    background: -webkit-gradient(linear, left top, left bottom, from(#65a9d7), to(#3e779d));
-    background: -webkit-linear-gradient(top, #65a9d7, #3e779d);
-    background: -moz-linear-gradient(top, #65a9d7, #3e779d);
-    background: -ms-linear-gradient(top, #65a9d7, #3e779d);
-    background: -o-linear-gradient(top, #65a9d7, #3e779d);
-    background-image: -ms-linear-gradient(top, #65a9d7 0%, #3e779d 100%);
-    color: #fff;
-}
-.buttons:active {
-    text-shadow: #1e4158 0 1px 0;
-    border: 1px solid #0a3c59;
-    background: #65a9d7;
-    background: -webkit-gradient(linear, left top, left bottom, from(#3e779d), to(#3e779d));
-    background: -webkit-linear-gradient(top, #3e779d, #65a9d7);
-    background: -moz-linear-gradient(top, #3e779d, #65a9d7);
-    background: -ms-linear-gradient(top, #3e779d, #65a9d7);
-    background: -o-linear-gradient(top, #3e779d, #65a9d7);
-    background-image: -ms-linear-gradient(top, #3e779d 0%, #65a9d7 100%);
-    color: #fff;
-}
-#videoElement {
-    margin: 0px auto;
-    width: 320px;
-    height: 240px;
-    background-color: #666;
-    border: 10px #333 solid;
-}
-body{
-  text-align:center;
-  font-family: arial;
-  font-family: "Abel", Helvetica, sans-serif;
+	border: 1px solid #0a3c59;
+	background: #3e779d;
+	background: -webkit-gradient(linear, left top, left bottom, from(#65a9d7),
+		to(#3e779d));
+	background: -webkit-linear-gradient(top, #65a9d7, #3e779d);
+	background: -moz-linear-gradient(top, #65a9d7, #3e779d);
+	background: -ms-linear-gradient(top, #65a9d7, #3e779d);
+	background: -o-linear-gradient(top, #65a9d7, #3e779d);
+	background-image: -ms-linear-gradient(top, #65a9d7 0%, #3e779d 100%);
+	padding: 3px 3px;
+	-webkit-border-radius: 7px;
+	-moz-border-radius: 7px;
+	border-radius: 7px;
+	-webkit-box-shadow: rgba(255, 255, 255, 0.4) 0 1px 0, inset
+		rgba(255, 255, 255, 0.4) 0 0px 0;
+	-moz-box-shadow: rgba(255, 255, 255, 0.4) 0 1px 0, inset
+		rgba(255, 255, 255, 0.4) 0 0px 0;
+	box-shadow: rgba(255, 255, 255, 0.4) 0 1px 0, inset
+		rgba(255, 255, 255, 0.4) 0 0px 0;
+	text-shadow: #7ea4bd 0 1px 0;
+	color: #06426c;
+	font-size: 14px;
+	font-family: helvetica, serif;
+	text-decoration: none;
+	vertical-align: middle;
+	width: 100px;
+	margin: 20px;
 }
 
-.stuff{
-  display: none;
+.buttons:hover {
+	border: 1px solid #0a3c59;
+	text-shadow: #1e4158 0 1px 0;
+	background: #3e779d;
+	background: -webkit-gradient(linear, left top, left bottom, from(#65a9d7),
+		to(#3e779d));
+	background: -webkit-linear-gradient(top, #65a9d7, #3e779d);
+	background: -moz-linear-gradient(top, #65a9d7, #3e779d);
+	background: -ms-linear-gradient(top, #65a9d7, #3e779d);
+	background: -o-linear-gradient(top, #65a9d7, #3e779d);
+	background-image: -ms-linear-gradient(top, #65a9d7 0%, #3e779d 100%);
+	color: #fff;
+}
+
+.buttons:active {
+	text-shadow: #1e4158 0 1px 0;
+	border: 1px solid #0a3c59;
+	background: #65a9d7;
+	background: -webkit-gradient(linear, left top, left bottom, from(#3e779d),
+		to(#3e779d));
+	background: -webkit-linear-gradient(top, #3e779d, #65a9d7);
+	background: -moz-linear-gradient(top, #3e779d, #65a9d7);
+	background: -ms-linear-gradient(top, #3e779d, #65a9d7);
+	background: -o-linear-gradient(top, #3e779d, #65a9d7);
+	background-image: -ms-linear-gradient(top, #3e779d 0%, #65a9d7 100%);
+	color: #fff;
+}
+
+#videoElement {
+	margin: 0px auto;
+	width: 320px;
+	height: 240px;
+	background-color: #666;
+	border: 10px #333 solid;
+}
+
+body {
+	text-align: center;
+	font-family: arial;
+	font-family: "Abel", Helvetica, sans-serif;
+}
+
+.stuff {
+	display: none;
 }
 
 .item {
-  display: inline-block;
-  width: 300px;
-  margin: 20px 10px;
-  background: white;
-  padding: 10px 0px;
+	display: inline-block;
+	width: 300px;
+	margin: 20px 10px;
+	background: white;
+	padding: 10px 0px;
 }
 
-.item span{
-  padding-bottom: 15px;
-  display: block;
-  font-size: 36px;
-  color: rgb(100,100,100)
+.item span {
+	padding-bottom: 15px;
+	display: block;
+	font-size: 36px;
+	color: rgb(100, 100, 100)
 }
 
 video, canvas {
-  width:266px;
-  height:200px;
-  background: rgba(0,0,0,0.1);
+	width: 266px;
+	height: 200px;
+	background: rgba(0, 0, 0, 0.1);
 }
 
-video{
-          transform: scaleX(-1);
-       -o-transform: scaleX(-1);
-      -ms-transform: scaleX(-1);
-     -moz-transform: scaleX(-1);
-  -webkit-transform: scaleX(-1);
+video {
+	transform: scaleX(-1);
+	-o-transform: scaleX(-1);
+	-ms-transform: scaleX(-1);
+	-moz-transform: scaleX(-1);
+	-webkit-transform: scaleX(-1);
 }
 
-img{
-  width: 128px;
-  height: 96px;
-  margin:6px;
+img {
+	width: 128px;
+	height: 96px;
+	margin: 6px;
 }
 </style>
+<title>WEB_CAM test page, DO NOT CLOSE!</title>
 </head>
-  
 <body>
-<div>
+	<div class="header">
+		<h1 class="title">camera page</h1>
+		<h3 class="subtitle">Checking web camera features, if OK, then
+			pass to the next page, in the new tab (this page must be online
+			during test )</h3>
+	</div>
+	<div>
+		<input id="button_test_video" type="button" class="buttons"
+			value="Test video" />
+	</div>
+	<div class="item item1">
+		<video id="video" width="320" height="240" autoplay="autoplay"></video>
+	</div>
+	<div class="item item2">
+		<canvas id="canvas" width="320" height="240"></canvas>
+	</div>
+	<h1 class="title" id="message">To continue , needed the web
+		camera. Please let use the camera at the top of the page.</h1>
 
-<input id="button_test_video" type="button" class ="buttons" value="Test video" />
-</div>
-<div class="item item1">
-<video id="video" width="320" height="240" autoplay="autoplay" ></video>
-</div>
-<div class="item item2">
-<canvas id="canvas" width="320" height="240" ></canvas>
-</div>
-<h1 class= "title" id = "message">To continue , needed the web camera.  Please let use the camera at the top of the page.</h1> 
-
-<!-- <input type="button" id = "start_test" class = "buttons" value="Start test" onclick="window.location.href='test_run'"/> -->
-<input type="button" id = "start_test" class = "buttons" value="Start test" onclick="window.location.href='Personal_result_view'"/>
+	<!-- <input type="button" id = "start_test" class = "buttons" value="Start test" onclick="window.location.href='test_run'"/> original link -->
+	<input type="button" id="start_test" class="buttons" value="Start test"
+		onclick="window.location.href='jobSeeker_test_preparing_click_event'" />
 
 </body>
 </html>

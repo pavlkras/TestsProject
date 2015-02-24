@@ -35,10 +35,10 @@ import tel_ran.tests.services.interfaces.IPersonalActionsService;
 public class PersonalActions {
 	@Autowired
 	IPersonalActionsService personalService;       
-        @RequestMapping({"/"})
-        public String Index(){     return "index";       }
-        //--------------------- fields of this class ---------------------------
-	int personId;
+	@RequestMapping({"/"})
+	public String Index(){     return "index";       }
+	//--------------------- fields of this class ---------------------------
+	String personId = null;
 	private String categoryName = null;
 	private String level = null;
 	private String chosenQuestionsQuantity = null;
@@ -47,8 +47,8 @@ public class PersonalActions {
 	private List<Answer> mAnswList = null;
 	private int counter = 0;
 	private List<Answer> receivedAnswers = new ArrayList<Answer>();
-        //---------------------------------------------------------------------
-
+	//---------------------------------------------------------------------
+	////------  login case ---------///////
 	@RequestMapping({ "/PersonalActions" })
 	public String login_page(Map<String, Object> model,
 			HttpServletRequest request, Model pageModel) {
@@ -110,15 +110,51 @@ public class PersonalActions {
 
 		return "Personal_signup_failure";
 	}
+	//// ------ END login case ---------///////
+
+	///---------- this action is click on the link provided in the mail ----/////////	
+	@RequestMapping({"/jobSeeker_test_preparing_click_event"})
+	public String jobSeeker_test_preparing_click_event(HttpServletRequest request, Model model){
+		String returnPage = "index";
+		String testId = request.getQueryString();// getting  id of test from link after user click the link
+		if(personId == null){//check authorization 		
+			returnPage = "Personal_LinkClickAction";
+		}else{
+			System.out.println(testId+"  id witch text in link sending to jobSeeker ");
+
+			// TO DO call method Company AlexFoox getCreatedTestById(testId);	
+
+			returnPage = "Personal_test_preparing_view";// witch parameters of test 
+		}		
+		model.addAttribute("logedUser","test from /// this action is click on the link provided in the mail /////////");
+		return returnPage;
+	}
+	//---- page login for synchronize application after click the link for testing ---//
+	@RequestMapping({"/jobSeeker_authorization_event"})
+	public String jobSeeker_authorization_event(@ModelAttribute("authorization_event_form") User user,HttpServletRequest request, Model pageModel){
+		String[] getUser = personalService.loadUserservice(user.getId());
+		if (getUser != null) {
+			User inDB = new User(getUser);
+			if (user.getPassword().equals(inDB.getPassword())) {
+				pageModel.addAttribute("logedUser", user);
+				personId = inDB.getId();
+				return "web_cam";
+			} else
+				pageModel.addAttribute("logedUser", "user's not found");
+			return "Personal_wrong_password";
+		}
+		return "jobSeeker_test_preparing_click_event";
+	}
+	///---------- END action click on the link provided in the mail ----------------/////////
 	
-	/////////////web cam verify action mapping/////////////////////
+	///----------- web_cam verify action mapping ------------////
 	@RequestMapping({ "/web_cam" })
 	public String web_cam(Map<String, Object> model) {
 		User userForm = new User();
 		model.put("userForm", userForm);
 		return "web_cam";
 	}
-	////////////END web cam verify action mapping////////////////////
+	///--------- END web_cam verify action mapping --------/////
 
 	@RequestMapping(value = "/Personal_result_view")
 	public String allCategoriesAndLevelsSelection(Model model){
@@ -146,10 +182,10 @@ public class PersonalActions {
 	}
 
 	@RequestMapping({ "/test_preparing" })
-	public String starting_test(String qnumber, HttpServletRequest request, Model pageModel) {
+	public String starting_test(String personalqnumber, HttpServletRequest request, Model pageModel) {
 
 		//setting received number of question in Test
-		mTest.setqNum(Integer.parseInt(qnumber));
+		mTest.setqNum(Integer.parseInt(personalqnumber));
 
 		//test creation
 		String xmlStr = personalService.getTraineeQuestions(mTest.getCategoryName(), mTest.getLevel(), mTest.getqNum());
@@ -235,8 +271,8 @@ public class PersonalActions {
 			answIDsList.clear();
 		}// end for (int temp = 0; temp < qList.getLength(); temp++)
 		mTest.setQstnNmList(qstnIDsList);
-		}
-		
+	}
+
 	//	@RequestMapping("/get_link/{id}")
 	//	public String get_link(@PathVariable int id, Model pageModel) {
 	//		String test = service.loadTestService(id)[IUserService.TEST_ID];
@@ -257,7 +293,7 @@ public class PersonalActions {
 				if (ans.getAnswerText().compareTo(answer) == 0) {
 					receivedAnswers.add(ans);
 					break;
-					}
+				}
 			}
 			counter++;
 		}
