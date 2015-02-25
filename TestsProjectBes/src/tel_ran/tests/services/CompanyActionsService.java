@@ -3,7 +3,6 @@ package tel_ran.tests.services;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.Query;
 
@@ -13,11 +12,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import tel_ran.tests.services.interfaces.ICompanyActionsService;
 
+
 public class CompanyActionsService extends TestsPersistence implements ICompanyActionsService {
 
+	//-------------Use Case Company Sign up 3.1.2----------- //   BEGIN    ///
 	@Override
 	public String[] getAnySingleQuery(String strQuery) {
-		
+
 		String []array = null;
 		try {
 			Query query=em.createQuery(strQuery);
@@ -32,43 +33,44 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 		}
 		return array;
 	}
-	
 
-	
 
 	@Override
 	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
 	public boolean createCompany(String C_Name, String C_Site,
 			String C_Specialization, String C_AmountEmployes, String C_Password) {
-		
+
 		boolean result=false;
-		
-			if(em.find(Company.class, C_Name)==null){
-				Company comp =new Company();
-				comp.setC_Name(C_Name);
-				comp.setC_Site(C_Site);
-				comp.setC_Specialization(C_Specialization);
-				comp.setC_AmountEmployes(C_AmountEmployes);
-				comp.setPassword(C_Password);
-				em.persist(comp);
-				result=true;
-			}
-	
+
+		if(em.find(Company.class, C_Name)==null){
+			Company comp =new Company();
+			comp.setC_Name(C_Name);
+			comp.setC_Site(C_Site);
+			comp.setC_Specialization(C_Specialization);
+			comp.setC_AmountEmployes(C_AmountEmployes);
+			comp.setPassword(C_Password);
+			em.persist(comp);
+			result=true;
+		}
+
 		return result;
 	}
 
-
+//-------------Use Case Company Sign up 3.1.2-----------  /// end  ///
 	@Override
 	public void printQuestion(int arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
-// 	3.1.4. Viewing test results /// BEGIN ////
+	
+
+	
+	// 	3.1.4. Viewing test results /// BEGIN ////
 	@Override
 	public List<String> getTestsResultsAll(String companyName) {
 		List<String> res = new ArrayList<String>();
 		Company company = getCompanyInstance(companyName);
-		
+
 		if(company!=null){
 			/*@SuppressWarnings("unchecked")
 			Query query = em.createQuery("SELECT p, t FROM EntityPerson p LEFT OUTER JOIN p.entityTestResultCommon t WHERE p.company = :company ORDER BY p.person_id").setParameter("company", company);
@@ -92,7 +94,7 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 					res.add(strbuf.toString());
 				}
 			}
-*/
+			 */
 			List<EntityTestResultCommon> tests = company.getEntityTestResultCommon();
 			for (EntityTestResultCommon test: tests){
 				JSONObject jsonObj = new JSONObject();
@@ -118,11 +120,11 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 	public List<String> getTestsResultsForPersonID(String companyName, int personID) {
 		Company company = null;
 		company = getCompanyInstance(companyName);
-		
+
 		@SuppressWarnings("unchecked")
 		List<EntityTestResultCommon> testsData = (List<EntityTestResultCommon>) em.createQuery
-				("SELECT t FROM EntityPerson p JOIN p.entityTestResultCommon t WHERE p.C_Name = :company AND p.person_id = :personID")
-				.setParameter("personID", personID).setParameter("company", company).getResultList();
+		("SELECT t FROM EntityPerson p JOIN p.entityTestResultCommon t WHERE p.C_Name = :company AND p.person_id = :personID")
+		.setParameter("personID", personID).setParameter("company", company).getResultList();
 		System.out.println("Number of tests gotten from DB: "+testsData.size());
 		List<String> res = new ArrayList<String>();
 		if( testsData.size() > 0 ){
@@ -136,8 +138,8 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 	@Override
 	public List<String> getTestsResultsForTimeInterval(String companyName,
 			Date date_from, Date date_until) {
-		
-		
+
+
 		return new ArrayList<String>();
 	}
 
@@ -145,6 +147,49 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 	public String getTestsResultsForTestID(String companyName, int testID) {
 		return "";
 	}
-// 	3.1.4. Viewing test results /// END ////
+	// 	3.1.4. Viewing test results /// END ////
+
+
+
+
+	// 	Use case Ordering Test 3.1.3 /// BEGIN ////
+	@Override
+	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
+	public long  createIdTest(List<Long> list, int personId) {
+		EntityPersonFOOX temp = em.find(EntityPersonFOOX.class, personId);	
+		EntityTest test = new EntityTest();
+		EntityPersonFOOX pers = new EntityPersonFOOX();
+		StringBuffer idQuestion = new StringBuffer();
+		for(Long s : list){
+			System.out.println(s.toString());
+			idQuestion.append(s);
+			idQuestion.append(",");
+		}
+		test.setQuestion(idQuestion.toString() );
+		pers.setPersonId(personId);
+		test.setPersonId(temp);
+		em.persist(test);
+		
+		long testId = test.getTestId();
+
+		return testId;
+	}
+
+	@Override
+	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
+	public int createPerson(int personId,String personName,String personSurname) {
+		int result = personId;		
+		if(em.find(EntityPersonFOOX.class, personId)==null){
+			EntityPersonFOOX person = new EntityPersonFOOX();
+			person.setPersonId(personId);
+			person.setPersonName(personName);
+			person.setPersonSurname(personSurname);			
+			em.persist(person);        
+			result=person.getPersonId();
+			
+		}
+		return result;
+	}
+	// 	Use case Ordering Test 3.1.3 /// END  ////
 
 }
