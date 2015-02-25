@@ -10,6 +10,10 @@ void printQuestion(int id);
 boolean createCompany(String C_Name,String C_Site, String C_Specialization,String C_AmountEmployes,String C_Password);
 String []getAnySingleQuery(String strQuery);
 
+//Use case Ordering Test 3.1.3
+long createIdTest(List<Long> list,int personId);
+int createPerson(int personId,String personName,String personSurname);
+
 //Company actions for 3.1.4. Viewing test results
 List<String> getTestsResultsAll(String currCompanyId);
 List<String> getTestsResultsForTimeInterval(String currCompanyId, Date timeFrom, Date timeUntil);
