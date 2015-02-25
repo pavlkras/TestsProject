@@ -113,17 +113,16 @@ public class PersonalActions {
 	//// ------ END login case ---------///////
 
 	///---------- this action is click on the link provided in the mail ----/////////	
+	String testId ="";
 	@RequestMapping({"/jobSeeker_test_preparing_click_event"})
 	public String jobSeeker_test_preparing_click_event(HttpServletRequest request, Model model){
 		String returnPage = "index";
-		String testId = request.getQueryString();// getting  id of test from link after user click the link
-		if(personId == null){//check authorization 		
+		 
+		if(personId == null){//check authorization
+			testId = request.getQueryString();// getting  id of test from link after user click the link
 			returnPage = "Personal_LinkClickAction";
-		}else{
+		}else{ 
 			System.out.println(testId+"  id witch text in link sending to jobSeeker ");
-
-			// TO DO call method Company AlexFoox getCreatedTestById(testId);	
-
 			returnPage = "Personal_test_preparing_view";// witch parameters of test 
 		}		
 		model.addAttribute("logedUser","You must by register to take the test");
@@ -146,7 +145,7 @@ public class PersonalActions {
 		return "jobSeeker_test_preparing_click_event";
 	}
 	///---------- END action click on the link provided in the mail ----------------/////////
-	
+
 	///----------- web_cam verify action mapping ------------////
 	@RequestMapping({ "/web_cam" })
 	public String web_cam(Map<String, Object> model) {

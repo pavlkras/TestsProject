@@ -291,7 +291,7 @@ img {
 								<img src="images/logo/quizhome.png" alt="Online forum"><span
 									class="homespan">Forum</span>
 							</div>
-						</a> <a href="http://localhost:8080/TestsProjectFes/jobSeeker_test_preparing_click_event?testId=8">
+						</a> <a href="http://localhost:8080/TestsProjectFes/jobSeeker_test_preparing_click_event?8">
 							<div class="homecontent"><!-- 
 								<img src="images/logo/interviewhome.png"
 									alt="Interview Questions"><span class="homespan"> -->Test Link click case<!-- </span> -->
