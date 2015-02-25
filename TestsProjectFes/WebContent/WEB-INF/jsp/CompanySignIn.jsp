@@ -14,6 +14,10 @@
 	<form action="create_request">
 		<input type="submit" value="Company Tests Results Start Page"/>
 	</form>
+	<br>
+	<form action="ordering">
+		<input type="submit" value="Company Tests ordering Page"/>
+	</form>
 </body>
 </html>
 

@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import tel_ran.tests.services.interfaces.ICompanyActionsService;
+import tel_ran.tests.services.interfaces.IMaintenanceService;
 import tel_ran.tests.controller.CompanyTestsResutlsHandler;
 
 @Controller
@@ -22,7 +23,10 @@ import tel_ran.tests.controller.CompanyTestsResutlsHandler;
 public class CompanyActions {
 	String companyName;
 	@Autowired
-	ICompanyActionsService companyService;	
+	ICompanyActionsService companyService;
+	
+	@Autowired
+	IMaintenanceService maintenanceService;
 	// Action Re-mapping for Send Ajax request to DB if equal  user and priority level, and set: flAuthorization=true;
 		@RequestMapping({"/CompanyActions"})
 		public String signIn(String usernamec,String passwordc){			
@@ -134,8 +138,26 @@ Normal Flow:
 6.	The System presents the link for performing the test in the control mode  */
 //
 
-//TO DO stub method
-	 
+	@RequestMapping({"/ordering"})
+	public String generateTest() {
+		return "CompanyGenerateTest";
+	}
+
+
+	@RequestMapping({"/add_test"})
+	public String createTest(String category,String level,int personId,String personName, String personSurname, Model model) {
+		maintenanceService.setAutorization(true);
+
+		List<Long> listIdQuestions = maintenanceService.getUniqueSetQuestionsForTest(category, level, (long) 15);
+
+	    int personId1 = companyService.createPerson(personId, personName, personSurname);
+		long idTest = companyService.createIdTest(listIdQuestions,personId1);
+		String link = "http://localhost:8080/TestsProjectFes/test_preparing?" + idTest;        
+
+		model.addAttribute("myResult", link);
+
+		return "CompanyTestLink";
+	}	 
 //------------END  Use case Ordering Test 3.1.3-------------
 
 /*-------------Use case Viewing test results----------------
