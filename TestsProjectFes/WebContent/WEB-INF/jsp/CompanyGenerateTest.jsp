@@ -5,6 +5,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Insert title here</title>
+<script type="text/javascript">
+  function check(login) {
+    if (login.length != 9) document.getElementById("e_login").style.display = "inline";
+    else document.getElementById("e_login").style.display = "none";
+  }
+</script>
 </head>
 <body>
  <form action="add_test">
@@ -21,11 +27,13 @@
     4<input type="radio" name="level" value=4>
     5<input type="radio" name="level" value=5> <br> 
   <br><br> 
+  
+
   Please fill data of Person:   <br>        
    <table>
    <tr>
     <td>personId:</td> 
-    <td><input type="text" name="personId" size=10 /> <br> </td>
+    <td> <input type="text" name="personId" onkeyup="check(this.value)"  maxlength="9" size = "7"/> <span id="e_login" style="display: none; color: #c00;">Not correct</span><br> </td>
    </tr>
    <tr>
     <td>personName:</td>
