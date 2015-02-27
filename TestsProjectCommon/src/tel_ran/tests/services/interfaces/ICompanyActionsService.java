@@ -17,9 +17,6 @@ int createPerson(int personId,String personName,String personSurname);
 //Company actions for 3.1.4. Viewing test results
 List<String> getTestsResultsAll(String currCompanyId);
 List<String> getTestsResultsForTimeInterval(String currCompanyId, Date timeFrom, Date timeUntil);
-List<String> getTestsResultsForPersonID(String currCompanyId, int PersonID);
-String getTestsResultsForTestID(String currCompanyId, int TestID);
-//getPicturesFromTest(int testID);
-
+List<String> getTestsResultsForPersonID(String currCompanyId, int personID);
 
 }
