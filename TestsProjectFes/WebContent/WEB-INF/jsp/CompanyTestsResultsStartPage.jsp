@@ -17,21 +17,21 @@
   	$(function() {
   		$(':radio[id=all]').change(function() {
 	   		$("#dates").hide();
-	   		$("#user_id_block").hide();
+	   		$("#person_id_block").hide();
 		});
 	});
   	
   	$(function() {
 		$(':radio[id=time_interval]').change(function() {
 	   		$("#dates").show();
-	   		$("#user_id_block").hide();
+	   		$("#person_id_block").hide();
 		});
 	});
   	
   	$(function() {
-  		$(':radio[id=user_specific]').change(function() {
+  		$(':radio[id=by_person_id]').change(function() {
   		 	$("#dates").hide();
-  		 	$("#user_id_block").show();
+  		 	$("#person_id_block").show();
   		});
   	});
 
@@ -44,14 +44,14 @@
 <br>
 <label><input type="radio" name="request_type" id="time_interval" value="time_interval">Time interval</label>
 <br>
-<label><input type="radio" name="request_type" id="user_specific" value="user_specific">User-specific</label>
+<label><input type="radio" name="request_type" id="by_person_id" value="by_person_id">By person ID</label>
 <br>
 <div id="dates" style="display:none">		
 <p><label>Date from: <input type="text" name="date_from"  value=""></label></p>
 <p><label>Date to: <input type="text" name="date_until" value=""></label></p>
 </div>
-<div id="user_id_block" style="display:none">
-User ID <input type="text" name="user_id">
+<div id="person_id_block" style="display:none">
+Person ID <input type="text" name="person_id">
 </div>
 
 

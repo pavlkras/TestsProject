@@ -186,15 +186,14 @@ e)	Number of the wrong answers with the percentage
 f)	5 photos made during the test	------ IGOR ------*/
 
 	@RequestMapping({"/process_request"})
-	public String processRequestTestsCommon(String request_type, String date_from, String date_until, String user_id, Model model){
+	public String processRequestTestsCommon(String request_type, String date_from, String date_until, String person_id, Model model){
 
-		boolean errorlevel = false;
+		boolean isError = false;
 		String res = "";
 		List<String> bes_response = new ArrayList<String>();
 
 		if(request_type.equals("all")){
 			List<String> temp = companyService.getTestsResultsAll("Comp2");  //Changed for test
-			//List<String> temp = companyService.getTestsResultsAll(companyName);  //Above is changed for test
 			if(temp != null){
 				bes_response = temp; 
 			}
@@ -207,27 +206,38 @@ f)	5 photos made during the test	------ IGOR ------*/
 				DateFormat df = new SimpleDateFormat ("MM/dd/yyyy"); 
 				date_from_ = df.parse(date_from);
 				date_until_ = df.parse(date_until);
+				System.out.println(date_from_);
+				System.out.println(date_until_);
+				if (date_until_.compareTo(date_from_)<0){
+					isError = true;
+				}
 			} catch (ParseException e) {
-				errorlevel = true;
+				isError = true;
 			}
-			if(!errorlevel)
-				bes_response = companyService.getTestsResultsForTimeInterval(companyName, date_from_, date_until_);
+			if(!isError)
+				bes_response = companyService.getTestsResultsForTimeInterval("Comp2", date_from_, date_until_);
 
-		}else if(request_type.equals("user_specific")){
-			int user_ID = 0;
+		}else if(request_type.equals("by_person_id")){
+			int id = 0;
 			try {
-				user_ID = Integer.parseInt(user_id);
+				id = Integer.parseInt(person_id);
+				System.out.println("Parsed int: "+id);
 			}catch(NumberFormatException e){
-				errorlevel = true;
+				isError = true;
 			}
-			if(!errorlevel)
-				bes_response = companyService.getTestsResultsForPersonID(companyName, user_ID);
+			if(!isError)
+				bes_response = companyService.getTestsResultsForPersonID("Comp2", id);
 		}
 
-		if (errorlevel){
+		if (isError){
 			res = "ErrorMessage";
 		}else{
-			res = CompanyTestsResutlsHandler.compileToViewTestCommon(bes_response);
+			StringBuffer strbuf = new StringBuffer();
+			for(String jSon : bes_response){
+				strbuf.append(jSon);
+			}
+			res = strbuf.toString();
+			//res = CompanyTestsResutlsHandler.compileToViewTestCommon(bes_response);
 		}
 		model.addAttribute("res", res);
 
@@ -243,7 +253,7 @@ f)	5 photos made during the test	------ IGOR ------*/
 	 */
 	@RequestMapping({"/test_details"})
 	public String processRequestTestDetails(String test_ID, Model model){
-		boolean errorlevel = false;
+		/*boolean errorlevel = false;
 		String res = "";
 		String bes_response = null;
 		int test_ID_ = 0;
@@ -261,7 +271,7 @@ f)	5 photos made during the test	------ IGOR ------*/
 			res = CompanyTestsResutlsHandler.compileToViewTestDetails(bes_response);
 		}
 		model.addAttribute("res", res);
-
+*/
 		return "CompanyTestDetails";
 	}
 // -----------------END  Use case Viewing test results-----------------
