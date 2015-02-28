@@ -14,7 +14,41 @@ import tel_ran.tests.services.interfaces.ICompanyActionsService;
 
 
 public class CompanyActionsService extends TestsPersistence implements ICompanyActionsService {
+  //-------------- Case 3.1.1 ------------------------// begin//
+	
 
+	@Override
+	public boolean CompanyAuthorization(String companyName, String password) {
+     boolean result = false;
+     Company res = em.find(Company.class, companyName);
+     if(res != null){
+      
+       if( res.getPassword().equals(password)){
+       result = true;
+       
+       }else{
+    	   
+    	   result = false;
+       }
+    	}
+		
+		return result;
+	}
+
+
+	@Override
+	public boolean getCompanyByName(String companyName) {
+    boolean result = false;
+	if(em.find(Company.class, companyName) != null){
+     result = true;
+    
+	}
+		return result;
+	}
+	
+	
+	 //-------------- Case 3.1.1 ------------------------// end//
+	
 	//-------------Use Case Company Sign up 3.1.2----------- //   BEGIN    ///
 	@Override
 	public String[] getAnySingleQuery(String strQuery) {
@@ -169,5 +203,7 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 		return result;
 	}
 	// 	Use case Ordering Test 3.1.3 /// END  ////
+
+
 
 }
