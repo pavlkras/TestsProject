@@ -79,7 +79,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		em.persist(temp);// sending to DB добавляем данные в БД
 		return temp;
 	}
-	//////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////---- update methods -----/////////////////////////////////////////////////
 	@Override	
 	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW)	
 	public boolean UpdateQuestionInDataBase(String questionID,String questionText,String descriptionText,String category, int level,List<String> answers,int trueAnswerNumber) {
@@ -110,7 +110,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 
 		return flagAction;// return to client 
 	}	
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////--- Search method -----//////////////////////////////////////////////////////////////////////////////
 	/** ЗАПРОС В БД По вопросу, словам из вопроса, или букве(нескольким буквам типа  J2EE) SEARCH Question  */
 	@SuppressWarnings("unchecked")
 	@Override	
