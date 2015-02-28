@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import tel_ran.tests.services.interfaces.ICompanyActionsService;
 import tel_ran.tests.services.interfaces.IMaintenanceService;
-import tel_ran.tests.controller.CompanyTestsResutlsHandler;
+
 
 @Controller
 @Scope("session") /*session timer default = 20min*/
@@ -27,9 +27,12 @@ public class CompanyActions {
 	
 	@Autowired
 	IMaintenanceService maintenanceService;
+	
+	
+	
 	// Action Re-mapping for Send Ajax request to DB if equal  user and priority level, and set: flAuthorization=true;
 		@RequestMapping({"/CompanyActions"})
-		public String signIn(String usernamec,String passwordc){			
+		public String signIn(){			
 			return "CompanySignIn";
 		}
 	// ALEX FOOX Action Re-mapping
@@ -63,7 +66,26 @@ Wrong Password Flow:
 2.	Returns to the Login */
 	//
 
-        // TO DO stub Method 
+	@RequestMapping("/loginProcessing")
+	public String loginProcessing(String companyName, String password,Model model){
+	boolean IfExistCompany = companyService.getCompanyByName(companyName);
+	String result;
+	if(IfExistCompany){
+	boolean ress = companyService.CompanyAuthorization(companyName, password);
+    if(ress ){       
+         result = "CompanyGenerateTest";
+    }else{
+    result = "CompanySignIn";
+    model.addAttribute("result", " This password not variable try again " );
+    }
+    }else {	       			
+	   result = "CompanySignIn";
+	   model.addAttribute("result", " This Company not exist - " + companyName);
+	}
+     return result;
+	}
+
+	
 
 	// END  --------------- Use case Company Login--------------
 	
@@ -138,10 +160,7 @@ Normal Flow:
 6.	The System presents the link for performing the test in the control mode  */
 //
 
-	@RequestMapping({"/ordering"})
-	public String generateTest() {
-		return "CompanyGenerateTest";
-	}
+	
 
 
 	@RequestMapping({"/add_test"})

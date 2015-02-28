@@ -7,17 +7,23 @@
 <title>Point Cat</title>
 </head>
 <body>
-	<form action="CompanyRegistration">
-		<input type="submit" value="Company Registration Start Page" />
+	<form action="loginProcessing">
+	Login:	<input type="text" name="companyName"><br>
+	Password: <input
+			type="password" name="password"><br> <input
+			type="submit" value="LogIn" >
 	</form>
+    <br>
+	<a href ="CompanyRegistration">Registration</a>
 	<br>
 	<form action="create_request">
-		<input type="submit" value="Company Tests Results Start Page"/>
+		<input type="submit" value="Company Tests Results Start Page" />
 	</form>
-	<br>
-	<form action="ordering">
-		<input type="submit" value="Company Tests ordering Page"/>
-	</form>
+	<p>
+		<script type="text/javascript">
+			document.write("${result}");
+		</script>
+	</p>
 </body>
 </html>
 
