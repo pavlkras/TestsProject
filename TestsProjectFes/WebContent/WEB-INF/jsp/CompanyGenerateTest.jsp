@@ -27,8 +27,6 @@
     4<input type="radio" name="level" value=4>
     5<input type="radio" name="level" value=5> <br> 
   <br><br> 
-  
-
   Please fill data of Person:   <br>        
    <table>
    <tr>
@@ -43,13 +41,10 @@
     <td>personSurname: </td>
     <td><input type="text" name="personSurname" size=20 /> <br> </td> 
    </tr> 
-   </table>
-    
+   </table>    
    <input type="submit" value="Generate test" />
  </form>
- <br>
- <form action="input_form">
-  <input type="submit" value="To input form"/>
- </form>
+ <br> 
+ <a href="create_request">Test Details</a>
 </body>
 </html>

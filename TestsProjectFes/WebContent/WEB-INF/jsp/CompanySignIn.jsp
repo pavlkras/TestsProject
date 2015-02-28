@@ -4,21 +4,22 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Point Cat</title>
+<title>Company Home Page</title>
 </head>
 <body>
-	<form action="loginProcessing">
-	Login:	<input type="text" name="companyName"><br>
-	Password: <input
-			type="password" name="password"><br> <input
-			type="submit" value="LogIn" >
-	</form>
-    <br>
-	<a href ="CompanyRegistration">Registration</a>
 	<br>
-	<form action="create_request">
-		<input type="submit" value="Company Tests Results Start Page" />
+	<br>
+	<form action="loginProcessing">
+		Login: <input type="text" name="companyName" size="24"><br>
+		<br> Password: <input type="password" name="password" size="20"><br>
+		<br> <input type="submit" value="LogIn">
 	</form>
+	<br>
+	<a href="companyadd">Registration</a>
+	<br>
+	<br>
+	<a href="search_form">Search Company</a>
+	<br>
 	<p>
 		<script type="text/javascript">
 			document.write("${result}");

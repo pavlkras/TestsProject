@@ -8,15 +8,16 @@
 </head>
 <body>
 	<form action="query_processing">
-		please type query: <input type="text" name="jpaStr" size=50 value="Select c from Company c" >
-		<input type="submit" value="Send query" name="adding"/>
-		<button  value="Select c from Company c" name="adding">VIEW ALL</button>
+		Please type Company Name for search: <input type="text" name="jpaStr" size=50 value="" ><!-- Select c from Company c  -->
+		<input type="submit" value="SEARCH" name="adding"/>
+		<button  value="" name="adding">VIEW ALL</button>
 	</form>
 	<br>
-	<form action="companyadd">
-		<input type="submit" value="Add COMPANY"/>
-	</form>
+	<p>${myResult}</p>
+	<br>	
+	<a href="companyadd">Add new Company</a>
 	<br>
-	<a href="http://localhost:8080/TestsProjectFes/companyadd">Add COMPANY</a>
+	<br>
+	<a href=".">Home Page</a>
 </body>
 </html>

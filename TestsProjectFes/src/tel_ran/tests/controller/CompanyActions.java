@@ -24,30 +24,23 @@ public class CompanyActions {
 	String companyName;
 	@Autowired
 	ICompanyActionsService companyService;
-	
+
+
 	@Autowired
-	IMaintenanceService maintenanceService;
-	
-	
-	
+	IMaintenanceService maintenanceService;	
 	// Action Re-mapping for Send Ajax request to DB if equal  user and priority level, and set: flAuthorization=true;
-		@RequestMapping({"/CompanyActions"})
-		public String signIn(){			
-			return "CompanySignIn";
-		}
-	// ALEX FOOX Action Re-mapping
-	@RequestMapping({"/CompanyRegistration"})
-	public String transitionActionPage(){		
-		return "CompanyRegistrationPage";
+	@RequestMapping({"/CompanyActions"})
+	public String signIn(){			
+		return "CompanySignIn";
 	}
+
 	// IGOR Action Re-mapping
 	@RequestMapping({"/create_request"})
 	public String createRequest(){
 		return "CompanyTestsResultsStartPage";
 	}
 
-	
-/* ----------Use case Company Login--------------
+	/* ----------Use case Company Login--------------
 Login Normal Flow: 
 1.	The user enters a company username and password. 
 2.	The user presses a submit button
@@ -68,28 +61,25 @@ Wrong Password Flow:
 
 	@RequestMapping("/loginProcessing")
 	public String loginProcessing(String companyName, String password,Model model){
-	boolean IfExistCompany = companyService.getCompanyByName(companyName);
-	String result;
-	if(IfExistCompany){
-	boolean ress = companyService.CompanyAuthorization(companyName, password);
-    if(ress ){       
-         result = "CompanyGenerateTest";
-    }else{
-    result = "CompanySignIn";
-    model.addAttribute("result", " This password not variable try again " );
-    }
-    }else {	       			
-	   result = "CompanySignIn";
-	   model.addAttribute("result", " This Company not exist - " + companyName);
+		boolean IfExistCompany = companyService.getCompanyByName(companyName);
+		String result;
+		if(IfExistCompany){
+			boolean ress = companyService.CompanyAuthorization(companyName, password);
+			if(ress ){       
+				result = "CompanyGenerateTest";
+			}else{
+				result = "CompanySignIn";
+				model.addAttribute("result", " This password not variable try again " );
+			}
+		}else {	       			
+			result = "CompanySignIn";
+			model.addAttribute("result", " This Company not exist - " + companyName);
+		}
+		return result;
 	}
-     return result;
-	}
-
-	
-
 	// END  --------------- Use case Company Login--------------
-	
-/* -------------Use Case Company Sign up 3.1.2-----------
+
+	/* -------------Use Case Company Sign up 3.1.2-----------
 	/*Pre-conditions:
 1.	The System is running up
 2.	The company is not registered in the System
@@ -115,20 +105,19 @@ User Registered Flow:
 1.	The alert window appears with message: â€œThe company <username> already registered. Type another company username or go to Login with this oneâ€�
 2.	Returns to  the Registration Flow
         	----------Company  ALEX FOOX -----------*/
-	@RequestMapping({"/input_form"})
+	@RequestMapping({"/search_form"})
 	public String query() {
-		return "Company_input_form";
+		return "Company_search_form";
 	}
 
 	@RequestMapping({"/query_processing"})
 	public String queryProcessing(String jpaStr, Model model) {
-		;
 		String[] result = companyService.getAnySingleQuery(jpaStr);
 		StringBuffer buf = new StringBuffer();
 		for (String str : result)
 			buf.append(str).append("<br>");
 		model.addAttribute("myResult", buf.toString());
-		return "Company_result_view";
+		return "Company_search_form";
 	}
 
 	@RequestMapping({"/companyadd"})
@@ -137,13 +126,17 @@ User Registered Flow:
 	}
 
 	@RequestMapping({"/add_processing"})
-	public String addProcessing(String C_Name,String C_Site, String C_Specialization,String C_AmountEmployes,String C_Password) {
+	public String addProcessing(String C_Name,String C_Site, String C_Specialization,String C_AmountEmployes,String C_Password,Model model) {
 
 		boolean flag = companyService.createCompany(C_Name, C_Site, C_Specialization, C_AmountEmployes, C_Password);
 		if(flag==true){
-			return "Company_success_adding";
+			model.addAttribute("myResult", "<H1>Company Added Success</H1>");
+			return "Company_search_form";
 		}
-		else return "Company_Error";
+		else{
+			model.addAttribute("myResult", "<H1>This Company - "+C_Name+".  Already Exist!</H1>");
+			return "Company_search_form";
+		}
 	}
 	//-------------Use Case Company Sign up 3.1.2-----------
 
@@ -158,28 +151,23 @@ Normal Flow:
 4.	The user enters the person personal data (First Name, Family Name)
 5.	The System generates a test and a link for that test
 6.	The System presents the link for performing the test in the control mode  */
-//
-
-	
-
-
+	//
 	@RequestMapping({"/add_test"})
 	public String createTest(String category,String level,int personId,String personName, String personSurname, Model model) {
 		maintenanceService.setAutorization(true);
-
 		List<Long> listIdQuestions = maintenanceService.getUniqueSetQuestionsForTest(category, level, (long) 15);
 
-	    int personId1 = companyService.createPerson(personId, personName, personSurname);
+		int personId1 = companyService.createPerson(personId, personName, personSurname);
 		long idTest = companyService.createIdTest(listIdQuestions,personId1);
-		String link = "http://localhost:8080/TestsProjectFes/test_preparing?" + idTest;        
+		String link = "http://localhost:8080/TestsProjectFes/jobSeeker_test_preparing_click_event?" + idTest;        
 
 		model.addAttribute("myResult", link);
 
 		return "CompanyTestLink";
 	}	 
-//------------END  Use case Ordering Test 3.1.3-------------
+	//------------END  Use case Ordering Test 3.1.3-------------
 
-/*-------------Use case Viewing test results----------------
+	/*-------------Use case Viewing test results----------------
 3.1.4.	Viewing test results
 Pre-Conditions:
 1.	The System is running up
@@ -290,9 +278,9 @@ f)	5 photos made during the test	------ IGOR ------*/
 			res = CompanyTestsResutlsHandler.compileToViewTestDetails(bes_response);
 		}
 		model.addAttribute("res", res);
-*/
+		 */
 		return "CompanyTestDetails";
 	}
-// -----------------END  Use case Viewing test results-----------------
+	// -----------------END  Use case Viewing test results-----------------
 
 }

@@ -87,7 +87,9 @@ public class Maintenance {
 	@RequestMapping({"/add_actions"})
 	public String addProcessingPage(String questionText,String descriptionText,String category,int question_level,
 			String answer_text_1,String answer_text_2,String answer_text_3,String answer_text_4 ,int trueAnswerNumber,Model model){
-
+		
+		System.out.println(category.charAt(category.length()-1));
+		
 		List<String> answer = new ArrayList<String>();
 		answer.add(answer_text_1);		answer.add(answer_text_2);
 		answer.add(answer_text_3);		answer.add(answer_text_4);
