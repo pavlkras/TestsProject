@@ -6,6 +6,13 @@ import java.util.List;
 public interface ICompanyActionsService {
 void printQuestion(int id);
 
+
+//Use case 3.1.1
+boolean getCompanyByName(String companyName);
+boolean CompanyAuthorization(String companyName , String password);
+	
+
+
 //alexfoox Company 
 boolean createCompany(String C_Name,String C_Site, String C_Specialization,String C_AmountEmployes,String C_Password);
 String []getAnySingleQuery(String strQuery);
