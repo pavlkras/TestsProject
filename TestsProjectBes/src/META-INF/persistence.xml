@@ -6,11 +6,11 @@
  <properties>
  <property name="hibernate.hbm2ddl.auto" value="create"/>
  <property name="hibernate.connection.url" 
- value="jdbc:mysql://localhost/company"/>
+ value="jdbc:mysql://localhost/HR_DB"/>
  <property name="hibernate.connection.driver_class" 
  value="com.mysql.jdbc.Driver"/>
  <property name="hibernate.connection.username" value="root"/>
- <property name="hibernate.connection.password" value="172839456"/>
+ <property name="hibernate.connection.password" value="12345.com"/>
  </properties>
   </persistence-unit>
 </persistence>
