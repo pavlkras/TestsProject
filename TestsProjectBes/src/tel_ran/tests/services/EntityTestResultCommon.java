@@ -29,7 +29,7 @@ public class EntityTestResultCommon {
 	@ManyToOne
 	private EntityPerson entityPerson;
 	@ManyToOne
-	private Company company;
+	private EntityCompany company;
 
 	public EntityTestResultCommon() {
 		
@@ -83,10 +83,10 @@ public class EntityTestResultCommon {
 	public void setEntityPerson(EntityPerson param) {
 	    this.entityPerson = param;
 	}
-	public Company getCompany() {
+	public EntityCompany getCompany() {
 	    return company;
 	}
-	public void setCompany(Company param) {
+	public void setCompany(EntityCompany param) {
 	    this.company = param;
 	}
 }

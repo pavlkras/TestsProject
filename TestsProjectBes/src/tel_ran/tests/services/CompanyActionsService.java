@@ -17,7 +17,7 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 	@Override
 	public boolean CompanyAuthorization(String companyName, String password) {
 		boolean result = false;
-		Company res = em.find(Company.class, companyName);
+		EntityCompany res = em.find(EntityCompany.class, companyName);
 		if(res != null){
 			if( res.getPassword().equals(password)){
 				result = true;
@@ -31,7 +31,7 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 	@Override
 	public boolean getCompanyByName(String companyName) {
 		boolean result = false;
-		if(em.find(Company.class, companyName) != null){
+		if(em.find(EntityCompany.class, companyName) != null){
 			result = true;
 		}
 		return result;
@@ -42,12 +42,12 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 	@Override
 	public String[] getAnySingleQuery(String strQuery) {
 		String[] outResult;
-		List<Company> result = em.createQuery(
-				"SELECT c FROM Company c WHERE c.C_Name LIKE :custName").setParameter("custName","%"+strQuery+"%").getResultList();// return to client result of operation
+		List<EntityCompany> result = em.createQuery(
+				"SELECT c FROM EntityCompany c WHERE c.C_Name LIKE :custName").setParameter("custName","%"+strQuery+"%").getResultList();// return to client result of operation
 		int len_gth = result.size();
 		outResult = new String[len_gth];
 		int flCount = 0;
-		for(Company q: result){		
+		for(EntityCompany q: result){		
 			if(flCount != len_gth){
 				outResult[flCount++] = q.toString();
 			}
@@ -60,8 +60,8 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 	public boolean createCompany(String C_Name, String C_Site,
 			String C_Specialization, String C_AmountEmployes, String C_Password) {
 		boolean result=false;
-		if(em.find(Company.class, C_Name)==null){
-			Company comp =new Company();
+		if(em.find(EntityCompany.class, C_Name)==null){
+			EntityCompany comp =new EntityCompany();
 			comp.setC_Name(C_Name);
 			comp.setC_Site(C_Site);
 			comp.setC_Specialization(C_Specialization);
@@ -115,7 +115,7 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 	@Override
 	public List<String> getTestsResultsAll(String companyName) {
 		List<String> res = new ArrayList<String>();
-		Company company = em.find(Company.class, companyName);
+		EntityCompany company = em.find(EntityCompany.class, companyName);
 		if(company!=null){
 			@SuppressWarnings("unchecked")
 			List<EntityTestResultCommon> tests = (List<EntityTestResultCommon>) em.createQuery
@@ -130,7 +130,7 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 	@Override
 	public List<String> getTestsResultsForPersonID(String companyName, int personID) {
 		List<String> res = new ArrayList<String>();
-		Company company = em.find(Company.class, companyName);
+		EntityCompany company = em.find(EntityCompany.class, companyName);
 		EntityPerson person = em.find(EntityPerson.class, Integer.toString(personID));
 		if(company!=null){
 			@SuppressWarnings("unchecked")
@@ -147,7 +147,7 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 	@Override
 	public List<String> getTestsResultsForTimeInterval(String companyName, Date date_from, Date date_until) {
 		List<String> res = new ArrayList<String>();
-		Company company = em.find(Company.class, companyName);
+		EntityCompany company = em.find(EntityCompany.class, companyName);
 		if(company!=null){
 			@SuppressWarnings("unchecked")
 			List<EntityTestResultCommon> tests = (List<EntityTestResultCommon>) em.createQuery
