@@ -87,5 +87,6 @@
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/spring-websocket-4.0.3.RELEASE-sources.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/spring-websocket-4.0.3.RELEASE.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/java-json.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/javax.mail.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
