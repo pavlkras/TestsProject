@@ -97,13 +97,14 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 
 	@Override
 	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
-	public int createPerson(int personId,String personName,String personSurname) {
+	public int createPerson(int personId,String personName,String personSurname,String personEmail) {
 		int result = personId;		
 		if(em.find(EntityPersonFOOX.class, personId)==null){
 			EntityPersonFOOX person = new EntityPersonFOOX();
 			person.setPersonId(personId);
 			person.setPersonName(personName);
-			person.setPersonSurname(personSurname);			
+			person.setPersonSurname(personSurname);	
+			person.setPersonEmail(personEmail);
 			em.persist(person);        
 			result=person.getPersonId();
 		}

@@ -23,8 +23,14 @@ public class EntityPersonFOOX {
 	}
 	private String personName;
     private String personSurname;
+    private String personEmail;
     
-    
+	public String getPersonEmail() {
+		return personEmail;
+	}
+	public void setPersonEmail(String personEmail) {
+		this.personEmail = personEmail;
+	}
 	public int getPersonId() {
 		return personId;
 	}
