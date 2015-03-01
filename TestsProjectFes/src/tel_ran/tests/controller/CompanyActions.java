@@ -6,6 +6,15 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
+
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -148,22 +157,27 @@ Normal Flow:
 1.	The user selects a test category
 2.	The user selects  the  test details (complexity level)
 3.	The user enters an identity number of the tested person 
-4.	The user enters the person personal data (First Name, Family Name)
+4.	The user enters the person personal data (First Name, Family Name , E-mail)
 5.	The System generates a test and a link for that test
 6.	The System presents the link for performing the test in the control mode  */
 	//
 	@RequestMapping({"/add_test"})
-	public String createTest(String category,String level,int personId,String personName, String personSurname, Model model) {
+	public String createTest(String category,String level,int personId,String personName, String personSurname,String personEmail, Model model) {
 		maintenanceService.setAutorization(true);
 		List<Long> listIdQuestions = maintenanceService.getUniqueSetQuestionsForTest(category, level, (long) 15);
 
-		int personId1 = companyService.createPerson(personId, personName, personSurname);
+		int personId1 = companyService.createPerson(personId, personName, personSurname,personEmail);
 		long idTest = companyService.createIdTest(listIdQuestions,personId1);
 		String link = "http://localhost:8080/TestsProjectFes/jobSeeker_test_preparing_click_event?" + idTest;        
+	    boolean flagMail = sendEmail(link,personEmail);
+	    if(flagMail){
+	    	model.addAttribute("myResult", link);	
+	    }else{
+	    	model.addAttribute("myResult", "Error Mail");
+	    }
+		
 
-		model.addAttribute("myResult", link);
-
-		return "CompanyTestLink";
+		return "CompanyGenerateTest";
 	}	 
 	//------------END  Use case Ordering Test 3.1.3-------------
 
@@ -191,6 +205,40 @@ c)	Complexity level
 d)	Number of the right answers with the percentage 
 e)	Number of the wrong answers with the percentage
 f)	5 photos made during the test	------ IGOR ------*/
+
+	private boolean sendEmail(String link, String personEmail) {
+		boolean result = false;
+		String smtpHost = "cakelycakes.com";
+		String to = personEmail;
+		String subject = "Email from MYSITE";
+		String text = "Press for this link :  " + link;
+		
+		try {
+			Properties properties = new Properties();
+			properties.put("mail.smtp.host", smtpHost);
+			Session emailSession = Session.getDefaultInstance(properties);
+
+			Message emailMessage = new MimeMessage(emailSession);
+			emailMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+			emailMessage.setSubject(subject);
+			emailMessage.setText(text);
+
+			emailSession.setDebug(true);
+
+			Transport.send(emailMessage);
+			result = true;
+		} catch (AddressException e) {
+			e.printStackTrace();
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+		
+	}
+
+	
+	
 
 	@RequestMapping({"/process_request"})
 	public String processRequestTestsCommon(String request_type, String date_from, String date_until, String person_id, Model model){

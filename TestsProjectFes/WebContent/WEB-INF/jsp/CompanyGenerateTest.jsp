@@ -14,7 +14,7 @@
 </head>
 <body>
  <form action="add_test">
- Hi, my dear friend!</br> 
+ <p>${myResult}</p><br><br>
  Please select a Category of Question: <br>
   C#   <input type="checkbox" name="category" value="C#" />
   Java <input type="checkbox" name="category" value="Java" />
@@ -30,21 +30,27 @@
   Please fill data of Person:   <br>        
    <table>
    <tr>
-    <td>personId:</td> 
+    <td>Id:</td> 
     <td> <input type="text" name="personId" onkeyup="check(this.value)"  maxlength="9" size = "7"/> <span id="e_login" style="display: none; color: #c00;">Not correct</span><br> </td>
    </tr>
    <tr>
-    <td>personName:</td>
+    <td>FirstName:</td>
     <td><input type="text" name="personName" size=20 /></td> 
    </tr>
    <tr>
-    <td>personSurname: </td>
+    <td>SurName: </td>
     <td><input type="text" name="personSurname" size=20 /> <br> </td> 
+   </tr> 
+    <tr>
+    <td>E-mail: </td>
+    <td><input type="text" name="personEmail" size=20 /> <br> </td> 
    </tr> 
    </table>    
    <input type="submit" value="Generate test" />
  </form>
  <br> 
  <a href="create_request">Test Details</a>
+
+ 
 </body>
 </html>
