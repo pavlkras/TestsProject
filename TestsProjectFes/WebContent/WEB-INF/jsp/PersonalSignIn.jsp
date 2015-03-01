@@ -8,19 +8,51 @@
 <link
 	href='<c:url value="/static/css_folder/css/IndexPage.css"></c:url>'
 	rel="stylesheet">
-<title>Index Page</title>
+<title>Home Page</title>
 </head>
 <body>
 	<table>
+	<!----- header buttons for users and company actions ----// Begin //  -->
 		<tr>
-			<td>
-				<h2 class="h2">Library of popular programming languages Links</h2>
+			<td>				
+				<div class="gra1">
+					<h2 class="h2">Hellow guest</h2>
+					<div class="firsthomecontent">
+						<a href="PersonalActions" name="inputString" value="Login">
+							<div class="homecontent">
+								<img src="static/images/logo/interviewhome.png"><span
+									class="homespan">Login</span>
+							</div>
+						</a><a href="Personal_result_view">
+							<div class="homecontent">
+								<img src="static/images/logo/interviewhome.png"><span
+									class="homespan">Interview</span>
+							</div>
+						</a><a href="CompanyActions">
+							<div class="homecontent">
+								<img src="static/images/logo/interviewhome.png"><span
+									class="homespan">Company</span>
+							</div>
+						</a>
+						<!-- this test link, is click action from job Seeker mail -->
+						<a
+							href="http://localhost:8080/TestsProjectFes/jobSeeker_test_preparing_click_event?8">
+							<div class="homecontent">
+								<img src="static/images/logo/interviewhome.png"> <span
+									class="homespan">Test Link</span>
+							</div>
+						</a>
+					</div>
+				</div>
 			</td>
 		</tr>
+		<!----- header buttons for users and company actions ----// END //  -->
+
+		<!---- Popular Tutorials  Links -------- //   Begin   // -->
 		<tr>
 			<td>
 				<div class="gra1">
-					<h2 class="h2">Popular Tutorials</h2>
+					<h2 class="h2">Popular Tutorials Links</h2>
 					<div class="firsthomecontent">
 						<a href="http://docs.oracle.com/javase/tutorial/">
 							<div class="homecontent">
@@ -83,7 +115,9 @@
 					</div>
 				</div>
 			</td>
-		</tr>
+			<!---- Popular Tutorials  Links -------- //   END   // -->
+
+			<!----Links to Relevanty  Java Technology Tutorials --------- - //   Begin   // -->
 		<tr>
 			<td>
 				<div class="gra1">
@@ -170,29 +204,9 @@
 					</div>
 				</div>
 			</td>
-			<td rowspan="2">
-				<div class="gra2">
-					<h2 class="h2">Application Resources</h2>
-					<a href="PersonalActions" name="inputString" value="Login">
-						<div class="homecontent">
-							<img src="static/images/logo/interviewhome.png"><span
-								class="homespan">Login</span>
-						</div>
-					</a><a href="CompanyActions">
-						<div class="homecontent">
-							<img src="static/images/logo/interviewhome.png"><span
-								class="homespan">Company</span>
-						</div>
-					</a> <a
-						href="http://localhost:8080/TestsProjectFes/jobSeeker_test_preparing_click_event?8">
-						<div class="homecontent">
-							<img src="static/images/logo/interviewhome.png"> <span
-								class="homespan">Test Link</span>
-						</div>
-					</a>
-				</div>
-			</td>
-		</tr>
+			<!----Links to Relevanty  Java Technology Tutorials --------- - //   END   // -->
+
+			<!---- Miscellaneous Topics  Links -------- //   Begin   // -->
 		<tr>
 			<td>
 				<div class="gra1">
@@ -231,20 +245,16 @@
 								<img src="static/images/logo/full-form.jpg" alt="Full Form"><span
 									class="homespan">Acronyms</span>
 							</div>
-						</a><a href="Personal_result_view">
-							<div class="homecontent">
-								<img src="static/images/logo/interviewhome.png"><span
-									class="homespan">Interview</span>
-							</div>
 						</a>
 					</div>
 				</div>
 			</td>
 		</tr>
+		<!---- Miscellaneous Topics  Links -------- //   END   // -->
 		<tr>
 			<td>&nbsp;&nbsp;&nbsp;</td>
 		</tr>
-	</table>
+	</table>	
 </body>
 </html>
 
