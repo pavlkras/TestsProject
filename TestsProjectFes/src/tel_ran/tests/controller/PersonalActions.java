@@ -36,7 +36,7 @@ public class PersonalActions {
 	@Autowired
 	IPersonalActionsService personalService;       
 	@RequestMapping({"/"})
-	public String Index(){     return "index";       }
+	public String Index(){     return "PersonalSignIn";       }// this index page !!!!!! for all users and all company !!!!
 	//--------------------- fields of this class ---------------------------
 	String personId = null;
 	private String categoryName = null;
@@ -61,8 +61,9 @@ public class PersonalActions {
 		User userForm = new User();
 		model.put("userForm", userForm);
 
-		String login = request.getParameter("login");
-		return login != null ? "Personal_login_page" : "Personal_sign_up";
+		/*String login = request.getParameter("login");
+		return login != null ? "Personal_login_page" : "Personal_sign_up";*/
+		return "Personal_login_page";
 	}
 
 	@RequestMapping(value = "/login_action", method = {RequestMethod.POST, RequestMethod.GET})

@@ -3,9 +3,12 @@
 	pageEncoding="ISO-8859-1"%>
 <%@ page
 	import="java.util.*, java.text.*,tel_ran.tests.controller.Maintenance"%>
+	<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <!DOCTYPE html>
 <html>
 <head>
+<link href='<c:url value="/static/css_folder/css/MaintenanceHomePage.css"></c:url>' rel="stylesheet">
 <title>Maintenance Actions</title>
 <script type="text/javascript">
 	var textTxt;
@@ -52,67 +55,9 @@
   		FILE_SW.setAttributeNode(att);
 	}
 </script>
-
-<style type="text/css">
-* {
-	text-align: center;
-}
-/** form for adding questions from file switch ****/
-.fileaddform {
-	display: none;
-}
-/**** Generated code form, for tag <a>, resurce from code:(http://www.bestcssbuttongenerator.com) *****/
-.myButton {
-	margin: 0.1em;
-	-moz-box-shadow: 3px 4px 0px 0px #899599;
-	-webkit-box-shadow: 3px 4px 0px 0px #899599;
-	box-shadow: 3px 4px 0px 0px #899599;
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ededed
-		), color-stop(1, #bab1ba));
-	background: -moz-linear-gradient(top, #ededed 5%, #bab1ba 100%);
-	background: -webkit-linear-gradient(top, #ededed 5%, #bab1ba 100%);
-	background: -o-linear-gradient(top, #ededed 5%, #bab1ba 100%);
-	background: -ms-linear-gradient(top, #ededed 5%, #bab1ba 100%);
-	background: linear-gradient(to bottom, #ededed 5%, #bab1ba 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed',
-		endColorstr='#bab1ba', GradientType=0);
-	background-color: #ededed;
-	-moz-border-radius: 15px;
-	-webkit-border-radius: 15px;
-	border-radius: 15px;
-	border: 1px solid #d6bcd6;
-	display: inline-block;
-	cursor: pointer;
-	color: #3a8a9e;
-	font-family: arial;
-	font-size: 17px;
-	padding: 7px 25px;
-	text-decoration: none;
-	text-shadow: 0px 1px 0px #e1e2ed;
-}
-
-.myButton:hover {
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #bab1ba
-		), color-stop(1, #ededed));
-	background: -moz-linear-gradient(top, #bab1ba 5%, #ededed 100%);
-	background: -webkit-linear-gradient(top, #bab1ba 5%, #ededed 100%);
-	background: -o-linear-gradient(top, #bab1ba 5%, #ededed 100%);
-	background: -ms-linear-gradient(top, #bab1ba 5%, #ededed 100%);
-	background: linear-gradient(to bottom, #bab1ba 5%, #ededed 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#bab1ba',
-		endColorstr='#ededed', GradientType=0);
-	background-color: #bab1ba;
-}
-
-.myButton:active {
-	position: relative;
-	top: 1px;
-}
-</style>
 </head>
 <body
 	onload="document.getElementById('fileinput').addEventListener('click',readSingleFile,false)">
-
 	<p>
 		<script type="text/javascript">
 			document.write("${loginText}");

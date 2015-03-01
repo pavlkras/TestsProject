@@ -7,8 +7,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -25,12 +23,16 @@ public class Maintenance {
 	@Autowired
 	IMaintenanceService maintenanceService;
 	/**************************************/
-	private String loginForm = "<form class='myButton' action = 'maintenance_login_action' name='loginForm' method = 'get'>"
-			+ "Name: <input type='text'  name='username'>"
-			+ "Password: <input type='password'  name='password'>"
-			+ "<input type='submit' class='myButton' value='Administrators Login'></form>"
-			+ "<br><br><form action = 'PersonalActions' name='loginForm' method = 'post'>"
-			+"<input type='submit' class='myButton' name='login' value='Users Login'> </form>";  
+	private String loginForm = "<form class='myButton' action = 'maintenance_login_action'  method = 'get'>"
+			+ "Name: <input type='text'  name='username'><br><br>"
+			+ "Password: <input type='password'  name='password'><br><br>"
+			+ "<input type='submit' class='myButton' value='Administrators Login'></form>";  
+	private String buttonsMainPage = "<div id='homepage'>"
+			+ "<a class='myButton' href='http://localhost:8080/TestsProjectFes/maintenanceadd'>Create new question</a><br><br>"
+			+ "<a class='myButton' href='http://localhost:8080/TestsProjectFes/update'>Update/Delete Question</a><br><br>"
+			+ "<a class='myButton' href='#' onclick='ClickLoadFromFile()'>Adding questions from file</a><br><br>"
+			+ "<a class='myButton' href='http://localhost:8080/TestsProjectFes/'>...</a> </div>";
+	/*************************************/
 	@RequestMapping({"/Maintenance"})
 	public String mappingFromIndexPage(Model model){				
 		model.addAttribute("loginText", loginForm);
@@ -42,14 +44,8 @@ public class Maintenance {
 	public String authorize(String username , String password,Model model){
 		boolean fl = false;
 		if(username.equalsIgnoreCase("") && password.equalsIgnoreCase("")){
-			fl = true;
-		
-		maintenanceService.setAutorization(fl);// setter flAutorization on Service.	
-		String buttonsMainPage = "<div id='homepage'>"
-				+ "<a class='myButton' href='http://localhost:8080/TestsProjectFes/maintenanceadd'>Create new question</a><br>"
-				+ "<a class='myButton' href='http://localhost:8080/TestsProjectFes/update'>Update/Delete Question</a><br>"
-				+ "<a class='myButton' href='#' onclick='ClickLoadFromFile()'>Adding questions from file</a>"
-				+ "<a class='myButton' href='http://localhost:8080/TestsProjectFes/'>...</a> </div>";
+			fl = true;		
+		maintenanceService.setAutorization(fl);// setter flAutorization on Service.			
 		model.addAttribute("loginText", buttonsMainPage);
 		}else{			
 			model.addAttribute("loginText", loginForm);
@@ -57,8 +53,6 @@ public class Maintenance {
 		}
 		return "MaintenanceSignInPage";
 	}
-
-
 	/**************************************/
 	@RequestMapping({"/maintenanceadd"})
 	public String addingPage() {return "MaintenanceAddingPage";}
@@ -87,8 +81,6 @@ public class Maintenance {
 	@RequestMapping({"/add_actions"})
 	public String addProcessingPage(String questionText,String descriptionText,String category,int question_level,
 			String answer_text_1,String answer_text_2,String answer_text_3,String answer_text_4 ,int trueAnswerNumber,Model model){
-		
-		System.out.println(category.charAt(category.length()-1));
 		
 		List<String> answer = new ArrayList<String>();
 		answer.add(answer_text_1);		answer.add(answer_text_2);
@@ -271,12 +263,7 @@ public class Maintenance {
 			model.addAttribute("result","Exception: file not found");
 		} catch (IOException e) {
 			model.addAttribute("result","Exception: can't read from file");
-		}
-		String buttonsMainPage = "<div id='homepage'>"
-				+ "<a class='myButton' href='http://localhost:8080/TestsProjectFes/maintenanceadd'>Create new question</a><br>"
-				+ "<a class='myButton' href='http://localhost:8080/TestsProjectFes/update'>Update/Delete Question</a><br>"
-				+ "<a class='myButton' href='#' onclick='ClickLoadFromFile()'>Adding questions from file</a>"
-				+ "<a class='myButton' href='http://localhost:8080/TestsProjectFes/'>...</a> </div>";
+		}		
 		model.addAttribute("loginText", buttonsMainPage);
 		return 	"MaintenanceSignInPage";// return too page after action
 	}	

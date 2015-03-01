@@ -1,9 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
+	<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<link
+	href='<c:url value="/static/css_folder/css/CreateQuestionPage.css"></c:url>'
+	rel="stylesheet">
 <style type="text/css">
 *{
 text-align: center;
@@ -45,16 +50,12 @@ textarea:HOVER {
 	    <td><textarea name="descriptionText"></textarea></td>
     </tr>
     <tr>
-        <td>Select  Category</td>
+        <td>Insert  Category</td>
         <td>Select Level</td>
      </tr>    
 	 <tr>
-	    <td>
-		     C# <input type="checkbox" name="category" value="C#" />
-		     Java <input type="checkbox" name="category" value="Java" />
-		     C++ <input	type="checkbox" name="category" value="C++" /> <br>	
-		     Insert another Category<br>
-		     <input	type="text" name="category" value="" /><br>
+	     <td>		 
+		     <input	type="text" name="category" value="C#,Java,HTML" /><br>
 		 </td>
 		 <td>
 			 1<input type="radio" name="question_level" value=1 checked="checked">
