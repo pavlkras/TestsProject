@@ -19,7 +19,7 @@ String []getAnySingleQuery(String strQuery);
 
 //Use case Ordering Test 3.1.3
 long createIdTest(List<Long> list,int personId);
-int createPerson(int personId,String personName,String personSurname);
+int createPerson(int personId,String personName,String personSurname,String personEmail);
 
 //Company actions for 3.1.4. Viewing test results
 List<String> getTestsResultsAll(String currCompanyId);
