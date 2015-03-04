@@ -142,7 +142,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	public String deleteQuetionById(String questionID){
 		String outMessageTextToJSP_Page = "";
 		try {
-			long id =Integer.parseInt(questionID);			
+			long id = Integer.parseInt(questionID);			
 			List<EntityAnswer> liEntAns = em.createQuery("SELECT c FROM EntityAnswer c WHERE c.questionid="+id).getResultList();
 			for(EntityAnswer entAns:liEntAns){
 				em.remove(entAns);
@@ -151,7 +151,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 			Object objEntQue = em.createQuery("SELECT c FROM EntityQuestion c WHERE c.id="+id).getSingleResult();
 			em.remove(objEntQue);
 			em.flush();			
-			return "Object Question By ID="+questionID+". Has been Deleted";// return to client 
+			outMessageTextToJSP_Page = "Object Question By ID="+questionID+". Has been Deleted";// return to client 
 		} catch (Exception e) {
 			outMessageTextToJSP_Page = "Error Deleting Object by ID"+questionID+". This Object Already DELETED";
 		}
