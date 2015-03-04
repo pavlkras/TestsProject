@@ -139,7 +139,7 @@ public class Maintenance {
 		return "MaintenanceUpdatePage";// return too page after action		
 	}	
 	/***  ПОИСК ВОПРОСОВ: действия разрешены Администратору системы  */
-	private int rowsCounter=0;
+	private int rowsCounter = 0;
 	@RequestMapping({"/search_actions"})
 	public String searchProcessingPage(String category, String free_question, Model model){		
 		/** это метод обновления вопроса, принимает String free_question: Это текст в свободной форме, для поиска вопроса.*/	
@@ -209,7 +209,7 @@ public class Maintenance {
 				stringBufferOutResult.append("<input	type='text' name='questionID' value='"+dataFromTables[0]+"' style='visibility: hidden;'><br>");
 				stringBufferOutResult.append("<input type='submit' value='Change Question'>");
 				stringBufferOutResult.append("</form>");
-				stringBufferOutResult.append("<form action='deleteAction'>Delete Question number:<input type='submit' name='questionID' value='"+dataFromTables[0]+"'></form>");
+				//stringBufferOutResult.append("<form action='deleteAction'>Delete Question number:<input type='submit' name='questionID' value='"+dataFromTables[0]+"'></form>");
 
 				model.addAttribute("result",stringBufferOutResult.toString());// out text to Page
 			}else{
