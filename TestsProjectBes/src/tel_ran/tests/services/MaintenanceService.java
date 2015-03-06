@@ -193,7 +193,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 					else{
 						for(int i=0; i<numbQuestions; i++){
 							Random rnd = new Random();
-							int rand =  rnd.nextInt(res.size()) + 1;
+							int rand =  rnd.nextInt(res.size());
 							outRes.add(res.get(rand));
 						}
 					}
