@@ -78,9 +78,9 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 	@Override
 	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
 	public long  createIdTest(List<Long> list, int personId) {
-		EntityPersonFOOX temp = em.find(EntityPersonFOOX.class, personId);	
+		EntityPerson temp = em.find(EntityPerson.class, personId);	
 		EntityTest test = new EntityTest();
-		EntityPersonFOOX pers = new EntityPersonFOOX();
+		EntityPerson pers = new EntityPerson();
 		StringBuffer idQuestion = new StringBuffer();
 		for(Long s : list){
 			System.out.println(s.toString());
@@ -99,8 +99,8 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
 	public int createPerson(int personId,String personName,String personSurname,String personEmail) {
 		int result = personId;		
-		if(em.find(EntityPersonFOOX.class, personId)==null){
-			EntityPersonFOOX person = new EntityPersonFOOX();
+		if(em.find(EntityPerson.class, personId)==null){
+			EntityPerson person = new EntityPerson();
 			person.setPersonId(personId);
 			person.setPersonName(personName);
 			person.setPersonSurname(personSurname);	

@@ -16,15 +16,15 @@ public class EntityTest {
     private String question;
     
     @ManyToOne	
-	private EntityPersonFOOX personId;
+	private EntityPerson personId;
  
 
 
-public EntityPersonFOOX getPersonId() {
+public EntityPerson getPersonId() {
 	return personId;
 }
 
-public void setPersonId(EntityPersonFOOX personId) {
+public void setPersonId(EntityPerson personId) {
 	this.personId = personId;
 }
 
