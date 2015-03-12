@@ -24,4 +24,16 @@ public class TestsResultsRestController {
 		return company.getTestsResultsAll(companyName);
 	}
 	
+	@RequestMapping(value=ICommonConstants.TESTS_RESULTS_BY_PERSON_ID + "/{companyName}" + "/{personId}", method=RequestMethod.GET)
+	@ResponseBody List<String> getTestsResultsByPersonId(@PathVariable String companyName, @PathVariable String personId){         //s pomosch'yu @PathVariable berem iz URL znachenie peremennoi isbn
+		List<String> res = null;
+		try{
+			int id = Integer.parseInt(personId);
+			res = company.getTestsResultsForPersonID(companyName, id);
+		}catch(NumberFormatException  ex){
+			res = null;
+		}
+		return res;
+	}
+	
 }
