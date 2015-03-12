@@ -21,25 +21,8 @@ public class TestsResultsRestController {
 	
 	@RequestMapping(value=ICommonConstants.TESTS_RESULTS + "/{companyName}", method=RequestMethod.GET)
 	@ResponseBody List<String> getAllTestsResults(@PathVariable String companyName){   
-		String name="qwerty";
-		System.out.println("in function " + companyName);
-		List<String> res = company.getTestsResultsAll(name);
-		for(String str:res){
-			System.out.println(str);
-		}
-		return company.getTestsResultsAll(name);
-		//return res;
+		List<String> res = company.getTestsResultsAll(companyName);
+		return company.getTestsResultsAll(companyName);
 	}
-/*	
-	@RequestMapping(value=ICommonConstants.TESTS_RESULTS_BY_DATES + "/{date1}" + "&" + "{date2}", method=RequestMethod.GET)
-	@ResponseBody List<String> getTestsResultsByDates(@PathVariable String companyId, Date date1, Date date2){   
-		return companyModel.getTestsResultsForTimeInterval(companyId, date1, date2);
-	}
-	
-	@RequestMapping(value=ICommonConstants.TESTS_RESULTS_BY_PERSON_ID + "/{personId}", method=RequestMethod.GET)
-	@ResponseBody List<String> getTestsResultsByPersonId(@PathVariable String companyId, int personId){         //s pomosch'yu @PathVariable berem iz URL znachenie peremennoi isbn
-		return companyModel.getTestsResultsForPersonID(companyId, personId);
-	}
-	*/
 	
 }
