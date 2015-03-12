@@ -50,6 +50,7 @@
 			<aop:around method="correctUserAuthorized" pointcut-ref="myCut2" />
 		</aop:aspect>
 	</aop:config>
-
+	
+	<bean id="company" class="tel_ran.tests.services.CompanyActionsService"/>
 
 </beans>
