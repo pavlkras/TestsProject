@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import tel_ran.tests.services.EntityTestResultCommon;
 import tel_ran.tests.services.interfaces.ICompanyActionsService;
-import tel_ran.tests.constants.ICommonConstants;
 
 @Controller
 @RequestMapping({"/view_results"})
@@ -19,7 +18,7 @@ public class TestsResultsRestController {
 	@Autowired
 	ICompanyActionsService company;
 	
-	@RequestMapping(value=ICommonConstants.TESTS_RESULTS + "/{companyName}", method=RequestMethod.GET)
+	@RequestMapping(value=ICommonData.TESTS_RESULTS + "/{companyName}", method=RequestMethod.GET)
 	@ResponseBody List<String> getAllTestsResults(@PathVariable String companyName){   
 		List<String> res = company.getTestsResultsAll(companyName);
 		return company.getTestsResultsAll(companyName);
