@@ -1,4 +1,4 @@
-package tel_ran.tests.rest.controller;
+package tel_ran.tests.rest;
 
 import java.util.*;
 
