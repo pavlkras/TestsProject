@@ -9,7 +9,8 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>company_service</servlet-name>
-    <url-pattern>*.service1</url-pattern>
+   <!-- <url-pattern>*.service1</url-pattern> -->
+     <url-pattern>/</url-pattern>
   </servlet-mapping>
 
   <servlet>
@@ -32,7 +33,7 @@
     <servlet-name>maintenance_service</servlet-name>
     <url-pattern>*.service3</url-pattern>
   </servlet-mapping>
-  <!-- <listener>
+  <listener>
     <listener-class>
         org.springframework.web.context.ContextLoaderListener
     </listener-class>
@@ -40,6 +41,6 @@
   <context-param>
     <param-name>contextConfigLocation</param-name>
     <param-value>/WEB-INF/beans.xml</param-value>
-  </context-param> -->
+  </context-param>
   
 </web-app>
