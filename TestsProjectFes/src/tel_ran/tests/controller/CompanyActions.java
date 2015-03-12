@@ -21,6 +21,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.client.RestTemplate;
 
 import tel_ran.tests.services.interfaces.ICompanyActionsService;
 import tel_ran.tests.services.interfaces.IMaintenanceService;
@@ -34,6 +35,7 @@ public class CompanyActions {
 	@Autowired
 	ICompanyActionsService companyService;
 
+        RestTemplate restTemplate =  new RestTemplate();
 
 	@Autowired
 	IMaintenanceService maintenanceService;	
@@ -76,6 +78,7 @@ Wrong Password Flow:
 			boolean ress = companyService.CompanyAuthorization(companyName, password);
 			if(ress ){       
 				result = "CompanyGenerateTest";
+				this.companyName = companyName; 
 			}else{
 				result = "CompanySignIn";
 				model.addAttribute("result", " This password not variable try again " );
@@ -245,6 +248,8 @@ f)	5 photos made during the test	------ IGOR ------*/
 		//TODO Create method of coding companyName & currentTime into token for BES authorize
 		// or find another authorize method for the REST service
 		//model.addAttribute("token", "ef");
+		String res = restTemplate.getForObject("http://localhost:8080/TestsProjectBes/view_results/all_tests_results/"+ companyName, String.class);
+		System.out.println("passed " +	res);
 		return "CompanyViewTestsResults";
 	}
 	// -----------------END  Use case Viewing test results-----------------
