@@ -10,10 +10,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import tel_ran.tests.services.EntityTestResultCommon;
+import tel_ran.tests.services.common.ICommonData;
 import tel_ran.tests.services.interfaces.ICompanyActionsService;
 
 @Controller
-@RequestMapping({"/view_results"})
+@RequestMapping({"/view_results_rest"})
 public class TestsResultsRestController {
 	@Autowired
 	ICompanyActionsService company;
@@ -24,7 +25,7 @@ public class TestsResultsRestController {
 		return company.getTestsResultsAll(companyName);
 	}
 	
-	@RequestMapping(value=ICommonConstants.TESTS_RESULTS_BY_PERSON_ID + "/{companyName}" + "/{personId}", method=RequestMethod.GET)
+	@RequestMapping(value=ICommonData.TESTS_RESULTS_BY_PERSON_ID + "/{companyName}" + "/{personId}", method=RequestMethod.GET)
 	@ResponseBody List<String> getTestsResultsByPersonId(@PathVariable String companyName, @PathVariable String personId){         //s pomosch'yu @PathVariable berem iz URL znachenie peremennoi isbn
 		List<String> res = null;
 		try{
