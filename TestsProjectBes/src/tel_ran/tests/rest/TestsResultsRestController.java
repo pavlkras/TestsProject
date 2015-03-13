@@ -24,20 +24,12 @@ public class TestsResultsRestController {
 	
 	@RequestMapping(value=ICommonData.TESTS_RESULTS + "/{companyName}", method=RequestMethod.GET)
 	@ResponseBody List<String> getAllTestsResults(@PathVariable String companyName){   
-		List<String> res = company.getTestsResultsAll(companyName);
 		return company.getTestsResultsAll(companyName);
 	}
 	
 	@RequestMapping(value=ICommonData.TESTS_RESULTS_BY_PERSON_ID + "/{companyName}" + "/{personId}", method=RequestMethod.GET)
-	@ResponseBody List<String> getTestsResultsByPersonId(@PathVariable String companyName, @PathVariable String personId){         //s pomosch'yu @PathVariable berem iz URL znachenie peremennoi isbn
-		List<String> res = null;
-		try{
-			int id = Integer.parseInt(personId);
-			res = company.getTestsResultsForPersonID(companyName, id);
-		}catch(NumberFormatException  ex){
-			res = null;
-		}
-		return res;
+	@ResponseBody List<String> getTestsResultsByPersonId(@PathVariable String companyName, @PathVariable int personId){         
+		return company.getTestsResultsForPersonID(companyName, personId);
 	}
 	
 	@RequestMapping(value=ICommonData.TESTS_RESULTS_BY_DATES + "/{companyName}" + "/{date1}" + "/{date2}", method=RequestMethod.GET)
