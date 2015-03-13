@@ -49,7 +49,7 @@
    <input type="submit" value="Generate test" />
  </form>
  <br> 
- <a href="create_request">Test Details</a>
+ <a href="view_results">Test Details</a>
 
  
 </body>
