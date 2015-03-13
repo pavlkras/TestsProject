@@ -44,7 +44,6 @@ public class TestsResultsRestController {
 	//if format of Date dd-MM-yyyy 
 	@ResponseBody List<String> getTestsResultsByDates(@PathVariable String companyName, @PathVariable String date1, @PathVariable String date2){   
 		List<String> res = null;
-		System.out.println("date1: " + date1 + " date2: " + date2);
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 		try {
 			Date date_from = dateFormat.parse(date1);
