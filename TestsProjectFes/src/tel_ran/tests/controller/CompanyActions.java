@@ -248,8 +248,7 @@ f)	5 photos made during the test	------ IGOR ------*/
 		//TODO Create method of coding companyName & currentTime into token for BES authorize
 		// or find another authorize method for the REST service
 		//model.addAttribute("token", "ef");
-		String res = restTemplate.getForObject("http://localhost:8080/TestsProjectBes/view_results_rest/all_tests_results/"+ companyName, String.class);
-		System.out.println("passed " +	res);
+		List<String> res = restTemplate.getForObject("http://localhost:8080/TestsProjectBes/view_results_rest/all_tests_results/"+ companyName, List.class);
 		return "CompanyViewTestsResults";
 	}
 	// -----------------END  Use case Viewing test results-----------------
