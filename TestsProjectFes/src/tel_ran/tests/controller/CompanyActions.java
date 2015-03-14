@@ -176,13 +176,14 @@ Normal Flow:
 		String link = "http://localhost:8080/TestsProjectFes/jobSeeker_test_preparing_click_event?" + idTest;        
 	    boolean flagMail = sendEmail(link,personEmail);
 	    if(flagMail){
-	    	model.addAttribute("myResult", link);	
+	    	model.addAttribute("myResult", link +"<br>" + "<H1>message was sent successfully</H1>");    	
 	    }else{
-	    	model.addAttribute("myResult", "Error Mail");
+	    	model.addAttribute("myResult", "<H1>Error while sending message</H1>");
+	    	
 	    }
 		
 
-		return "CompanyGenerateTest";
+		return "Company_TestLink";
 	}	 
 	//------------END  Use case Ordering Test 3.1.3-------------
 
