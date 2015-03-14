@@ -8,8 +8,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
+import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.AddressException;
@@ -184,38 +186,50 @@ Normal Flow:
 	}	 
 	//------------END  Use case Ordering Test 3.1.3-------------
 
-
-
 	private boolean sendEmail(String link, String personEmail) {
 		boolean result = false;
-		String smtpHost = "cakelycakes.com";
-		String to = personEmail;
-		String subject = "Email from MYSITE";
-		String text = "Press for this link :  " + link;
-		
+
+		final String username = "senderurltest@gmail.com";
+		final String password = "sender54321.com";
+		String subject = "Email from HR";
+		String text = "Press for this link :  "+ link;
+
 		try {
-			Properties properties = new Properties();
-			properties.put("mail.smtp.host", smtpHost);
-			Session emailSession = Session.getDefaultInstance(properties);
 
-			Message emailMessage = new MimeMessage(emailSession);
-			emailMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
-			emailMessage.setSubject(subject);
-			emailMessage.setText(text);
+			Properties props = new Properties();
+			props.put("mail.smtp.host", "smtp.gmail.com");
+			props.put("mail.smtp.socketFactory.port", "465");
+			props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+			props.put("mail.smtp.auth", "true");
+			props.put("mail.smtp.port", "465");
 
-			emailSession.setDebug(true);
+			Session session = Session.getDefaultInstance(props, new Authenticator() {
+				protected PasswordAuthentication getPasswordAuthentication() {
+					return new PasswordAuthentication(username, password);
+				}
+			});
 
-			Transport.send(emailMessage);
+			Message message = new MimeMessage(session);		            
+			message.setFrom(new InternetAddress(username));		            
+			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(personEmail));		            
+			message.setSubject(subject);		            
+			message.setText(text);
+			session.setDebug(true);
+
+			Transport.send(message);
 			result = true;
-		} catch (AddressException e) {
+
+		}  catch (AddressException e) {
 			e.printStackTrace();
 		} catch (MessagingException e) {
 			e.printStackTrace();
 		}
-		
 		return result;
-		
+
 	}
+
+
+
 
 	
 	/*-------------Use case Viewing test results----------------
