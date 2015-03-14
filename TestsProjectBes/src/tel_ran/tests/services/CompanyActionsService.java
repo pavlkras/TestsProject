@@ -132,7 +132,7 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 	public List<String> getTestsResultsForPersonID(String companyName, int personID) {
 		List<String> res = new ArrayList<String>();
 		EntityCompany company = em.find(EntityCompany.class, companyName);
-		EntityPerson person = em.find(EntityPerson.class, Integer.toString(personID));
+		EntityPerson person = em.find(EntityPerson.class, personID);
 		if(company!=null){
 			@SuppressWarnings("unchecked")
 			List<EntityTestResultCommon> tests = (List<EntityTestResultCommon>) em.createQuery
