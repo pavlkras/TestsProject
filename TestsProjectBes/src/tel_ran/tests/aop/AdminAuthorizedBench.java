@@ -1,13 +1,16 @@
 package tel_ran.tests.aop;
 import java.util.List;
+
 import org.aspectj.lang.ProceedingJoinPoint;
+
 import tel_ran.tests.services.MaintenanceService;
 
 public class AdminAuthorizedBench {
 	@SuppressWarnings("unchecked")
-	public Object correctAdminAuthorized(ProceedingJoinPoint point) {		
+	public Object correctAdminAuthorized(ProceedingJoinPoint point) throws Throwable {		
 		Object[]arguments = point.getArgs();
-		Object newObject = new Object();
+		return point.proceed(arguments);
+		/*Object newObject = new Object();
 		Object outObject="";
 
 		if(arguments[0] instanceof Boolean && arguments.length==1){
@@ -34,7 +37,7 @@ public class AdminAuthorizedBench {
 		} catch (Throwable e) {				
 			System.out.println("User is not Autorized");
 		}		
-		return outObject;
+		return outObject;*/
 	}
 }
 

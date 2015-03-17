@@ -20,10 +20,14 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import tel_ran.tests.entitys.EntityAnswersText;
+import tel_ran.tests.entitys.EntityQuestion;
+import tel_ran.tests.entitys.EntityQuestionAttributes;
+import tel_ran.tests.entitys.EntityUser;
 import tel_ran.tests.services.interfaces.IPersonalActionsService;
 
 public class PersonalActionsService extends TestsPersistence implements	IPersonalActionsService {
-
+	private static EntityQuestionAttributes resAttr;
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
 	public boolean saveUserService(String[] userArgs) {
@@ -37,12 +41,12 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 			user.setEmail(userArgs[EMAIL]);
 			em.persist(user);
 
-			
+
 			result = true;
 		}
 		return result;
 	}
-	
+
 	@Override
 	public String[] loadUserservice(String userId) {
 		String[] result = new String[USER_FIELDS];
@@ -57,10 +61,10 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 
 		return result;
 	}
-	
+
 	@Override
 	public List<String> getCategoriesList() {
-		String query = "Select DISTINCT q.category FROM EntityQuestion q ORDER BY q.category";
+		String query = "Select DISTINCT q.category FROM EntityQuestionAttributes q ORDER BY q.category";
 		Query q = em.createQuery(query);
 		List<String> allCategories = q.getResultList();
 
@@ -69,7 +73,7 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 
 	@Override
 	public List<String> getComplexityLevelList() {
-		String query = "Select DISTINCT q.level FROM EntityQuestion q ORDER BY q.level";
+		String query = "Select DISTINCT q.levelOfDifficulti FROM EntityQuestionAttributes q ORDER BY q.levelOfDifficulti";
 		Query q = em.createQuery(query);
 		List<String> allLevels = q.getResultList();
 
@@ -79,7 +83,7 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 	@Override
 	public String getMaxCategoryLevelQuestions(String catName,
 			String complexityLevel) {
-		String query = "SELECT q FROM EntityQuestion q WHERE q.category=?1 AND q.level=?2";
+		String query = "SELECT q FROM EntityQuestionAttributes q WHERE q.category=?1 AND q.levelOfDifficulti=?2";
 		Query q = em.createQuery(query);
 		q.setParameter(1, catName);
 		q.setParameter(2, Integer.parseInt(complexityLevel));
@@ -90,7 +94,7 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 
 	@Override
 	public String getMaxCategoryQuestions(String catName, String level) {
-		String query = "SELECT q FROM EntityQuestion q WHERE q.category=?1 AND q.level=?2";
+		String query = "SELECT q FROM EntityQuestionAttributes q WHERE q.category=?1 AND q.levelOfDifficulti=?2";
 		Query q = em.createQuery(query);
 		q.setParameter(1, catName);
 		q.setParameter(2, Integer.parseInt(level));
@@ -102,12 +106,27 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 	@SuppressWarnings("unchecked")
 	@Override
 	public String getTraineeQuestions(String category, int level, int qAmount) {
+		String query = "SELECT q FROM EntityQuestionAttributes q WHERE q.category=?1 AND q.levelOfDifficulti=?2";
+		Query q = em.createQuery(query);
+		q.setParameter(1, category);
+		q.setParameter(2, level);
+		////
+		List<EntityQuestionAttributes> questionAttributesList = q.getResultList();
+		////		
+		List<EntityQuestion> questionList = new ArrayList<EntityQuestion>();
+		////
+		for(EntityQuestionAttributes sqattr : questionAttributesList){
+			EntityQuestion tempQuestion = sqattr.getQuestionId();
+			questionList.add(tempQuestion);
+		}
+
+		/*
 		String query = "SELECT q FROM EntityQuestion q WHERE q.category=?1 AND q.level=?2";
 		Query q = em.createQuery(query);
 		q.setParameter(1, category);
 		q.setParameter(2, level);
 
-		List<EntityQuestion> questionList = q.getResultList();
+		List<EntityQuestion> questionList = q.getResultList();*/
 
 		// if required number of the questions is less then questionList obtain
 		// then randomly choose some questions from list and fill new array till
@@ -128,19 +147,19 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 			}
 			questionList = setQuestList(newQuestList);
 		}
-		
-	/*	ObjectMapper mapper = new ObjectMapper();
+
+		/*	ObjectMapper mapper = new ObjectMapper();
 		String text = "";
-		try {*/
-			//text = mapper.writeValueAsString(questionList);
-		/*} catch (JsonProcessingException e) {
+		try {
+		//text = mapper.writeValueAsString(questionList);
+		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		System.out.println(text);*/
-        return loadXMLQuestions(questionList);	
+		return loadXMLQuestions(questionList);	
 	}
-	
+
 	private List<EntityQuestion> setQuestList(List<EntityQuestion> newQuestList) {
 		List<EntityQuestion> questionList = new ArrayList<EntityQuestion>();
 		for (int i = 0; i < newQuestList.size(); i++) {
@@ -148,65 +167,48 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 		}
 		return questionList;
 	}
-
 	private String loadXMLQuestions(List<EntityQuestion> qList) {
-		String strXML = null;
-
-		// qList = getAnswersForQuestions(qList);
-
-		EntityQuestion q = qList.get(0);
-		List<EntityAnswer> answerL = q.getAnswers();
-		
+		String strXML = null;	
 		try {
-			DocumentBuilderFactory docFactory = DocumentBuilderFactory
-					.newInstance();
+			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-
 			// root elements
 			Document doc = docBuilder.newDocument();
-			
 			Element elemQuestions = doc.createElement("questions");
 			doc.appendChild(elemQuestions);
-
 			if (qList != null) {
 				for (int i = 0; i < qList.size(); i++) {
 					Element elemQ = doc.createElement("question");
 					elemQuestions.appendChild(elemQ);
-
 					// set attribute to staff element
 					EntityQuestion question = qList.get(i);
-					List<EntityAnswer> answerList = question.getAnswers();
-
+					//
+					List<EntityAnswersText> answerList = null;
+					List<EntityQuestionAttributes> t2qattr = question.getQuestionAttributes();
+					char correctAnswerChar = ' ';
+					for(EntityQuestionAttributes tempAttr:t2qattr){
+						answerList = tempAttr.getQuestionAnswersList();
+						correctAnswerChar = tempAttr.getCorrectAnswer();
+					}
+					//
 					Attr questAttr = doc.createAttribute("questionID");
 					questAttr.setValue(String.valueOf(question.getId()));
 					elemQ.setAttributeNode(questAttr);
-
-					elemQ.appendChild(getElements(doc, elemQ, "questionText",
-							question.getQuestion()));
-
+					elemQ.appendChild(getElements(doc, elemQ, "questionText",question.getQuestionText()));
 					// Element qstnText = doc.createElement("questionText");
 					// qstnText.appendChild(doc.createTextNode(question.getQuestion()));
 					// elemQ.appendChild(qstnText);
-
 					for (int j = 0; j < answerList.size(); j++) {
-						EntityAnswer answer = answerList.get(j);
-
+						EntityAnswersText answer = answerList.get(j);
 						Element elemA = doc.createElement("answer");
 						elemQ.appendChild(elemA);
-
 						Attr ansAttr = doc.createAttribute("answerID");
 						ansAttr.setValue(question.getId() + "_" + answer.getId());
 						elemA.setAttributeNode(ansAttr);
-
-						elemA.appendChild(getElements(doc, elemA, "answerText",
-								answer.getAnswerText()));
-
-						elemA.appendChild(getElements(doc, elemA,
-								"answerStatus",
-								String.valueOf(answer.isAnswer())));
+						elemA.appendChild(getElements(doc, elemA, "answerText",answer.getAnswerText()));						
+						elemA.appendChild(getElements(doc, elemA,"answerStatus",String.valueOf(correctAnswerChar)));
 					}
 				}
-
 			}
 			TransformerFactory tf = TransformerFactory.newInstance();
 			Transformer transformer;
@@ -214,26 +216,22 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 			StringWriter writer = new StringWriter();
 			transformer.transform(new DOMSource(doc), new StreamResult(writer));
 			strXML = writer.getBuffer().toString();
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return strXML;
 	}
-	
+	//
 	private static Node getElements(Document doc, Element element, String name,
 			String value) {
 		Element node = doc.createElement(name);
 		node.appendChild(doc.createTextNode(value));
 		return node;
 	}
-
-
+//
 	@Override
 	public String loadXMLTest(int arg0) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 }

@@ -8,6 +8,10 @@ import org.json.JSONObject;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import tel_ran.tests.entitys.EntityCompany;
+import tel_ran.tests.entitys.EntityPerson;
+import tel_ran.tests.entitys.EntityTest;
+import tel_ran.tests.entitys.EntityTestResultCommon;
 import tel_ran.tests.services.interfaces.ICompanyActionsService;
 
 

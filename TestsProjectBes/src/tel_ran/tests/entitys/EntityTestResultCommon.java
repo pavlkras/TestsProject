@@ -1,4 +1,4 @@
-package tel_ran.tests.services;
+package tel_ran.tests.entitys;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

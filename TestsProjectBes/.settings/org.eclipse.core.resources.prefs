@@ -1,4 +1,4 @@
 eclipse.preferences.version=1
-encoding//src/tel_ran/tests/services/EntityAnswer.java=UTF-8
-encoding//src/tel_ran/tests/services/EntityQuestion.java=UTF-8
+encoding//src/tel_ran/tests/entitys/EntityAnswersText.java=UTF-8
+encoding//src/tel_ran/tests/entitys/EntityQuestion.java=UTF-8
 encoding//src/tel_ran/tests/services/MaintenanceService.java=UTF-8

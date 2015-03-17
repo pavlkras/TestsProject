@@ -9,156 +9,304 @@ import javax.persistence.Query;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import tel_ran.tests.entitys.EntityAnswersText;
+import tel_ran.tests.entitys.EntityQuestion;
+import tel_ran.tests.entitys.EntityQuestionAttributes;
+import tel_ran.tests.entitys.EntityUser;
 import tel_ran.tests.services.interfaces.IMaintenanceService;
 
-public class MaintenanceService extends TestsPersistence implements IMaintenanceService {
+public class MaintenanceService extends TestsPersistence implements IMaintenanceService {   
+	////-------------- Authorization Case ----------// Begin  //
 	private static boolean flAdminAuthorized = false;
-
+// ---------- stub method authorization ------------------//
 	@Override
-	public void setAutorization(boolean auth) {
-		MaintenanceService.flAdminAuthorized = auth;
-	}
-	public static boolean isAuthorized(){
-		return flAdminAuthorized;
-	}
-	private int j=1;// счетчик правильного ответа 
 	@SuppressWarnings("unchecked")
-	@Override
-	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW) //аннотация для правильной обработки транзакций между Клиентом и БД
-	public boolean createQuestion(String questionText,String descriptionText, String category,	int level, List<String> answers, int trueAnswerNumber) {
-		boolean flagAction = false;		
-		List<EntityQuestion> res;
-		try{
-			res = em.createQuery(// searching  if question not exist	
-					"SELECT c FROM EntityQuestion c WHERE c.questionText LIKE :custName").setParameter("custName",questionText).getResultList();
-		}catch(Exception e){
-			res = null;
-		}
-		if(res == null || res.size() == 0){
-			// creating table question and setting data//
-			EntityQuestion qwtemp = new EntityQuestion();			
-			qwtemp.setQuestion(questionText);
-			qwtemp.setDescription(descriptionText);
-			qwtemp.setCategory(category);
-			qwtemp.setLevel(level);
-			em.persist(qwtemp);// sending to database (commit)
-			/**
-			 * получаем Id внесенного вопроса для привязки к ответам, заносим результат в таблицу Answer-колонку-QuestionKey
-			 * Id get introduced to link the issue to the answers, enter the results in Table Answer-column-QuestionKey 
-			 * */
-			List<EntityAnswer> answersList = new ArrayList<EntityAnswer>();
-			long keyQuestion = qwtemp.getId(); 			
-			//обходим лист стрингов который пришел как параметер  List<String> answers и добавляем ответы в БД
-			for (String answerText : answers) {				
-				EntityAnswer ans = addAnswersList(answerText, trueAnswerNumber, keyQuestion); 
-				answersList.add(ans);
-				j++;// счетчик правильного ответа 
+	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW) 
+	public boolean setAutorization(String username, String password) {
+		List<EntityUser> user = em.createQuery("Select u from EntityUser u").getResultList();
+		//
+		for(EntityUser tempUser :user){
+			if(tempUser.getName().equalsIgnoreCase(username) && tempUser.getPassword().equalsIgnoreCase(password)){			
+				flAdminAuthorized = true;		
+			}else{
+				flAdminAuthorized = false;	
 			}
-			qwtemp.setAnswers(answersList);
-			j = 1;
+		}		
+		//
+		return MaintenanceService.flAdminAuthorized;	
+	}
+	public static boolean isAuthorized(){return flAdminAuthorized;}
+	////-------------- Authorization users like Administrator DB ----------// END  //
+	////-------------- Creation and Adding ONE Question into DB Case ----------// BEGIN  //
+	@Override
+	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW) 
+	public boolean CreateNewQuestion(String imageLink, String questionText, String category, int levelOfDifficulti, List<String> answers, char correctAnswer,int questionNumber) {
+		////
+		boolean flagAction = false;	
+		long keyQuestion = 0;
+		EntityQuestion objectQuestion;		
+		////
+		if((objectQuestion = em.find(EntityQuestion.class,(long) questionNumber)) == null ){
+			objectQuestion = new EntityQuestion();	
+			objectQuestion.setQuestionText(questionText);		
+			em.persist(objectQuestion);// sending to database (commit)
+			//
+			keyQuestion = objectQuestion.getId(); 
+			//
+			System.out.println("creating new question id="+keyQuestion);//--------------
+			//
+			List<EntityQuestionAttributes> questionAttributes = new ArrayList<EntityQuestionAttributes>();
+			EntityQuestionAttributes qattr = addQuestionAttributes(imageLink, category,  levelOfDifficulti, correctAnswer,answers, keyQuestion);
+			questionAttributes.add(qattr);
+			//
+			objectQuestion.setQuestionAttributes(questionAttributes);
+			//
+			em.persist(objectQuestion);
+			flagAction = true;			
+		}else{	
+			keyQuestion = objectQuestion.getId(); 
+			//
+			System.out.println("adding attributes to exist question id="+keyQuestion);	//------------	
+			//
+			List<EntityQuestionAttributes> questionAttributes = objectQuestion.getQuestionAttributes();
+			EntityQuestionAttributes qattr = addQuestionAttributes(imageLink, category,  levelOfDifficulti, correctAnswer,answers, keyQuestion);
+			questionAttributes.add(qattr);
+			objectQuestion.setQuestionAttributes(questionAttributes);
+			em.persist(objectQuestion);
 			flagAction = true;
 		}
-		else{
-			em.clear();
+		em.clear();	
+
+		return flagAction;
+	}
+	////
+	private EntityQuestionAttributes addQuestionAttributes(String imageLink, String category, int levelOfDifficulti,char correctAnswer, List<String> answers, long keyQuestion) {
+		EntityQuestionAttributes questionAttributesList = new EntityQuestionAttributes();
+		EntityQuestion objectQuestion = em.find(EntityQuestion.class, keyQuestion);			
+		////
+		if(imageLink.length() > 15 && imageLink != null){
+			System.out.println("adding link");//-------------
+			questionAttributesList.setImageLink(imageLink);
 		}
-		return flagAction;// return to client 
-	}	
-	////////////////////////////////////////////////////////////////////////////////////
-	/** method for Creating Table Answer in DB 	 */
-	private EntityAnswer addAnswersList(String answer, int trueAnswerNumber, long keyQuestion) {
-		// creating table answer and setting data//
-		EntityAnswer temp = new EntityAnswer();
-		EntityQuestion quest = em.find(EntityQuestion.class, keyQuestion);		
-		temp.setAnswerText(answer);// adding text answer 
-		temp.setQuestionId(quest);// setting  mapBy  
-		if(trueAnswerNumber == (int)j){
-			temp.setAnswer(true);//  adding boolean true if this answer  true
-		}else{
-			temp.setAnswer(false);//  adding boolean false if this answer not true
+		////
+		questionAttributesList.setCategory(category);
+		questionAttributesList.setLevelOfDifficulti(levelOfDifficulti);
+		questionAttributesList.setCorrectAnswer(correctAnswer);
+		questionAttributesList.setQuestionId(objectQuestion);	
+		////
+		em.persist(questionAttributesList);	
+
+		if(answers != null){
+			System.out.println("adding answers ->");//-----------
+			List<EntityAnswersText> answersList = new ArrayList<EntityAnswersText>();
+			for (String answerText : answers) {				
+				long keyAttr = questionAttributesList.getId();
+				EntityAnswersText ans = addAnswersList(answerText, keyAttr ); 
+				answersList.add(ans);  				
+			}			
+			questionAttributesList.setQuestionAnswersList(answersList);// mapping to answers
 		}
-		em.persist(temp);// sending to DB добавляем данные в БД
+		return questionAttributesList;
+	}
+	////
+	private EntityAnswersText addAnswersList(String answer, long keyAttr) {		
+		EntityAnswersText temp = new EntityAnswersText();
+		EntityQuestionAttributes qAttrId = em.find(EntityQuestionAttributes.class, keyAttr);
+		temp.setAnswerText(answer);		
+		temp.setQuestionAttributeId(qAttrId);	
+		em.persist(temp);
 		return temp;
 	}
-	/////////////////////////////////////---- update methods -----/////////////////////////////////////////////////
-	@Override	
-	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW)	
-	public boolean UpdateQuestionInDataBase(String questionID,String questionText,String descriptionText,String category, int level,List<String> answers,int trueAnswerNumber) {
-		boolean flagAction = false;
-		// changing Question table attribute
-		long id = (long)Integer.parseInt(questionID);
-		Object res = em.createQuery("SELECT c FROM EntityQuestion c WHERE c.id="+id).getSingleResult();// element question table getting by ID
-		EntityQuestion elem=(EntityQuestion) res;	
-		elem.setQuestion(questionText);
-		elem.setDescription(descriptionText);
-		elem.setCategory(category);
-		elem.setLevel(level);
-		em.persist(elem);
-		// changing table Answer, adding text 
-		List<EntityAnswer> answersList = elem.getAnswers();//em.createQuery("SELECT c FROM EntityAnswer c WHERE c.questionid="+elem.getId()).getResultList();//searching in DB is question not exist
-		int i=0;	
-		j=1;// counter for answers   
-		for(EntityAnswer text:answersList){					
-			text.setAnswerText(answers.get(i++));// getting and adding text to column AnswerText 		
-			if(trueAnswerNumber == (int)j++){
-				text.setAnswer(true);// adding boolean  true if this answer true 
-			}else{
-				text.setAnswer(false);// adding boolean false if this answer not true
-			}				
-			em.persist(text);// добавляем данные в БД
-		}			
-		flagAction = true;
 
-		return flagAction;// return to client 
-	}	
-	///////////////////////////////////--- Search method -----//////////////////////////////////////////////////////////////////////////////
-	/** ЗАПРОС В БД По вопросу, словам из вопроса, или букве(нескольким буквам типа  J2EE) SEARCH Question  */
-	@SuppressWarnings("unchecked")
-	@Override	
-	public List<String> SearchQuestionInDataBase(String question, String category) {	
-		List<String> outResult = new ArrayList<String>();
-		List<EntityQuestion> result = em.createQuery(
-				"SELECT c FROM EntityQuestion c WHERE c.questionText LIKE :custName").setParameter("custName","%"+question+"%").getResultList();// return to client result of operation
-		for(EntityQuestion q: result){
-			outResult.add(q.toString());
+	////-------------- Creation and Adding ONE Question into DB Case ----------// END  //
+	////
+	////-------------- Creation and Adding MANY Questions into DB from Generated Question Case ----------// BEGIN  //
+	@Override
+	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW)	
+	public boolean ModuleForBuildingQuestions(String byCategory, int nQuestions) {
+		boolean ff = false;
+		List<String> answers;		
+		List<String[]> listQuestions = getGeneratedTemplateList(byCategory, nQuestions);
+		//
+		for(String[] fres :listQuestions){	
+			System.out.println(fres.length+" <- razmer masiva");
+			answers = new ArrayList<String>();
+			if(fres.length > 6){				
+				answers.add(fres[6]);answers.add(fres[7]);answers.add(fres[8]);answers.add(fres[9]);
+			}
+			ff = CreateNewQuestion(fres[1], fres[0], fres[2], Integer.parseInt(fres[3]), answers, fres[4].charAt(0), Integer.parseInt(fres[5]));
 		}
-		return outResult;// return to client 
+		return ff;
 	}
-	///////////////////////////////internal method for filling in the form update issue/////////////////////////////////////
+	//--------------- stub methods -------------------///
+	private List<String[]> getGeneratedTemplateList(String category,int nQuestions) {
+
+		List<String[]> outResult = new ArrayList<String[]>();
+		String[] question1 = {"QuestionText0","82D39ED_QuestionText1_AEA6AE8F7201706D430E824FD2F0.jpg","MATH","1","A","0","a11","a12","a13","a14"};
+		String[] question2 = {"QuestionText1","E11842F_QuestionText2_520AA2458992AE532883CFA45EE4.jpg","MATH","1","B","0"};
+		String[] question3 = {"QuestionText2","82D39ED_QuestionText3_AtA6AE8F7201706D430E824FD2F0.jpg","MATH","1","C","0"};
+		String[] question4 = {"QuestionText3","E11842F_QuestionText4_520AA2458992AE532883CFA45EE4.jpg","MATH","1","D","0","a41","a42","a43","a44"};
+		String[] question5 = {"QuestionText4","null","MATH","1","E","0","a51","a52","a53","a54"};
+		outResult.add(question1);
+		outResult.add(question2);
+		outResult.add(question3);
+		outResult.add(question4);
+		outResult.add(question5);
+		return outResult;
+	}		
+	//-------------------end stubs -------------///
+	////-------------- Creation and Adding MANY Questions into DB from Generated Question Case ----------// END  //
+	////	   
+	////-------------- Reading from file and Adding Questions into DB Case ----------// BEGIN  //
+	@Override
+	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW)	
+	public boolean FillDataBaseFromTextResource(List<String> inputTextFromFile) {
+		//pattern for text in file question(one line!!!)
+		//questionText----imageLink----category----levelOfDifficulti----answer1----answer2----answer3----answer4----correctAnswerChar----questionIndexNumber
+		//		
+		boolean flagAction = false;
+		//
+		for(String line: inputTextFromFile){ 
+			//
+			String[] question_Parts = line.split(DELIMITER); //delimiter for text, from interface IMaintenanceService
+			//
+			String questionText = question_Parts[0];
+			String imageLink = question_Parts[1];			
+			String category = question_Parts[2];
+			int levelOfDifficulti = Integer.parseInt(question_Parts[3]);
+			//
+			List<String> answers = new ArrayList<String>();
+			answers.add(question_Parts[4]);	
+			answers.add(question_Parts[5]);
+			answers.add(question_Parts[6]);
+			answers.add(question_Parts[7]);			
+			//
+			char correctAnswer = question_Parts[8].charAt(0);
+			int questionNumber = Integer.parseInt(question_Parts[9]);
+			//
+			flagAction = CreateNewQuestion(imageLink, questionText, category, levelOfDifficulti, answers, correctAnswer, questionNumber);			
+		}	
+		return flagAction;
+	}
+	////-------------- Reading from file and Adding Questions into DB Case ----------// END  //
+	////
+	////-------------- internal method for filling in the form update issue ----------// BEGIN  //
 	@Override
 	public String getQuestionById(String questionID) {// method return all attributes from Question and Answer Tables in string line  
 		StringBuffer  outRes = new StringBuffer();
 		long id = (long)Integer.parseInt(questionID);
-		EntityQuestion question = (EntityQuestion) em.createQuery("SELECT c FROM EntityQuestion c WHERE c.id="+id).getSingleResult();
-		outRes.append(question);
-		List<EntityAnswer> answers = question.getAnswers(); //em.createQuery("SELECT c FROM EntityAnswer c WHERE c.questionid="+id).getResultList();// return to client result of operation
-		for(EntityAnswer tAn :answers)
-			outRes.append(tAn);			
+		//
+		EntityQuestion question = em.find(EntityQuestion.class, id);
+		outRes.append(question + DELIMITER);
+		//
+		List<EntityQuestionAttributes> attr = question.getQuestionAttributes();
+		for(EntityQuestionAttributes textAttr:attr){
+			outRes.append(textAttr + DELIMITER);		
+			List<EntityAnswersText> answers = textAttr.getQuestionAnswersList();
+			if(answers != null){
+				for(EntityAnswersText tAn :answers){
+					outRes.append(tAn + DELIMITER);	
+				}
+			}		
+		}
 		return outRes.toString();// return to client 
 	}
-	//////////////////////////////////////////////method for delete question into DB/////////////////////////////////////////////
+	////-------------- internal method for filling in the form update issue ----------// END  //
+	////
+	////-------------- Builder of page witch categories check box ----------// BEGIN  //
+	@Override
 	@SuppressWarnings("unchecked")
+	public List<String> getAllCategoriesFromDataBase() {
+		String query = "Select DISTINCT q.category FROM EntityQuestionAttributes q ORDER BY q.category";
+		Query q = em.createQuery(query);
+		List<String> allCategories = q.getResultList();		
+		return allCategories;
+	}
+	////-------------- Builder of page witch categories check box ----------// END  //
+	////
+	////-------------- Method for delete question into DB ----------// BEGIN  //
 	@Override
 	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW)	
 	public String deleteQuetionById(String questionID){
 		String outMessageTextToJSP_Page = "";
 		try {
-			long id = Integer.parseInt(questionID);			
-			List<EntityAnswer> liEntAns = em.createQuery("SELECT c FROM EntityAnswer c WHERE c.questionid="+id).getResultList();
-			for(EntityAnswer entAns:liEntAns){
-				em.remove(entAns);
+			long id = Integer.parseInt(questionID);		
+			EntityQuestion objEntQue = em.find(EntityQuestion.class, id);
+			//
+			List<EntityQuestionAttributes> liEntAttr = objEntQue.getQuestionAttributes();
+			for(EntityQuestionAttributes entAttr:liEntAttr){
+				//	
+				List<EntityAnswersText> liEntAns = entAttr.getQuestionAnswersList();
+				for(EntityAnswersText entAns:liEntAns){
+					em.remove(entAns);
+					em.flush();
+				}
+				em.remove(entAttr);
 				em.flush();
-			}
-			Object objEntQue = em.createQuery("SELECT c FROM EntityQuestion c WHERE c.id="+id).getSingleResult();
+			}				
+			//
 			em.remove(objEntQue);
-			em.flush();			
+			em.flush();
 			outMessageTextToJSP_Page = "Object Question By ID="+questionID+". Has been Deleted";// return to client 
 		} catch (Exception e) {
 			outMessageTextToJSP_Page = "Error Deleting Object by ID"+questionID+". This Object Already DELETED";
 		}
 		return outMessageTextToJSP_Page ;// return to client 
 	}
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// method for test case group AlexFoox Company return id of unique set questions 
+	////-------------- Method for delete question into DB ----------// END  //
+	////
+	////-------------- Search Method by Category or Categories and level of difficulty ----------// BEGIN  //
+	@SuppressWarnings("unchecked")		
+	public List<String> SearchAllQuestionInDataBase(String category, int levelOfDifficulti) {	
+		List<String> outResult = new ArrayList<String>();
+		List<EntityQuestionAttributes> result = em.createQuery(	"SELECT c FROM EntityQuestionAttributes c WHERE c.category LIKE :custName").setParameter("custName","%"+category+"%").getResultList();
+		for(EntityQuestionAttributes q: result){
+			outResult.add(q.toString());			
+		}
+		return outResult;// return to client 
+	}
+	////-------------- Search Method by Category or Categories and level of difficulty ----------// END  //
+	////
+	/////-------------- Update  ONE Question into DB Case ----------// BEGIN  //
+	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW)	
+	public boolean UpdateTextQuestionInDataBase(String questionID, String imageLink, String questionText, String category, int levelOfDifficulti, List<String> answers, char correctAnswer) {
+		boolean flagAction = false;
+		//
+		long id = (long)Integer.parseInt(questionID);
+		//
+		try{
+			Object res = em.createQuery("SELECT c FROM EntityQuestion c WHERE c.id="+id).getSingleResult();// element question table getting by ID
+			EntityQuestion elem = (EntityQuestion) res;
+			elem.setQuestionText(questionText);
+			List<EntityQuestionAttributes> questionAttributes = elem.getQuestionAttributes();
+			for(EntityQuestionAttributes qattr:questionAttributes){
+				qattr.setCategory(category);
+				qattr.setCorrectAnswer(correctAnswer);
+				qattr.setImageLink(imageLink);
+				qattr.setLevelOfDifficulti(levelOfDifficulti);
+				//
+				if(answers != null){
+					List<EntityAnswersText> answersList = qattr.getQuestionAnswersList();	 	
+					int i=0;			
+					for(EntityAnswersText text:answersList){					
+						text.setAnswerText(answers.get(i++));					
+						em.persist(text);
+					}  
+				}				
+			}			
+			elem.setQuestionAttributes(questionAttributes);
+			em.persist(elem);
+
+			flagAction = true;
+		}catch(Exception e){
+			e.printStackTrace();
+			System.out.println("not good in maintenance service update question");
+		}
+		return flagAction;// return to client 
+	}	
+	////-------------- Update  ONE Question into DB Case ----------// END  //
+	////
+	////-------------- Method for test case group AlexFoox Company return id of unique set questions ----------// BEGIN  //
 	@SuppressWarnings("unchecked")	
 	@Override  
 	public List<Long> getUniqueSetQuestionsForTest(String category,String level,Long nQuestion){
@@ -180,7 +328,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 						condition.append("(c.category LIKE ?" + (i+2) + ")");
 					}
 				}
-				Query query = em.createQuery("SELECT c.id FROM EntityQuestion c WHERE (c.level=?1) AND (" + condition.toString() + ")");
+				Query query = em.createQuery("SELECT c.id FROM EntityQuestionAttributes c WHERE (c.levelOfDifficulti=?1) AND (" + condition.toString() + ")");
 				query.setParameter(1, levelQuestion);
 				for(int i=0; i<categories.length; i++){
 					query.setParameter((i+2), categories1[i].toString());
@@ -202,24 +350,8 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 				outRes = null;
 			}
 		}
-		return outRes;      // return to any application case client, specific id question
+		return outRes;
 	}
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	@Override
-	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW)	// работа с транзакциями
-	public boolean FillDataBaseFromTextResource(List<String> inputParsedText) {//adding in database questions and answers from local file
-		boolean flagAction = false;
-		for(String line: inputParsedText){ 
-			String[] question_Parts = line.split(DELIMITER); //delimiter for text, from interface IMaintenanceService
-			Integer trueAnswerNumber = Integer.parseInt(question_Parts[8]); 
-			List<String> answers = new ArrayList<String>();
-			answers.add(question_Parts[4]);		answers.add(question_Parts[5]);
-			answers.add(question_Parts[6]);		answers.add(question_Parts[7]);
-
-			int level = Integer.parseInt(question_Parts[3]);
-			flagAction = createQuestion(question_Parts[0], question_Parts[1], question_Parts[2], level, answers, trueAnswerNumber);			
-		}	
-		return flagAction;
-	}
-
+	////-------------- Method for test case group AlexFoox Company return id of unique set questions ----------// END  //
 }
+//// ----- END Code -----
