@@ -1,12 +1,7 @@
 package tel_ran.tests.aop;
-import java.util.List;
-
 import org.aspectj.lang.ProceedingJoinPoint;
 
-import tel_ran.tests.services.MaintenanceService;
-
 public class AdminAuthorizedBench {
-	@SuppressWarnings("unchecked")
 	public Object correctAdminAuthorized(ProceedingJoinPoint point) throws Throwable {		
 		Object[]arguments = point.getArgs();
 		return point.proceed(arguments);
