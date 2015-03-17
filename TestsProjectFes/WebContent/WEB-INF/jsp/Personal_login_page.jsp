@@ -53,5 +53,7 @@
 				</form>
 
 				<p id='logedUser'>User in session: ${logedUser}</p>
+				<br>
+	<a href=".">Home</a>
 </body>
 </html>

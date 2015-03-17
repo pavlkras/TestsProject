@@ -277,5 +277,7 @@ table td {
 			<!--  <input	type="hidden" name="check_email" id="check_email" value="0" /> --> 
 			<input	type="hidden" name="check_all" id="check_all" value="0" />
 	</form>
+	<br>
+	<a href=".">Home</a>
 </body>
 </html>

@@ -30,5 +30,7 @@
 	<script type="text/javascript">
 document.write("${logedUser}");
 </script>
+<br>
+	<a href=".">Home</a>
 </body>
 </html>

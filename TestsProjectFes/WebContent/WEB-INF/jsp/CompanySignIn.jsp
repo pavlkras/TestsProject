@@ -32,6 +32,8 @@
 			document.write("${result}");
 		</script>
 	</p>
+	<br>
+	<a class='myButton' href=".">Home</a>
 </body>
 </html>
 

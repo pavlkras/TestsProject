@@ -59,5 +59,7 @@ function checkCategoryAndLevel(){
     </table>
 
 </form>
+<br>
+	<a href=".">Home</a>
 </body>
 </html>

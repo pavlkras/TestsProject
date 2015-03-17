@@ -52,6 +52,6 @@
 	document.write("${result}");
 	</script>
 	<br> 
- <a href="create_request">Test Details</a> <a href=".">Home</a>  <a href="view_results">Test Details</a>
+  <a href=".">Home</a> &nbsp;&nbsp; <a href="view_results">Test Details</a>
 </body>
 </html>

@@ -69,7 +69,7 @@ Wrong Password Flow:
 				List<String> resultCategory = maintenanceService.getAllCategoriesFromDataBase();
 				for(String catBox:resultCategory){					
 					if(counter < N_ROWS_CATEGORY){
-						categoryHtmlText.append(catBox + "&nbsp;&nbsp;<input type='checkbox' name='category' value='" + catBox + "' />");
+						categoryHtmlText.append("&nbsp;&nbsp;&nbsp;"+catBox + "-<input type='checkbox' name='category' value='" + catBox + "' />");
 						counter++;
 					}else{
 						counter = 0;

@@ -22,5 +22,7 @@
 <h1>The user is already registered!!!</h1> 
 <a href="PersonalActions">Return to login page</a>
 </div>
+<br>
+	<a href=".">Home</a>
 </body>
 </html>
