@@ -1,10 +1,5 @@
 package tel_ran.tests.controller;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -30,6 +25,7 @@ import tel_ran.tests.services.interfaces.IMaintenanceService;
 @Scope("session") /*session timer default = 20min*/
 @RequestMapping({"/","/CompanyActions"})
 public class CompanyActions {
+	private static int N_ROWS_CATEGORY = 10;
 	String companyName;
 	@Autowired
 	ICompanyActionsService companyService;
@@ -72,9 +68,22 @@ Wrong Password Flow:
 	public String loginProcessing(String companyName, String password,Model model){
 		boolean IfExistCompany = companyService.getCompanyByName(companyName);
 		String result;
+		int counter = 0;
 		if(IfExistCompany){
 			boolean ress = companyService.CompanyAuthorization(companyName, password);
-			if(ress ){       
+			if(ress ){ 				
+				StringBuffer categoryHtmlText = new StringBuffer();
+				List<String> resultCategory = maintenanceService.getAllCategoriesFromDataBase();
+				for(String catBox:resultCategory){					
+					if(counter < N_ROWS_CATEGORY){
+						categoryHtmlText.append(catBox + "&nbsp;&nbsp;<input type='checkbox' name='category' value='" + catBox + "' />");
+						counter++;
+					}else{
+						counter = 0;
+						categoryHtmlText.append("<br>");
+					}
+				}
+				model.addAttribute("categoryFill", categoryHtmlText.toString());
 				result = "CompanyGenerateTest";
 			}else{
 				result = "CompanySignIn";
@@ -163,33 +172,28 @@ Normal Flow:
 	//
 	@RequestMapping({"/add_test"})
 	public String createTest(String category,String level,int personId,String personName, String personSurname,String personEmail, Model model) {
-		maintenanceService.setAutorization(true);
+		maintenanceService.setAutorization("0","0");
 		List<Long> listIdQuestions = maintenanceService.getUniqueSetQuestionsForTest(category, level, (long) 15);
 
 		int personId1 = companyService.createPerson(personId, personName, personSurname,personEmail);
 		long idTest = companyService.createIdTest(listIdQuestions,personId1);
 		String link = "http://localhost:8080/TestsProjectFes/jobSeeker_test_preparing_click_event?" + idTest;        
-	    boolean flagMail = sendEmail(link,personEmail);
-	    if(flagMail){
-	    	model.addAttribute("myResult", link);	
-	    }else{
-	    	model.addAttribute("myResult", "Error Mail");
-	    }
-		
-
+		boolean flagMail = sendEmail(link,personEmail);
+		if(flagMail){
+			model.addAttribute("result", link);	
+		}else{
+			model.addAttribute("result", "Error Mail");
+		}
 		return "CompanyGenerateTest";
 	}	 
 	//------------END  Use case Ordering Test 3.1.3-------------
-
-
-
 	private boolean sendEmail(String link, String personEmail) {
-		boolean result = false;
-		String smtpHost = "cakelycakes.com";
+		boolean result = true;
+		/*String smtpHost = "cakelycakes.com";
 		String to = personEmail;
 		String subject = "Email from MYSITE";
 		String text = "Press for this link :  " + link;
-		
+
 		try {
 			Properties properties = new Properties();
 			properties.put("mail.smtp.host", smtpHost);
@@ -208,13 +212,12 @@ Normal Flow:
 			e.printStackTrace();
 		} catch (MessagingException e) {
 			e.printStackTrace();
-		}
-		
+		}*/
+
 		return result;
-		
+
 	}
 
-	
 	/*-------------Use case Viewing test results----------------
 3.1.4.	Viewing test results
 Pre-Conditions:

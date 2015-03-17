@@ -4,9 +4,10 @@
 	text-align: center;
 }
 /** form for adding questions from file switch ****/
-.fileaddform {
+.hiddenObject{
 	display: none;
 }
+
 /**** Generated code form, for tag <a>, resurce from code:(http://www.bestcssbuttongenerator.com) *****/
 .myButton {
 	-moz-box-shadow:inset 0px 1px 0px 0px #97c4fe;

@@ -10,9 +10,9 @@
 <meta http-equiv="Content-Type"
 	content="text/html; charset=windows-1251">
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<link
+ <link
 	href='<c:url value="/static/css_folder/css/MaintenanceUpdatePage.css"></c:url>'
-	rel="stylesheet">
+	rel="stylesheet"> 
 <script type="text/javascript">	
     function test(questionId) {	    	
     	var EDIT_Q = document.getElementsByName("edit_q")[0];
@@ -39,20 +39,21 @@
 <title>UPDATE</title>
 </head>
 <body onload="actionTypeChange()">
-	<a class="myButton" href='http://localhost:8080/TestsProjectFes/'>...</a>
+	<a class="myButton" href='.'>home</a>&nbsp;<a class="myButton" href='maintenanceadd'>add</a>
 	<form name="delete_q" class="displayAction" action='deleteAction'>
 		Question N: <input type='text' name='questionIDdelete' size="8">&nbsp;&nbsp;
 		<input type="submit" class="myButton" value='Delete ?'>
 	</form>
-	<form name="edit_q" class="displayAction" action="getArrayFromDB">
+	<form name="edit_q" class="displayAction" action="fillFormForUpdateQuestion">
 		Question N: <input type="text" name="questionID" size="8">&nbsp;&nbsp;
 		<input type="submit" class="myButton" value="Edit ?">
 	</form>
 	<p onclick="test('1')">Update - Change/Delete issues</p>
 	<!-- test working java script in this jsp file -->
 	<form name="searchCODE" action="search_actions">
-		<input type="text" name="free_question" size="50"> <input
-			class="myButton" type="submit" value="SEARCH"><br>
+		<input type="text" name="category" size="10">
+		<input type="text" name="levelOfDifficulti" size="5" value="1">
+		 <input	class="myButton" type="submit" value="SEARCH"><br>
 	</form>
 	<br>
 	<br>

@@ -13,13 +13,11 @@
 </script>
 </head>
 <body>
- <form action="add_test">
- <p>${myResult}</p><br><br>
- Please select a Category of Question: <br>
-  C#   <input type="checkbox" name="category" value="C#" />
-  Java <input type="checkbox" name="category" value="Java" />
-  C++  <input type="checkbox" name="category" value="C++" /> <br> 
-      <br><br>    
+ <form action="add_test"> 
+ Please select a Category of Question: <br>   
+	<script type="text/javascript">
+	document.write("${categoryFill}");
+	</script><br>    
  Please select Level for Question: <br>   
     1<input type="radio" name="level" value=1 checked="checked">
     2<input type="radio" name="level" value=2>
@@ -49,8 +47,10 @@
    <input type="submit" value="Generate test" />
  </form>
  <br> 
- <a href="create_request">Test Details</a>
-
- 
+ <a href="create_request">Test Details</a><br> 
+	<script type="text/javascript">
+	document.write("${result}");
+	</script><br> 
+ <a href=".">Home</a> 
 </body>
 </html>
