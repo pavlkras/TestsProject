@@ -1,6 +1,17 @@
 package tel_ran.tests.controller;
 
 import java.util.List;
+import java.util.Properties;
+
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -183,7 +194,7 @@ Normal Flow:
 	//------------END  Use case Ordering Test 3.1.3-------------
 	private boolean sendEmail(String link, String personEmail) {
 		boolean result = false;
-		/*
+	
 		final String username = "senderurltest@gmail.com";
 		final String password = "sender54321.com";
 		String subject = "Email from HR";
@@ -219,7 +230,7 @@ Normal Flow:
 		} catch (MessagingException e) {
 			e.printStackTrace();
 
-		}*/
+		}
 		return result;
 	}
 
