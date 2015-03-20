@@ -33,13 +33,13 @@
 	<bean id="companyAuthorizAspect" class="tel_ran.tests.aop.CompanyAuthorizedBench" />
 	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
 
-	<aop:config>
-		<aop:aspect ref="companyAuthorizAspect">
-			<aop:pointcut expression="execution(* tel_ran.tests.services.CompanyActionsService.*(..)) " id="myCut1" />
-			<aop:around method="correctCompanyAuthorized"
-				pointcut-ref="myCut1" />
-		</aop:aspect>
-	</aop:config>
+<!-- 	<aop:config> -->
+<!-- 		<aop:aspect ref="companyAuthorizAspect"> -->
+<!-- 			<aop:pointcut expression="execution(* tel_ran.tests.services.CompanyActionsService.*(..)) " id="myCut1" /> -->
+<!-- 			<aop:around method="correctCompanyAuthorized" -->
+<!-- 				pointcut-ref="myCut1" /> -->
+<!-- 		</aop:aspect> -->
+<!-- 	</aop:config> -->
 
 	<bean id="userAuthorizAspect" class="tel_ran.tests.aop.UserAuthorizedBench" />
 	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>

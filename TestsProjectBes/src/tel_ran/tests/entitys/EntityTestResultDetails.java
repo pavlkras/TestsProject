@@ -38,9 +38,9 @@ public class EntityTestResultDetails {
 			JSONArray picturesURLArray = new JSONArray();
 			if(pictures.length() > 0){
 				String [] picturesSplittedURLs = pictures.split(CommonData.delimiter);
-				int i=0;
+				
 				for(String picture:picturesSplittedURLs){
-					picturesURLArray.put(i++, picture);
+					picturesURLArray.put(picture);
 				}
 			}
 			if(picturesURLArray.length() > 0){
