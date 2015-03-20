@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -118,8 +119,8 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 
 	//------------- Viewing test results  3.1.4.----------- //   BEGIN    ///
 	@Override
-	public List<String> getTestsResultsAll(String companyName) {
-		List<String> res = new ArrayList<String>();
+	public String getTestsResultsAll(String companyName) {
+		String res = "";
 		EntityCompany company = em.find(EntityCompany.class, companyName);
 		if(company!=null){
 			@SuppressWarnings("unchecked")
@@ -127,14 +128,14 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 			("SELECT t FROM EntityTestResultCommon t WHERE t.company = :company ORDER BY t.entityPerson")
 			.setParameter("company", company)
 			.getResultList();
-			generateJsonResponse(res, tests);
+			res = generateJsonResponse(tests);
 		}
 		return res;
 	}
 
 	@Override
-	public List<String> getTestsResultsForPersonID(String companyName, int personID) {
-		List<String> res = new ArrayList<String>();
+	public String getTestsResultsForPersonID(String companyName, int personID) {
+		String res = "";
 		EntityCompany company = em.find(EntityCompany.class, companyName);
 		EntityPerson person = em.find(EntityPerson.class, personID);
 		if(company!=null){
@@ -144,14 +145,14 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 			.setParameter("person", person)
 			.setParameter("company", company)
 			.getResultList();
-			generateJsonResponse(res, tests);
+			res = generateJsonResponse(tests);
 		}
 		return res;
 	}
 
 	@Override
-	public List<String> getTestsResultsForTimeInterval(String companyName, Date date_from, Date date_until) {
-		List<String> res = new ArrayList<String>();
+	public String getTestsResultsForTimeInterval(String companyName, Date date_from, Date date_until) {
+		String res = "";
 		EntityCompany company = em.find(EntityCompany.class, companyName);
 		if(company!=null){
 			@SuppressWarnings("unchecked")
@@ -161,20 +162,23 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 			.setParameter("date_until", date_until)
 			.setParameter("company", company)
 			.getResultList();
-			generateJsonResponse(res, tests);
+			res = generateJsonResponse(tests);
 		}
 		return res;
 	}
 
-	private void generateJsonResponse(List<String> res,	List<EntityTestResultCommon> tests) {
+	private String generateJsonResponse(List<EntityTestResultCommon> tests) {
+		JSONArray result = new JSONArray();
 		for (EntityTestResultCommon test: tests){
 			JSONObject jsonObj = new JSONObject();
-			test.getEntityPerson().fillJsonObject(jsonObj); //Adding person data to jSon
-			test.fillJsonObject(jsonObj);					//Adding TestResultCommon data to jSon
-			test.getEntityTestResultDetails().fillJsonObject(jsonObj); //Adding TestResultDetails data to jSon
-			//	System.out.println(jsonObj.toString());
-			res.add(jsonObj.toString());
+			test.getEntityPerson().fillJsonObject(jsonObj);				//Adding person data to jSon
+			test.fillJsonObject(jsonObj);								//Adding TestResultCommon data to jSon
+			test.getEntityTestResultDetails().fillJsonObject(jsonObj); 	//Adding TestResultDetails data to jSon
+				//System.out.println(jsonObj.toString());
+			result.put(jsonObj);
 		}
+		return result.toString();
+		
 	}
 	//------------- Viewing test results  3.1.4.----------- // END ////
 	//////////////////////////////////////////////////////////////////////////////////////////
