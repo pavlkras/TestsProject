@@ -1,10 +1,10 @@
+<%@page import="tel_ran.tests.services.common.ICommonData"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <!doctype html>
 <html lang="en">
 <!-- <html lang="en" class="ng-app:myapp" id="ng-app" ng-app="myapp" xmlns:ng="http://angularjs.org"> -->
 <head>
-<meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
@@ -24,8 +24,8 @@
 <link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">       
 <link href="http://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/d004434a5ff76e7b97c8b07c01f34ca69e635d97/build/css/bootstrap-datetimepicker.css" rel="stylesheet">
 <script src="/TestsProjectFes/static_js/js/CompanyViewTestsResults.js"></script>
-
 <title>View tests results</title>
+</head>
 <body ng-app="app" ng-controller="InputController">
 	<div class="container-fluid">
 		<h3 class="page-header">View tests results</h3>
@@ -35,9 +35,9 @@
 					<div class='col-md-3'>
 						<div class="form-group"> 			
 							<select ng-model="mode" name="mode" class="selectpicker form-control" title="Please select a mode ...">
-								<option ng-click="changed_to_mode('all');">All tests</option>
-								<option ng-click="changed_to_mode('range')">Data Range</option>
-								<option ng-click="changed_to_mode('id')">For Some Person ID</option>
+								<option ng-click="changed_to_mode('all', '<%=ICommonData.TESTS_RESULTS%>');">All tests</option>
+								<option ng-click="changed_to_mode('range', '<%=ICommonData.TESTS_RESULTS_BY_DATES%>')">Data Range</option>
+								<option ng-click="changed_to_mode('id', '<%=ICommonData.TESTS_RESULTS_BY_PERSON_ID%>')">For Some Person ID</option>
 							</select>
 						</div>
 					</div>
@@ -69,6 +69,7 @@
 						<input type="number" ng-model="personID" name="personID" class="form-control" placeholder="Person ID">
 					</div>
 				</div>
+				<input type="text" ng-show="false" ng-model="token" ng-init="token = '${token}'">
 				<div class='col-md-1'>
 					<button ng-disabled="isButtonDisabled" type="submit" class="btn btn-primary">Submit</button>
 				</div>

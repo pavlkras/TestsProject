@@ -1,9 +1,5 @@
 var app = angular.module('app', ['ngResource']);
 
-//app.factory('restService', function($resource) {
-//	  return $resource('/todo/:todoId', { todoId:'@_id' });
-//});
-
 app.controller('InputController', ['$scope','$http', function($scope, $http) {
   $scope.selectedMode = -1;
 
@@ -13,10 +9,10 @@ app.controller('InputController', ['$scope','$http', function($scope, $http) {
   };
   
   $scope.isButtonDisabled = true;
-  $scope.changed_to_mode = function(i) {
+  $scope.changed_to_mode = function(i, modePath) {
 	$scope.selectedMode = i;
 	$scope.isButtonDisabled = false;
-	
+	$scope.modePath = modePath;
 	switch(i){
 		case 'all': 
 		$scope.display.calendar = false;
@@ -33,15 +29,37 @@ app.controller('InputController', ['$scope','$http', function($scope, $http) {
 	}
   };
   
+  	$scope.parameters = function(){
+		var params = '';
+		switch($scope.selectedMode){
+			case 'all': 
+				params = '';
+			break;
+			case 'range':
+				params = "/"+"date1"+"/"+"date2";
+			break;
+			case 'id':
+				params = "/"+$scope.personID;
+			break;
+		}
+	  return params;
+	};
+	
+//	$scope.setToken = function(token){
+//		$scope.token = token;
+//	};
+	
+	
   $scope.submit = function(){
-	console.log($scope.selectedMode);
-	$http.get("http://localhost:8080/TestsProjectBes/view_results_rest/all_tests_results/Comp1").success(function (response) {
+	$scope.link = "/TestsProjectBes/view_results_rest"+$scope.modePath+$scope.parameters()+"/"+$scope.token;
+	console.log($scope.link);
+	$http.get($scope.link).success(function (response) {
 		$scope.results = response;
 	});
   };
   
 }]);
-
+// jQuery for calendar picker
 $(function () {
 		$('#datetimepicker1').datetimepicker();
 		$('#datetimepicker2').datetimepicker();
@@ -52,14 +70,3 @@ $(function () {
 		$('#datetimepicker1').data("DateTimePicker").maxDate(e.date);
 	});
 });
-
-//$(function () {
-//		$('#datetimepicker1').datetimepicker();
-//		$('#datetimepicker2').datetimepicker();
-//		$("#datetimepicker1").on("dp.change",function (e) {
-//		$('#datetimepicker2').data("DateTimePicker").minDate(e.date);
-//	});
-//		$("#datetimepicker2").on("dp.change",function (e) {
-//		$('#datetimepicker1').data("DateTimePicker").maxDate(e.date);
-//	});
-//});
