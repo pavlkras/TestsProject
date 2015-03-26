@@ -26,7 +26,7 @@
 <script src="/TestsProjectFes/static_js/js/CompanyViewTestsResults.js"></script>
 <title>View tests results</title>
 </head>
-<body ng-app="app" ng-controller="InputController" ng-init="companyName='${company}'">
+<body ng-app="app" ng-controller="InputController" ng-init="token='${token}'">
 	<div class="container-fluid">
 		<h3 class="page-header">View tests results</h3>
 		<div class="row">
@@ -69,7 +69,7 @@
 						<input type="number" ng-model="personID" name="personID" class="form-control" placeholder="Person ID">
 					</div>
 				</div>
-				<input type="text" ng-show="false" ng-model="token" ng-init="token = '${token}'">
+			<!--	<input type="text" ng-show="false" ng-model="token" ng-init="token = '${token}'">  -->
 				<div class='col-md-1'>
 					<button ng-disabled="isButtonDisabled" type="submit" class="btn btn-primary">Submit</button>
 				</div>
