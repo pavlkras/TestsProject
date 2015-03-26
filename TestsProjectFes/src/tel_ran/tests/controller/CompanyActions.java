@@ -263,7 +263,6 @@ f)	5 photos made during the test	------ IGOR ------*/
 	public String viewResults(Model model){
 		//TODO Create method of coding companyName & currentTime into token for BES authorize
 		// or find another authorize method for the REST service
-		model.addAttribute("company", companyName);
 		model.addAttribute("token", companyName);
 		//model.addAttribute("token", "Comp1"); //test val
 		return "CompanyViewTestsResults";
