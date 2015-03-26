@@ -33,13 +33,13 @@ app.controller('InputController', ['$scope','$http', function($scope, $http) {
 		var params = '';
 		switch($scope.selectedMode){
 			case 'all': 
-				params = '';
+				params = "/"+$scope.companyName;
 			break;
 			case 'range':
-				params = "/"+"date1"+"/"+"date2";
+				params = "/"+$scope.companyName+"/"+$scope.dateFrom+"/"+$scope.dateTo;
 			break;
 			case 'id':
-				params = "/"+$scope.personID;
+				params = "/"+$scope.companyName+"/"+$scope.personID;
 			break;
 		}
 	  return params;
@@ -52,6 +52,7 @@ app.controller('InputController', ['$scope','$http', function($scope, $http) {
 	
   $scope.submit = function(){
 	$scope.link = "/TestsProjectBes/view_results_rest"+$scope.modePath+$scope.parameters()+"/"+$scope.token;
+//	$scope.link = "/TestsProjectBes/view_results_rest"+$scope.modePath+$scope.parameters();
 	console.log($scope.link);
 	$http.get($scope.link).success(function (response) {
 		$scope.results = response;
