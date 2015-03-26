@@ -17,14 +17,20 @@ app.controller('InputController', ['$scope','$http', function($scope, $http) {
 		case 'all': 
 		$scope.display.calendar = false;
 		$scope.display.id = false;
+		$scope.calendar = false;
+		$scope.personID = false;
 		break;
 		case 'range':
 		$scope.display.calendar = true;
 		$scope.display.id = false;
+		$scope.calendar = true;
+		$scope.personID = false;
 		break;
 		case 'id':
 		$scope.display.calendar = false;
 		$scope.display.id = true;
+		$scope.calendar = false;
+		$scope.personID = true;
 		break;
 	}
   };
