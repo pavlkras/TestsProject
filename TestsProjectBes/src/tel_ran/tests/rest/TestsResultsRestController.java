@@ -21,15 +21,13 @@ public class TestsResultsRestController {
 	@Autowired
 	ICompanyActionsService company;
 	
-	//@RequestMapping(value=ICommonData.TESTS_RESULTS + "/{token}", method=RequestMethod.GET)
-	@RequestMapping(value=ICommonData.TESTS_RESULTS + "/{companyName}", method=RequestMethod.GET)
+	@RequestMapping(value=ICommonData.TESTS_RESULTS + "/{token}", method=RequestMethod.GET)
 	@ResponseBody @JsonRawValue
 	String all(@PathVariable String token){
 		String companyName = token; //dummy - change to decoding
 		return company.getTestsResultsAll(companyName);
 	}
 	
-	//@RequestMapping(value=ICommonData.TESTS_RESULTS_BY_PERSON_ID + "/{personId}"+ "/{token}" , method=RequestMethod.GET)
 	@RequestMapping(value=ICommonData.TESTS_RESULTS_BY_PERSON_ID + "/{companyName}" + "/{personId}", method=RequestMethod.GET)
 	@ResponseBody @JsonRawValue 
 	String byPersonId(@PathVariable int personId, @PathVariable String token){  
@@ -37,12 +35,10 @@ public class TestsResultsRestController {
 		return company.getTestsResultsForPersonID(companyName, personId);
 	}
 	
-	//@RequestMapping(value=ICommonData.TESTS_RESULTS_BY_DATES + "/{date1}" + "/{date2}" + "/{token}", method=RequestMethod.GET)
-	@RequestMapping(value=ICommonData.TESTS_RESULTS_BY_DATES + "/{companyName}" + "/{date1}" + "/{date2}", method=RequestMethod.GET)
+	@RequestMapping(value=ICommonData.TESTS_RESULTS_BY_DATES + "/{date1}" + "/{date2}" + "/{token}", method=RequestMethod.GET)
 	//if format of Date dd-MM-yyyy 
 	@ResponseBody @JsonRawValue
-	//String byDates(@PathVariable String date1, @PathVariable String date2, @PathVariable String token){ 
-	String byDates(@PathVariable String companyName, @PathVariable String date1, @PathVariable String date2){
+	String byDates(@PathVariable String date1, @PathVariable String date2, @PathVariable String token){ 
 		String companyName = token; //dummy - change to decoding	
 		String res = null;
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
