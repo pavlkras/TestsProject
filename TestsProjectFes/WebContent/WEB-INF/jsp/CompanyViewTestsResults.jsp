@@ -26,7 +26,7 @@
 <script src="/TestsProjectFes/static_js/js/CompanyViewTestsResults.js"></script>
 <title>View tests results</title>
 </head>
-<body ng-app="app" ng-controller="InputController">
+<body ng-app="app" ng-controller="InputController" ng-init="companyName='${company}'">
 	<div class="container-fluid">
 		<h3 class="page-header">View tests results</h3>
 		<div class="row">
