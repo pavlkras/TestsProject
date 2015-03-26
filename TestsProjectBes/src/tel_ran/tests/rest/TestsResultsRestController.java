@@ -28,7 +28,7 @@ public class TestsResultsRestController {
 		return company.getTestsResultsAll(companyName);
 	}
 	
-	@RequestMapping(value=ICommonData.TESTS_RESULTS_BY_PERSON_ID + "/{companyName}" + "/{personId}", method=RequestMethod.GET)
+	@RequestMapping(value=ICommonData.TESTS_RESULTS_BY_PERSON_ID + "/{personId}" + "/{token}", method=RequestMethod.GET)
 	@ResponseBody @JsonRawValue 
 	String byPersonId(@PathVariable int personId, @PathVariable String token){  
 		String companyName = token; //dummy - change to decoding
