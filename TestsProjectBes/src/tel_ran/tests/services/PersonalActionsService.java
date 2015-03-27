@@ -1,6 +1,7 @@
 package tel_ran.tests.services;
 
 import java.io.StringWriter;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -23,22 +24,35 @@ import org.w3c.dom.Node;
 import tel_ran.tests.entitys.EntityAnswersText;
 import tel_ran.tests.entitys.EntityQuestion;
 import tel_ran.tests.entitys.EntityQuestionAttributes;
+import tel_ran.tests.entitys.EntityTest;
 import tel_ran.tests.entitys.EntityUser;
 import tel_ran.tests.services.interfaces.IPersonalActionsService;
 
+@SuppressWarnings("unchecked")
 public class PersonalActionsService extends TestsPersistence implements	IPersonalActionsService {
-	private static EntityQuestionAttributes resAttr;
+	////------ User Authorization and Registration case -----------// BEGIN //
+	@Override
+	public boolean IsUserExist(String userMail, String userPassword) {
+		boolean actionResult = false;	
+		String[] authorizationTest = GetUserByMail(userMail);
+		System.out.println(authorizationTest[PASSWORD]+"   "+userPassword);
+		if(authorizationTest != null && authorizationTest[PASSWORD].equals(userPassword)){
+			actionResult = true;
+		}
+		return actionResult;
+	}	
+
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
-	public boolean saveUserService(String[] userArgs) {
+	public boolean AddingNewUser(String[] args) {		
 		boolean result = false;
 
-		if (em.find(EntityUser.class, userArgs[ID]) == null) {
+		if (em.find(EntityUser.class, args[EMAIL]) == null) {
 			EntityUser user = new EntityUser();
-			user.setId(userArgs[ID]);
-			user.setName(userArgs[NAME]);
-			user.setPassword(userArgs[PASSWORD]);
-			user.setEmail(userArgs[EMAIL]);
+			user.setFirstName(args[FIRSTNAME]);
+			user.setName(args[LASTTNAME]);
+			user.setPassword(args[PASSWORD]);
+			user.setEmail(args[EMAIL]);
 			em.persist(user);
 
 
@@ -48,24 +62,29 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 	}
 
 	@Override
-	public String[] loadUserservice(String userId) {
-		String[] result = new String[USER_FIELDS];
-		EntityUser resUser = new EntityUser();
-		if ((resUser = em.find(EntityUser.class, userId)) != null) {
-			result[ID] = resUser.getId();
-			result[NAME] = resUser.getName();
+	public String[] GetUserByMail(String userMail) {		
+		String[] result;
+		EntityUser resUser = em.find(EntityUser.class, userMail);
+		System.out.println(resUser);
+		if (resUser != null) {
+			result = new String[4];
+			result[FIRSTNAME] = resUser.getFirstName();
+			result[LASTTNAME] = resUser.getLastName();
 			result[PASSWORD] = resUser.getPassword();
 			result[EMAIL] = resUser.getEmail();
-		} else
+		} else{
 			result = null;
+		}
 
 		return result;
 	}
+	////------- User Authorization and Registration case -------------------// END //	
 
+	////------- Test mode Test for User case ----------------// BEGIN //
 	@Override
 	public List<String> getCategoriesList() {
 		String query = "Select DISTINCT q.category FROM EntityQuestionAttributes q ORDER BY q.category";
-		Query q = em.createQuery(query);
+		Query q = em.createQuery(query);		
 		List<String> allCategories = q.getResultList();
 
 		return allCategories;
@@ -103,7 +122,6 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 		return res;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public String getTraineeQuestions(String category, int level, int qAmount) {
 		String query = "SELECT q FROM EntityQuestionAttributes q WHERE q.category=?1 AND q.levelOfDifficulti=?2";
@@ -119,14 +137,6 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 			EntityQuestion tempQuestion = sqattr.getQuestionId();
 			questionList.add(tempQuestion);
 		}
-
-		/*
-		String query = "SELECT q FROM EntityQuestion q WHERE q.category=?1 AND q.level=?2";
-		Query q = em.createQuery(query);
-		q.setParameter(1, category);
-		q.setParameter(2, level);
-
-		List<EntityQuestion> questionList = q.getResultList();*/
 
 		// if required number of the questions is less then questionList obtain
 		// then randomly choose some questions from list and fill new array till
@@ -147,16 +157,6 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 			}
 			questionList = setQuestList(newQuestList);
 		}
-
-		/*	ObjectMapper mapper = new ObjectMapper();
-		String text = "";
-		try {
-		//text = mapper.writeValueAsString(questionList);
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.out.println(text);*/
 		return loadXMLQuestions(questionList);	
 	}
 
@@ -195,9 +195,7 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 					questAttr.setValue(String.valueOf(question.getId()));
 					elemQ.setAttributeNode(questAttr);
 					elemQ.appendChild(getElements(doc, elemQ, "questionText",question.getQuestionText()));
-					// Element qstnText = doc.createElement("questionText");
-					// qstnText.appendChild(doc.createTextNode(question.getQuestion()));
-					// elemQ.appendChild(qstnText);
+
 					for (int j = 0; j < answerList.size(); j++) {
 						EntityAnswersText answer = answerList.get(j);
 						Element elemA = doc.createElement("answer");
@@ -221,17 +219,66 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 		}
 		return strXML;
 	}
-	//
+	////
 	private static Node getElements(Document doc, Element element, String name,
 			String value) {
 		Element node = doc.createElement(name);
 		node.appendChild(doc.createTextNode(value));
 		return node;
 	}
-//
+	////------- Test mode Test for User case ----------------// END //
+
+	////------- Control mode Test for Person case ----------------// BEGIN //
 	@Override
-	public String loadXMLTest(int arg0) {
-		// TODO Auto-generated method stub
-		return null;
+	public String[] GetTestForPerson(String testId) {	
+		long testID = (long)Integer.parseInt(testId);		
+		EntityTest personTest = em.find(EntityTest.class, testID);		
+		int peRson = personTest.getEntityPerson().getPersonId();
+		String pass = personTest.getPassword();	
+		String questions = personTest.getQuestion();
+
+		String[] outResult = {peRson+"", pass, questions};
+		return outResult;
 	}
+	////	
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+	public boolean SaveStartPersonTestParam(String testId, String correctAnswers, long timeStartTest) {
+		boolean resAction = false;
+		try{
+			long testID = (long)Integer.parseInt(testId);		
+			EntityTest personTest = em.find(EntityTest.class, testID);		
+			personTest.setCorrectAnswers(correctAnswers.toCharArray());			
+			personTest.setTestDate(new Date(timeStartTest));	
+			int amountOfCorrectAnswers = personTest.getCorrectAnswers().length;
+			personTest.setAmountOfCorrectAnswers(amountOfCorrectAnswers );
+			em.persist(personTest);
+			resAction = true;
+		}catch(Exception e){
+			e.printStackTrace();
+			System.out.println("catch save start test");
+		}
+		return resAction;
+	}
+	////
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+	public boolean SaveEndPersonTestResult(String testId, String personAnswers,	String imagesLinks, long timeEndTest) {
+		System.out.println("personAnswers-"+personAnswers);
+		boolean resAction = false;
+		try{
+			long testID = (long)Integer.parseInt(testId);		
+			EntityTest personTest = em.find(EntityTest.class, testID);		
+			personTest.setPersonAnswers(personAnswers.toCharArray());
+			personTest.setPictures(imagesLinks);		
+			personTest.setTestDate(new Date(timeEndTest));				
+			em.persist(personTest);
+			resAction = true;
+		}catch(Exception e){
+			e.printStackTrace();
+			System.out.println("catch save end test");
+		}
+		return resAction;
+	}
+	////------- Control mode Test for Person case ----------------// END //
 }

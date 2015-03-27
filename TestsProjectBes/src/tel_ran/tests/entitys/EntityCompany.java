@@ -7,21 +7,23 @@ public class EntityCompany {
 	@Id
 	private String C_Name;
 	private String C_Site;
-		
+
 	private String C_Specialization;
-	
+
 	private String C_AmountEmployes;
-	
+
 	private String C_Password;
-	
-	//// Added by Igor ////
+
+	////Added by Igor ////
 	@OneToMany(mappedBy = "company")
-	private List<EntityTestResultCommon> entityTestResultCommon;
-	public List<EntityTestResultCommon> getEntityTestResultCommon() {
-	    return entityTestResultCommon;
+	private List<EntityTest> entityTestResultCommon;
+
+	public List<EntityTest> getEntityTest() {
+		return entityTestResultCommon;
 	}
-	public void setEntityTestResultCommon(List<EntityTestResultCommon> param) {
-	    this.entityTestResultCommon = param;
+
+	public void setEntityTest(List<EntityTest> param) {
+		this.entityTestResultCommon = param;
 	}
 	//// End of Adding ////
 
@@ -63,8 +65,6 @@ public class EntityCompany {
 				+ ", Amount Employes : " + C_AmountEmployes 
 				;
 	}
-
-
 }
 
 

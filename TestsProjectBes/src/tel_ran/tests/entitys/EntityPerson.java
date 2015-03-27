@@ -15,7 +15,7 @@ public class EntityPerson {
 	@Column(name="personId",unique = true, nullable = false, length = 500)
     private int personId;
   
-    @OneToMany(mappedBy = "personId")
+    @OneToMany/*(mappedBy = "personId")*/
     private List<EntityTest> enTest;
  
 	public List<EntityTest> getEnTest() {

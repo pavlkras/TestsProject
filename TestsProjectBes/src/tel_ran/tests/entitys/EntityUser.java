@@ -2,32 +2,32 @@ package tel_ran.tests.entitys;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Transient;
 
 @SuppressWarnings("serial")
 @Entity
 public class EntityUser implements Serializable{
-	
 	@Id
-	private String id;//teudat zeut. to work with field convert it on int in functions
-	private String name;
-	private String password;
-	@Transient
+	@Column(name = "email", unique = true, nullable = false, length = 70)
 	private String email;
-
-	public String getId() {
-		return id;
+	////
+	private String firstName;
+	private String lastName;
+	private String password;
+	////
+	public String getFirstName() {
+		return firstName;
 	}
-	public void setId(String id) {
-		this.id = id;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
-	public String getName() {
-		return name;
+	public String getLastName() {
+		return lastName;
 	}
-	public void setName(String name) {
-		this.name = name;
+	public void setName(String lastName) {
+		this.lastName = lastName;
 	}
 	public String getPassword() {
 		return password;
@@ -41,11 +41,10 @@ public class EntityUser implements Serializable{
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	////
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", name=" + name + ", password=" + password
-				+ ", email=" + email+ " ]";
+		return "User firstName=" + firstName + ", lastName=" + lastName + ", password=" + password
+				+ ", email=" + email;
 	}
-	
-
 }

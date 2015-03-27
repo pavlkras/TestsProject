@@ -1,6 +1,5 @@
 package tel_ran.tests.services;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -12,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import tel_ran.tests.entitys.EntityCompany;
 import tel_ran.tests.entitys.EntityPerson;
 import tel_ran.tests.entitys.EntityTest;
-import tel_ran.tests.entitys.EntityTestResultCommon;
 import tel_ran.tests.services.interfaces.ICompanyActionsService;
 
 
@@ -82,19 +80,20 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 	//------------- 	Use case Ordering Test 3.1.3 -------------/// BEGIN ////
 	@Override
 	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
-	public long  createIdTest(List<Long> list, int personId) {
+	public long  createIdTest(List<Long> list, int personId, String pass) {
 		EntityPerson temp = em.find(EntityPerson.class, personId);	
 		EntityTest test = new EntityTest();
 		EntityPerson pers = new EntityPerson();
 		StringBuffer idQuestion = new StringBuffer();
-		for(Long s : list){
-			System.out.println(s.toString());
+		for(Long s : list){			
 			idQuestion.append(s);
 			idQuestion.append(",");
 		}
 		test.setQuestion(idQuestion.toString() );
 		pers.setPersonId(personId);
+		test.setPassword(pass); 
 		test.setPersonId(temp);
+
 		em.persist(test);
 		long testId = test.getTestId();
 		return testId;
@@ -104,7 +103,7 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
 	public int createPerson(int personId,String personName,String personSurname,String personEmail) {
 		int result = personId;		
-		if(em.find(EntityPerson.class, personId)==null){
+		if(em.find(EntityPerson.class, personId)==null){			
 			EntityPerson person = new EntityPerson();
 			person.setPersonId(personId);
 			person.setPersonName(personName);
@@ -117,75 +116,76 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 	}
 	//------------- 	Use case Ordering Test 3.1.3 -------------/// END  ////	
 
-	//------------- Viewing test results  3.1.4.----------- //   BEGIN    ///
-	@Override
-	public String getTestsResultsAll(String companyName) {
-		String res = "";
-		EntityCompany company = em.find(EntityCompany.class, companyName);
-		if(company!=null){
-			@SuppressWarnings("unchecked")
-			List<EntityTestResultCommon> tests = (List<EntityTestResultCommon>) em.createQuery
-			("SELECT t FROM EntityTestResultCommon t WHERE t.company = :company ORDER BY t.entityPerson")
-			.setParameter("company", company)
-			.getResultList();
-			res = generateJsonResponse(tests);
-		}
-		return res;
-	}
+	 //------------- Viewing test results  3.1.4.----------- //   BEGIN    ///
+	 @Override
+	 public String getTestsResultsAll(String companyName) {
+	  String res = "";
+	  EntityCompany company = em.find(EntityCompany.class, companyName);
+	  if(company!=null){
+	   @SuppressWarnings("unchecked")
+	   //List<EntityTestResultCommon> tests = (List<EntityTestResultCommon>) em.createQuery
+	   //("SELECT t FROM EntityTestResultCommon t WHERE t.company = :company ORDER BY t.entityPerson")
+	   List<EntityTest> tests = (List<EntityTest>) em.createQuery
+	   ("SELECT t FROM EntityTest t WHERE t.company = :company ORDER BY t.entityPerson")
+	   .setParameter("company", company)
+	   .getResultList();
+	   res = generateJsonResponse(tests);
+	  }
+	  return res;
+	 }
 
-	@Override
-	public String getTestsResultsForPersonID(String companyName, int personID) {
-		String res = "";
-		EntityCompany company = em.find(EntityCompany.class, companyName);
-		EntityPerson person = em.find(EntityPerson.class, personID);
-		if(company!=null){
-			@SuppressWarnings("unchecked")
-			List<EntityTestResultCommon> tests = (List<EntityTestResultCommon>) em.createQuery
-			("SELECT t FROM EntityTestResultCommon t WHERE t.entityPerson = :person AND t.company = :company")
-			.setParameter("person", person)
-			.setParameter("company", company)
-			.getResultList();
-			res = generateJsonResponse(tests);
-		}
-		return res;
-	}
+	 @Override
+	 public String getTestsResultsForPersonID(String companyName, int personID) {
+	  String res = "";
+	  EntityCompany company = em.find(EntityCompany.class, companyName);
+	  EntityPerson person = em.find(EntityPerson.class, personID);
+	  if(company!=null){
+	   @SuppressWarnings("unchecked")
+	   //List<EntityTestResultCommon> tests = (List<EntityTestResultCommon>) em.createQuery
+	   //("SELECT t FROM EntityTestResultCommon t WHERE t.entityPerson = :person AND t.company = :company")
+	   List<EntityTest> tests = (List<EntityTest>) em.createQuery
+	   ("SELECT t FROM EntityTest t WHERE t.entityPerson = :person AND t.company = :company")
+	   .setParameter("person", person)
+	   .setParameter("company", company)
+	   .getResultList();
+	   res = generateJsonResponse(tests);
+	  }
+	  return res;
+	 }
 
-	@Override
-	public String getTestsResultsForTimeInterval(String companyName, Date date_from, Date date_until) {
-		String res = "";
-		EntityCompany company = em.find(EntityCompany.class, companyName);
-		if(company!=null){
-			@SuppressWarnings("unchecked")
-			List<EntityTestResultCommon> tests = (List<EntityTestResultCommon>) em.createQuery
-			("SELECT t FROM EntityTestResultCommon t WHERE t.testDate >= :date_from AND t.testDate <= :date_until AND t.company = :company ORDER BY t.entityPerson")
-			.setParameter("date_from", date_from)
-			.setParameter("date_until", date_until)
-			.setParameter("company", company)
-			.getResultList();
-			res = generateJsonResponse(tests);
-		}
-		return res;
-	}
+	 @Override
+	 public String getTestsResultsForTimeInterval(String companyName, Date date_from, Date date_until) {
+	  String res = "";
+	  EntityCompany company = em.find(EntityCompany.class, companyName);
+	  if(company!=null){
+	   @SuppressWarnings("unchecked")
+	   //List<EntityTestResultCommon> tests = (List<EntityTestResultCommon>) em.createQuery
+	   //("SELECT t FROM EntityTestResultCommon t WHERE t.testDate >= :date_from AND t.testDate <= :date_until AND t.company = :company ORDER BY t.entityPerson")
+	   List<EntityTest> tests = (List<EntityTest>) em.createQuery
+	   ("SELECT t FROM EntityTest t WHERE t.testDate >= :date_from AND t.testDate <= :date_until AND t.company = :company ORDER BY t.entityPerson")
+	   .setParameter("date_from", date_from)
+	   .setParameter("date_until", date_until)
+	   .setParameter("company", company)
+	   .getResultList();
+	   res = generateJsonResponse(tests);
+	  }
+	  return res;
+	 }
 
-	private String generateJsonResponse(List<EntityTestResultCommon> tests) {
-		JSONArray result = new JSONArray();
-		for (EntityTestResultCommon test: tests){
-			JSONObject jsonObj = new JSONObject();
-			test.getEntityPerson().fillJsonObject(jsonObj);				//Adding person data to jSon
-			test.fillJsonObject(jsonObj);								//Adding TestResultCommon data to jSon
-			test.getEntityTestResultDetails().fillJsonObject(jsonObj); 	//Adding TestResultDetails data to jSon
-				//System.out.println(jsonObj.toString());
-			result.put(jsonObj);
-		}
-		return result.toString();
-		
-	}
-	//------------- Viewing test results  3.1.4.----------- // END ////
-	//////////////////////////////////////////////////////////////////////////////////////////
-	//-------------Use Case Company  3.1.?----------- //   BEGIN    ///
-	@Override
-	public void printQuestion(int arg0) {
-		// TODO Auto-generated method stub
-	}
-	//-------------Use Case Company  3.1.?----------- //   END    ///
+	 //private String generateJsonResponse(List<EntityTestResultCommon> tests) {
+	 private String generateJsonResponse(List<EntityTest> tests) {
+	  JSONArray result = new JSONArray();
+	  //for (EntityTestResultCommon test: tests){
+	  for (EntityTest test: tests){
+	   JSONObject jsonObj = new JSONObject();
+	   test.getEntityPerson().fillJsonObject(jsonObj);    //Adding person data to jSon
+	   test.fillJsonObject(jsonObj);        //Adding TestResultCommon data to jSon
+	   //test.getEntityTestResultDetails().fillJsonObject(jsonObj);  //Adding TestResultDetails data to jSon
+	    //System.out.println(jsonObj.toString());
+	   result.put(jsonObj);
+	  }
+	  return result.toString();
+	  
+	 }
+	 //------------- Viewing test results  3.1.4.----------- // END ////
 }

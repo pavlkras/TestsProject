@@ -16,22 +16,19 @@ import tel_ran.tests.entitys.EntityUser;
 import tel_ran.tests.services.interfaces.IMaintenanceService;
 
 public class MaintenanceService extends TestsPersistence implements IMaintenanceService {   
-	////-------------- Authorization Case ----------// Begin  //
+////-------------- Authorization Case ----------// Begin  //
 	private static boolean flAdminAuthorized = false;
-// ---------- stub method authorization ------------------//
-	@Override
-	@SuppressWarnings("unchecked")
-	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW) 
-	public boolean setAutorization(String username, String password) {
-		List<EntityUser> user = em.createQuery("Select u from EntityUser u").getResultList();
+	// ---------- stub method authorization ------------------//
+	@Override	
+	public boolean setAutorization(String userMail, String password) {
+		////
+		EntityUser tmpUser = em.find(EntityUser.class, userMail);
 		//
-		for(EntityUser tempUser :user){
-			if(tempUser.getName().equalsIgnoreCase(username) && tempUser.getPassword().equalsIgnoreCase(password)){			
-				flAdminAuthorized = true;		
-			}else{
-				flAdminAuthorized = false;	
-			}
-		}		
+		if(tmpUser != null && tmpUser.getPassword().equalsIgnoreCase(password)){			
+			flAdminAuthorized = true;		
+		}else{
+			flAdminAuthorized = true;	 
+		}
 		//
 		return MaintenanceService.flAdminAuthorized;	
 	}
@@ -142,7 +139,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	private List<String[]> getGeneratedTemplateList(String category,int nQuestions) {
 
 		List<String[]> outResult = new ArrayList<String[]>();
-		String[] question1 = {"QuestionText0","82D39ED_QuestionText1_AEA6AE8F7201706D430E824FD2F0.jpg","MATH","1","A","0","a11","a12","a13","a14"};
+		String[] question1 = {"Whot Wrong witch Code:","82D39ED_QuestionText1_AEA6AE8F7201706D430E824FD2F0.jpg","MATH","1","A","0","a11","a12","a13","a14"};
 		String[] question2 = {"QuestionText1","E11842F_QuestionText2_520AA2458992AE532883CFA45EE4.jpg","MATH","1","B","0"};
 		String[] question3 = {"QuestionText2","82D39ED_QuestionText3_AtA6AE8F7201706D430E824FD2F0.jpg","MATH","1","C","0"};
 		String[] question4 = {"QuestionText3","E11842F_QuestionText4_520AA2458992AE532883CFA45EE4.jpg","MATH","1","D","0","a41","a42","a43","a44"};
@@ -261,7 +258,8 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		List<String> outResult = new ArrayList<String>();
 		List<EntityQuestionAttributes> result = em.createQuery(	"SELECT c FROM EntityQuestionAttributes c WHERE c.category LIKE :custName").setParameter("custName","%"+category+"%").getResultList();
 		for(EntityQuestionAttributes q: result){
-			outResult.add(q.toString());			
+			// TO DO query get by category and level of difficulty 
+			outResult.add(q.getQuestionId().getQuestionText() + IMaintenanceService.DELIMITER + q.toString());			
 		}
 		return outResult;// return to client 
 	}
