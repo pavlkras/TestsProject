@@ -7,7 +7,7 @@
 <link href='<c:url value="/static/css/trainee_mode_parameters_styles.css"></c:url>' rel="stylesheet">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<title>Category choice</title>
+<title>Test Creation</title>
 <script type="text/javascript">
 
 function checkCategoryAndLevel(){

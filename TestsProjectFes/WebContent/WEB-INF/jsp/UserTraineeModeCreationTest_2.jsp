@@ -6,7 +6,7 @@
 <link href='<c:url value="/static/css/trainee_mode_parameters_styles.css"></c:url>' rel="stylesheet">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<title>Questions quantity choice</title>
+<title>Test Creation</title>
 <script type="text/javascript">
 
 function checkQuestionsNumber(){
@@ -35,7 +35,7 @@ with maximal number of questions <span id="maxnum">${questionsCountByCategoryLev
 <br>
 <br>
 <br>
-<form id="myform" method="post" action="test_preparing" onsubmit="return checkQuestionsNumber()">
+<form id="myform" method="post" action="test_run" onsubmit="return checkQuestionsNumber()">
 Please input a number of questions you want to test: <input id="qnum" type="text" name="personalqnumber" size=20/>
 <input id="submitbutton" type="submit" value="Submit"/>
 </form>
