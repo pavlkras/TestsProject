@@ -114,6 +114,7 @@ public class PersonalActions {
 		if (testForPerson != null && testForPerson[0].equals(id) && testForPerson[1].equals(password)) {
 			//
 			timeStartTest = System.currentTimeMillis();
+			System.out.println("test start time saved testId-"+testId);
 			//
 			personId = testForPerson[0]; personPassword = testForPerson[1];
 			String[] tempArray = testForPerson[2].split(",");
@@ -179,8 +180,10 @@ public class PersonalActions {
 	////
 	@RequestMapping(value = "/endPersonTest", method = RequestMethod.POST)
 	String outResultTestToPerson(String answerschecked, String imageLinkText, String testID, Model model){
-		System.out.println("id-"+testID);
+		//
+		System.out.println("test start time saved testId-"+testID);
 		long timeEndTest = System.currentTimeMillis();
+		//
 		if(!personalService.SaveEndPersonTestResult(testID, answerschecked, "TO DO", timeEndTest)){
 			String arg1 = "Sorry test is not sended, try again.";
 			model.addAttribute("result", arg1 );
