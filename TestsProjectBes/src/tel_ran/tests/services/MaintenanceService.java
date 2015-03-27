@@ -326,7 +326,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 						condition.append("(c.category LIKE ?" + (i+2) + ")");
 					}
 				}
-				Query query = em.createQuery("SELECT c.id FROM EntityQuestionAttributes c WHERE (c.levelOfDifficulti=?1) AND (" + condition.toString() + ")");
+				Query query = em.createQuery("SELECT c.id FROM EntityQuestionAttributes c WHERE (c.levelOfDifficulty=?1) AND (" + condition.toString() + ")");
 				query.setParameter(1, levelQuestion);
 				for(int i=0; i<categories.length; i++){
 					query.setParameter((i+2), categories1[i].toString());
