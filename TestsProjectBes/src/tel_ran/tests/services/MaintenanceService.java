@@ -16,7 +16,7 @@ import tel_ran.tests.entitys.EntityUser;
 import tel_ran.tests.services.interfaces.IMaintenanceService;
 
 public class MaintenanceService extends TestsPersistence implements IMaintenanceService {   
-////-------------- Authorization Case ----------// Begin  //
+	////-------------- Authorization Case ----------// Begin  //
 	private static boolean flAdminAuthorized = false;
 	// ---------- stub method authorization ------------------//
 	@Override	
@@ -37,7 +37,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	////-------------- Creation and Adding ONE Question into DB Case ----------// BEGIN  //
 	@Override
 	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW) 
-	public boolean CreateNewQuestion(String imageLink, String questionText, String category, int levelOfDifficulti, List<String> answers, char correctAnswer,int questionNumber) {
+	public boolean CreateNewQuestion(String imageLink, String questionText, String category, int levelOfDifficulty, List<String> answers, char correctAnswer,int questionNumber) {
 		////
 		boolean flagAction = false;	
 		long keyQuestion = 0;
@@ -53,7 +53,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 			System.out.println("creating new question id="+keyQuestion);//--------------
 			//
 			List<EntityQuestionAttributes> questionAttributes = new ArrayList<EntityQuestionAttributes>();
-			EntityQuestionAttributes qattr = addQuestionAttributes(imageLink, category,  levelOfDifficulti, correctAnswer,answers, keyQuestion);
+			EntityQuestionAttributes qattr = addQuestionAttributes(imageLink, category,  levelOfDifficulty, correctAnswer,answers, keyQuestion);
 			questionAttributes.add(qattr);
 			//
 			objectQuestion.setQuestionAttributes(questionAttributes);
@@ -66,7 +66,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 			System.out.println("adding attributes to exist question id="+keyQuestion);	//------------	
 			//
 			List<EntityQuestionAttributes> questionAttributes = objectQuestion.getQuestionAttributes();
-			EntityQuestionAttributes qattr = addQuestionAttributes(imageLink, category,  levelOfDifficulti, correctAnswer,answers, keyQuestion);
+			EntityQuestionAttributes qattr = addQuestionAttributes(imageLink, category,  levelOfDifficulty, correctAnswer,answers, keyQuestion);
 			questionAttributes.add(qattr);
 			objectQuestion.setQuestionAttributes(questionAttributes);
 			em.persist(objectQuestion);
@@ -77,7 +77,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		return flagAction;
 	}
 	////
-	private EntityQuestionAttributes addQuestionAttributes(String imageLink, String category, int levelOfDifficulti,char correctAnswer, List<String> answers, long keyQuestion) {
+	private EntityQuestionAttributes addQuestionAttributes(String imageLink, String category, int levelOfDifficulty,char correctAnswer, List<String> answers, long keyQuestion) {
 		EntityQuestionAttributes questionAttributesList = new EntityQuestionAttributes();
 		EntityQuestion objectQuestion = em.find(EntityQuestion.class, keyQuestion);			
 		////
@@ -87,7 +87,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		}
 		////
 		questionAttributesList.setCategory(category);
-		questionAttributesList.setLevelOfDifficulti(levelOfDifficulti);
+		questionAttributesList.setLevelOfDifficulty(levelOfDifficulty);
 		questionAttributesList.setCorrectAnswer(correctAnswer);
 		questionAttributesList.setQuestionId(objectQuestion);	
 		////
@@ -254,7 +254,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	////
 	////-------------- Search Method by Category or Categories and level of difficulty ----------// BEGIN  //
 	@SuppressWarnings("unchecked")		
-	public List<String> SearchAllQuestionInDataBase(String category, int levelOfDifficulti) {	
+	public List<String> SearchAllQuestionInDataBase(String category, int levelOfDifficulty) {	
 		List<String> outResult = new ArrayList<String>();
 		List<EntityQuestionAttributes> result = em.createQuery(	"SELECT c FROM EntityQuestionAttributes c WHERE c.category LIKE :custName").setParameter("custName","%"+category+"%").getResultList();
 		for(EntityQuestionAttributes q: result){
@@ -267,7 +267,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	////
 	/////-------------- Update  ONE Question into DB Case ----------// BEGIN  //
 	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW)	
-	public boolean UpdateTextQuestionInDataBase(String questionID, String imageLink, String questionText, String category, int levelOfDifficulti, List<String> answers, char correctAnswer) {
+	public boolean UpdateTextQuestionInDataBase(String questionID, String imageLink, String questionText, String category, int levelOfDifficulty, List<String> answers, char correctAnswer) {
 		boolean flagAction = false;
 		//
 		long id = (long)Integer.parseInt(questionID);
@@ -281,7 +281,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 				qattr.setCategory(category);
 				qattr.setCorrectAnswer(correctAnswer);
 				qattr.setImageLink(imageLink);
-				qattr.setLevelOfDifficulti(levelOfDifficulti);
+				qattr.setLevelOfDifficulty(levelOfDifficulty);
 				//
 				if(answers != null){
 					List<EntityAnswersText> answersList = qattr.getQuestionAnswersList();	 	

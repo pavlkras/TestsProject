@@ -38,8 +38,8 @@ public class EntityQuestionAttributes implements Serializable {
 	@Column(name = "category")
 	private String category;
 	////
-	@Column(name = "levelOfDifficulti")
-	private int levelOfDifficulti;
+	@Column(name = "levelOfDifficulty")
+	private int levelOfDifficulty;
 	////
 	@Column(name = "correctAnswer")
 	private char correctAnswer;
@@ -65,11 +65,11 @@ public class EntityQuestionAttributes implements Serializable {
 		this.category = category;
 	}
 	////
-	public int getLevelOfDifficulti() {
-		return levelOfDifficulti;
+	public int getLevelOfDifficulty() {
+		return levelOfDifficulty;
 	}
-	public void setLevelOfDifficulti(int levelOfDifficulti) {
-		this.levelOfDifficulti = levelOfDifficulti;
+	public void setLevelOfDifficulty(int levelOfDifficulty) {
+		this.levelOfDifficulty = levelOfDifficulty;
 	}
 	////
 	public char getCorrectAnswer() {
@@ -95,7 +95,7 @@ public class EntityQuestionAttributes implements Serializable {
 		return questionId.getId()
 				+ IMaintenanceService.DELIMITER + imageLink 
 				+ IMaintenanceService.DELIMITER + category
-				+ IMaintenanceService.DELIMITER + levelOfDifficulti
+				+ IMaintenanceService.DELIMITER + levelOfDifficulty
 				+ IMaintenanceService.DELIMITER + correctAnswer;
 	}
 }
