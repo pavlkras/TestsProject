@@ -34,7 +34,7 @@ public class PersonalActions {
 	@Autowired
 	IPersonalActionsService personalService; 
 	@Autowired
-	IMaintenanceService maintenanceService;
+	IMaintenanceService maintenanceService;	
 	@RequestMapping({"/"})
 	public String Index(){     return "PersonalSignIn";       }// this mapping to index page !!!!!! for all users and all company !!!!
 	//--------------------- fields of this class ---------------------------

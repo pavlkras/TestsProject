@@ -16,8 +16,10 @@
 <property name="serviceUrl" value="http://localhost:8080/TestsProjectBes/personal_service.service2"></property>
 <property name="serviceInterface" value="tel_ran.tests.services.interfaces.IPersonalActionsService"></property>
 </bean>
+
 <bean id="maintanenceService" class="org.springframework.remoting.caucho.BurlapProxyFactoryBean">
 <property name="serviceUrl" value="http://localhost:8080/TestsProjectBes/maintenance_service.service3"></property>
 <property name="serviceInterface" value="tel_ran.tests.services.interfaces.IMaintenanceService"></property>
 </bean>
+
 </beans>
