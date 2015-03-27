@@ -8,7 +8,6 @@
 <link rel="stylesheet" type="text/css" href="/CSS/reg.css" />
 <script src="/JS/cPassword.js" type="text/javascript"></script>
 
-
 <style type="text/css">
 table {
 	width: 600px;
@@ -116,45 +115,7 @@ table td {
 		}
 		checkAll();
 	}
-
-/* 	function isEmail(item) {
-		var at = "@"
-		var dot = "."
-		var lat = item.indexOf(at)
-		var litem = item.length
-		var ldot = item.indexOf(dot)
-		if (item.indexOf(at) == -1)
-			return false;
-		if (item.indexOf(at) == -1 || item.indexOf(at) == 0
-				|| item.indexOf(at) == litem)
-			return false;
-		if (item.indexOf(dot) == -1 || item.indexOf(dot) == 0
-				|| item.indexOf(dot) >= litem - 2)
-			return false;
-		if (item.indexOf(at, (lat + 1)) != -1)
-			return false;
-		if (item.substring(lat - 1, lat) == dot
-				|| item.substring(lat + 1, lat + 2) == dot)
-			return false;
-		if (item.indexOf(dot, (lat + 2)) == -1)
-			return false;
-		if (item.indexOf(" ") != -1)
-			return false;
-		return true
-	}
-
-	function CorrectEmail(item) {
-		if (isEmail(item.value) == true) {
-			document.getElementById('email_correct').innerHTML = 'correct';
-			document.getElementById('email_correct').className = 'correct';
-			document.getElementById('check_email').value = 1;
-		} else {
-			document.getElementById('email_correct').innerHTML = '';
-			document.getElementById('check_email').value = 0;
-		}
-		checkAll();
-	} */
-
+	
 	function checkAll() {
 		var x;
 		var check_login = document.getElementById('check_login').value;
@@ -178,7 +139,6 @@ table td {
 		<table>
 			<tr>
 				<td class="td_left">Company Name</td>
-
 				<td class="td_right"><input type="text" name="C_Name"
 					id="login_id" size="40" onkeypress="CountLogin('login_id')"
 					onfocus="CountLogin('login_id')" onkeyup="CountLogin('login_id')"
@@ -186,15 +146,10 @@ table td {
 					<div class="mini">
 						Input: <span id="login_view">0</span>
 					</div></td>
-				<td class="td_info"><div id="login_correct">Minimum 5
-						simbols</div></td>
-
+				<td class="td_info"><div id="login_correct">Minimum 5 simbols </div></td>
 			</tr>
-
 			<tr>
 				<td class="td_left">Specialization</td>
-
-
 				<td class="td_right"><select name="C_Specialization">
 						<option value="Education">Education</option>
 						<option value="Software development">Software development</option>
@@ -202,7 +157,6 @@ table td {
 						<option value="Other">Other</option>
 				</select></td>
 				<td class="td_info"></td>
-
 			</tr>
 			<tr>
 				<td class="td_left">WEB-SITE</td>
@@ -210,7 +164,6 @@ table td {
 				<td class="td_right"><input type="text" name="C_Site"
 					id="login_id" size="40" /></td>
 				<td class="td_info"></td>
-
 			</tr>
 			<tr>
 				<td class="td_left">Amount Employees :</td>
@@ -224,17 +177,6 @@ table td {
 						<option value="more 1000">more 1000</option>
 				</select></td>
 			</tr>
-			<!-- <tr>
-				<td class="td_left">Amount Employees</td>
-
-				<td class="td_right">
-				<input type="text" name="C_AmountEmployes"	id="login_id" size="40"  />
-				</td>
-				<td class="td_info"></td>
-
-			</tr> -->
-
-
 			<tr>
 				<td class="td_left">Password</td>
 				<td class="td_right"><input type="password" name="C_Password"
@@ -256,26 +198,17 @@ table td {
 
 				<td class="td_info"><div id="repass_correct"></div></td>
 			</tr>
-			<!-- <tr>
-				<td class="td_left">E-Mail</td>
-				<td class="td_right"><input type="text" name="email" size="40"
-					id="email_id" onkeypress="CorrectEmail(this)"
-					onfocus="CorrectEmail(this)" onkeyup="CorrectEmail(this)" value="" /></td>
-
-				<td class="td_info"><div id="email_correct"></div></td>
-			</tr> -->
 			<tr>
-				<td class="td_button" colspan="3">
-				<input type="submit" name="submit" id="submit_id" value="Registration" disabled />
+				<td class="td_button" colspan="3"><input type="submit"
+					name="submit" id="submit_id" value="Registration" disabled />
 					<div id="check_correct"></div></td>
-
 			</tr>
 		</table>
 		<input type="hidden" name="check_login" id="check_login" value="0" />
 		<input type="hidden" name="check_pass" id="check_pass" value="0" /> <input
 			type="hidden" name="check_repass" id="check_repass" value="0" />
-			<!--  <input	type="hidden" name="check_email" id="check_email" value="0" /> --> 
-			<input	type="hidden" name="check_all" id="check_all" value="0" />
+		<!--  <input	type="hidden" name="check_email" id="check_email" value="0" /> -->
+		<input type="hidden" name="check_all" id="check_all" value="0" />
 	</form>
 	<br>
 	<a href=".">Home</a>

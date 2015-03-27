@@ -1,7 +1,7 @@
 package tel_ran.tests.controller;
-
 import java.util.List;
 import java.util.Properties;
+import java.util.UUID;
 
 import javax.mail.Authenticator;
 import javax.mail.Message;
@@ -23,20 +23,25 @@ import org.springframework.web.client.RestTemplate;
 import tel_ran.tests.services.interfaces.ICompanyActionsService;
 import tel_ran.tests.services.interfaces.IMaintenanceService;
 
-
 @Controller
 @Scope("session") /*session timer default = 20min*/
 @RequestMapping({"/","/CompanyActions"})
 public class CompanyActions {
+	// --- private fields 
 	private static int N_ROWS_CATEGORY = 10;
+	//
 	String companyName;
+	//
 	@Autowired
 	ICompanyActionsService companyService;
-
+	//
 	RestTemplate restTemplate =  new RestTemplate();
-
+	//
 	@Autowired
 	IMaintenanceService maintenanceService;	
+
+	// --- private fields 
+	////
 	// Action Re-mapping for Send Ajax request to DB if equal  user and priority level, and set: flAuthorization=true;
 	@RequestMapping({"/CompanyActions"})
 	public String signIn(){			
@@ -80,7 +85,7 @@ Wrong Password Flow:
 				List<String> resultCategory = maintenanceService.getAllCategoriesFromDataBase();
 				for(String catBox:resultCategory){					
 					if(counter < N_ROWS_CATEGORY){
-						categoryHtmlText.append("&nbsp;&nbsp;&nbsp;"+catBox + "-<input type='checkbox' name='category' value='" + catBox + "' />");
+						categoryHtmlText.append("&nbsp;&nbsp;&nbsp;"+catBox + "&nbsp;-<input type='checkbox' name='category' value='" + catBox + "' />");
 						counter++;
 					}else{
 						counter = 0;
@@ -176,29 +181,35 @@ Normal Flow:
 6.	The System presents the link for performing the test in the control mode  */
 	//
 	@RequestMapping({"/add_test"})
-	public String createTest(String category,String level,int personId,String personName, String personSurname,String personEmail, Model model) {
-		maintenanceService.setAutorization("0","0");
-		List<Long> listIdQuestions = maintenanceService.getUniqueSetQuestionsForTest(category, level, (long) 15);
+	public String createTest(String category,String level, String personId, String personName, String personSurname,String personEmail, String selectCountQuestions, Model model) {	
+		long counterOfQuestions = Integer.parseInt(selectCountQuestions);
+		List<Long> listIdQuestions = maintenanceService.getUniqueSetQuestionsForTest(category, level, (long) counterOfQuestions);
 
-		int personId1 = companyService.createPerson(personId, personName, personSurname,personEmail);
-		long idTest = companyService.createIdTest(listIdQuestions,personId1);
+		int personID = companyService.createPerson(Integer.parseInt(personId), personName, personSurname,personEmail);
+		String password = getRandomPassword();
+		long idTest = companyService.createIdTest(listIdQuestions,personID,password);
+
 		String link = "http://localhost:8080/TestsProjectFes/jobSeeker_test_preparing_click_event?" + idTest;        
-		boolean flagMail = sendEmail(link,personEmail);
+		boolean flagMail = sendEmail(link,personEmail,password);
 		if(flagMail){
 			model.addAttribute("myResult", link +"<br>" + "<H1>message was sent successfully</H1>");    	
 		}else{
 			model.addAttribute("myResult", "<H1>Error while sending message</H1>");
 		}
 		return "Company_TestLink";
+	}
+
+	private String getRandomPassword() {
+		String uuid = UUID.randomUUID().toString();		
+		return uuid	;
 	}	 
 	//------------END  Use case Ordering Test 3.1.3-------------
-	private boolean sendEmail(String link, String personEmail) {
+	private boolean sendEmail(String link, String personEmail, String pass) {
 		boolean result = false;
-	
 		final String username = "senderurltest@gmail.com";
 		final String password = "sender54321.com";
 		String subject = "Email from HR";
-		String text = "Press for this link :  "+ link;
+		String text = "Press for this link :  "+ link + "\n\n Your password: "+pass;
 
 		try {
 
@@ -233,7 +244,6 @@ Normal Flow:
 		}
 		return result;
 	}
-
 	/*-------------Use case Viewing test results----------------
 3.1.4.	Viewing test results
 Pre-Conditions:

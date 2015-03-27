@@ -24,6 +24,13 @@
     3<input type="radio" name="level" value=3>
     4<input type="radio" name="level" value=4>
     5<input type="radio" name="level" value=5> <br> 
+    SelectQuestion Count:<br>
+    <select name="selectCountQuestions">
+    <option  value="5">5</option>
+    <option value="10">10</option>
+    <option value="15">15</option>
+    <option value="25">25</option>
+    </select>
   <br><br> 
   Please fill data of Person:   <br>        
    <table>

@@ -156,12 +156,18 @@ public class Maintenance {
 		try{
 			List<String> resultDB = maintenanceService.SearchAllQuestionInDataBase(category, Integer.parseInt(levelOfDifficulti));
 			StringBuffer str = new StringBuffer();
-			str.append("<table><tr><th > description </th></tr>");
+			str.append("<table><tr><th>N</th><th>Question</th><th>Category</th><th>Level of difficulty</th></tr>");
+			////
 			for (String questionLine : resultDB) {				
 				String[] element = questionLine.split(IMaintenanceService.DELIMITER);
-				str.append("<tr onclick='test(" + element[0] + ")'><td>"+ element[0]+ "</td><td>"+ element[1]+ "</td><td>"+ element[2]+ "</td><td>"+ element[3]+ "</td><td>"+ element[4]+ "</td></tr>");
+				str.append("<tr onclick='test(" + element[1] + ")'>"
+						+ "<td> "+ element[1]+ " </td>"
+						+ "<td> "+ element[0]+ " </td>"
+						+ "<td> "+ element[3]+ " </td>"
+						+ "<td> "+ element[4]+ " </td></tr>");
 				rowsCounter++;				
 			}
+			////
 			str.append("</table><br>");
 			model.addAttribute("result", str.toString()); 
 		}catch(Exception e){

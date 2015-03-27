@@ -3,7 +3,6 @@ package tel_ran.tests.controller;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.DocumentBuilder;
@@ -13,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -26,7 +24,7 @@ import org.xml.sax.InputSource;
 import tel_ran.tests.model.Answer;
 import tel_ran.tests.model.Question;
 import tel_ran.tests.model.Test;
-import tel_ran.tests.model.User;
+import tel_ran.tests.services.interfaces.IMaintenanceService;
 import tel_ran.tests.services.interfaces.IPersonalActionsService;
 
 @Controller
@@ -34,128 +32,168 @@ import tel_ran.tests.services.interfaces.IPersonalActionsService;
 @RequestMapping({"/","/PersonalActions"})
 public class PersonalActions {
 	@Autowired
-	IPersonalActionsService personalService;       
+	IPersonalActionsService personalService; 
+	@Autowired
+	IMaintenanceService maintenanceService;
 	@RequestMapping({"/"})
-	public String Index(){     return "PersonalSignIn";       }// this index page !!!!!! for all users and all company !!!!
+	public String Index(){     return "PersonalSignIn";       }// this mapping to index page !!!!!! for all users and all company !!!!
 	//--------------------- fields of this class ---------------------------
-	String personId = null;
+	String personId = "";
+	String personPassword = "";
+	String testId  = "";	
 	private String categoryName = null;
 	private String level = null;
-	private String chosenQuestionsQuantity = null;
 	private Test mTest = null;
 	private List<Question> mQstnList = null;
 	private List<Answer> mAnswList = null;
 	private int counter = 0;
 	private List<Answer> receivedAnswers = new ArrayList<Answer>();
 	//---------------------------------------------------------------------
-	////------  login case ---------///////
-	@RequestMapping({ "/PersonalActions" })
-	public String login_page(Map<String, Object> model,
-			HttpServletRequest request, Model pageModel) {
-		User sessionUser = (User) request.getSession()
-				.getAttribute("logedUser");
-		if (sessionUser != null) {
-
-			return "Personal_user_home";
-		}
-		User userForm = new User();
-		model.put("userForm", userForm);
-
-		/*String login = request.getParameter("login");
-		return login != null ? "Personal_login_page" : "Personal_sign_up";*/
-		return "Personal_login_page";
-	}
-
+	//// ------  login case --------- // BEGIN //
 	@RequestMapping(value = "/login_action", method = {RequestMethod.POST, RequestMethod.GET})
-	public String login_action(@ModelAttribute("userForm") User user, HttpServletRequest request,
-			Map<String, Object> model, Model pageModel) {
+	public String login_action(String userEmail, String password, HttpServletRequest request, Model pageModel) {
+		String outPage = "PersonalSignIn";
 		String sign_up = request.getParameter("sign_up");
 		if(sign_up != null){
-			return "Personal_sign_up";
-		}
-		String[] getUser = personalService.loadUserservice(user.getId());
-		if (getUser != null) {
-			User inDB = new User(getUser);
-			if (user.getPassword().equals(inDB.getPassword())) {
-				pageModel.addAttribute("logedUser", user);
-				return "Personal_user_home";
-			} else
-				return "Personal_wrong_password";
-		}
-		pageModel.addAttribute("logedUser", "user's not found");
+			outPage = "Personal_sign_up";
+		}else{
+			////		
+			boolean getUser = personalService.IsUserExist(userEmail, password);
 
-		return "Personal_login_page";
+			if (getUser) {					
+				outPage = "Personal_user_home";
+			} else{
+				pageModel.addAttribute("logedUser", "wrong password");
+			}
+		}
+		return outPage;		
 	}
-
+	//// -----------  Registration case -------------- // BEGIN //
 	@RequestMapping(value = "/signup_action", method = RequestMethod.POST)
-	public String signup_action(@ModelAttribute("userForm") User user, HttpServletRequest request,
-			Map<String, Object> model, Model pageModel) {
-		String login = request.getParameter("login");
-		if(login != null){
-			return "Personal_login_page";
+	public String signup_action(String firstname, String lastname,String email, String password, Model model) {
+
+		String outPage = "PersonalSignIn";
+		String[] res = personalService.GetUserByMail(email);
+		if (res == null) {
+			//			
+			String[] userArgs = { firstname, lastname, email,  password};
+			//
+			int lengthObj = userArgs.length;
+			for(int i=0;i<lengthObj;i++){
+				System.out.println(userArgs[i]);
+			}
+			personalService.AddingNewUser(userArgs);
+			outPage = "Personal_user_home";
+		}else{
+			outPage = "Personal_existing_user";	
 		}
-		if (personalService.loadUserservice(user.getId()) == null) {
-			String id = user.getId();
-			String name = user.getName();
-			String password = user.getPassword();
-			String email = user.getEmail();
-			String[] userArgs = { id, name, password, email };
-			personalService.saveUserService(userArgs);
-			pageModel.addAttribute("logedUser", user);
-
-			return "Personal_user_home";
-		}
-
-		else if (user.getId() != null)
-			return "Personal_existing_user";
-
-		return "Personal_signup_failure";
+		//
+		return outPage;
 	}
-	//// ------ END login case ---------///////
+	////------  Registration case -- // END //
+	////------  login case --------- // END //
 
-	///---------- this action is click on the link provided in the mail ----/////////	
-	String testId ="";
+	///------- this action is click on the link provided in the mail ----// BEGIN //		
 	@RequestMapping({"/jobSeeker_test_preparing_click_event"})
-	public String jobSeeker_test_preparing_click_event(HttpServletRequest request, Model model){
-		String returnPage = "index";
-		 
-		if(personId == null){//check authorization
-			testId = request.getQueryString();// getting  id of test from link after user click the link
-			returnPage = "Personal_LinkClickAction";
-		}else{ 
-			System.out.println(testId+"  id witch text in link sending to jobSeeker ");
-			returnPage = "Personal_test_preparing_view";// witch parameters of test 
-		}		
-		model.addAttribute("logedUser","You must by register to take the test");
-		return returnPage;
+	public String jobSeeker_test_preparing_click_event(HttpServletRequest request, Model model){		
+		testId = request.getQueryString();// getting  id of test from link after user click the link		
+		return "Personal_LinkClickAction";
 	}
-	//---- page login for synchronize application after click the link for testing ---//
+	////---------- Test in control mode case --------- // BEGIN //
+	private static String tableTestCreated;
+	////
 	@RequestMapping({"/jobSeeker_authorization_event"})
-	public String jobSeeker_authorization_event(@ModelAttribute("authorization_event_form") User user,HttpServletRequest request, Model pageModel){
-		String[] getUser = personalService.loadUserservice(user.getId());
-		if (getUser != null) {
-			User inDB = new User(getUser);
-			if (user.getPassword().equals(inDB.getPassword())) {
-				pageModel.addAttribute("logedUser", user);
-				personId = inDB.getId();
-				return "web_cam";
-			} else
-				pageModel.addAttribute("logedUser", "user's not found");
-			return "Personal_wrong_password";
+	public String jobSeeker_authorization_event(String id, String password, HttpServletRequest request, Model model){		
+		StringBuffer createdTestTable = new StringBuffer();
+		StringBuffer correctAnswers = new StringBuffer();
+		String outResult;
+		String[] testForPerson = personalService.GetTestForPerson(testId);
+		////	
+		long timeStartTest = 0;
+		//
+		if (testForPerson != null && testForPerson[0].equals(id) && testForPerson[1].equals(password)) {
+			//
+			timeStartTest = System.currentTimeMillis();
+			//
+			personId = testForPerson[0]; personPassword = testForPerson[1];
+			String[] tempArray = testForPerson[2].split(",");
+
+			createdTestTable.append("<form action='endPersonTest' id='formTestPerson'  method='post'><table class='tableStyle'>");
+			for(int i = 0;i<tempArray.length;i++){
+				//
+				String tempQuestion = maintenanceService.getQuestionById(tempArray[i]);
+				//
+				String[] tempQuestionText = tempQuestion.split(IMaintenanceService.DELIMITER);
+				//
+				createdTestTable.append("<table id='tabTestPerson_"+i+"' class='tableStyle'><tr><th class'questionTextStyle' colspan='2'>"+tempQuestionText[1]+"</th></tr>");			
+				if(tempQuestionText[3].length() > 15){					
+					createdTestTable.append("<tr><td colspan='2'><img src='static/images/questions/"+tempQuestionText[3]+"' alt='question image'></td></tr><br>");
+				}			
+				//				
+				if(tempQuestionText.length > 7 && tempQuestionText.length == 11 && tempQuestionText[9].equalsIgnoreCase("0") && tempQuestionText[10].equalsIgnoreCase("0")){
+					createdTestTable.append("<tr onchange='onchangeClick(1)'><td><p>A. <input type='checkbox' name='answerschecked' value='A'>&nbsp;&nbsp; "+tempQuestionText[7]+"</p></td> "
+							+ "<td><p>B. <input type='checkbox' name='answerschecked' value='B'>&nbsp;&nbsp; "+tempQuestionText[8]+"</p></td></tr>");		
+				}else if(tempQuestionText.length > 7 && tempQuestionText.length == 11 && !tempQuestionText[9].equalsIgnoreCase("0") && !tempQuestionText[10].equalsIgnoreCase("0")){
+					createdTestTable.append("<tr onchange='onchangeClick(1)'><td><p>A. <input type='checkbox' name='answerschecked' value='A'>&nbsp;&nbsp; "+tempQuestionText[7]+"</p></td> "
+							+ "<td><p>B. <input type='checkbox' name='answerschecked' value='B'>&nbsp;&nbsp; "+tempQuestionText[8]+"</p></td></tr>");	
+					createdTestTable.append("<tr onchange='onchangeClick(1)'><td><p>C. <input type='checkbox' name='answerschecked' value='C'>&nbsp;&nbsp; "+tempQuestionText[7]+"</p></td>"
+							+ "<td><p>D. <input type='checkbox' name='answerschecked' value='D'>&nbsp;&nbsp; "+tempQuestionText[8]+"</p></td></tr>");		
+				}else if(tempQuestionText.length > 7 && tempQuestionText.length > 11){
+					createdTestTable.append("<tr onchange='onchangeClick(1)'><td><p>A. <input type='checkbox' name='answerschecked' value='A'>&nbsp;&nbsp; "+tempQuestionText[7]+"</p></td> "
+							+ "<td><p>B. <input type='checkbox' name='answerschecked' value='B'>&nbsp;&nbsp; "+tempQuestionText[8]+"</p></td></tr>");	
+					createdTestTable.append("<tr onchange='onchangeClick(1)'><td><p>C. <input type='checkbox' name='answerschecked' value='C'>&nbsp;&nbsp; "+tempQuestionText[7]+"</p></td>"
+							+ "<td><p>D. <input type='checkbox' name='answerschecked' value='D'>&nbsp;&nbsp; "+tempQuestionText[8]+"</p></td></tr>");
+					//
+					createdTestTable.append("<tr onchange='onchangeClick(1)'><td><p>E. <input type='checkbox' name='answerschecked' value='E'>&nbsp;&nbsp; "+tempQuestionText[7]+"</p></td> "
+							+ "<td><p>F. <input type='checkbox' name='answerschecked' value='F'>&nbsp;&nbsp; "+tempQuestionText[8]+"</p></td></tr>");		
+					createdTestTable.append("<tr><td><p>C. <input type='checkbox' name='answerschecked' value='C'>&nbsp;&nbsp; "+tempQuestionText[7]+"</p></td></tr> "
+							+ "<tr><td><p>G. <input type='checkbox' name='answerschecked' value='G'>&nbsp;&nbsp; "+tempQuestionText[8]+"</p></td></tr>");						
+				} 	
+				//
+				correctAnswers.append(tempQuestionText[6] + ",");
+			}	//end for
+			//				
+			createdTestTable.append("</table><br><input type='text' hidden='hidden' name='testID' value='"+testId+"'><input  type='submit' value='Send Test'></form>");  
+			correctAnswers.append("----" + testForPerson[0] + "----" + testForPerson[1]);// TO DO on BES split for save action
+			//
+			setTableTest(createdTestTable);
+			outResult = "PersonalTestWebCamFlow";
+		}else{
+			outResult = "Personal_LinkClickAction";
+			tableTestCreated = "";
+			// Create log about failed created test for person 
 		}
-		return "jobSeeker_test_preparing_click_event";
+		//// end if else
+		String corrAnsw = correctAnswers.toString();
+		if(!personalService.SaveStartPersonTestParam(testId, corrAnsw, timeStartTest)){System.out.println("time start saved");}// method for save parameters of test to generated test 
+		////
+		return outResult;		
 	}
-	///---------- END action click on the link provided in the mail ----------------/////////
-
-	///----------- web_cam verify action mapping ------------////
-	@RequestMapping({ "/web_cam" })
-	public String web_cam(Map<String, Object> model) {
-		User userForm = new User();
-		model.put("userForm", userForm);
-		return "web_cam";
+	////	
+	private void setTableTest(StringBuffer createdTestTable) {
+		tableTestCreated = createdTestTable.toString();		
 	}
-	///--------- END web_cam verify action mapping --------/////
+	public static String GetTestTable(){		
+		return tableTestCreated;
+	}
+	////
+	@RequestMapping(value = "/endPersonTest", method = RequestMethod.POST)
+	String outResultTestToPerson(String answerschecked, String imageLinkText, String testID, Model model){
+		System.out.println("id-"+testID);
+		long timeEndTest = System.currentTimeMillis();
+		if(!personalService.SaveEndPersonTestResult(testID, answerschecked, "TO DO", timeEndTest)){
+			String arg1 = "Sorry test is not sended, try again.";
+			model.addAttribute("result", arg1 );
+			System.out.println("time end saved");
+			return "PersonTestResultPage";	
+		}
+		return "PersonalSignIn";		
+	}
 
+	////---------- Test in control mode case --------- // END //
+	////----------  action click on the link provided in the mail ----------------// END //
+
+	////----------   ----------------// BEGIN //
 	@RequestMapping(value = "/Personal_result_view")
 	public String allCategoriesAndLevelsSelection(Model model){
 
@@ -163,7 +201,7 @@ public class PersonalActions {
 		List<String> allLevels = personalService.getComplexityLevelList();
 		model.addAttribute("categoryNames", allCategories);
 		model.addAttribute("cLevels", allLevels);
-		return "Personal_result_view";
+		return "Personal_result_view";// rename to USER !!!
 	}
 
 	@RequestMapping({"add_questions_count"})
@@ -189,7 +227,7 @@ public class PersonalActions {
 
 		//test creation
 		String xmlStr = personalService.getTraineeQuestions(mTest.getCategoryName(), mTest.getLevel(), mTest.getqNum());
-		// JSONObject jsonObject = service.loadJSONTest(testId);
+
 
 		getDataFromXML(xmlStr);
 
@@ -273,14 +311,7 @@ public class PersonalActions {
 		mTest.setQstnNmList(qstnIDsList);
 	}
 
-	//	@RequestMapping("/get_link/{id}")
-	//	public String get_link(@PathVariable int id, Model pageModel) {
-	//		String test = service.loadTestService(id)[IUserService.TEST_ID];
-	//		System.out.println(test);
-	//		// pageModel.addAttribute("testId", test.getTestId());
-	//		counter = 0;
-	//		return "choose_test";
-	//	}
+
 
 	@RequestMapping({ "/test_run" })
 	public String test_run(HttpServletRequest request, Model pageModel) {
@@ -297,7 +328,7 @@ public class PersonalActions {
 			}
 			counter++;
 		}
-		// pageModel.addAttribute("test", test);
+
 		if (counter >= mQstnList.size()) {
 			String durTime = getTestDurationTime(mTest);
 			mTest = getTestResults(receivedAnswers, mTest);
@@ -368,7 +399,7 @@ public class PersonalActions {
 	private Test getTestResults(List<Answer> answersList, Test test) {
 		int wrongAnswerCounter = 0;
 		int rightAnswerCounter = 0;
-		//		mTest.clearTestResultList();
+
 		List<String> resultList = new ArrayList<String>();
 		String result = "";
 

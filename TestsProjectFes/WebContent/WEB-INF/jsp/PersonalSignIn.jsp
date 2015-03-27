@@ -5,6 +5,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+<script
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <link
 	href='<c:url value="/static/css_folder/css/IndexPage.css"></c:url>'
 	rel="stylesheet">
@@ -12,18 +14,12 @@
 </head>
 <body>
 	<table>
-	<!----- header buttons for users and company actions ----// Begin //  -->
-		<tr>
-			<td>				
+		<!----- header buttons for users and company actions ----// Begin //  -->
+		<tr >
+			<td>
 				<div class="gra1">
-					<h2 class="h2">Hellow guest</h2>
 					<div class="firsthomecontent">
-						<a href="PersonalActions" name="inputString" value="Login">
-							<div class="homecontent">
-								<img src="static/images/logo/interviewhome.png"><span
-									class="homespan">Login</span>
-							</div>
-						</a><a href="Personal_result_view">
+						<a href="Personal_result_view">
 							<div class="homecontent">
 								<img src="static/images/logo/interviewhome.png"><span
 									class="homespan">Interview</span>
@@ -34,9 +30,9 @@
 									class="homespan">Company</span>
 							</div>
 						</a>
-						<!-- this test link, is click action from job Seeker mail -->
+						<!-- this test link, is click action from job Seeker mail stub method -->
 						<a
-							href="http://localhost:8080/TestsProjectFes/jobSeeker_test_preparing_click_event?8">
+							href="http://localhost:8080/TestsProjectFes/jobSeeker_test_preparing_click_event?1">
 							<div class="homecontent">
 								<img src="static/images/logo/interviewhome.png"> <span
 									class="homespan">Test Link</span>
@@ -45,12 +41,37 @@
 					</div>
 				</div>
 			</td>
+			<td rowspan="3">
+				<div class="formTstyle">
+					<h2>login</h2>
+					<form action="login_action" method="post" name="user_login_form">
+						<table border="0">
+							<tr>
+								<td>Mail <span class="ipsForm_required">*</span></td>
+								<td><input type="email" name="userEmail" id="email" /></td>
+							</tr>
+							<tr>
+								<td>Password <span class="ipsForm_required">*</span></td>
+								<td><input type="password" name="password" id="first_password" /></td>
+							</tr>
+							<tr>
+								<td colspan="2" align="center"><input type="submit"
+									class="buttonStyle" name="login" value="Login" /> <input
+									type="submit" name="sign_up" value="Registration" /></td>
+							</tr>
+						</table>
+						<p style='color:red; text-align: center;'><script type="text/javascript">
+	document.write("${logedUser}");
+	</script>&nbsp;</p>
+					</form>					
+				</div>
+			</td>
 		</tr>
 		<!----- header buttons for users and company actions ----// END //  -->
 
 		<!---- Popular Tutorials  Links -------- //   Begin   // -->
 		<tr>
-			<td>
+			<td >
 				<div class="gra1">
 					<h2 class="h2">Popular Tutorials Links</h2>
 					<div class="firsthomecontent">
@@ -119,7 +140,7 @@
 
 			<!----Links to Relevanty  Java Technology Tutorials --------- - //   Begin   // -->
 		<tr>
-			<td>
+			<td >
 				<div class="gra1">
 					<h2 class="h2">Java Technology Tutorials</h2>
 					<div class="firsthomecontent">
@@ -208,7 +229,7 @@
 
 			<!---- Miscellaneous Topics  Links -------- //   Begin   // -->
 		<tr>
-			<td>
+			<td colspan="2">
 				<div class="gra1">
 					<h2 class="h2">Miscellaneous Topics</h2>
 					<div class="firsthomecontent">
@@ -254,7 +275,7 @@
 		<tr>
 			<td>&nbsp;&nbsp;&nbsp;</td>
 		</tr>
-	</table>	
+	</table>
 </body>
 </html>
 

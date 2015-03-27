@@ -2,40 +2,32 @@ package tel_ran.tests.model;
 
 import tel_ran.tests.services.interfaces.IPersonalActionsService;
 
-
-
-public class User {
-	
-	
-	private String id;//teudat zeut. to work with field convert it on int in functions
-	private String name;
+public class User {	
+	private String firstName;
+	private String lastName;
 	private String password;	
-	
-	public User() {	
-		
-	}
-	
+	private String email;	
+	//
+	public User() {	}
+
 	public User(String [] args) {		
-		this.id = args[IPersonalActionsService.ID];
-		this.name = args[IPersonalActionsService.NAME];
+		this.firstName = args[IPersonalActionsService.FIRSTNAME];
+		this.lastName = args[IPersonalActionsService.LASTTNAME];
 		this.password = args[IPersonalActionsService.PASSWORD];
 		this.email = args[IPersonalActionsService.EMAIL];
 	} 
-	
-	private String email;	
-		
-
-	public String getId() {
-		return id;
+	//
+	public String getFirstName() {
+		return firstName;
 	}
-	public void setId(String id) {
-		this.id = id;
+	public void setFirstName(String id) {
+		this.firstName = id;
 	}
-	public String getName() {
-		return name;
+	public String getLastName() {
+		return lastName;
 	}
-	public void setName(String name) {
-		this.name = name;
+	public void setLastName(String name) {
+		this.lastName = name;
 	}
 	public String getPassword() {
 		return password;
@@ -52,10 +44,9 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", name=" + name + ", password=" + password
-				+ ", email=" + email +  "]";
+		return "User [firstName=" + firstName + ", lastName=" + lastName
+				+ ", password=" + password + ", email=" + email + "]";
 	}
-	
 
 }
 
