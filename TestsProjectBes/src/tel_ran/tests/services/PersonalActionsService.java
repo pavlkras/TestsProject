@@ -245,6 +245,7 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
 	public boolean SaveStartPersonTestParam(String testId, String correctAnswers, long timeStartTest) {
 		boolean resAction = false;
+		
 		try{
 			long testID = (long)Integer.parseInt(testId);		
 			EntityTest personTest = em.find(EntityTest.class, testID);		
@@ -255,7 +256,7 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 			em.persist(personTest);
 			resAction = true;
 		}catch(Exception e){
-			e.printStackTrace();
+			//e.printStackTrace();
 			System.out.println("catch save start test");
 		}
 		return resAction;
@@ -275,7 +276,7 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 			em.persist(personTest);
 			resAction = true;
 		}catch(Exception e){
-			e.printStackTrace();
+			//e.printStackTrace();
 			System.out.println("catch save end test");
 		}
 		return resAction;

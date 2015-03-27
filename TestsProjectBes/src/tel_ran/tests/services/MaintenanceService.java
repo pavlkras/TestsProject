@@ -9,13 +9,15 @@ import javax.persistence.Query;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import stubgeneratequestions.IGenerationQuestionsService;
+import stubgeneratequestions.StubCreateQuestion;
 import tel_ran.tests.entitys.EntityAnswersText;
 import tel_ran.tests.entitys.EntityQuestion;
 import tel_ran.tests.entitys.EntityQuestionAttributes;
 import tel_ran.tests.entitys.EntityUser;
 import tel_ran.tests.services.interfaces.IMaintenanceService;
 
-public class MaintenanceService extends TestsPersistence implements IMaintenanceService {   
+public class MaintenanceService extends TestsPersistence implements IMaintenanceService {	
 	////-------------- Authorization Case ----------// Begin  //
 	private static boolean flAdminAuthorized = false;
 	// ---------- stub method authorization ------------------//
@@ -116,50 +118,33 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	}
 
 	////-------------- Creation and Adding ONE Question into DB Case ----------// END  //
-	////
-	////-------------- Creation and Adding MANY Questions into DB from Generated Question Case ----------// BEGIN  //
+	//// ------------- Build Data 
+	////-------------- Creation and Adding MANY Questions into DB from Generated Question Case ----------// BEGIN  //-------------------------------------------------------------------
+	
 	@Override
 	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW)	
 	public boolean ModuleForBuildingQuestions(String byCategory, int nQuestions) {
-		boolean ff = false;
+		boolean flagAction = false;
 		List<String> answers;		
-		List<String[]> listQuestions = getGeneratedTemplateList(byCategory, nQuestions);
+		IGenerationQuestionsService gen = new StubCreateQuestion();
+		List<String[]> listQuestions = gen.methodToCreateQuestionsByCategory(byCategory, nQuestions);
 		//
-		for(String[] fres :listQuestions){	
-			System.out.println(fres.length+" <- razmer masiva");
+		for(String[] fres :listQuestions){				
 			answers = new ArrayList<String>();
 			if(fres.length > 6){				
 				answers.add(fres[6]);answers.add(fres[7]);answers.add(fres[8]);answers.add(fres[9]);
 			}
-			ff = CreateNewQuestion(fres[1], fres[0], fres[2], Integer.parseInt(fres[3]), answers, fres[4].charAt(0), Integer.parseInt(fres[5]));
+			flagAction = CreateNewQuestion(fres[1], fres[0], fres[2], Integer.parseInt(fres[3]), answers, fres[4].charAt(0), Integer.parseInt(fres[5]));
 		}
-		return ff;
+		return flagAction;
 	}
-	//--------------- stub methods -------------------///
-	private List<String[]> getGeneratedTemplateList(String category,int nQuestions) {
-
-		List<String[]> outResult = new ArrayList<String[]>();
-		String[] question1 = {"Whot Wrong witch Code:","82D39ED_QuestionText1_AEA6AE8F7201706D430E824FD2F0.jpg","MATH","1","A","0","a11","a12","a13","a14"};
-		String[] question2 = {"QuestionText1","E11842F_QuestionText2_520AA2458992AE532883CFA45EE4.jpg","MATH","1","B","0"};
-		String[] question3 = {"QuestionText2","82D39ED_QuestionText3_AtA6AE8F7201706D430E824FD2F0.jpg","MATH","1","C","0"};
-		String[] question4 = {"QuestionText3","E11842F_QuestionText4_520AA2458992AE532883CFA45EE4.jpg","MATH","1","D","0","a41","a42","a43","a44"};
-		String[] question5 = {"QuestionText4","null","MATH","1","E","0","a51","a52","a53","a54"};
-		outResult.add(question1);
-		outResult.add(question2);
-		outResult.add(question3);
-		outResult.add(question4);
-		outResult.add(question5);
-		return outResult;
-	}		
-	//-------------------end stubs -------------///
 	////-------------- Creation and Adding MANY Questions into DB from Generated Question Case ----------// END  //
-	////	   
 	////-------------- Reading from file and Adding Questions into DB Case ----------// BEGIN  //
 	@Override
 	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW)	
 	public boolean FillDataBaseFromTextResource(List<String> inputTextFromFile) {
-		//pattern for text in file question(one line!!!)
-		//questionText----imageLink----category----levelOfDifficulti----answer1----answer2----answer3----answer4----correctAnswerChar----questionIndexNumber
+		//sample for text in file question(one line!!!)
+		//questionText----imageLink----category----levelOfDifficulty----answer1----answer2----answer3----answer4----correctAnswerChar----questionIndexNumber
 		//		
 		boolean flagAction = false;
 		//
@@ -170,7 +155,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 			String questionText = question_Parts[0];
 			String imageLink = question_Parts[1];			
 			String category = question_Parts[2];
-			int levelOfDifficulti = Integer.parseInt(question_Parts[3]);
+			int levelOfDifficulty = Integer.parseInt(question_Parts[3]);
 			//
 			List<String> answers = new ArrayList<String>();
 			answers.add(question_Parts[4]);	
@@ -181,12 +166,11 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 			char correctAnswer = question_Parts[8].charAt(0);
 			int questionNumber = Integer.parseInt(question_Parts[9]);
 			//
-			flagAction = CreateNewQuestion(imageLink, questionText, category, levelOfDifficulti, answers, correctAnswer, questionNumber);			
+			flagAction = CreateNewQuestion(imageLink, questionText, category, levelOfDifficulty, answers, correctAnswer, questionNumber);			
 		}	
 		return flagAction;
 	}
 	////-------------- Reading from file and Adding Questions into DB Case ----------// END  //
-	////
 	////-------------- internal method for filling in the form update issue ----------// BEGIN  //
 	@Override
 	public String getQuestionById(String questionID) {// method return all attributes from Question and Answer Tables in string line  
@@ -209,7 +193,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		return outRes.toString();// return to client 
 	}
 	////-------------- internal method for filling in the form update issue ----------// END  //
-	////
+	//// ------------- Build Data end ---
 	////-------------- Builder of page witch categories check box ----------// BEGIN  //
 	@Override
 	@SuppressWarnings("unchecked")
@@ -251,7 +235,6 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		return outMessageTextToJSP_Page ;// return to client 
 	}
 	////-------------- Method for delete question into DB ----------// END  //
-	////
 	////-------------- Search Method by Category or Categories and level of difficulty ----------// BEGIN  //
 	@SuppressWarnings("unchecked")		
 	public List<String> SearchAllQuestionInDataBase(String category, int levelOfDifficulty) {	

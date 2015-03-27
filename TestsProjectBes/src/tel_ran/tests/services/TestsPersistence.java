@@ -1,11 +1,9 @@
 package tel_ran.tests.services;
-import java.util.List;
-
-import javax.persistence.*;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceContextType;
 public class TestsPersistence {
 @PersistenceContext(unitName="springHibernate",
 type=PersistenceContextType.EXTENDED)
 EntityManager em;
-
-
 }

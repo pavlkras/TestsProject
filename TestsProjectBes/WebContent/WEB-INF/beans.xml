@@ -18,6 +18,8 @@
 		<property name="entityManagerFactory" ref="emf" />
 	</bean>
 
+
+
 	<!-- <bean id="adminAuthorizAspect" class="tel_ran.tests.aop.AdminAuthorizedBench" />
 	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
 
