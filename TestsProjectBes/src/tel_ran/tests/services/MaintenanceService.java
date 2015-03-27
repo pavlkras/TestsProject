@@ -120,7 +120,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	////-------------- Creation and Adding ONE Question into DB Case ----------// END  //
 	//// ------------- Build Data 
 	////-------------- Creation and Adding MANY Questions into DB from Generated Question Case ----------// BEGIN  //-------------------------------------------------------------------
-	
+
 	@Override
 	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW)	
 	public boolean ModuleForBuildingQuestions(String byCategory, int nQuestions) {
@@ -134,6 +134,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 			if(fres.length > 6){				
 				answers.add(fres[6]);answers.add(fres[7]);answers.add(fres[8]);answers.add(fres[9]);
 			}
+			System.out.println("fres[4].charAt(0)-"+fres[4].charAt(0));
 			flagAction = CreateNewQuestion(fres[1], fres[0], fres[2], Integer.parseInt(fres[3]), answers, fres[4].charAt(0), Integer.parseInt(fres[5]));
 		}
 		return flagAction;

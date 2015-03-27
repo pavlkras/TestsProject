@@ -34,10 +34,12 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 	@Override
 	public boolean IsUserExist(String userMail, String userPassword) {
 		boolean actionResult = false;	
-		String[] authorizationTest = GetUserByMail(userMail);
-		System.out.println(authorizationTest[PASSWORD]+"   "+userPassword);
-		if(authorizationTest != null && authorizationTest[PASSWORD].equals(userPassword)){
+		System.out.println("userMail-"+userMail+" userPassword-"+userPassword);
+		String[] authorizationTest = GetUserByMail(userMail);		
+		if(authorizationTest != null && authorizationTest[PASSWORD].equals(userPassword)){			
 			actionResult = true;
+		}else{
+			System.out.println("obj is null -");
 		}
 		return actionResult;
 	}	
