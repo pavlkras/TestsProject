@@ -55,7 +55,7 @@ public class EntityPerson {
 	//Added by Igor
 	public JSONObject fillJsonObject(JSONObject jsonObj) {
 		try {
-			jsonObj.put("personId", personId);
+	//		jsonObj.put("personId", personId);
 			jsonObj.put("personName",personName);
 			jsonObj.put("personSurname",personSurname);
 		} catch (JSONException e) {}

@@ -127,75 +127,77 @@ private EntityCompany entityCompany;
 	//------------- 	Use case Ordering Test 3.1.3 -------------/// END  ////	
 
 	 //------------- Viewing test results  3.1.4.----------- //   BEGIN    ///
-	 @Override
-	 public String getTestsResultsAll(String companyName) {
-	  String res = "";
-	  EntityCompany company = em.find(EntityCompany.class, companyName);
-	  if(company!=null){
-	   @SuppressWarnings("unchecked")
-	   //List<EntityTestResultCommon> tests = (List<EntityTestResultCommon>) em.createQuery
-	   //("SELECT t FROM EntityTestResultCommon t WHERE t.company = :company ORDER BY t.entityPerson")
-	   List<EntityTest> tests = (List<EntityTest>) em.createQuery
-	   ("SELECT t FROM EntityTest t WHERE t.company = :company ORDER BY t.entityPerson")
-	   .setParameter("company", company)
-	   .getResultList();
-	   res = generateJsonResponse(tests);
-	  }
-	  return res;
-	 }
+	@Override
+	public String getTestsResultsAll(long companyId) {
+		String res = "";
+		EntityCompany company = em.find(EntityCompany.class, companyId);
+		if(company!=null){
+			@SuppressWarnings("unchecked")
+			List<EntityTest> tests = (List<EntityTest>) em.createQuery
+			("SELECT t FROM EntityTest t WHERE t.company = :company ORDER BY t.entityPerson")
+			.setParameter("company", company)
+			.getResultList();
+			res = generateJsonResponse(tests);
+		}
+		return res;
+	}
 
-	 @Override
-	 public String getTestsResultsForPersonID(String companyName, int personID) {
-	  String res = "";
-	  EntityCompany company = em.find(EntityCompany.class, companyName);
-	  EntityPerson person = em.find(EntityPerson.class, personID);
-	  if(company!=null){
-	   @SuppressWarnings("unchecked")
-	   //List<EntityTestResultCommon> tests = (List<EntityTestResultCommon>) em.createQuery
-	   //("SELECT t FROM EntityTestResultCommon t WHERE t.entityPerson = :person AND t.company = :company")
-	   List<EntityTest> tests = (List<EntityTest>) em.createQuery
-	   ("SELECT t FROM EntityTest t WHERE t.entityPerson = :person AND t.company = :company")
-	   .setParameter("person", person)
-	   .setParameter("company", company)
-	   .getResultList();
-	   res = generateJsonResponse(tests);
-	  }
-	  return res;
-	 }
+	@Override
+	public String getTestsResultsForPersonID(long companyId, int personID) {
+		String res = "";
+		EntityCompany company = em.find(EntityCompany.class, companyId);
+		EntityPerson person = em.find(EntityPerson.class, personID);
+		if(company!=null){
+			@SuppressWarnings("unchecked")
+			List<EntityTest> tests = (List<EntityTest>) em.createQuery
+			("SELECT t FROM EntityTest t WHERE t.entityPerson = :person AND t.company = :company")
+			.setParameter("person", person)
+			.setParameter("company", company)
+			.getResultList();
+			res = generateJsonResponse(tests);
+		}
+		return res;
+	}
 
-	 @Override
-	 public String getTestsResultsForTimeInterval(String companyName, Date date_from, Date date_until) {
-	  String res = "";
-	  EntityCompany company = em.find(EntityCompany.class, companyName);
-	  if(company!=null){
-	   @SuppressWarnings("unchecked")
-	   //List<EntityTestResultCommon> tests = (List<EntityTestResultCommon>) em.createQuery
-	   //("SELECT t FROM EntityTestResultCommon t WHERE t.testDate >= :date_from AND t.testDate <= :date_until AND t.company = :company ORDER BY t.entityPerson")
-	   List<EntityTest> tests = (List<EntityTest>) em.createQuery
-	   ("SELECT t FROM EntityTest t WHERE t.testDate >= :date_from AND t.testDate <= :date_until AND t.company = :company ORDER BY t.entityPerson")
-	   .setParameter("date_from", date_from)
-	   .setParameter("date_until", date_until)
-	   .setParameter("company", company)
-	   .getResultList();
-	   res = generateJsonResponse(tests);
-	  }
-	  return res;
+	@Override
+	public String getTestsResultsForTimeInterval(long companyId, Date date_from, Date date_until) {
+		 String res = "";
+		 EntityCompany company = em.find(EntityCompany.class, companyId);
+		 if(company!=null){
+			 @SuppressWarnings("unchecked")
+			 List<EntityTest> tests = (List<EntityTest>) em.createQuery
+			 ("SELECT t FROM EntityTest t WHERE t.testDate >= :date_from AND t.testDate <= :date_until AND t.company = :company ORDER BY t.entityPerson")
+			 .setParameter("date_from", date_from)
+			 .setParameter("date_until", date_until)
+			 .setParameter("company", company)
+			 .getResultList();
+			 res = generateJsonResponse(tests);
+		 }
+		 return res;
 	 }
-
-	 //private String generateJsonResponse(List<EntityTestResultCommon> tests) {
-	 private String generateJsonResponse(List<EntityTest> tests) {
-	  JSONArray result = new JSONArray();
-	  //for (EntityTestResultCommon test: tests){
-	  for (EntityTest test: tests){
-	   JSONObject jsonObj = new JSONObject();
-	   test.getEntityPerson().fillJsonObject(jsonObj);    //Adding person data to jSon
-	   test.fillJsonObject(jsonObj);        //Adding TestResultCommon data to jSon
-	   //test.getEntityTestResultDetails().fillJsonObject(jsonObj);  //Adding TestResultDetails data to jSon
-	    //System.out.println(jsonObj.toString());
-	   result.put(jsonObj);
-	  }
-	  return result.toString();
-	  
+	
+	@Override
+	public String getTestResultDetails(long companyId, int testId) {
+		 String res = "{}";
+		 EntityCompany company = em.find(EntityCompany.class, companyId);
+		 if(company!=null){
+			 @SuppressWarnings("unchecked")
+			 EntityTest test = (EntityTest) em.createQuery
+			 ("SELECT t FROM EntityTest t WHERE t.testDate >= :date_from AND t.testDate <= :date_until AND t.company = :company ORDER BY t.entityPerson")
+			 .setParameter("testId", testId)
+			 .setParameter("company", company)
+			 .getSingleResult();
+			 res = test.getJsonDetails();
+		 }
+		 return res;
+	 }
+	 
+	 private String generateJsonResponse(List<EntityTest> testresults) {
+		 JSONArray result = new JSONArray();
+		 for (EntityTest test: testresults){
+			 result.put(test);
+		 }
+		 return result.toString();
 	 }
 	 //------------- Viewing test results  3.1.4.----------- // END ////
 }

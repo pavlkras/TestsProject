@@ -29,7 +29,8 @@ public class EntityTest {
  private String password;
  private char[] personAnswers;  
  private char[] correctAnswers;            //letter of the right answer
- private int amountOfCorrectAnswers; 
+ private int amountOfCorrectAnswers;
+ private int amountOfQuestions;
  private String pictures = "";           // format to string!! namefoto.jpg,nameAnotherfoto.jpg,xxx.jgg, ...
  private Date testDate;
  @ManyToOne
@@ -55,31 +56,30 @@ public void setEntityCompany(EntityCompany entityCompany) {
 	this.entityCompany = entityCompany;
 }
 
-public JSONObject fillJsonObject(JSONObject jsonObj) {
-  try {
-   jsonObj.put("testid",testId);
-   jsonObj.put("testCategory",testCategory);
-   jsonObj.put("testName", testName);
-   DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-   jsonObj.put("testDate", df.format(testDate));
-   jsonObj.put("duration",duration);
-   jsonObj.put("complexityLevel",complexityLevel);
-   jsonObj.put("personAnswers",  personAnswers);
-   jsonObj.put("correctAnswers", correctAnswers);
-   JSONArray picturesURLArray = new JSONArray();
-   if(pictures.length() > 0){
-    String [] picturesSplittedURLs = pictures.split(CommonData.delimiter);
-    
-    for(String picture:picturesSplittedURLs){
-     picturesURLArray.put(picture);
-    }
-   }
-   if(picturesURLArray.length() > 0){
-    jsonObj.put("picturesURL", picturesURLArray);
-   }
-  } catch (JSONException e) {}
-  return jsonObj;
- }
+public JSONObject getJsonObjectCommonData() {
+	 JSONObject jsonObj = new JSONObject();
+	 try {
+		 entityPerson.fillJsonObject(jsonObj);
+		 jsonObj.put("testid",testId);
+		 jsonObj.put("testCategory",testCategory);
+		 jsonObj.put("testName", testName);
+		 DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		 jsonObj.put("testDate", df.format(testDate));
+		 } catch (JSONException e) {}
+	 return jsonObj;
+}
+
+public String getJsonDetails() {
+	 JSONObject jsonObj = new JSONObject();
+	 try {
+	   jsonObj.put("duration",duration);
+	   jsonObj.put("complexityLevel",complexityLevel);
+	   jsonObj.put("amountOfCorrectAnswers",amountOfCorrectAnswers);
+	   jsonObj.put("amountOfQuestions",amountOfQuestions);
+	   //TODO Write image encoder into BASE64 
+	  } catch (JSONException e) {}
+	  return jsonObj.toString();
+}
  
  public int getAmountOfCorrectAnswers() {
   return amountOfCorrectAnswers;
@@ -171,6 +171,14 @@ public String getPictures() {
 
 public void setPictures(String pictures) {
  this.pictures = pictures;
+}
+
+public int getAmountOfQuestions() {
+	return amountOfQuestions;
+}
+
+public void setAmountOfQuestions(int amountOfQuestions) {
+	this.amountOfQuestions = amountOfQuestions;
 }
 
 public void addPictureLink(String pictureLink) { //http-links with delimiters
