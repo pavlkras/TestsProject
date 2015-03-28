@@ -1,11 +1,15 @@
-var app = angular.module('app', ['ngResource']);
+angular.module('app', ['smart-table','mgcrea.ngStrap'])
 
-app.controller('InputController', ['$scope','$http', function($scope, $http) {
+.controller('InputController', ['$scope','$http', function($scope, $http) {
   $scope.selectedMode = -1;
 
   $scope.display = {
 	calendar: false,
 	id: false
+  };
+  
+  $scope.showDetails = function(testid){
+	  console.log(testid);
   };
   
   $scope.isButtonDisabled = true;
@@ -64,19 +68,40 @@ app.controller('InputController', ['$scope','$http', function($scope, $http) {
 	});
   };
   
-}]);
+}])
+
+.directive('pageSelect', function() {
+	  return {
+	    restrict: 'E',
+	    template: '<input type="text" class="select-page" ng-model="inputPage" ng-change="selectPage(inputPage)">',
+	    link: function(scope, element, attrs) {
+	      scope.$watch('currentPage', function(c) {
+	        scope.inputPage = c;
+	      });
+	    }
+	  }
+	})
+	.directive('stRatio',function(){
+	    return {
+	        link:function(scope, element, attr){
+	          var ratio=+(attr.stRatio);
+	          element.css('width',ratio+'%');	          
+	        }
+	     };
+	 });
+
 // jQuery for calendar picker
-$(function () {
-		$('#datetimepicker1').datetimepicker({
-			format: 'DD-MM-YYYY'
-		});
-		$('#datetimepicker2').datetimepicker({
-			format: 'DD-MM-YYYY'
-		});
-		$("#datetimepicker1").on("dp.change",function (e) {
-		$('#datetimepicker2').data("DateTimePicker").minDate(e.date);
-	});
-		$("#datetimepicker2").on("dp.change",function (e) {
-		$('#datetimepicker1').data("DateTimePicker").maxDate(e.date);
-	});
-});
+//$(function () {
+//		$('#datetimepicker1').datetimepicker({
+//			format: 'DD-MM-YYYY'
+//		});
+//		$('#datetimepicker2').datetimepicker({
+//			format: 'DD-MM-YYYY'
+//		});
+//		$("#datetimepicker1").on("dp.change",function (e) {
+//		$('#datetimepicker2').data("DateTimePicker").minDate(e.date);
+//	});
+//		$("#datetimepicker2").on("dp.change",function (e) {
+//		$('#datetimepicker1').data("DateTimePicker").maxDate(e.date);
+//	});
+//});
