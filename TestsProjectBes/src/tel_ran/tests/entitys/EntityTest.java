@@ -175,7 +175,7 @@ public EntityPerson getEntityPerson() {
 	return entityPerson;
 }
 
-public void setPersonId(EntityPerson entityPerson) {
+public void setEntityPerson(EntityPerson entityPerson) {
 	this.entityPerson = entityPerson;
 }
 
