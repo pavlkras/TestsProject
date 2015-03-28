@@ -22,7 +22,7 @@ public class EntityTest {
  
  @Id
  @GeneratedValue
- private long testId;
+ private long testId; 
  private String testCategory = "";//?
  private String testName = "";//?
  private String question; 
@@ -31,8 +31,9 @@ public class EntityTest {
  private char[] correctAnswers;            //letter of the right answer
  private int amountOfCorrectAnswers; 
  private String pictures = "";           // format to string!! namefoto.jpg,nameAnotherfoto.jpg,xxx.jgg, ...
- 
- private Date testDate;         
+ private Date testDate;
+ @ManyToOne
+ private EntityCompany entityCompany;
  
  private int duration;
  private int complexityLevel;
@@ -46,7 +47,15 @@ public class EntityTest {
   
  }
  
- public JSONObject fillJsonObject(JSONObject jsonObj) {
+ public EntityCompany getEntityCompany() {
+	return entityCompany;
+}
+
+public void setEntityCompany(EntityCompany entityCompany) {
+	this.entityCompany = entityCompany;
+}
+
+public JSONObject fillJsonObject(JSONObject jsonObj) {
   try {
    jsonObj.put("testid",testId);
    jsonObj.put("testCategory",testCategory);

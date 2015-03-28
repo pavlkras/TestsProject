@@ -1,10 +1,20 @@
 package tel_ran.tests.entitys;
-import javax.persistence.*;
+import java.util.List;
 
-import java.util.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 @Entity
 public class EntityCompany {
 	@Id
+	@GeneratedValue
+	@Column(name = "id")
+	private long id;
+	 @OneToMany (mappedBy = "entityCompany")
+	    private List<EntityTest> personsTests; 
+	
 	private String C_Name;
 	private String C_Site;
 
@@ -26,10 +36,15 @@ public class EntityCompany {
 		this.entityTestResultCommon = param;
 	}
 	//// End of Adding ////
+	
 
 	public void setPassword(String password) {
 		C_Password = password;
 	}
+	public long getId() {
+		return id;
+	}
+
 	public String getPassword() {
 		return C_Password;
 	}

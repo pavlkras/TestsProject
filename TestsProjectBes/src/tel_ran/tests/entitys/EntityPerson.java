@@ -12,10 +12,10 @@ import org.json.JSONObject;
 
 public class EntityPerson {
     @Id
-	@Column(name="personId",unique = true, nullable = false, length = 500)
+	@Column(name="personId",unique = true, nullable = false, length = 15)
     private int personId;
   
-    @OneToMany/*(mappedBy = "personId")*/
+    @OneToMany(mappedBy = "entityPerson")
     private List<EntityTest> enTest;
  
 	public List<EntityTest> getEnTest() {

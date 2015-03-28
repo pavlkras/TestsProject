@@ -15,14 +15,15 @@ import tel_ran.tests.services.interfaces.ICompanyActionsService;
 
 
 public class CompanyActionsService extends TestsPersistence implements ICompanyActionsService {
-
+private EntityCompany entityCompany;
 	//-------------Use Case Company Login 3.1.1----------- //   BEGIN    ///
 	@Override
 	public boolean CompanyAuthorization(String companyName, String password) {
 		boolean result = false;
-		EntityCompany res = em.find(EntityCompany.class, companyName);
-		if(res != null){
-			if( res.getPassword().equals(password)){
+		
+		entityCompany = (EntityCompany) em.createQuery("Select c from EntityCompany c where c.C_Name='" + companyName+"'" ).getSingleResult();
+		if(entityCompany != null){
+			if( entityCompany.getPassword().equals(password)){
 				result = true;
 			}else{
 				result = false;
@@ -32,10 +33,13 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 	}
 
 	@Override
-	public boolean getCompanyByName(String companyName) {
-		boolean result = false;
-		if(em.find(EntityCompany.class, companyName) != null){
-			result = true;
+	public long getCompanyByName(String companyName) {
+		long result = 0;
+		System.out.println(companyName);
+		EntityCompany resss = (EntityCompany) em.createQuery("Select c from EntityCompany c where c.C_Name='" + companyName+"'" ).getSingleResult();
+		System.out.println(resss.getC_Name());
+		if(resss != null && resss.getC_Name().equalsIgnoreCase(companyName)){
+			result = resss.getId();
 		}
 		return result;
 	}
@@ -63,16 +67,21 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 	public boolean createCompany(String C_Name, String C_Site,
 			String C_Specialization, String C_AmountEmployes, String C_Password) {
 		boolean result=false;
-		if(em.find(EntityCompany.class, C_Name)==null){
-			EntityCompany comp =new EntityCompany();
-			comp.setC_Name(C_Name);
-			comp.setC_Site(C_Site);
-			comp.setC_Specialization(C_Specialization);
-			comp.setC_AmountEmployes(C_AmountEmployes);
-			comp.setPassword(C_Password);
-			em.persist(comp);
-			result=true;
-		}
+		
+			try {
+				EntityCompany comp =new EntityCompany();
+				comp.setC_Name(C_Name);
+				comp.setC_Site(C_Site);
+				comp.setC_Specialization(C_Specialization);
+				comp.setC_AmountEmployes(C_AmountEmployes);
+				comp.setPassword(C_Password);
+				em.persist(comp);
+				result=true;
+			} catch (Exception e) {
+				System.out.println("catch from CREATE COMPANY BES");
+			///	e.printStackTrace();
+			}
+		
 		return result;
 	}
 
@@ -91,6 +100,7 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 		}
 		test.setQuestion(idQuestion.toString() );
 		pers.setPersonId(personId);
+		test.setEntityCompany(entityCompany);
 		test.setPassword(pass); 
 		test.setPersonId(temp);
 
