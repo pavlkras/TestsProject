@@ -25,8 +25,8 @@ public class EntityCompany {
 	private String C_Password;
 
 	////Added by Igor ////
-	@OneToMany(mappedBy = "company")
-	private List<EntityTest> entityTestResultCommon;
+	//@OneToMany(mappedBy = "company")
+	//private List<EntityTest> entityTestResultCommon;
 
 	public List<EntityTest> getEntityTest() {
 		return entityTestResultCommon;
