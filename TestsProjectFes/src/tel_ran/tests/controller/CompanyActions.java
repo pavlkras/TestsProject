@@ -31,6 +31,7 @@ public class CompanyActions {
 	private static int N_ROWS_CATEGORY = 10;
 	//
 	String companyName;
+	long companyId;
 	//
 	@Autowired
 	ICompanyActionsService companyService;
@@ -75,10 +76,15 @@ Wrong Password Flow:
 
 	@RequestMapping("/loginProcessing")
 	public String loginProcessing(String companyName, String password,Model model){
-		boolean IfExistCompany = companyService.getCompanyByName(companyName);
+		
+	////// Method getCompanyByName(companyName) - return companyId;
+	///	boolean IfExistCompany
+		companyId = companyService.getCompanyByName(companyName);
+		
 		String result;
 		int counter = 0;
-		if(IfExistCompany){
+	////if(IfExistCompany){
+		if(companyId>0){
 			boolean ress = companyService.CompanyAuthorization(companyName, password);
 			if(ress ){ 				
 				StringBuffer categoryHtmlText = new StringBuffer();
