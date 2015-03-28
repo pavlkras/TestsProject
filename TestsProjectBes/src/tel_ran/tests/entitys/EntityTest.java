@@ -23,38 +23,27 @@ public class EntityTest {
  @Id
  @GeneratedValue
  private long testId; 
- private String testCategory = "";//?
- private String testName = "";//?
+ private String testCategory;
+ private String testName;
  private String question; 
  private String password;
  private char[] personAnswers;  
  private char[] correctAnswers;            //letter of the right answer
  private int amountOfCorrectAnswers;
  private int amountOfQuestions;
- private String pictures = "";           // format to string!! namefoto.jpg,nameAnotherfoto.jpg,xxx.jgg, ...
+ private String pictures;           // format to string!! namefoto.jpg,nameAnotherfoto.jpg,xxx.jgg, ...
  private Date testDate;
- @ManyToOne
- private EntityCompany entityCompany;
- 
  private int duration;
  private int complexityLevel;
-
+ 
+ @ManyToOne
+ private EntityCompany entityCompany;
  @ManyToOne
  private EntityPerson entityPerson; 
- @ManyToOne
- private EntityCompany company;
+ 
 
  public EntityTest() {
-  
  }
- 
- public EntityCompany getEntityCompany() {
-	return entityCompany;
-}
-
-public void setEntityCompany(EntityCompany entityCompany) {
-	this.entityCompany = entityCompany;
-}
 
 public JSONObject getJsonObjectCommonData() {
 	 JSONObject jsonObj = new JSONObject();
@@ -81,98 +70,67 @@ public String getJsonDetails() {
 	  return jsonObj.toString();
 }
  
- public int getAmountOfCorrectAnswers() {
-  return amountOfCorrectAnswers;
- }
+public long getTestId() {
+	return testId;
+}
 
- public void setAmountOfCorrectAnswers(int amountOfCorrectAnswers) {
-  this.amountOfCorrectAnswers = amountOfCorrectAnswers;
- }
+public String getTestCategory() {
+	return testCategory;
+}
 
- public EntityPerson getEntityPerson() {
-  return entityPerson;
- }
+public void setTestCategory(String testCategory) {
+	this.testCategory = testCategory;
+}
 
- public String getPassword() {
-  return password;
- }
+public String getTestName() {
+	return testName;
+}
 
- public void setPassword(String password) {
-  this.password = password;
- }
+public void setTestName(String testName) {
+	this.testName = testName;
+}
 
- public void setPersonId(EntityPerson entityPerson) {
-  this.entityPerson = entityPerson;
- }
+public String getQuestion() {
+	return question;
+}
 
- public long getTestId() {
-  return testId;
- }
+public void setQuestion(String idQuestion) {
+	this.question = idQuestion;
+}
 
- public String getQuestion() {
-  return question;
- }
+public String getPassword() {
+	return password;
+}
 
- public void setQuestion(String idQuestion) {
-  this.question = idQuestion;
- }
+public void setPassword(String password) {
+	this.password = password;
+}
 
- public char[] getPersonAnswers() {
-  return personAnswers;
- }
+public char[] getPersonAnswers() {
+	return personAnswers;
+}
 
- public void setPersonAnswers(char[] personAnswers) {
-  this.personAnswers = personAnswers;
- }
+public void setPersonAnswers(char[] personAnswers) {
+	this.personAnswers = personAnswers;
+}	 
+	 
+public char[] getCorrectAnswers() {
+	return correctAnswers;
+}
 
- public char[] getCorrectAnswers() {
-  return correctAnswers;
- }
+public void setCorrectAnswers(char[] correctAnswers) {
+	this.correctAnswers = correctAnswers;
+}
 
- public void setCorrectAnswers(char[] correctAnswers) {
-  this.correctAnswers = correctAnswers;
- }
+		 
+public int getAmountOfCorrectAnswers() {
+	return amountOfCorrectAnswers;
+}
 
- public Date getTestDate() {
-  return testDate;
+public void setAmountOfCorrectAnswers(int amountOfCorrectAnswers) {
+	this.amountOfCorrectAnswers = amountOfCorrectAnswers;
 }
  
-public void setTestDate(Date testDate) {
-  this.testDate = testDate;
-}
-
-public int getDuration() {
- return duration;
-}
-
-public void setDuration(int duration) {
- this.duration = duration;
-}
-
-public int getComplexityLevel() {
- return complexityLevel;
-}
-
-public void setComplexityLevel(int complexityLevel) {
- this.complexityLevel = complexityLevel;
-}
-
- public EntityCompany getCompany() {
-     return company;
- }
- 
-public void setCompany(EntityCompany param) {
-     this.company = param;
- }
-
-public String getPictures() {
- return pictures;
-}
-
-public void setPictures(String pictures) {
- this.pictures = pictures;
-}
-
 public int getAmountOfQuestions() {
 	return amountOfQuestions;
 }
@@ -180,6 +138,54 @@ public int getAmountOfQuestions() {
 public void setAmountOfQuestions(int amountOfQuestions) {
 	this.amountOfQuestions = amountOfQuestions;
 }
+
+public String getPictures() {
+	return pictures;
+}
+
+public void setPictures(String pictures) {
+	this.pictures = pictures;
+}
+	
+public Date getTestDate() {
+	return testDate;
+}
+ 
+public void setTestDate(Date testDate) {
+	this.testDate = testDate;
+}	
+
+public int getDuration() {
+	return duration;
+}
+
+public void setDuration(int duration) {
+	this.duration = duration;
+}
+
+public int getComplexityLevel() {
+	return complexityLevel;
+}
+
+public void setComplexityLevel(int complexityLevel) {
+	this.complexityLevel = complexityLevel;
+}
+	
+public EntityPerson getEntityPerson() {
+	return entityPerson;
+}
+
+public void setPersonId(EntityPerson entityPerson) {
+	this.entityPerson = entityPerson;
+}
+
+ public EntityCompany getEntityCompany() {
+	return entityCompany;
+}
+
+public void setEntityCompany(EntityCompany entityCompany) {
+	this.entityCompany = entityCompany;
+} 
 
 public void addPictureLink(String pictureLink) { //http-links with delimiters
  if(this.pictures.length() == 0){
