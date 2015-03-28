@@ -31,7 +31,7 @@ public class CompanyActions {
 	private static int N_ROWS_CATEGORY = 10;
 	//
 	String companyName;
-	long companyId;
+	long companyId = -1;
 	//
 	@Autowired
 	ICompanyActionsService companyService;
@@ -277,11 +277,23 @@ f)	5 photos made during the test	------ IGOR ------*/
 
 	@RequestMapping({"/view_results"})
 	public String viewResults(Model model){
-		//TODO Create method of coding companyName & currentTime into token for BES authorize
-		// or find another authorize method for the REST service
-		model.addAttribute("token", companyName);
-		//model.addAttribute("token", "Comp1"); //test val
+		//Code for testing
+		companyId = 1;
+		
+		if(companyId != -1){
+			model.addAttribute("token", encodeToken(companyId));
+		}
 		return "CompanyViewTestsResults";
+	}
+	
+	private String encodeToken(long companyId2) {
+		// TODO Token processing
+		// Create method of coding companyName & currentTime
+		// into token for BES authorize
+
+		//Temporary code
+		String token = Long.toString(companyId2);
+		return token;
 	}
 	// -----------------END  Use case Viewing test results-----------------
 
