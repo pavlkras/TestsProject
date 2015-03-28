@@ -134,7 +134,7 @@ private EntityCompany entityCompany;
 		if(company!=null){
 			@SuppressWarnings("unchecked")
 			List<EntityTest> tests = (List<EntityTest>) em.createQuery
-			("SELECT t FROM EntityTest t WHERE t.company = :company ORDER BY t.entityPerson")
+			("SELECT t FROM EntityTest t WHERE t.entityCompany = :company ORDER BY t.entityPerson")
 			.setParameter("company", company)
 			.getResultList();
 			res = generateJsonResponse(tests);
@@ -147,10 +147,11 @@ private EntityCompany entityCompany;
 		String res = "";
 		EntityCompany company = em.find(EntityCompany.class, companyId);
 		EntityPerson person = em.find(EntityPerson.class, personID);
-		if(company!=null){
+		System.out.println(person.getPersonEmail());
+		if(company!=null && person != null){
 			@SuppressWarnings("unchecked")
 			List<EntityTest> tests = (List<EntityTest>) em.createQuery
-			("SELECT t FROM EntityTest t WHERE t.entityPerson = :person AND t.company = :company")
+			("SELECT t FROM EntityTest t WHERE t.entityPerson = :person AND t.entityCompany = :company")
 			.setParameter("person", person)
 			.setParameter("company", company)
 			.getResultList();
@@ -166,7 +167,7 @@ private EntityCompany entityCompany;
 		 if(company!=null){
 			 @SuppressWarnings("unchecked")
 			 List<EntityTest> tests = (List<EntityTest>) em.createQuery
-			 ("SELECT t FROM EntityTest t WHERE t.testDate >= :date_from AND t.testDate <= :date_until AND t.company = :company ORDER BY t.entityPerson")
+			 ("SELECT t FROM EntityTest t WHERE t.testDate >= :date_from AND t.testDate <= :date_until AND t.entityCompany = :company ORDER BY t.entityPerson")
 			 .setParameter("date_from", date_from)
 			 .setParameter("date_until", date_until)
 			 .setParameter("company", company)
@@ -183,7 +184,7 @@ private EntityCompany entityCompany;
 		 if(company!=null){
 			 @SuppressWarnings("unchecked")
 			 EntityTest test = (EntityTest) em.createQuery
-			 ("SELECT t FROM EntityTest t WHERE t.testDate >= :date_from AND t.testDate <= :date_until AND t.company = :company ORDER BY t.entityPerson")
+			 ("SELECT t FROM EntityTest t WHERE t.testDate >= :date_from AND t.testDate <= :date_until AND t.entityCompany = :company ORDER BY t.entityPerson")
 			 .setParameter("testId", testId)
 			 .setParameter("company", company)
 			 .getSingleResult();
@@ -195,7 +196,7 @@ private EntityCompany entityCompany;
 	 private String generateJsonResponse(List<EntityTest> testresults) {
 		 JSONArray result = new JSONArray();
 		 for (EntityTest test: testresults){
-			 result.put(test);
+			 result.put(test.getJsonObjectCommonData());
 		 }
 		 return result.toString();
 	 }

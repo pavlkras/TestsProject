@@ -12,9 +12,8 @@ public class EntityCompany {
 	@GeneratedValue
 	@Column(name = "id")
 	private long id;
-	 @OneToMany (mappedBy = "entityCompany")
-	    private List<EntityTest> personsTests; 
-	
+	@OneToMany (mappedBy = "entityCompany")
+	private List<EntityTest> personsTests; 
 	private String C_Name;
 	private String C_Site;
 
@@ -23,20 +22,6 @@ public class EntityCompany {
 	private String C_AmountEmployes;
 
 	private String C_Password;
-
-	////Added by Igor ////
-	//@OneToMany(mappedBy = "company")
-	//private List<EntityTest> entityTestResultCommon;
-
-	public List<EntityTest> getEntityTest() {
-		return entityTestResultCommon;
-	}
-
-	public void setEntityTest(List<EntityTest> param) {
-		this.entityTestResultCommon = param;
-	}
-	//// End of Adding ////
-	
 
 	public void setPassword(String password) {
 		C_Password = password;
@@ -72,7 +57,12 @@ public class EntityCompany {
 	public void setC_AmountEmployes(String c_AmountEmployes) {
 		C_AmountEmployes = c_AmountEmployes;
 	}
-
+	public List<EntityTest> getPersonsTests() {
+		return personsTests;
+	}
+	public void setPersonsTests(List<EntityTest> personsTests) {
+		this.personsTests = personsTests;
+	}
 	@Override
 	public String toString() {
 		return "Company " + C_Name + ", Site : " + C_Site

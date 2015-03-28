@@ -52,16 +52,4 @@ public class EntityPerson {
 	public void setPersonSurname(String personSurname) {
 		this.personSurname = personSurname;
 	}
-	//Added by Igor
-	public JSONObject fillJsonObject(JSONObject jsonObj) {
-		try {
-	//		jsonObj.put("personId", personId);
-			jsonObj.put("personName",personName);
-			jsonObj.put("personSurname",personSurname);
-		} catch (JSONException e) {}
-		return jsonObj;
-	}    
-	//End of adding
-
-
 }

@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -41,33 +42,33 @@ public class EntityTest {
  @ManyToOne
  private EntityPerson entityPerson; 
  
-
  public EntityTest() {
  }
 
 public JSONObject getJsonObjectCommonData() {
 	 JSONObject jsonObj = new JSONObject();
 	 try {
-		 entityPerson.fillJsonObject(jsonObj);
+		 jsonObj.put("personName",entityPerson.getPersonName());
+		 jsonObj.put("personSurname",entityPerson.getPersonSurname());
 		 jsonObj.put("testid",testId);
 		 jsonObj.put("testCategory",testCategory);
 		 jsonObj.put("testName", testName);
 		 DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		 jsonObj.put("testDate", df.format(testDate));
-		 } catch (JSONException e) {}
+	 } catch (JSONException e) {}
 	 return jsonObj;
 }
 
 public String getJsonDetails() {
 	 JSONObject jsonObj = new JSONObject();
 	 try {
-	   jsonObj.put("duration",duration);
-	   jsonObj.put("complexityLevel",complexityLevel);
-	   jsonObj.put("amountOfCorrectAnswers",amountOfCorrectAnswers);
-	   jsonObj.put("amountOfQuestions",amountOfQuestions);
-	   //TODO Write image encoder into BASE64 
-	  } catch (JSONException e) {}
-	  return jsonObj.toString();
+		 jsonObj.put("duration",duration);
+		 jsonObj.put("complexityLevel",complexityLevel);
+		 jsonObj.put("amountOfCorrectAnswers",amountOfCorrectAnswers);
+		 jsonObj.put("amountOfQuestions",amountOfQuestions);
+		 //TODO Write image encoder into BASE64 
+	 } catch (JSONException e) {}
+	 return jsonObj.toString();
 }
  
 public long getTestId() {
