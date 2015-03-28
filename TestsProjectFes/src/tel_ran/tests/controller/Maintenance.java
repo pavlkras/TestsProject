@@ -128,7 +128,7 @@ public class Maintenance {
 	//
 	@RequestMapping({ "/updateOneQuestion" })
 	public String UpdateProcessingPage(String questionID, String questionText,
-			String category, String levelOfDifficulti, String at1, String at2,
+			String category, String levelOfDifficulty, String at1, String at2,
 			String at3, String at4, String correctAnswer, String QuTextNumber,
 			String imageLinkText, Model model) {
 		//
@@ -137,7 +137,7 @@ public class Maintenance {
 			answers = new ArrayList<String>();			answers.add(at1);			answers.add(at2);			answers.add(at3);			answers.add(at4);
 		}
 		//
-		boolean result = maintenanceService.UpdateTextQuestionInDataBase( questionID,  imageLinkText,  questionText,  category,  Integer.parseInt(levelOfDifficulti),  answers,  correctAnswer.charAt(0));
+		boolean result = maintenanceService.UpdateTextQuestionInDataBase( questionID,  imageLinkText,  questionText,  category,  Integer.parseInt(levelOfDifficulty),  answers,  correctAnswer.charAt(0));
 		String outRes = "";
 		if (result) {
 			outRes = "<p>Changed Question successfully added</p>";
@@ -178,8 +178,7 @@ public class Maintenance {
 
 	//------- getting question and attributes for change ---------// Begin //
 	@RequestMapping({ "/fillFormForUpdateQuestion" })
-	public String getInformationDB(String questionID, Model model) {
-		System.out.println(questionID);
+	public String getInformationDB(String questionID, Model model) {		
 		try {
 			if (rowsCounter > (Integer.parseInt(questionID) - 1)) {
 				StringBuffer stringBufferOutResult = new StringBuffer();
@@ -203,29 +202,29 @@ public class Maintenance {
 					//
 					stringBufferOutResult.append("Question Level<br>");
 					if (checkRes == 1) {
-						stringBufferOutResult.append("<input checked='checked' type='radio' name='levelOfDifficulti' value=1>1");
+						stringBufferOutResult.append("<input checked='checked' type='radio' name='levelOfDifficulty' value=1>1");
 					} else {
-						stringBufferOutResult.append("<input type='radio' name='levelOfDifficulti' value=1>1");
+						stringBufferOutResult.append("<input type='radio' name='levelOfDifficulty' value=1>1");
 					}
 					if (checkRes == 2) {
-						stringBufferOutResult.append("<input checked='checked' type='radio' name='levelOfDifficulti' value=2>2");
+						stringBufferOutResult.append("<input checked='checked' type='radio' name='levelOfDifficulty' value=2>2");
 					} else {
-						stringBufferOutResult.append("<input type='radio' name='levelOfDifficulti' value=2>2");
+						stringBufferOutResult.append("<input type='radio' name='levelOfDifficulty' value=2>2");
 					}
 					if (checkRes == 3) {
-						stringBufferOutResult.append("<input checked='checked' type='radio' name='levelOfDifficulti' value=3>3");
+						stringBufferOutResult.append("<input checked='checked' type='radio' name='levelOfDifficulty' value=3>3");
 					} else {
-						stringBufferOutResult.append("<input type='radio' name='levelOfDifficulti' value=3>3");
+						stringBufferOutResult.append("<input type='radio' name='levelOfDifficulty' value=3>3");
 					}
 					if (checkRes == 4) {
-						stringBufferOutResult.append("<input checked='checked' type='radio' name='levelOfDifficulti' value=4>4");
+						stringBufferOutResult.append("<input checked='checked' type='radio' name='levelOfDifficulty' value=4>4");
 					} else {
-						stringBufferOutResult.append("<input type='radio' name='levelOfDifficulti' value=4>4");
+						stringBufferOutResult.append("<input type='radio' name='levelOfDifficulty' value=4>4");
 					}
 					if (checkRes == 5) {
-						stringBufferOutResult.append("<input checked='checked' type='radio' name='levelOfDifficulti' value=5>5");
+						stringBufferOutResult.append("<input checked='checked' type='radio' name='levelOfDifficulty' value=5>5");
 					} else {
-						stringBufferOutResult.append("<input type='radio' name='levelOfDifficulti' value=5>5");
+						stringBufferOutResult.append("<input type='radio' name='levelOfDifficulty' value=5>5");
 					}				
 					stringBufferOutResult.append("<br>Correct Answer<br>");			
 					stringBufferOutResult.append("<input type='text' name='correctAnswer' value='" + dataFromTables[6] + "' size='2'><br>");
@@ -251,7 +250,8 @@ public class Maintenance {
 				model.addAttribute("result","Number of Question is Wrong. Input real number of question");
 			}
 		} catch (NumberFormatException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
+			System.out.println("catch create form for update question FES");
 			model.addAttribute("result","Number of Question is Empty. Input number of question");
 		}				
 		return "MaintenanceUpdatePage";
@@ -311,8 +311,7 @@ public class Maintenance {
 						counter = 0;
 						checkedFlyButtons.append("<br>");
 					}
-					checkedFlyButtons.append(tresR
-							+ " :<input type='checkbox' name='category' value='" + tresR + "'> ");
+					checkedFlyButtons.append(tresR + "&nbsp;-&nbsp;<input type='checkbox' name='category' value='" + tresR + "'> ");
 					counter++;
 				}
 				model.addAttribute("formCategory", checkedFlyButtons.toString());

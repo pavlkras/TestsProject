@@ -150,11 +150,11 @@
 		imagesCount = imagesCount + 1;
 	}
 	////
-	var counterQuestions = 1;
+	var counterQuestions = 0;
 	function onchangeClick(incrementValue){
 		counterQuestions  +=  incrementValue;
 	var lengthOfQuestionTableList =	document.getElementsByTagName("th").length;
-	if(lengthOfQuestionTableList > counterQuestions){
+	if(lengthOfQuestionTableList >= counterQuestions){
 		showE('tabTestPerson_'+counterQuestions);		
 	}
 	}
