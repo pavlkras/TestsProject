@@ -102,7 +102,7 @@ private EntityCompany entityCompany;
 		pers.setPersonId(personId);
 		test.setEntityCompany(entityCompany);
 		test.setPassword(pass); 
-		test.setPersonId(temp);
+		test.setEntityPerson(temp);
 
 		em.persist(test);
 		long testId = test.getTestId();
