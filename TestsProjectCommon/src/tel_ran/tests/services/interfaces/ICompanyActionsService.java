@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface ICompanyActionsService {
 //Use case 3.1.1
-boolean getCompanyByName(String companyName);
+long getCompanyByName(String companyName);
 boolean CompanyAuthorization(String companyName , String password);
 	
 
