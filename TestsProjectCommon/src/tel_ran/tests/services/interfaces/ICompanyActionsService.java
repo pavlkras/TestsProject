@@ -19,8 +19,8 @@ long createIdTest(List<Long> list,int personId, String testPassword);
 int createPerson(int personId,String personName,String personSurname,String personEmail);
 
 //Company actions for 3.1.4. Viewing test results
-String getTestsResultsAll(String currCompanyId);
-String getTestsResultsForTimeInterval(String currCompanyId, Date timeFrom, Date timeUntil);
-String getTestsResultsForPersonID(String currCompanyId, int personID);
-
+public String getTestsResultsAll(long companyId);
+public String getTestsResultsForPersonID(long companyId, int personID);
+public String getTestsResultsForTimeInterval(long companyId, Date date_from, Date date_until);
+public String getTestResultDetails(long companyId, int testId);
 }
