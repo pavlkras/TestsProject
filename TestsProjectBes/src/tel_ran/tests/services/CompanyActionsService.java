@@ -13,7 +13,6 @@ import tel_ran.tests.entitys.EntityPerson;
 import tel_ran.tests.entitys.EntityTest;
 import tel_ran.tests.services.interfaces.ICompanyActionsService;
 
-
 public class CompanyActionsService extends TestsPersistence implements ICompanyActionsService {
 private EntityCompany entityCompany;
 	//-------------Use Case Company Login 3.1.1----------- //   BEGIN    ///
@@ -178,13 +177,13 @@ private EntityCompany entityCompany;
 	 }
 	
 	@Override
-	public String getTestResultDetails(long companyId, int testId) {
+	public String getTestResultDetails(long companyId, long testId) {
 		 String res = "{}";
 		 EntityCompany company = em.find(EntityCompany.class, companyId);
 		 if(company!=null){
 			 @SuppressWarnings("unchecked")
 			 EntityTest test = (EntityTest) em.createQuery
-			 ("SELECT t FROM EntityTest t WHERE t.testDate >= :date_from AND t.testDate <= :date_until AND t.entityCompany = :company ORDER BY t.entityPerson")
+			 ("SELECT t FROM EntityTest t WHERE t.testId = :testId AND t.entityCompany = :company")
 			 .setParameter("testId", testId)
 			 .setParameter("company", company)
 			 .getSingleResult();
@@ -201,4 +200,5 @@ private EntityCompany entityCompany;
 		 return result.toString();
 	 }
 	 //------------- Viewing test results  3.1.4.----------- // END ////
+
 }
