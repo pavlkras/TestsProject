@@ -60,7 +60,7 @@ public class TestsResultsRestController {
 		return res;
 	}
 	
-	@RequestMapping(value=ICommonData.TEST_RESULTS_DETAILS + "/{testId}" + "/{token}", method=RequestMethod.GET)
+	@RequestMapping(value=ICommonData.TEST_RESULT_DETAILS + "/{testId}" + "/{token}", method=RequestMethod.GET)
 	@ResponseBody @JsonRawValue
 	String testDetails(@PathVariable long testId, @PathVariable String token){
 		long companyId = decodeToken(token);
