@@ -97,11 +97,11 @@ function FileReadeFunctionCalling(){
 	 <tr>
 	     <th class="thFloatText">Select Level</th>
 		 <td class="tdFloatContent">
-			 1<input type="radio" name="levelOfDifficulti" value=1 checked="checked">
-			 2<input type="radio" name="levelOfDifficulti" value=2>
-			 3<input type="radio" name="levelOfDifficulti" value=3>
-			 4<input type="radio" name="levelOfDifficulti" value=4>
-			 5<input type="radio" name="levelOfDifficulti" value=5>		
+			 1<input type="radio" name="levelOfDifficulty" value=1 checked="checked">
+			 2<input type="radio" name="levelOfDifficulty" value=2>
+			 3<input type="radio" name="levelOfDifficulty" value=3>
+			 4<input type="radio" name="levelOfDifficulty" value=4>
+			 5<input type="radio" name="levelOfDifficulty" value=5>		
 	     </td>
 	 </tr>
 	 <tr id="answersTr" >
