@@ -22,5 +22,5 @@ int createPerson(int personId,String personName,String personSurname,String pers
 public String getTestsResultsAll(long companyId);
 public String getTestsResultsForPersonID(long companyId, int personID);
 public String getTestsResultsForTimeInterval(long companyId, Date date_from, Date date_until);
-public String getTestResultDetails(long companyId, int testId);
+public String getTestResultDetails(long companyId, long testId);
 }
