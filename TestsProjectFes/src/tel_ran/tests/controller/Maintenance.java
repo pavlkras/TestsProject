@@ -82,7 +82,7 @@ public class Maintenance {
 	/** ДОБАВЛЕНИЕ НОВОГО ВОПРОСА В БАЗУ ДАННЫХ */
 	@RequestMapping({ "/add_actions" })
 	public String AddProcessingPage(String questionText, String category,
-			String levelOfDifficulti, String at1, String at2, String at3,
+			String levelOfDifficulty, String at1, String at2, String at3,
 			String at4, String correctAnswer, String questionIndex, String imageLink, Model model) {
 
 		boolean actionRes = false; // flag work action
@@ -94,7 +94,7 @@ public class Maintenance {
 
 		try {			
 			int questioNumber = Integer.parseInt(questionIndex);
-			actionRes = maintenanceService.CreateNewQuestion( imageLink ,  questionText,  category,  Integer.parseInt(levelOfDifficulti), answers,  correctAnswer.charAt(0), questioNumber );
+			actionRes = maintenanceService.CreateNewQuestion( imageLink ,  questionText,  category,  Integer.parseInt(levelOfDifficulty), answers,  correctAnswer.charAt(0), questioNumber );
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("maintenance addProcessingPage :method: Exception");
