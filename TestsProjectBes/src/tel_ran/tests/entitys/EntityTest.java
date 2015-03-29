@@ -31,11 +31,14 @@ public class EntityTest {
  private char[] personAnswers;  
  private char[] correctAnswers;            //letter of the right answer
  private int amountOfCorrectAnswers;
+ private int amountOfWrongAnswers;
  private int amountOfQuestions;
  private String pictures;           // format to string!! namefoto.jpg,nameAnotherfoto.jpg,xxx.jgg, ...
  private Date testDate;
  private int duration;
  private int complexityLevel;
+ private long startTestDate;
+ private long endTestDate;
  
  @ManyToOne
  private EntityCompany entityCompany;
@@ -63,9 +66,10 @@ public String getJsonDetails() {
 	 JSONObject jsonObj = new JSONObject();
 	 try {
 		 jsonObj.put("duration",duration);
+		 jsonObj.put("amountOfQuestions",amountOfQuestions);
 		 jsonObj.put("complexityLevel",complexityLevel);
 		 jsonObj.put("amountOfCorrectAnswers",amountOfCorrectAnswers);
-		 jsonObj.put("amountOfQuestions",amountOfQuestions);
+		 jsonObj.put("amountOfWrongAnswers",amountOfWrongAnswers);
 		 //TODO Write image encoder into BASE64 
 	 } catch (JSONException e) {}
 	 return jsonObj.toString();
@@ -132,6 +136,14 @@ public void setAmountOfCorrectAnswers(int amountOfCorrectAnswers) {
 	this.amountOfCorrectAnswers = amountOfCorrectAnswers;
 }
  
+public int getAmountOfWrongAnswers() {
+	return amountOfWrongAnswers;
+}
+
+public void setAmountOfWrongAnswers(int amountOfWrongAnswers) {
+	this.amountOfWrongAnswers = amountOfWrongAnswers;
+}
+
 public int getAmountOfQuestions() {
 	return amountOfQuestions;
 }
@@ -171,7 +183,23 @@ public int getComplexityLevel() {
 public void setComplexityLevel(int complexityLevel) {
 	this.complexityLevel = complexityLevel;
 }
-	
+
+public long getStartTestDate() {
+	return startTestDate;
+}
+
+public void setStartTestDate(long startTestDate) {
+	this.startTestDate = startTestDate;
+}
+
+public long getEndTestDate() {
+	return endTestDate;
+}
+
+public void setEndTestDate(long endTestDate) {
+	this.endTestDate = endTestDate;
+}
+
 public EntityPerson getEntityPerson() {
 	return entityPerson;
 }
