@@ -31,7 +31,6 @@ public class EntityTest {
  private char[] personAnswers;  
  private char[] correctAnswers;            //letter of the right answer
  private int amountOfCorrectAnswers;
- private int amountOfWrongAnswers;
  private int amountOfQuestions;
  private String pictures;           // format to string!! namefoto.jpg,nameAnotherfoto.jpg,xxx.jgg, ...
  private Date testDate;
@@ -69,7 +68,7 @@ public String getJsonDetails() {
 		 jsonObj.put("amountOfQuestions",amountOfQuestions);
 		 jsonObj.put("complexityLevel",complexityLevel);
 		 jsonObj.put("amountOfCorrectAnswers",amountOfCorrectAnswers);
-		 jsonObj.put("amountOfWrongAnswers",amountOfWrongAnswers);
+		 jsonObj.put("amountOfWrongAnswers",amountOfQuestions - amountOfCorrectAnswers);
 		 //TODO Write image encoder into BASE64 
 	 } catch (JSONException e) {}
 	 return jsonObj.toString();
@@ -134,14 +133,6 @@ public int getAmountOfCorrectAnswers() {
 
 public void setAmountOfCorrectAnswers(int amountOfCorrectAnswers) {
 	this.amountOfCorrectAnswers = amountOfCorrectAnswers;
-}
- 
-public int getAmountOfWrongAnswers() {
-	return amountOfWrongAnswers;
-}
-
-public void setAmountOfWrongAnswers(int amountOfWrongAnswers) {
-	this.amountOfWrongAnswers = amountOfWrongAnswers;
 }
 
 public int getAmountOfQuestions() {
