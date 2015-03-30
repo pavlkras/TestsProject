@@ -6,8 +6,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-@SuppressWarnings("serial")
+
 @Entity
+@SuppressWarnings("serial")
 public class EntityUser implements Serializable{
 	@Id
 	@Column(name = "email", unique = true, nullable = false, length = 70)

@@ -5,9 +5,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 @Entity
 
 public class EntityPerson {
@@ -52,4 +49,10 @@ public class EntityPerson {
 	public void setPersonSurname(String personSurname) {
 		this.personSurname = personSurname;
 	}
+	@Override
+	public String toString() {
+		return "EntityPerson [personId=" + personId + ", personName=" + personName + ", personSurname="
+				+ personSurname + ", personEmail=" + personEmail + "]";
+	}
+	
 }
