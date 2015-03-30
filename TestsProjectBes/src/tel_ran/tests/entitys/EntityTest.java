@@ -13,7 +13,7 @@ import javax.persistence.ManyToOne;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import tel_ran.tests.services.common.CommonData;
+import tel_ran.tests.services.common.ICommonData;
 import tel_ran.tests.services.interfaces.IMaintenanceService;
 
 @Entity
@@ -212,7 +212,7 @@ public class EntityTest {
 			this.pictures = pictureLink;
 		}
 		else{
-			this.pictures += CommonData.delimiter + pictureLink;
+			this.pictures += ICommonData.delimiter + pictureLink;
 		}
 	}
 	////
