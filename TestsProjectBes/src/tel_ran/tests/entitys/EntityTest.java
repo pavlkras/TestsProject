@@ -1,10 +1,5 @@
 package tel_ran.tests.entitys;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -18,128 +13,11 @@ import javax.persistence.ManyToOne;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-<<<<<<< HEAD
-import com.sun.org.apache.xml.internal.security.utils.Base64;
-
-import tel_ran.tests.services.common.CommonData;
-=======
 import tel_ran.tests.services.common.ICommonData;
->>>>>>> origin/master
 import tel_ran.tests.services.interfaces.IMaintenanceService;
 
 @Entity
 public class EntityTest {
-<<<<<<< HEAD
- 
- @Id
- @GeneratedValue
- private long testId; 
- private String testCategory;
- private String testName;
- private String question; 
- private String password;
- private char[] personAnswers;  
- private char[] correctAnswers;              //letter of the right answer
- private int amountOfCorrectAnswers;
- private int amountOfQuestions;
- private String pictures;                   // format to string!! namefoto.jpg,nameAnotherfoto.jpg,xxx.jgg, ...
- private Date testDate;
- private int duration;
- private int complexityLevel;
- private long startTestDate;
- private long endTestDate;
- 
- @ManyToOne
- private EntityCompany entityCompany;
- @ManyToOne
- private EntityPerson entityPerson; 
- 
- public EntityTest() {
- }
-
-public JSONObject getJsonObjectCommonData() {
-	 JSONObject jsonObj = new JSONObject();
-	 try {
-		 jsonObj.put("personName",entityPerson.getPersonName());
-		 jsonObj.put("personSurname",entityPerson.getPersonSurname());
-		 jsonObj.put("testid",testId);
-		 jsonObj.put("testCategory",testCategory);
-		 jsonObj.put("testName", testName);
-		 DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-		 jsonObj.put("testDate", df.format(testDate));
-	 } catch (JSONException e) {}
-	 return jsonObj;
-}
-
-public String getJsonDetails() {
-	 JSONObject jsonObj = new JSONObject();
-	 try {
-		 jsonObj.put("duration",duration);
-		 jsonObj.put("amountOfQuestions",amountOfQuestions);
-		 jsonObj.put("complexityLevel",complexityLevel);
-		 jsonObj.put("amountOfCorrectAnswers",amountOfCorrectAnswers);
-		 jsonObj.put("amountOfWrongAnswers",amountOfQuestions - amountOfCorrectAnswers);
-		 String[] pictureBase64 = null;
-		 if(!pictures.equals("")){
-			 pictureBase64 = pictures.split(",");  
-			 for(int i=0; i<pictureBase64.length; i++){
-				 pictureBase64[i] = encodeToBase64(pictureBase64[i]);
-			 }
-		 }
-		 jsonObj.put("picture", pictureBase64);
-	 } catch (JSONException e) {}
-	 return jsonObj.toString(); 
-}
-
-public String encodeToBase64(String pathToPicture){
-	String res = null;
-	byte[] bytes = null;
-	FileInputStream file;
-	try {
-		file = new FileInputStream(pathToPicture);
-		bytes = new byte[file.available()];
-		file.read(bytes);
-		file.close();
-		res = Base64.encode(bytes);
-	} catch (FileNotFoundException e) {	
-		
-	} catch (IOException e) { 
-		
-	} catch (NullPointerException e) { 
-		
-	}
-	return res;
-}
- 
-public long getTestId() {
-	return testId;
-}
-
-public String getTestCategory() {
-	return testCategory;
-}
-
-public void setTestCategory(String testCategory) {
-	this.testCategory = testCategory;
-}
-
-public String getTestName() {
-	return testName;
-}
-
-public void setTestName(String testName) {
-	this.testName = testName;
-}
-
-public String getQuestion() {
-	return question;
-}
-
-public void setQuestion(String idQuestion) {
-	this.question = idQuestion;
-}
-=======
->>>>>>> origin/master
 
 	@Id
 	@GeneratedValue
