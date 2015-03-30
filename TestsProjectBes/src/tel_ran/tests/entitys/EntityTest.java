@@ -66,9 +66,36 @@ public class EntityTest {
 			jsonObj.put("complexityLevel",complexityLevel);
 			jsonObj.put("amountOfCorrectAnswers",amountOfCorrectAnswers);
 			jsonObj.put("amountOfWrongAnswers",amountOfQuestions - amountOfCorrectAnswers);
-			//TODO Write image encoder into BASE64 
+			String[] pictureBase64 = null;
+			if(!pictures.equals("")){
+			 	pictureBase64 = pictures.split(",");  
+				for(int i=0; i<pictureBase64.length; i++){
+					pictureBase64[i] = encodeToBase64(pictureBase64[i]);
+				}
+			}
+		 	jsonObj.put("picture", pictureBase64); 
 		} catch (JSONException e) {}
 		return jsonObj.toString();
+	}
+
+	public String encodeToBase64(String pathToPicture){
+		String res = null;
+		byte[] bytes = null;
+		FileInputStream file;
+		try {
+			file = new FileInputStream(pathToPicture);
+			bytes = new byte[file.available()];
+			file.read(bytes);
+			file.close();
+			res = Base64.encode(bytes);
+		} catch (FileNotFoundException e) {	
+		
+		} catch (IOException e) { 
+		
+		} catch (NullPointerException e) { 
+		
+		}
+		return res;
 	}
 
 	public long getTestId() {
