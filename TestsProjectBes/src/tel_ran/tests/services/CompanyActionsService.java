@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,16 +32,15 @@ private EntityCompany entityCompany;
 
 	@Override
 	public long getCompanyByName(String companyName) {
-		long result = 0;
-		System.out.println(companyName);
-		EntityCompany resss = (EntityCompany) em.createQuery("Select c from EntityCompany c where c.C_Name='" + companyName+"'" ).getSingleResult();
-		System.out.println(resss.getC_Name());
-		if(resss != null && resss.getC_Name().equalsIgnoreCase(companyName)){
-			result = resss.getId();
+		long result = 0;		
+		EntityCompany tempCompanyEntity = (EntityCompany) em.createQuery("Select c from EntityCompany c where c.C_Name='" + companyName+"'" ).getSingleResult();		
+		if(tempCompanyEntity != null && tempCompanyEntity.getC_Name().equalsIgnoreCase(companyName)){
+			result = tempCompanyEntity.getId();
 		}
 		return result;
 	}
 	//-------------Use Case Company Login 3.1.1----------- //   END    ///
+	
 	//-------------Use Case Company Sign up 3.1.2----------- //   BEGIN    ///
 	@SuppressWarnings("unchecked")
 	@Override
@@ -63,10 +61,8 @@ private EntityCompany entityCompany;
 
 	@Override
 	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
-	public boolean createCompany(String C_Name, String C_Site,
-			String C_Specialization, String C_AmountEmployes, String C_Password) {
-		boolean result=false;
-		
+	public boolean createCompany(String C_Name, String C_Site, String C_Specialization, String C_AmountEmployes, String C_Password) {
+		boolean result=false;		
 			try {
 				EntityCompany comp =new EntityCompany();
 				comp.setC_Name(C_Name);
@@ -76,15 +72,16 @@ private EntityCompany entityCompany;
 				comp.setPassword(C_Password);
 				em.persist(comp);
 				result=true;
-			} catch (Exception e) {
+			} catch (Throwable e) {
+				result=false;
 				System.out.println("catch from CREATE COMPANY BES");
-			///	e.printStackTrace();
+			e.printStackTrace();
 			}
 		
 		return result;
 	}
-
 	//-------------Use Case Company Sign up 3.1.2-----------  /// END  ///
+	
 	//------------- 	Use case Ordering Test 3.1.3 -------------/// BEGIN ////
 	@Override
 	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
@@ -146,7 +143,6 @@ private EntityCompany entityCompany;
 		String res = "";
 		EntityCompany company = em.find(EntityCompany.class, companyId);
 		EntityPerson person = em.find(EntityPerson.class, personID);
-		System.out.println(person.getPersonEmail());
 		if(company!=null && person != null){
 			@SuppressWarnings("unchecked")
 			List<EntityTest> tests = (List<EntityTest>) em.createQuery
@@ -181,7 +177,6 @@ private EntityCompany entityCompany;
 		 String res = "{}";
 		 EntityCompany company = em.find(EntityCompany.class, companyId);
 		 if(company!=null){
-			 @SuppressWarnings("unchecked")
 			 EntityTest test = (EntityTest) em.createQuery
 			 ("SELECT t FROM EntityTest t WHERE t.testId = :testId AND t.entityCompany = :company")
 			 .setParameter("testId", testId)

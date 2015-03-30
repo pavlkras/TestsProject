@@ -31,18 +31,21 @@ public class EntityQuestionAttributes implements Serializable {
 	////
 	@OneToMany(mappedBy = "questionAttributeId")
 	List<EntityAnswersText> questionAnswersList;
-	//// pattern: D785JHGYT785J58R86JJ6776867TRJJ677TJ575JJ584K493K45J55.jpg or any resolution .HashCode.png = this question in hash code for equals action question parameters
+	//// pattern: D785JHGYT785J58R86JJ6776867TRJJ677TJ575JJ584K493K45J55.jpg or any resolution: HashCode.png
 	@Column(name = "imageLink", unique = false, nullable = true, length = 500)
 	private String imageLink;
 	////
 	@Column(name = "category")
 	private String category;
 	////
-	@Column(name = "levelOfDifficulty")
-	private int levelOfDifficulty;
+	@Column(name = "complexityLevel")
+	private int complexityLevel;
 	////
 	@Column(name = "correctAnswer")
 	private char correctAnswer;
+	////
+	@Column(name = "numresponses")
+	private int numberOfResponsesInThePicture;
 	////
 	public EntityQuestion getQuestionId() {
 		return questionId;
@@ -65,11 +68,11 @@ public class EntityQuestionAttributes implements Serializable {
 		this.category = category;
 	}
 	////
-	public int getLevelOfDifficulty() {
-		return levelOfDifficulty;
+	public int getComplexityLevel() {
+		return complexityLevel;
 	}
-	public void setLevelOfDifficulty(int levelOfDifficulty) {
-		this.levelOfDifficulty = levelOfDifficulty;
+	public void setComplexityLevel(int complexityLevel) {
+		this.complexityLevel = complexityLevel;
 	}
 	////
 	public char getCorrectAnswer() {
@@ -79,8 +82,16 @@ public class EntityQuestionAttributes implements Serializable {
 		this.correctAnswer = correctAnswer;
 	}
 	////
+	
+	////
 	public List<EntityAnswersText> getQuestionAnswersList() {
 		return questionAnswersList;
+	}
+	public int getNumberOfResponsesInThePicture() {
+		return numberOfResponsesInThePicture;
+	}
+	public void setNumberOfResponsesInThePicture(int numberOfResponsesInThePicture) {
+		this.numberOfResponsesInThePicture = numberOfResponsesInThePicture;
 	}
 	public void setQuestionAnswersList(List<EntityAnswersText> questionAnswers) {
 		this.questionAnswersList = questionAnswers;
@@ -95,7 +106,7 @@ public class EntityQuestionAttributes implements Serializable {
 		return questionId.getId()
 				+ IMaintenanceService.DELIMITER + imageLink 
 				+ IMaintenanceService.DELIMITER + category
-				+ IMaintenanceService.DELIMITER + levelOfDifficulty
+				+ IMaintenanceService.DELIMITER + complexityLevel
 				+ IMaintenanceService.DELIMITER + correctAnswer;
 	}
 }

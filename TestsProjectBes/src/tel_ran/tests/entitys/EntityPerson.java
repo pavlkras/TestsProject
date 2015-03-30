@@ -5,9 +5,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 @Entity
 
 public class EntityPerson {

@@ -23,6 +23,7 @@
     <servlet-name>personal_service</servlet-name>
     <url-pattern>*.service2</url-pattern>
   </servlet-mapping>
+  
   <servlet>
     <servlet-name>maintenance_service</servlet-name>
     <servlet-class>org.springframework.web.servlet.DispatcherServlet
@@ -33,6 +34,18 @@
     <servlet-name>maintenance_service</servlet-name>
     <url-pattern>*.service3</url-pattern>
   </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>user_service</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet
+  </servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>user_service</servlet-name>
+    <url-pattern>*.service4</url-pattern>
+  </servlet-mapping>  
+  
   <listener>
     <listener-class>
         org.springframework.web.context.ContextLoaderListener
