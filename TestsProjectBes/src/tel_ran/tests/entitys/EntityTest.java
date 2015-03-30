@@ -16,6 +16,11 @@ import org.json.JSONObject;
 import tel_ran.tests.services.common.ICommonData;
 import tel_ran.tests.services.interfaces.IMaintenanceService;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import com.sun.org.apache.xml.internal.security.utils.Base64;
+
 @Entity
 public class EntityTest {
 
