@@ -10,8 +10,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Result Page</title>
 </head>
-<body>
-	<p>User in session: ${logedUserId}</p>
+<body>	
 	<h1>Result Mode</h1>
 	
 	<p>Test duration: ${time}</p>
@@ -20,11 +19,11 @@
 			<p>"${element}"</p>
 	</c:forEach>
 	<br>
-	<p>Number of right answers: "${rightAnswers}"</p>
-	<p>Number of wrong answers: "${wrongAnswers}"</p>
+	<p>Correct answers: "${rightAnswers}"</p>
+	<p>User answers: "${wrongAnswers}"</p>
 
 <ul>
-<li><a href="Personal_result_view">Try again</a></li>
+<li><a href="createTestForUser">Try again</a></li>
 
 </ul>	
 	 

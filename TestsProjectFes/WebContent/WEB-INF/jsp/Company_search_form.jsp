@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Book query</title>
+<title>Company View</title>
 </head>
 <body>
 	<form action="query_processing">

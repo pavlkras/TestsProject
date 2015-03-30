@@ -22,4 +22,9 @@
 <property name="serviceInterface" value="tel_ran.tests.services.interfaces.IMaintenanceService"></property>
 </bean>
 
+<bean id="userService" class="org.springframework.remoting.caucho.BurlapProxyFactoryBean">
+<property name="serviceUrl" value="http://localhost:8080/TestsProjectBes/user_service.service4"></property>
+<property name="serviceInterface" value="tel_ran.tests.services.interfaces.IUserActionService"></property>
+</bean>
+
 </beans>

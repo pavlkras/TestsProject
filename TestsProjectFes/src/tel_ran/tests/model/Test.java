@@ -4,43 +4,35 @@ import java.io.Serializable;
 import java.util.*;
 
 public class Test implements Serializable{
-
-	private int testId = 0;	
-
-	private int userID = 0;
-	
-	private List<Long> mQstnIDsList = null;
-	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2947833404671486451L;
+	private int countOfQuestionsFromUser = 0;// count of questions from user	
+	private String userMailAddress;// for sending test on mail 
+	private List<Long> testQuestionID_setNumbers = null;
+	private int complexityLevel = 0;
+	private String categoryName = null;
+	//
 	private long startTimeMillis = 0;
 	private long endTimeMillis = 0;
 	private long totalTimeMillis = 0;
-	
-
-	private boolean cameraMode = false;
-	private String fotoLinks = null;
-	
-	private int level = 0;
-	
-	private String categoryName = null;
-	
-	private int qNum = 0;
-	
-	private int rightAnswerCounter = 0;
-	private int wrongAnswerCounter = 0;
-	
+	//
+	private String rightAnswerChars;
+	private String userAnswer;
 	private List<String> mTestResultList = null;
-
+	////
 	public String getCategoryName() {
 		return categoryName;
 	}
 	public void setCategoryName(String categoryName) {
 		this.categoryName = categoryName;
 	}
-	public int getqNum() {
-		return qNum;
+	public int getCountOfQuestionsFromUser() {
+		return countOfQuestionsFromUser;
 	}
-	public void setqNum(int qNum) {
-		this.qNum = qNum;
+	public void setCountOfQuestionsFromUser(int countOfQuestionsFromUser) {
+		this.countOfQuestionsFromUser = countOfQuestionsFromUser;
 	}
 	public long getStartTimeMillis() {
 		return startTimeMillis;
@@ -60,82 +52,65 @@ public class Test implements Serializable{
 	public void setTotalTimeMillis(long totalTimeMillis) {
 		this.totalTimeMillis = totalTimeMillis;
 	}
-	
+
 	public List<String> getTestResultList() {
 		return mTestResultList;
 	}
-	
 	public void setTestResultList(List<String> testResultList) {
-		
 		mTestResultList = new ArrayList<String>();
 		for(int i = 0; i < testResultList.size(); i++){
 			mTestResultList.add(testResultList.get(i));
 		}
 	}
-	
 	public void clearTestResultList() {
 		mTestResultList.clear();
 	}
-	
-	public void setTestId(int testId) {
-		this.testId = testId;
-	}
 
 	public List<Long> getQstnNmList() {
-		return mQstnIDsList;
+		return testQuestionID_setNumbers;
 	}
-
-	public int getRightAnswerCounter() {
-		return rightAnswerCounter;
+	////////////////
+	public String getRightAnswersChars() {
+		return rightAnswerChars;
 	}
-	public void setRightAnswerCounter(int rightAnswerCounter) {
-		this.rightAnswerCounter = rightAnswerCounter;
+	public void setRightAnswersChars(String rightAnswerChars) {
+		this.rightAnswerChars = rightAnswerChars;
 	}
-	public int getWrongAnswerCounter() {
-		return wrongAnswerCounter;
+	public String getUserAnswers() {
+		return userAnswer;
 	}
-	public void setWrongAnswerCounter(int wrongAnswerCounter) {
-		this.wrongAnswerCounter = wrongAnswerCounter;
+	public void setUserAnswers(String userAnswers) {
+		this.userAnswer = userAnswers;
 	}
+	////////////////
 	public void setQstnNmList(List<Long> qstnNmList) {
-		mQstnIDsList = new ArrayList<Long>();
+		testQuestionID_setNumbers = new ArrayList<Long>();
 		for(int i = 0; i < qstnNmList.size(); i++){
-			mQstnIDsList.add(qstnNmList.get(i));
+			testQuestionID_setNumbers.add(qstnNmList.get(i));
 		}
 	}
-
 	public int getLevel() {
-		return level;
+		return complexityLevel;
 	}
 	public void setLevel(int level) {
-		this.level = level;
+		this.complexityLevel = level;
 	}
-	public boolean isCameraMode() {
-		return cameraMode;
+	public String getUserMailAddress() {
+		return userMailAddress;
 	}
-	public void setCameraMode(boolean cameraMode) {
-		this.cameraMode = cameraMode;
-	}
-	public String getFotoLinks() {
-		return fotoLinks;
-	}
-	public void setFotoLinks(String fotoLinks) {
-		this.fotoLinks = fotoLinks;
-	}
-	
-	
-	public int getUserID() {
-		return userID;
-	}
-	public void setUserID(int userID) {
-		this.userID = userID;
-	}
-	public int getTestId() {
-		return testId;
+	public void setUserMailAddress(String userMailAddress) {
+		this.userMailAddress = userMailAddress;
 	}
 	@Override
 	public String toString() {
-		return "Test [testId=" + testId + "]";
+		return "Test [countOfQuestionsFromUser=" + countOfQuestionsFromUser
+				+ ", userMailAddress=" + userMailAddress + ", mQstnIDsList="
+				+ testQuestionID_setNumbers + ", startTimeMillis=" + startTimeMillis
+				+ ", endTimeMillis=" + endTimeMillis + ", totalTimeMillis="
+				+ totalTimeMillis + ", level=" + complexityLevel + ", categoryName="
+				+ categoryName + ", rightAnswerCounter=" + rightAnswerChars
+				+ ", wrongAnswerCounter=" + userAnswer
+				+ ", mTestResultList=" + mTestResultList + "]";
 	}
-
+	
 }

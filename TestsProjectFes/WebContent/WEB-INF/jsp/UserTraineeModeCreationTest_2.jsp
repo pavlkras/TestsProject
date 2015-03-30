@@ -35,8 +35,8 @@ with maximal number of questions <span id="maxnum">${questionsCountByCategoryLev
 <br>
 <br>
 <br>
-<form id="myform" method="post" action="test_run" onsubmit="return checkQuestionsNumber()">
-Please input a number of questions you want to test: <input id="qnum" type="text" name="personalqnumber" size=20/>
+<form id="myform" method="post" action="startUserTest" onsubmit="return checkQuestionsNumber()">
+Please input a number of questions you want to test: <input id="qnum" type="text" name="questionCountNumber" size=20/>
 <input id="submitbutton" type="submit" value="Submit"/>
 </form>
 

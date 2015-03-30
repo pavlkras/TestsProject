@@ -1,13 +1,16 @@
 @CHARSET "ISO-8859-1";
-h2{
+
+h2 {
 	text-align: center;
 }
+
 .h2 {
 	font-family: erdana, helvetica, arial, sans-serif;
 	font-size: 25px;
 	color: #610B38;
 	font-weight: 400;
 }
+
 .homecontent {
 	background-color: #fff;
 	border: 1px solid #ffc0cb;
@@ -16,6 +19,7 @@ h2{
 	width: 150px;
 	border-radius: 10px;
 }
+
 .homespan {
 	font: 21px times new roman;
 	padding: 5px;
@@ -31,36 +35,30 @@ a:hover {
 	text-decoration: underline;
 	color: red;
 }
+
 img {
 	max-width: 100%;
 	height: auto;
 }
-.gra1 {
-	border: 1px solid #ffc0cb;
-	border-radius: 10px;
-	background: -webkit-linear-gradient(#FAFAE5, white);
-	background: -o-linear-gradient(#FAFAE5, white);
-	background: -moz-linear-gradient(#FAFAE5, white);
-	background: linear-gradient(#FAFAE5, white);
-	height: 11em;
-}
 .firsthomecontent a {
 	float: left;
 }
+
 .ipsForm_required {
 	color: red;
 }
-.formTstyle{
-	margin-top:5px;
-	margin-left:5px;
-	border: 1px solid #ffc0cb;
-	border-radius: 10px;
-	background: -webkit-linear-gradient(#FAFAE5, white);
-	background: -o-linear-gradient(#FAFAE5, white);
-	background: -moz-linear-gradient(#FAFAE5, white);
-	background: linear-gradient(#FAFAE5, white);
-} 
-.buttonStyle{
-	margin-left: 5em;
+
+.miscStyle, #popularLincs, .javaTech {
+	display: none;
 }
-  
+
+.formDiv {
+	clear: both;
+	float: right;
+}
+
+li {
+	float: left;
+	margin-right: 2em;
+	border: 0.1em solid black;
+}

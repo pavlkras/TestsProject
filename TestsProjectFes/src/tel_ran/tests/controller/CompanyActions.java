@@ -13,6 +13,8 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import jdk.nashorn.internal.runtime.Context.ThrowErrorManager;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -161,9 +163,14 @@ User Registered Flow:
 
 	@RequestMapping({"/add_processing"})
 	public String addProcessing(String C_Name,String C_Site, String C_Specialization,String C_AmountEmployes,String C_Password,Model model) {
-
-		boolean flag = companyService.createCompany(C_Name, C_Site, C_Specialization, C_AmountEmployes, C_Password);
-		if(flag==true){
+		boolean flag = false;
+		try{
+		 flag = companyService.createCompany(C_Name, C_Site, C_Specialization, C_AmountEmployes, C_Password);
+		}catch(Throwable th){
+			th.printStackTrace();
+			System.out.println("catch creation company FES");
+		}
+		if(flag){
 			model.addAttribute("myResult", "<H1>Company Added Success</H1>");
 			return "Company_search_form";
 		}

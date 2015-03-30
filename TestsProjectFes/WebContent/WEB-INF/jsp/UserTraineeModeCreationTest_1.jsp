@@ -30,7 +30,7 @@ function checkCategoryAndLevel(){
 
 <body>
 
-<form action="add_questions_count" onsubmit="return checkCategoryAndLevel()">
+<form action="addQuestionsCount" onsubmit="return checkCategoryAndLevel()">
 
     <table class="tab">
 

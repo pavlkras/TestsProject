@@ -107,7 +107,7 @@ function FileReadeFunctionCalling(){
 	 <tr id="answersTr" >
 	    <th class="thFloatText" >Input Answer </th>	    
 	    <td class="tdFloatContent" >
-	        A. <textarea name="at1" onchange="hideLinkAndIndex()"></textarea><br>
+	        A. <textarea name="at1"></textarea><br>
 		    B. <textarea name="at2"></textarea><br>
 		    C. <textarea name="at3"></textarea><br>
 		    D. <textarea name="at4"></textarea><br>
@@ -123,8 +123,7 @@ function FileReadeFunctionCalling(){
 	<th class="thFloatText" >Image Link </th>
 	<td class="tdFloatContent" ><input id="changeTypefrom" onclick="FileReadeFunctionCalling()" type="text" name="imageLink" value="0" /><input id="changeTypeto" type="file" name="imageLink" style="display: none;" /></td>
 	</tr>
-	<tr>
-	 <th colspan="2"><input type="submit" value="Add To DataBase"></th></tr>
+	<tr><th colspan="2"><input type="submit" value="Add To DataBase"></th></tr>
 	</table>	
 	</form>
 	<br>
