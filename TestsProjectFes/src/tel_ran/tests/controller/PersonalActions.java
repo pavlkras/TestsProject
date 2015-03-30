@@ -82,75 +82,76 @@ public class PersonalActions {
 			String[] tempArray = testForPerson[2].split(",");// split string witch numbers id of question (long)
 
 			createdTestTable.append("<form action='endPersonTest' id='formTestPerson'  method='post'>"
-					+ "<table class='tableStyle'><tr>");// table of tables witch questions N-1
+					+ "<table>");// table of tables witch questions N-1
 			////
 			for(int i = 0;i<tempArray.length;i++){// Cycle long id questions for create one new question and add in out text
 				//
-				String tempQuestion = maintenanceService.getQuestionById(tempArray[i]);// getting one question by id from BES
+				String tempQuestion = maintenanceService.getQuestionById(tempArray[i]);// getting one question by id from BES				
 				String[] tempQuestionText = tempQuestion.split(IMaintenanceService.DELIMITER);// Splitting text by delimiter
-				////
-				for(int f=0;f<tempQuestionText.length;f++)
-					System.out.println(tempQuestionText[f]);
-		/*		createdTestTable.append("<table id='tabTestPerson_"+i+"' class='tableStyle'>"
-						+ "<tr><th class'questionTextStyle' colspan='2'>"+tempQuestionText[1]+"</th></tr>");// table of question and attributes of question table N-2			
-				if(tempQuestionText[3].length() > 15){					
-					createdTestTable.append("<tr><td colspan='2'><img src='static/images/questions/"+tempQuestionText[3]+"' alt='question image'></td></tr><br>");
+				////				
+				createdTestTable.append("<tr><td><table id='tabTestPerson_"+i+"' class='tableStyle'>"
+						+ "<tr><th class='questionTextStyle' colspan='2'>"+tempQuestionText[1]+"</th></tr>");// table of question and attributes of question table N-2			
+				if(tempQuestionText[3].length() > 15){	// image link	
+					//TO DO get image link as full path !!!!!
+					createdTestTable.append("<tr><td colspan='2'><img src='static/images/questionImages/"+tempQuestionText[3]+"' alt='Image not supported'></td></tr>");
 				}			
-				//----------------------
-				if(tempQuestionText.length > 4){
+				////
+				if(tempQuestionText.length > 8){
 					String[] answers = CreateAnswers(tempQuestionText);
-					if(tempQuestionText[2].equalsIgnoreCase("2")){					
-						createdTestTable.append("<p>A. <input type='checkbox' name='answerschecked' value='A'>&nbsp;&nbsp;" + answers[0] + "</p>"
-								+ "<p>B. <input type='checkbox' name='answerschecked' value='B'>&nbsp;&nbsp;" + answers[1] + "</p>");
-					}else if(tempQuestionText[2].equalsIgnoreCase("4")){
-						createdTestTable.append("<p>A. <input type='checkbox' name='answerschecked' value='A'>&nbsp;&nbsp;" + answers[0] + "</p>"
-								+ "<p>B. <input type='checkbox' name='answerschecked' value='B'>&nbsp;&nbsp;" + answers[1] + "</p>");
-						createdTestTable.append("<p>C. <input type='checkbox' name='answerschecked' value='C'>&nbsp;&nbsp;" + answers[2] + "</p>"
-								+ "<p>D. <input type='checkbox' name='answerschecked' value='D'>&nbsp;&nbsp;" + answers[3] + "</p>");
-					}				
-				}else 
-					if(tempQuestionText.length == 4){
-						if(tempQuestionText[2].equalsIgnoreCase("2")){
-							createdTestTable.append("<p>A. <input type='checkbox' name='answerschecked' value='A'>&nbsp;&nbsp;</p>"
-									+ "<p>B. <input type='checkbox' name='answerschecked' value='B'>&nbsp;&nbsp;</p>");
-						}else if(tempQuestionText[2].equalsIgnoreCase("4") && tempQuestionText.length == 4){
-							createdTestTable.append("<p>A. <input type='checkbox' name='answerschecked' value='A'>&nbsp;&nbsp;</p>"
-									+ "<p>B. <input type='checkbox' name='answerschecked' value='B'>&nbsp;&nbsp;</p>");
-							createdTestTable.append("<p>C. <input type='checkbox' name='answerschecked' value='C'>&nbsp;&nbsp;</p>"
-									+ "<p>D. <input type='checkbox' name='answerschecked' value='D'>&nbsp;&nbsp;</p>");
-						}
+					if(tempQuestionText[7].equalsIgnoreCase("2")){	
+						//
+						createdTestTable.append("<tr onchange='onchangeClick(1)'>"
+								+ "<td><p class='answersCharParam'>A. <input type='checkbox' name='answerschecked' value='A'>&nbsp;&nbsp;<span class='textAnswerSpan'>" + answers[0] + "</span></p></td>"
+								+ "<td><p class='answersCharParam'>B. <input type='checkbox' name='answerschecked' value='B'>&nbsp;&nbsp;<span class='textAnswerSpan'>" + answers[1] + "</span></p></td>"
+								+ "</tr>");
+						//
+					}else if(tempQuestionText[7].equalsIgnoreCase("4") && answers[2].equalsIgnoreCase("0") && answers[3].equalsIgnoreCase("0")){
+						//
+						createdTestTable.append("<tr onchange='onchangeClick(1)'>"
+								+ "<td><p class='answersCharParam'>A. <input type='checkbox' name='answerschecked' value='A'>&nbsp;&nbsp;<span class='textAnswerSpan'>" + answers[0] + "</span></p></td>"
+								+ "<td><p class='answersCharParam'>B. <input type='checkbox' name='answerschecked' value='B'>&nbsp;&nbsp;<span class='textAnswerSpan'>" + answers[1] + "</span></p></td>"
+								+ "</tr>");
+						//
+					}else if(tempQuestionText[7].equalsIgnoreCase("4") && !answers[2].equalsIgnoreCase("0") && !answers[3].equalsIgnoreCase("0")){
+						//
+						createdTestTable.append("<tr onchange='onchangeClick(1)'>"
+								+ "<td><p class='answersCharParam'>A. <input type='checkbox' name='answerschecked' value='A'>&nbsp;&nbsp;<span class='textAnswerSpan'>" + answers[1] + "</span></p></td>"
+								+ "<td><p class='answersCharParam'>B. <input type='checkbox' name='answerschecked' value='B'>&nbsp;&nbsp;<span class='textAnswerSpan'>" + answers[1] + "</span></p></td>"
+								+ "</tr><tr onchange='onchangeClick(1)'>"
+								+ "<td><p class='answersCharParam'>C. <input type='checkbox' name='answerschecked' value='C'>&nbsp;&nbsp;<span class='textAnswerSpan'>" + answers[2] + "</span></p></td>"
+								+ "<td><p class='answersCharParam'>D. <input type='checkbox' name='answerschecked' value='D'>&nbsp;&nbsp;<span class='textAnswerSpan'>" + answers[3] + "</span></p></td>"
+								+ "</tr>");
 					}
-				//--------------------
-				if((tempQuestionText.length > 7 && tempQuestionText.length == 11 && tempQuestionText[9].equalsIgnoreCase("0") && tempQuestionText[10].equalsIgnoreCase("0")) || numAnswersInImg == 2){
-					createdTestTable.append("<tr onchange='onchangeClick(1)'><td><p>A. <input type='checkbox' name='answerschecked' value='A'>&nbsp;&nbsp; "+tempQuestionText[7]+"</p></td> "
-							+ "<td><p>B. <input type='checkbox' name='answerschecked' value='B'>&nbsp;&nbsp; "+tempQuestionText[8]+"</p></td></tr>");		
-				}else if((tempQuestionText.length > 7 && tempQuestionText.length == 11 && !tempQuestionText[9].equalsIgnoreCase("0") && !tempQuestionText[10].equalsIgnoreCase("0")) || numAnswersInImg == 4){
-					createdTestTable.append("<tr onchange='onchangeClick(1)'><td><p>A. <input type='checkbox' name='answerschecked' value='A'>&nbsp;&nbsp; "+tempQuestionText[7]+"</p></td> "
-							+ "<td><p>B. <input type='checkbox' name='answerschecked' value='B'>&nbsp;&nbsp; "+tempQuestionText[8]+"</p></td></tr>");	
-					createdTestTable.append("<tr onchange='onchangeClick(1)'><td><p>C. <input type='checkbox' name='answerschecked' value='C'>&nbsp;&nbsp; "+tempQuestionText[7]+"</p></td>"
-							+ "<td><p>D. <input type='checkbox' name='answerschecked' value='D'>&nbsp;&nbsp; "+tempQuestionText[8]+"</p></td></tr>");		
-				}else if(tempQuestionText.length > 7 && tempQuestionText.length > 11){
-					createdTestTable.append("<tr onchange='onchangeClick(1)'><td><p>A. <input type='checkbox' name='answerschecked' value='A'>&nbsp;&nbsp; "+tempQuestionText[7]+"</p></td> "
-							+ "<td><p>B. <input type='checkbox' name='answerschecked' value='B'>&nbsp;&nbsp; "+tempQuestionText[8]+"</p></td></tr>");	
-					createdTestTable.append("<tr onchange='onchangeClick(1)'><td><p>C. <input type='checkbox' name='answerschecked' value='C'>&nbsp;&nbsp; "+tempQuestionText[7]+"</p></td>"
-							+ "<td><p>D. <input type='checkbox' name='answerschecked' value='D'>&nbsp;&nbsp; "+tempQuestionText[8]+"</p></td></tr>");
-					//
-					createdTestTable.append("<tr onchange='onchangeClick(1)'><td><p>E. <input type='checkbox' name='answerschecked' value='E'>&nbsp;&nbsp; "+tempQuestionText[7]+"</p></td> "
-							+ "<td><p>F. <input type='checkbox' name='answerschecked' value='F'>&nbsp;&nbsp; "+tempQuestionText[8]+"</p></td></tr>");		
-					createdTestTable.append("<tr><td><p>C. <input type='checkbox' name='answerschecked' value='C'>&nbsp;&nbsp; "+tempQuestionText[7]+"</p></td></tr> "
-							+ "<tr><td><p>G. <input type='checkbox' name='answerschecked' value='G'>&nbsp;&nbsp; "+tempQuestionText[8]+"</p></td></tr>");						
-				} */	
-				//
-				//correctAnswers.append(tempQuestionText[6] + ",");
+					////
+				}else if(tempQuestionText.length == 8){
+					if(tempQuestionText[7].equalsIgnoreCase("2")){
+						//
+						createdTestTable.append("<tr onchange='onchangeClick(1)'><td>"
+								+ "<p class='answersCharParam'>A. <input type='checkbox' name='answerschecked' value='A'>&nbsp;&nbsp;</p></td><td>"
+								+ "<p class='answersCharParam'>B. <input type='checkbox' name='answerschecked' value='B'>&nbsp;&nbsp;</p></td></tr>");
+						//
+					}else if(tempQuestionText[7].equalsIgnoreCase("4")){
+						//
+						createdTestTable.append("<tr onchange='onchangeClick(1)'>"
+								+ "<td><p class='answersCharParam'>A. <input type='checkbox' name='answerschecked' value='A'>&nbsp;&nbsp;</p></td>"
+								+ "<td><p class='answersCharParam'>B. <input type='checkbox' name='answerschecked' value='B'>&nbsp;&nbsp;</p></td>"
+								+ "</tr><tr onchange='onchangeClick(1)'>"
+								+ "<td><p class='answersCharParam'>C. <input type='checkbox' name='answerschecked' value='C'>&nbsp;&nbsp;</p></td>"
+								+ "<td><p class='answersCharParam'>D. <input type='checkbox' name='answerschecked' value='D'>&nbsp;&nbsp;</p></td></tr>");
+					}
+				}
+				////
+				createdTestTable.append("</table></td></tr>");
+				correctAnswers.append(tempQuestionText[6] + ",");
 			}	//end for
 			//				
-			/*createdTestTable.append("</table><br>"
+			createdTestTable.append("</table><br>"
 					+ "<input type='text' hidden='hidden' name='testID' value='"+testId+"'>"
-					+ "<input  type='submit' value='Send Test'></form>");  
+					+ "<input id='sendTestButton' type='submit' value='Send Test'></form>");  
 			correctAnswers.append("----" + testForPerson[0] + "----" + testForPerson[1]);// TO DO on BES split for save action
 			//
 			setTableTest(createdTestTable);// that created table of questions for one test 
-*/			outResult = "PersonalTestWebCamFlow";
+			outResult = "PersonalTestWebCamFlow";
 		}else{
 			outResult = "Personal_LinkClickAction";
 			tableTestCreated = "not good :(";
@@ -190,7 +191,7 @@ public class PersonalActions {
 		String[] answers = new String[4];
 		int j=0;
 		for (int i = 0; i < questionAttributes.length; i++) {
-			if(i == 4 || i == 5 ||i == 6 || i == 7){				
+			if(i == 8 || i == 9 ||i == 10 || i == 11){				
 				String my_new_str = questionAttributes[i].replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 				answers[j] = my_new_str;				
 				j++;
@@ -198,34 +199,6 @@ public class PersonalActions {
 		}
 		return answers;
 	}
-
-	////----------  action click on the link provided in the mail ----------------// END //
-	//// ------------------ creation test for User ------------------// BEGIN //
-	/*	if(questionAttributes.length > 4){
-				String[] answers = CreateAnswers(questionAttributes);
-				if(questionAttributes[2].equalsIgnoreCase("2")){					
-					tableTestCreated.append("<p>A. <input type='checkbox' name='answerschecked' value='A'>&nbsp;&nbsp;" + answers[0] + "</p>"
-							+ "<p>B. <input type='checkbox' name='answerschecked' value='B'>&nbsp;&nbsp;" + answers[1] + "</p>");
-				}else if(questionAttributes[2].equalsIgnoreCase("4")){
-					tableTestCreated.append("<p>A. <input type='checkbox' name='answerschecked' value='A'>&nbsp;&nbsp;" + answers[0] + "</p>"
-							+ "<p>B. <input type='checkbox' name='answerschecked' value='B'>&nbsp;&nbsp;" + answers[1] + "</p>");
-					tableTestCreated.append("<p>C. <input type='checkbox' name='answerschecked' value='C'>&nbsp;&nbsp;" + answers[2] + "</p>"
-							+ "<p>D. <input type='checkbox' name='answerschecked' value='D'>&nbsp;&nbsp;" + answers[3] + "</p>");
-				}				
-			}else 
-				if(questionAttributes.length == 4){
-					if(questionAttributes[2].equalsIgnoreCase("2")){
-						tableTestCreated.append("<p>A. <input type='checkbox' name='answerschecked' value='A'>&nbsp;&nbsp;</p>"
-								+ "<p>B. <input type='checkbox' name='answerschecked' value='B'>&nbsp;&nbsp;</p>");
-					}else if(questionAttributes[2].equalsIgnoreCase("4") && questionAttributes.length == 4){
-						tableTestCreated.append("<p>A. <input type='checkbox' name='answerschecked' value='A'>&nbsp;&nbsp;</p>"
-								+ "<p>B. <input type='checkbox' name='answerschecked' value='B'>&nbsp;&nbsp;</p>");
-						tableTestCreated.append("<p>C. <input type='checkbox' name='answerschecked' value='C'>&nbsp;&nbsp;</p>"
-								+ "<p>D. <input type='checkbox' name='answerschecked' value='D'>&nbsp;&nbsp;</p>");
-					}
-				}
-			tableTestCreated.append("<br> <input type='submit' value='Next Question' />");				
-		}	
-	 */
+	////----------  action click on the link provided in the mail ----------------// END //	
 	////------------------ creation test for User ------------------// END //
 }

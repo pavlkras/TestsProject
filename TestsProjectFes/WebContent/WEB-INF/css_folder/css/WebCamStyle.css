@@ -77,13 +77,24 @@ body {
 	
 } 
 
-.tableStyle{
-	border: 0.1em solid black;
-	text-align: center;
+.tableStyle{	
+	margin-left:10em;
 	display: none;
+	float: left;
 }
 .questionTextStyle{
-	
+	font-family: sans-serif;
+	font-size: 2em;
+	color:blue;
+}
+.answersCharParam{
+	color:red;
+}
+.textAnswerSpan{
+	color:blue;
+}
+#sendTestButton{
+	display: none;
 }
 p{
 	width: 50%;

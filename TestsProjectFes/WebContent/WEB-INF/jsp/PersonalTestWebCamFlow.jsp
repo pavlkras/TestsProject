@@ -105,6 +105,7 @@
 							document.getElementById("message").innerHTML = "Sorry camera not supported,  testing impossible ";
 							hideE('button_test');
 						} // end if (flagMediaSupported)
+												
 					}); // end onload
 
 	//////////// show an hide by id functions
@@ -154,9 +155,14 @@
 	function onchangeClick(incrementValue){
 		counterQuestions  +=  incrementValue;
 	var lengthOfQuestionTableList =	document.getElementsByTagName("th").length;
-	if(lengthOfQuestionTableList >= counterQuestions){
-		showE('tabTestPerson_'+counterQuestions);		
-	}
+	if(lengthOfQuestionTableList > counterQuestions){
+		showE('tabTestPerson_'+counterQuestions);
+		var elem = eval(parseInt(counterQuestions)-1);
+		hideE('tabTestPerson_'+elem);
+	}else{			
+		$("#sendTestButton").css("display","block");
+		hideE('tabTestPerson_'+counterQuestions);
+	}	
 	}
 </script>
 </head>
