@@ -13,8 +13,6 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-import jdk.nashorn.internal.runtime.Context.ThrowErrorManager;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -200,7 +198,7 @@ Normal Flow:
 
 		int personID = companyService.createPerson(Integer.parseInt(personId), personName, personSurname,personEmail);
 		String password = getRandomPassword();
-		long idTest = companyService.createIdTest(listIdQuestions,personID,password);
+		long idTest = companyService.createIdTest(listIdQuestions, personID, password, category, Integer.parseInt(level));
 
 		String link = "http://localhost:8080/TestsProjectFes/jobSeeker_test_preparing_click_event?" + idTest;        
 		boolean flagMail = sendEmail(link,personEmail,password);
@@ -285,7 +283,7 @@ f)	5 photos made during the test	------ IGOR ------*/
 	@RequestMapping({"/view_results"})
 	public String viewResults(Model model){
 		//Code for testing
-		companyId = 1;
+		companyId = 8;
 		
 		if(companyId != -1){
 			model.addAttribute("token", encodeToken(companyId));

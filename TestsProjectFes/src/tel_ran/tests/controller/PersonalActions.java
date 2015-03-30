@@ -1,7 +1,5 @@
 package tel_ran.tests.controller;
 
-import java.util.ArrayList;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import tel_ran.tests.model.Test;
 import tel_ran.tests.services.interfaces.IMaintenanceService;
 import tel_ran.tests.services.interfaces.IPersonalActionsService;
 
@@ -19,7 +16,6 @@ import tel_ran.tests.services.interfaces.IPersonalActionsService;
 @Scope("session")
 @RequestMapping({"/","/PersonalActions"})
 public class PersonalActions {
-	private static final int counter = 0;
 	@Autowired
 	IPersonalActionsService personalService; 
 	@Autowired
@@ -75,7 +71,7 @@ public class PersonalActions {
 		if (testForPerson != null && testForPerson[0].equals(id) && testForPerson[1].equals(password)) {
 			//
 			timeStartTest = System.currentTimeMillis();
-			System.out.println("start test time saved. testId-"+testId);
+			System.out.println("start test time saved. testId-"+testId);//----------------------------------- sysout
 			//
 			personId = testForPerson[0];
 			personPassword = testForPerson[1];
@@ -142,13 +138,12 @@ public class PersonalActions {
 				}
 				////
 				createdTestTable.append("</table></td></tr>");
-				correctAnswers.append(tempQuestionText[6] + ",");
+				correctAnswers.append(tempQuestionText[6]);
 			}	//end for
 			//				
 			createdTestTable.append("</table><br>"
 					+ "<input type='text' hidden='hidden' name='testID' value='"+testId+"'>"
-					+ "<input id='sendTestButton' type='submit' value='Send Test'></form>");  
-			correctAnswers.append("----" + testForPerson[0] + "----" + testForPerson[1]);// TO DO on BES split for save action
+					+ "<input id='sendTestButton' type='submit' value='Send Test'></form>"); 			
 			//
 			setTableTest(createdTestTable);// that created table of questions for one test 
 			outResult = "PersonalTestWebCamFlow";
@@ -158,34 +153,12 @@ public class PersonalActions {
 			// Create log about failed created test for person 
 		}
 		//// end if else
+		//testId +="----" + testForPerson[0] + "----" + testForPerson[1];// TO DO on BES split for save action
 		String corrAnsw = correctAnswers.toString();
-		if(!personalService.SaveStartPersonTestParam(testId, corrAnsw, timeStartTest)){System.out.println("time start saved");}// method for save parameters of test to generated test 
+		if(!personalService.SaveStartPersonTestParam(testId, corrAnsw, timeStartTest)){System.out.println("time start saved-"+timeStartTest);}// method for save parameters of test to generated test 
 		////
 		return outResult;		
 	}
-	////	
-	private void setTableTest(StringBuffer createdTestTable) {
-		tableTestCreated = createdTestTable.toString();		
-	}
-	public static String GetTestTable(){		
-		return tableTestCreated;
-	}
-	////
-	@RequestMapping(value = "/endPersonTest", method = RequestMethod.POST)
-	String outResultTestToPerson(String answerschecked, String imageLinkText, String testID, Model model){
-		//
-		System.out.println("end test time saved. testId-"+testID);
-		long timeEndTest = System.currentTimeMillis();
-		//
-		if(!personalService.SaveEndPersonTestResult(testID, answerschecked, "TO DO", timeEndTest)){
-			String arg1 = "Sorry test is not sended, try again.";
-			model.addAttribute("result", arg1 );
-			System.out.println("time end saved");
-			return "PersonTestResultPage";	
-		}
-		return "UserSignIn";	// end of control mode test flow	
-	}
-	////---------- Test in control mode case --------- // END //
 	////
 	private String[] CreateAnswers(String[] questionAttributes) {
 		String[] answers = new String[4];
@@ -199,6 +172,36 @@ public class PersonalActions {
 		}
 		return answers;
 	}
+	////	
+	private void setTableTest(StringBuffer createdTestTable) {
+		tableTestCreated = createdTestTable.toString();		
+	}
+	public static String GetTestTable(){		
+		return tableTestCreated;
+	}
+	////
+	@RequestMapping(value = "/endPersonTest", method = RequestMethod.POST)
+	String outResultTestToPerson(String answerschecked, String imageLinkText, String testID, Model model){
+		//
+		String newAnswerString = answerschecked.replaceAll(",,", "").replaceAll(",", "");
+		//
+		long timeEndTest = System.currentTimeMillis();
+		System.out.println("end time test save-"+ timeEndTest + "id test -"+testID);//----------------------------------- sysout
+		//
+		if(!personalService.SaveEndPersonTestResult(testID, newAnswerString, imageLinkText, timeEndTest)){
+			String arg1 = "Sorry test is not sended, try again.";
+			model.addAttribute("result", arg1 );
+			System.out.println("time end saved");
+			return "PersonTestResultPage";	
+		}
+		//
+		clearTheTest();
+		return "UserSignIn";	// end of control mode test flow	
+	}
+	////---------- Test in control mode case --------- // END //	
 	////----------  action click on the link provided in the mail ----------------// END //	
-	////------------------ creation test for User ------------------// END //
+
+	private void clearTheTest() {		
+		// TODO Auto-generated method stub
+	}
 }
