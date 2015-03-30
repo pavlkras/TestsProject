@@ -107,6 +107,7 @@ public class EntityQuestionAttributes implements Serializable {
 				+ IMaintenanceService.DELIMITER + imageLink 
 				+ IMaintenanceService.DELIMITER + category
 				+ IMaintenanceService.DELIMITER + complexityLevel
-				+ IMaintenanceService.DELIMITER + correctAnswer;
+				+ IMaintenanceService.DELIMITER + correctAnswer
+				+ IMaintenanceService.DELIMITER + numberOfResponsesInThePicture;
 	}
 }

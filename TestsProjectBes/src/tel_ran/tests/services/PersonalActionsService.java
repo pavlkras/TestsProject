@@ -1,7 +1,5 @@
 package tel_ran.tests.services;
 
-import java.sql.Date;
-
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +16,6 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 		int peRson = personTest.getEntityPerson().getPersonId();
 		String pass = personTest.getPassword();	
 		String questions = personTest.getQuestion();
-
 		String[] outResult = {peRson+"", pass, questions};
 		return outResult;
 	}
@@ -32,7 +29,7 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 			long testID = (long)Integer.parseInt(testId);		
 			EntityTest personTest = em.find(EntityTest.class, testID);		
 			personTest.setCorrectAnswers(correctAnswers.toCharArray());			
-			personTest.setTestDate(new Date(timeStartTest));	
+			personTest.setStartTestDate(timeStartTest);
 			int amountOfCorrectAnswers = personTest.getCorrectAnswers().length;
 			personTest.setAmountOfCorrectAnswers(amountOfCorrectAnswers );
 			em.persist(personTest);
@@ -54,7 +51,7 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 			EntityTest personTest = em.find(EntityTest.class, testID);		
 			personTest.setPersonAnswers(personAnswers.toCharArray());
 			personTest.setPictures(imagesLinks);		
-			personTest.setTestDate(new Date(timeEndTest));				
+			personTest.setEndTestDate(timeEndTest);				
 			em.persist(personTest);
 			resAction = true;
 		}catch(Exception e){
