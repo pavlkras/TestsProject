@@ -29,7 +29,7 @@ public class Maintenance {
 			+ "<input type='submit' class='myButton' value='Administrators Login'></form>";
 
 	/*************************************/
-	@RequestMapping({ "/Maintenance" })
+	@RequestMapping({ "/Maintenance" ,"/Ma"})
 	public String mappingFromIndexPage(Model model) {
 		model.addAttribute("loginText", loginForm);
 		model.addAttribute("result","for login User name and Password is EMPTY.");
