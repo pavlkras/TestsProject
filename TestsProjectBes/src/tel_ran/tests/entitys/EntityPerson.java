@@ -49,4 +49,10 @@ public class EntityPerson {
 	public void setPersonSurname(String personSurname) {
 		this.personSurname = personSurname;
 	}
+	@Override
+	public String toString() {
+		return "EntityPerson [personId=" + personId + ", personName=" + personName + ", personSurname="
+				+ personSurname + ", personEmail=" + personEmail + "]";
+	}
+	
 }
