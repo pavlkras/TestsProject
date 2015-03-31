@@ -239,10 +239,10 @@
 					<img src="static/images/logo/quizhome.png" alt="Online forum"><span
 						class="homespan">Forum</span>
 				</div>
-			</a> <a href=".">
+			</a> <a href="Ma">
 				<div class="homecontent">
 					<img src="static/images/logo/interviewhome.png"
-						alt="Interview Questions"><span class="homespan">Home</span>
+						alt="Interview Questions"><span class="homespan">HoMa</span>
 				</div>
 			</a> <a href="http://www.javatpoint.com/free-java-projects">
 				<div class="homecontent">

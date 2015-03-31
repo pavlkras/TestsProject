@@ -66,20 +66,19 @@ public class Maintenance {
 	/*
 	 * 3.3.1. Adding test question Pre-Conditions: 
 	 * 1. The System is running up
-	 * 2. The Administrator (the user with username “admin” and password “12345.com”) is signed in Normal Flow: 
-	 * 1. The System shows internal link with the text “create new question” 
+	 * 2. The Administrator (the user with username â€œadminâ€� and password â€œ12345.comâ€�) is signed in Normal Flow: 
+	 * 1. The System shows internal link with the text â€œcreate new questionâ€� 
 	 * (under the link there will be table with existing questions but it is used in this flow) 
 	 * 2. User presses the link 
 	 * 3. The system shows form for filling the following data: 
-	 * • Question text (typing)
-	 * • Category (selection)
-	 * • Complexity level (selection from 1 to 5) 
-	 * • 4 answers with numbers (1-4) 
-	 * • Number of the right question 
+	 * â€¢ Question text (typing)
+	 * â€¢ Category (selection)
+	 * â€¢ Complexity level (selection from 1 to 5) 
+	 * â€¢ 4 answers with numbers (1-4) 
+	 * â€¢ Number of the right question 
 	 * 4. User types/select required data and press submit button 
-	 * 5. The System saves the question data in the Database with message “ the question <question text> has been added successfully”
+	 * 5. The System saves the question data in the Database with message â€œ the question <question text> has been added successfullyâ€�
 	 */
-	/** ДОБАВЛЕНИЕ НОВОГО ВОПРОСА В БАЗУ ДАННЫХ */
 	@RequestMapping({ "/add_actions" })
 	public String AddProcessingPage(String questionText, String category,
 			String levelOfDifficulty, String at1, String at2, String at3,
@@ -117,7 +116,7 @@ public class Maintenance {
 	// use case 3.3.2 Update Test Question
 	/*
 	 * Pre-Conditions: 1. The System is running up 2. The Administrator (the
-	 * user with username “admin” and password “12345.com”) is signed in Normal
+	 * user with username â€œadminâ€� and password â€œ12345.comâ€�) is signed in Normal
 	 * Flow: 1. The user requests all questions containing specific text part 2.
 	 * The System shows table with scrolling containing all questions sorted by
 	 * the questions text 3. User selects required for update question 4. The
