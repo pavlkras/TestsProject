@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Base64;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,8 +14,12 @@ import javax.persistence.ManyToOne;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import tel_ran.tests.services.common.CommonData;
+import tel_ran.tests.services.common.ICommonData;
 import tel_ran.tests.services.interfaces.IMaintenanceService;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 @Entity
 public class EntityTest {
@@ -66,9 +71,36 @@ public class EntityTest {
 			jsonObj.put("complexityLevel",complexityLevel);
 			jsonObj.put("amountOfCorrectAnswers",amountOfCorrectAnswers);
 			jsonObj.put("amountOfWrongAnswers",amountOfQuestions - amountOfCorrectAnswers);
-			//TODO Write image encoder into BASE64 
+			String[] pictureBase64 = null;
+			if(!pictures.equals("")){
+			 	pictureBase64 = pictures.split(",");  
+				for(int i=0; i<pictureBase64.length; i++){
+					pictureBase64[i] = encodeToBase64(pictureBase64[i]);
+				}
+			}
+		 	jsonObj.put("picture", pictureBase64); 
 		} catch (JSONException e) {}
 		return jsonObj.toString();
+	}
+
+	public String encodeToBase64(String pathToPicture){
+		String res = null;
+		byte[] bytes = null;
+		FileInputStream file;
+		try {
+			file = new FileInputStream(pathToPicture);
+			bytes = new byte[file.available()];
+			file.read(bytes);
+			file.close();
+			res = Base64.getEncoder().encodeToString(bytes);
+		} catch (FileNotFoundException e) {	
+		
+		} catch (IOException e) { 
+		
+		} catch (NullPointerException e) { 
+		
+		}
+		return res;
 	}
 
 	public long getTestId() {
@@ -212,7 +244,7 @@ public class EntityTest {
 			this.pictures = pictureLink;
 		}
 		else{
-			this.pictures += CommonData.delimiter + pictureLink;
+			this.pictures += ICommonData.delimiter + pictureLink;
 		}
 	}
 	////
