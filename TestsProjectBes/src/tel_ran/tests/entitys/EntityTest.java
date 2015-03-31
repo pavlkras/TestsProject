@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Base64;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,7 +20,6 @@ import tel_ran.tests.services.interfaces.IMaintenanceService;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import com.sun.org.apache.xml.internal.security.utils.Base64;
 
 @Entity
 public class EntityTest {
@@ -92,7 +92,7 @@ public class EntityTest {
 			bytes = new byte[file.available()];
 			file.read(bytes);
 			file.close();
-			res = Base64.encode(bytes);
+			res = Base64.getEncoder().encodeToString(bytes);
 		} catch (FileNotFoundException e) {	
 		
 		} catch (IOException e) { 
