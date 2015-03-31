@@ -24,7 +24,6 @@
 <script src="/TestsProjectFes/static_js/js/viewresultsjs/bootstrap.min.js"></script>
 <script src="/TestsProjectFes/static_js/js/viewresultsjs/date-parser.js"></script>
 <script src="/TestsProjectFes/static_js/js/viewresultsjs/ngDialog.min.js"></script>
-<script src="/TestsProjectFes/static_js/js/viewresultsjs/angular-base64.min.js"></script>
 <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.12.1.js"></script>
 <link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">       
 <title>View tests results</title>
@@ -119,7 +118,14 @@
 <script type="text/ng-template" id="testDetails">
 <div class="ngdialog-message">    
 <h1>Test details</h1>
-    <p>testid = {{testId}}</p>
+<p>duration = {{testDetails.duration}}</p>
+<p>complexityLevel = {{testDetails.complexityLevel}}</p>
+<p>amountOfCorrectAnswers = {{testDetails.amountOfCorrectAnswers}}</p>
+<p>amountOfQuestions = {{testDetails.amountOfQuestions}}</p>
+<p>percentage of right answers = {{testDetails.persentOfRightAnswers}}%</p>
+<p ng-repeat="pictures_ in testDetails.pictures">
+	<img src="{{pictures_.picture}}"/>
+</p> 
 </div>
 </script>
 </body>
