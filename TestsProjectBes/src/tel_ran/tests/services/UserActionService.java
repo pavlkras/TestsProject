@@ -48,8 +48,7 @@ public class UserActionService extends TestsPersistence implements IUserActionSe
 	@Override
 	public String[] GetUserByMail(String userMail) {		
 		String[] result;
-		EntityUser resUser = em.find(EntityUser.class, userMail);
-		System.out.println("Get User By Mail - "+resUser);
+		EntityUser resUser = em.find(EntityUser.class, userMail);		
 		if (resUser != null) {
 			result = new String[4];
 			result[FIRSTNAME] = resUser.getFirstName();
@@ -58,8 +57,7 @@ public class UserActionService extends TestsPersistence implements IUserActionSe
 			result[EMAIL] = resUser.getEmail();
 		} else{
 			result = null;
-		}
-		System.out.println(result);
+		}		
 		return result;
 	}
 	////------- User Authorization and Registration case -------------------// END //	
