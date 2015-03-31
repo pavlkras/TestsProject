@@ -1,4 +1,4 @@
-var app = angular.module('app', ['smart-table','mgcrea.ngStrap','ngDialog','base64'])
+var app = angular.module('app', ['smart-table','mgcrea.ngStrap','ngDialog'])
 
 app.controller('InputController', ['$scope','$http', 'ngDialog', function($scope, $http, ngDialog) {
   $scope.selectedMode = -1;
@@ -51,18 +51,28 @@ app.controller('InputController', ['$scope','$http', 'ngDialog', function($scope
 	  return params;
 	};
 	
-	  
-  $scope.showDetails = function(testid){
-	  console.log(testid);
-	  $scope.testId = testid;
-      ngDialog.open({ 
+	//Test Details
+	$scope.getDetails = function(testid_){
+		$scope.link = "/TestsProjectBes/view_results_rest/test_details"+"/"+testid_+"/"+$scope.token;
+		console.log($scope.link);
+		$http.get($scope.link).success(function (response) {
+			$scope.testDetails = angular.fromJson(response);
+		});
+	};
+		  
+	$scope.showDetails = function(testid){
+		$scope.getDetails(testid);
+		console.log(testid);
+
+		ngDialog.open({ 
     	  controller: 'InputController',
     	  className: 'ngdialog-theme-default',
     	  template: 'testDetails',
     	  scope: $scope
-      });
-  };
+		});
+	};
 	
+// Test Common Results	
   $scope.submit = function(){
 	$scope.link = "/TestsProjectBes/view_results_rest"+$scope.modePath+$scope.parameters()+"/"+$scope.token;
 	console.log($scope.link);
