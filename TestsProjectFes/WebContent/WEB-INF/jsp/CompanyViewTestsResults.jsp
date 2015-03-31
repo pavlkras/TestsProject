@@ -1,7 +1,7 @@
 <%@page import="tel_ran.tests.services.common.ICommonData"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" ng-app="app" ng-controller="InputController" ng-init="token='${token}'">
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -12,22 +12,21 @@
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.js"></script>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/angular-strap/2.1.2/angular-strap.min.js"></script>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/angular-strap/2.1.2/angular-strap.tpl.min.js"></script>
-<script src="/TestsProjectFes/static_js/js/CompanyViewTestsResults.js"></script>
-<script src="/TestsProjectFes/static_js/js/smart-table.min.js"></script>
-<script src="/TestsProjectFes/static_js/js/angular-bootstrap-select.min.js"></script>
-<script src="/TestsProjectFes/static_js/js/transition.js"></script>
-<script src="/TestsProjectFes/static_js/js/collapse.js"></script>
-<script src="/TestsProjectFes/static_js/js/ui-utils.min.js"></script>
-<script src="/TestsProjectFes/static_js/js/bootstrap.min.js"></script>
-<script src="/TestsProjectFes/static_js/js/date-parser.js"></script>
+<link href="/TestsProjectFes/static/css_folder/css/viewresults/CompanyViewTestResults.css" rel="stylesheet">
+<link href="/TestsProjectFes/static/css_folder/css/viewresults/ngDialog.min.css" rel="stylesheet">
+<link href="/TestsProjectFes/static/css_folder/css/viewresults/ngDialog-theme-default.min.css" rel="stylesheet">
+<script src="/TestsProjectFes/static_js/js/viewresultsjs/CompanyViewTestsResults.js"></script>
+<script src="/TestsProjectFes/static_js/js/viewresultsjs/smart-table.min.js"></script>
+<script src="/TestsProjectFes/static_js/js/viewresultsjs/angular-bootstrap-select.min.js"></script>
+<script src="/TestsProjectFes/static_js/js/viewresultsjs/transition.js"></script>
+<script src="/TestsProjectFes/static_js/js/viewresultsjs/collapse.js"></script>
+<script src="/TestsProjectFes/static_js/js/viewresultsjs/ui-utils.min.js"></script>
+<script src="/TestsProjectFes/static_js/js/viewresultsjs/bootstrap.min.js"></script>
+<script src="/TestsProjectFes/static_js/js/viewresultsjs/date-parser.js"></script>
+<script src="/TestsProjectFes/static_js/js/viewresultsjs/ngDialog.min.js"></script>
+<script src="/TestsProjectFes/static_js/js/viewresultsjs/angular-base64.min.js"></script>
 <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.12.1.js"></script>
-<!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script> -->
-<!-- <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script> -->
-<!-- <script src="http://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/d004434a5ff76e7b97c8b07c01f34ca69e635d97/src/js/bootstrap-datetimepicker.js"></script>-->
 <link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">       
-<!--  <link href="http://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/d004434a5ff76e7b97c8b07c01f34ca69e635d97/build/css/bootstrap-datetimepicker.css" rel="stylesheet">-->
-
-<link href="/TestsProjectFes/static/css_folder/css/CompanyViewTestResults.css" rel="stylesheet">
 <title>View tests results</title>
 </head>
 <body>
@@ -117,5 +116,11 @@
 		</div>
 	</div>
 </div>
+<script type="text/ng-template" id="testDetails">
+<div class="ngdialog-message">    
+<h1>Test details</h1>
+    <p>testid = {{testId}}</p>
+</div>
+</script>
 </body>
 </html>
