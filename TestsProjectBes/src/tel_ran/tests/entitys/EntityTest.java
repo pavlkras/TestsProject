@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -70,15 +71,17 @@ public class EntityTest {
 			jsonObj.put("amountOfQuestions",amountOfQuestions);
 			jsonObj.put("complexityLevel",complexityLevel);
 			jsonObj.put("amountOfCorrectAnswers",amountOfCorrectAnswers);
-			jsonObj.put("amountOfWrongAnswers",amountOfQuestions - amountOfCorrectAnswers);
-			String[] pictureBase64 = null;
+			jsonObj.put("persentOfRightAnswers",Math.round((float)amountOfCorrectAnswers/(float)amountOfQuestions*100));
+			JSONArray ar = new JSONArray();
 			if(!pictures.equals("")){
-			 	pictureBase64 = pictures.split(",");  
-				for(int i=0; i<pictureBase64.length; i++){
-					pictureBase64[i] = encodeToBase64(pictureBase64[i]);
+				String[] picturePaths = pictures.split(",");  
+				for(String path:picturePaths){
+					JSONObject pic = new JSONObject();
+					pic.put("picture", "data:image/jpeg;base64,"+ encodeToBase64(path));
+					ar.put(pic);	
 				}
 			}
-		 	jsonObj.put("picture", pictureBase64); 
+		 	jsonObj.put("pictures", ar); 
 		} catch (JSONException e) {}
 		return jsonObj.toString();
 	}
