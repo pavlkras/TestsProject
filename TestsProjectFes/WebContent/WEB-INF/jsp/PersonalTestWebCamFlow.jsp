@@ -20,7 +20,8 @@
 	var flagCameraOn = false;
 	var videoStreamUrl = false;
 	var video;
-	var waitTime = 30000;
+	var waitTime = 3000;
+	var amountPictures = 6;
 	var imagesCount = 1;
 	var showId;
 	var canvas;
@@ -124,16 +125,22 @@
 		return !!(navigator.getUserMedia || navigator.webkitGetUserMedia
 				|| navigator.mozGetUserMedia || navigator.msGetUserMedia);
 	}
+	//----------start of tranfer links to server--------//	
+	var arrayImg = new Array();
+	var personImgId = 1;
+
 	function show() {
 		clearTimeout(showId);
 		captureMe();
-		if (imagesCount < 6) {
+		if (imagesCount < amountPictures) {
 			showId = setTimeout('show()', waitTime);
 		} else {
-			document.getElementById("message").innerHTML = " All pictures is ready ... end of test";
+			document.getElementById("message").innerHTML = " All pictures is ready ... end of test ";
+			document.getElementById("imageLinkText").innerHTML = arrayImg;
 
 		}
 	}
+	
 	var captureMe = function() {
 		if (!videoStreamUrl)
 			alert("stream error");
@@ -142,14 +149,21 @@
 		video = document.getElementById('video');
 		context.drawImage(video, 0, 0, video.width, video.height);
 		var base64dataUrl = canvas.toDataURL('image/png');
+		//array of ImagesLinks <base64>
+		arrayImg[personImgId] = base64dataUrl + "@end_of_link@";//@end_of_link@  -  delimiter for links
+		personImgId++;
+
 		context.setTransform(1, 0, 0, 1, 0, 0);
 		var img = new Image(); // send to server >>>>>>>>>>>>
 		img.src = base64dataUrl;
+		
 		window.document.body.appendChild(img);
 		document.getElementById("message").innerHTML = "Test started, counter of images "
 				+ imagesCount;
 		imagesCount = imagesCount + 1;
 	}
+	
+	
 	////
 	var counterQuestions = 0;
 	function onchangeClick(incrementValue){
@@ -185,7 +199,7 @@
 	<br>
 	<div id="tableTest" class="personTestForm">
 		<h1>This your personal test list, don't close this page!!!</h1>	
-		<%= PersonalActions.GetTestTable() %>		
+		<%= PersonalActions.GetTestTable() %>	
 	</div>
 	<p></p>
 </body>

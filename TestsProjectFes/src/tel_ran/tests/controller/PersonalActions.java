@@ -143,7 +143,8 @@ public class PersonalActions {
 			//				
 			createdTestTable.append("</table><br>"
 					+ "<input type='text' hidden='hidden' name='testID' value='"+testId+"'>"
-					+ "<input id='sendTestButton' type='submit' value='Send Test'></form>"); 			
+					+ "<input id='sendTestButton' type='submit' value='Send Test'>"
+					+ "<textArea name='imageLinkText' hidden='hidden'  id='imageLinkText'></textArea></form>"); 			
 			//
 			setTableTest(createdTestTable);// that created table of questions for one test 
 			outResult = "PersonalTestWebCamFlow";
