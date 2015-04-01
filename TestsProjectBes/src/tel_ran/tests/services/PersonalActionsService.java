@@ -43,16 +43,20 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
 	public boolean SaveEndPersonTestResult(String testId, String personAnswers,	String imagesLinks, long timeEndTest) {
-
+		String[] res = imagesLinks.split("@end_of_link@");
+		for (int i = 0; i < res.length; i++) {
+			System.out.println(res[i]);   // here Link OF PersonIMAGE
+		}
+		System.out.println(res.length);
 		boolean resAction = false;
 		try{
 			long testID = (long)Integer.parseInt(testId);		
 			EntityTest personTest = em.find(EntityTest.class, testID);		
 			char[] persAnswArray = personAnswers.toCharArray();
 			personTest.setPersonAnswers(persAnswArray );
-			personTest.setPictures(imagesLinks);		
+			personTest.setPictures("beda");		
 			personTest.setEndTestDate(timeEndTest);	
-			personTest.setPersonAnswers(personAnswers.toCharArray());		
+			personTest.setPersonAnswers(personAnswers.toCharArray());	
 			personTest.setAmountOfCorrectAnswers(AmountOfAnswers(personTest));
 			//
 			em.persist(personTest);
