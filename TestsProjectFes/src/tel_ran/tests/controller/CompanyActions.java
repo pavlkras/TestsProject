@@ -31,8 +31,9 @@ public class CompanyActions {
 	private static int N_ROWS_CATEGORY = 10;
 	//
 	String companyName;
-	long companyId = -1;
-	//
+	//long companyId = -1;
+	long companyId;
+	
 	@Autowired
 	ICompanyActionsService companyService;
 	//
@@ -283,11 +284,12 @@ f)	5 photos made during the test	------ IGOR ------*/
 	@RequestMapping({"/view_results"})
 	public String viewResults(Model model){
 		//Code for testing
-		companyId = 8;
+		//companyId = 8;
 		
-		if(companyId != -1){
-			model.addAttribute("token", encodeToken(companyId));
-		}
+		//if(companyId != -1){
+		//	model.addAttribute("token", encodeToken(companyId));
+		//}
+		model.addAttribute("token", companyId);
 		return "CompanyViewTestsResults";
 	}
 	
