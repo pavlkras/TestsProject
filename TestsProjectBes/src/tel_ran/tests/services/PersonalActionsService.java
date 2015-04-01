@@ -43,11 +43,10 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
 	public boolean SaveEndPersonTestResult(String testId, String personAnswers,	String imagesLinks, long timeEndTest) {
-		String[] res = imagesLinks.split("@end_of_link@");
-		for (int i = 0; i < res.length; i++) {
-			System.out.println(res[i]);   // here Link OF PersonIMAGE
-		}
-		System.out.println(res.length);
+		String[] res = imagesLinks.split("@end_of_link@");  // here Links OF PersonIMAGE in array string as 1 string = 1 img link base64!!!
+		 System.out.println("length of array witch imglinks-" + res.length);	
+		 //TO DO method for work witch lincs.
+		////
 		boolean resAction = false;
 		try{
 			long testID = (long)Integer.parseInt(testId);		
