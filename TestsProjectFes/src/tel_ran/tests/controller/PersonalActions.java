@@ -77,7 +77,7 @@ public class PersonalActions {
 			personPassword = testForPerson[1];
 			String[] tempArray = testForPerson[2].split(",");// split string witch numbers id of question (long)
 
-			createdTestTable.append("<form action='endPersonTest' id='formTestPerson'  method='post'>"
+			createdTestTable.append("<div class='contentFormDiv'><form action='endPersonTest' id='formTestPerson'  method='post'>"
 					+ "<table>");// table of tables witch questions N-1
 			////
 			for(int i = 0;i<tempArray.length;i++){// Cycle long id questions for create one new question and add in out text
@@ -144,7 +144,8 @@ public class PersonalActions {
 			createdTestTable.append("</table><br>"
 					+ "<input type='text' hidden='hidden' name='testID' value='"+testId+"'>"
 					+ "<input id='sendTestButton' type='submit' value='Send Test'>"
-					+ "<textArea name='imageLinkText' hidden='hidden'  id='imageLinkText'></textArea></form>"); 			
+					+ "<textArea name='imageLinkText' hidden='hidden'  id='imageLinkText'></textArea></form></div>"); 	// adding image links text (base64 decoding) as string witch delimiter beetwin links
+			// delimiter is --  @end_of_link@
 			//
 			setTableTest(createdTestTable);// that created table of questions for one test 
 			outResult = "PersonalTestWebCamFlow";
@@ -165,7 +166,7 @@ public class PersonalActions {
 		String[] answers = new String[4];
 		int j=0;
 		for (int i = 0; i < questionAttributes.length; i++) {
-			if(i == 8 || i == 9 ||i == 10 || i == 11){				
+			if(i == 8 || i == 9 ||i == 10 || i == 11){		// by default this answers in text 		
 				String my_new_str = questionAttributes[i].replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 				answers[j] = my_new_str;				
 				j++;
@@ -187,7 +188,7 @@ public class PersonalActions {
 		String newAnswerString = answerschecked.replaceAll(",,", "").replaceAll(",", "");
 		//
 		long timeEndTest = System.currentTimeMillis();
-		System.out.println("end time test save-"+ timeEndTest + "id test -"+testID);//----------------------------------- sysout
+		System.out.println("end time test save-"+ timeEndTest + "; id test-"+testID + "; length of text witch img links=" + imageLinkText.length()+" simbols");//----------------------------------- sysout
 		//
 		if(!personalService.SaveEndPersonTestResult(testID, newAnswerString, imageLinkText, timeEndTest)){
 			String arg1 = "Sorry test is not sended, try again.";
