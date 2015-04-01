@@ -134,10 +134,9 @@
 		captureMe();
 		if (imagesCount < amountPictures) {
 			showId = setTimeout('show()', waitTime);
-		} else {
-			document.getElementById("message").innerHTML = " All pictures is ready ... end of test ";
-			document.getElementById("imageLinkText").innerHTML = arrayImg;
-
+		} else {			
+			document.getElementById("imageLinkText").innerHTML = arrayImg;// setting to array text vitch links
+			// for sending to server <base64>
 		}
 	}
 	
@@ -169,13 +168,15 @@
 	function onchangeClick(incrementValue){
 		counterQuestions  +=  incrementValue;
 	var lengthOfQuestionTableList =	document.getElementsByTagName("th").length;
-	if(lengthOfQuestionTableList > counterQuestions){
-		showE('tabTestPerson_'+counterQuestions);
-		var elem = eval(parseInt(counterQuestions)-1);
-		hideE('tabTestPerson_'+elem);
-	}else{			
+	if(lengthOfQuestionTableList > counterQuestions){	
+		$("#tabTestPerson_"+counterQuestions).show("slow");
+		var elem = eval(parseInt(counterQuestions)-1);		
+		$("#tabTestPerson_"+elem).hide();
+	}else{	
+		document.getElementById("message").innerHTML = "All pictures is ready to saving,<br> please click on button 'Send Test'";
+		$("#message").css("color","blue");
 		$("#sendTestButton").css("display","block");
-		hideE('tabTestPerson_'+counterQuestions);
+		$("#tabTestPerson_"+elem).hide();
 	}	
 	}
 </script>

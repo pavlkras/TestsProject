@@ -72,33 +72,45 @@ body {
 	font-family: "Abel", Helvetica, sans-serif;
 }
 
- .personTestForm {
+.personTestForm,.contentFormDiv{
+	left: 5em;
+	top: 15em;
+	position: absolute;
 	text-align: center;
-	
-} 
-
-.tableStyle{	
-	margin-left:10em;
+	width: 90%;
+	position: absolute;
+	text-align: center;
+	width: 90%;
+	height: 10%;
+}
+.tableStyle {
+	margin-left: 10em;
 	display: none;
 	float: left;
 }
-.questionTextStyle{
+
+.questionTextStyle {
 	font-family: sans-serif;
 	font-size: 2em;
-	color:blue;
+	color: blue;
 }
-.answersCharParam{
-	color:red;
+
+.answersCharParam {
+	color: red;
 }
-.textAnswerSpan{
-	color:blue;
+
+.textAnswerSpan {
+	color: blue;
 }
-#sendTestButton{
+
+#sendTestButton {
 	display: none;
 }
-p{
+
+p {
 	width: 50%;
 }
+
 .item {
 	display: inline-block;
 	width: 300px;
