@@ -59,8 +59,7 @@ public class EntityTest {
 			jsonObj.put("testid",testId);
 			jsonObj.put("testCategory",testCategory);
 			jsonObj.put("testName", testName);
-			DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-			jsonObj.put("testDate", df.format(testDate));
+			jsonObj.put("testDate", testDate);
 		} catch (JSONException e) {}
 		return jsonObj;
 	}
