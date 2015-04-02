@@ -1,7 +1,29 @@
 package tel_ran.tests.services;
 
+
+
+import java.util.Base64;
+
+
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 import tel_ran.tests.entitys.EntityTest;
 import tel_ran.tests.services.interfaces.IPersonalActionsService;
@@ -44,8 +66,8 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
 	public boolean SaveEndPersonTestResult(String testId, String personAnswers,	String imagesLinks, long timeEndTest) {
 		String[] res = imagesLinks.split("@end_of_link@");  // here Links OF PersonIMAGE in array string as 1 string = 1 img link base64!!!
-		 System.out.println("length of array witch imglinks-" + res.length);	
-		 //TO DO method for work witch lincs.
+		System.out.println("length of array witch imglinks-" + res.length);	
+		String links = getLinkImageFromBase64(res); //something.png,something.png
 		////
 		boolean resAction = false;
 		try{
@@ -53,7 +75,7 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 			EntityTest personTest = em.find(EntityTest.class, testID);		
 			char[] persAnswArray = personAnswers.toCharArray();
 			personTest.setPersonAnswers(persAnswArray );
-			personTest.setPictures("beda");		
+			personTest.setPictures(links);		
 			personTest.setEndTestDate(timeEndTest);	
 			personTest.setPersonAnswers(personAnswers.toCharArray());	
 			personTest.setAmountOfCorrectAnswers(AmountOfAnswers(personTest));
@@ -67,7 +89,23 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 
 		return resAction;
 	}
-	////
+
+	private String getLinkImageFromBase64(String [] res){
+		if(res!=null){
+			String [] decodedImages = decodeToBase64(res);
+		}
+		return null;
+	}
+
+
+	private String [] decodeToBase64(String[] res){
+		for(int i=0; i<res.length; i++){
+			res[i] = Base64.getDecoder().decode(res[i]).toString();  //decoding 
+		}
+		return res;
+	}
+	
+    ////
 	private int AmountOfAnswers(EntityTest personTest) {
 		char[] corrAns = personTest.getCorrectAnswers();
 		char[] persAns = personTest.getPersonAnswers();
@@ -79,5 +117,5 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 		}
 		return amountTrueAnswers;
 	}
-////------- Control mode Test for Person case ----------------// END //
+	////------- Control mode Test for Person case ----------------// END //
 }
