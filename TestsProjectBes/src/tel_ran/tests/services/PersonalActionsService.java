@@ -1,30 +1,7 @@
 package tel_ran.tests.services;
-
-
-
 import java.util.Base64;
-
-
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import tel_ran.tests.entitys.EntityTest;
 import tel_ran.tests.services.interfaces.IPersonalActionsService;
 
