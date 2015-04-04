@@ -72,8 +72,7 @@
 		<form action="add_from_file_actions" name="add_from_file_actions">
 			<input type="file" id="fileaddformInput" name="fileaddformInput"
 				onchange='openFile(event)'> <br>
-			<textArea hidden="hidden" name="textfromfile" id="hiddenTextFromFile"></textArea>
-			<!--  hidden="hidden" -->
+			<textArea hidden="hidden" name="textfromfile" id="hiddenTextFromFile"></textArea>			
 			<input type='submit' value="Send Questions">
 		</form>
 	</div>
