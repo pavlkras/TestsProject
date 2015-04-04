@@ -309,7 +309,7 @@ public class Maintenance {
 			List<String> res = new ArrayList<String>();
 			String[] lRes = textfromfile.split("  ");
 			for(int i = 0;i < lRes.length;i++){
-				System.out.println(lRes[i]+"--FES question from file adding to list string");
+			
 				res.add(lRes[i]);
 			}
 		try{		
