@@ -89,7 +89,7 @@
 											function(stream) {
 												videoStreamUrl = window.URL
 														.createObjectURL(stream);
-												// устанавливаем как источник для video 
+												//  video 
 												video.src = videoStreamUrl;
 												document
 														.getElementById("message").innerHTML = 'Camera is worked, please press link to begin the test';
