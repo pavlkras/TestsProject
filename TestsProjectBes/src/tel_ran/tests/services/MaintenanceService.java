@@ -167,10 +167,12 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		char correctAnswer = ' ';
 		int questionNumber = 0;
 		//
-		for(String line: inputTextFromFile){ 		
+		try{
+		for(String line: inputTextFromFile){ 
+			
 			String[] question_Parts = line.split(DELIMITER); //delimiter for text, from interface IMaintenanceService
 			//
-			if(question_Parts.length == 10){		
+			if(question_Parts.length > 6){		
 				questionText = question_Parts[0];
 				imageLink = question_Parts[1];			
 				category = question_Parts[2];
@@ -195,8 +197,13 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 				correctAnswer = question_Parts[4].charAt(0);						
 			}
 			//----------------------------------------------------------------------------------------------------------------------------// this default = 4  
-			flagAction = CreateNewQuestion(imageLink, questionText, category, levelOfDifficulty, answers, correctAnswer, questionNumber, NUMBERofRESPONSESinThePICTURE );	
+			CreateNewQuestion(imageLink, questionText, category, levelOfDifficulty, answers, correctAnswer, questionNumber, NUMBERofRESPONSESinThePICTURE );
 		}	
+		flagAction = true;
+		}catch(Exception e){
+			System.out.println("catch from adding from file method BES");
+		}
+		//
 		return flagAction;
 	}
 	////-------------- Reading from file and Adding Questions into DB Case ----------// END  //

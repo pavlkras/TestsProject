@@ -15,7 +15,3 @@ Are the expressions arr and &arr same for an array of 10 integers?----ImageLink_
 How will you free the allocated memory ?----ImageLink_0----C----1----remove(var-name);----free(var-name);----delete(var-name);----dalloc(var-name);----B----0
 Which of the following are correctly formed #define statements in C?----ImageLink_0----C----1----#define CUBE (X) (X*X*X);----#define CUBE(x) (X*X*X)----#define CUBE(X)(X*X*X)----#define CUBE(X) {X*X*X}----C----0
 A preprocessor directive is a message from compiler to a linker?----ImageLink_0----C----1----True----False----0----0----B----0
-test?----ImageLink_0----C----1----B----24
-test?----ImageLink_0----C----1----B----24
-test?----ImageLink_0----C----1----B----24
-test?----ImageLink_0----C----1----B----24
