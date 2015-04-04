@@ -42,39 +42,49 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	//
 	@Override
 	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW) 
-	public boolean CreateNewQuestion(String imageLink, String questionText, String category, int complexityLevel, List<String> answers, char correctAnswer,int questionNumber, int numberOfResponsesInThePicture) {
+	public boolean CreateNewQuestion(String imageLink, String questionText, 
+			String category, int complexityLevel, List<String> answers, 
+			char correctAnswer,int questionNumber, int numberOfResponsesInThePicture) throws javax.persistence.RollbackException {
 		////
 		boolean flagAction = false;	
 		long keyQuestion = 0;
 		EntityQuestion objectQuestion;		
-		////		
-		if((objectQuestion = em.find(EntityQuestion.class,(long) questionNumber)) == null){		
-			objectQuestion = new EntityQuestion();	
-			objectQuestion.setQuestionText(questionText);		
-			em.persist(objectQuestion);// sending to database (commit) TO DO -- if Question exist bat!!! em.find(EntityQuestion.class,(long) questionNumber)) returned  null !!!
-			//
-			keyQuestion = objectQuestion.getId(); 
-			//
-			List<EntityQuestionAttributes> questionAttributes = new ArrayList<EntityQuestionAttributes>();
-			EntityQuestionAttributes qattr = addQuestionAttributes(imageLink, category,  complexityLevel, correctAnswer,answers, keyQuestion,numberOfResponsesInThePicture);
-			questionAttributes.add(qattr);
-			//
-			objectQuestion.setQuestionAttributes(questionAttributes);
-			//
-			em.persist(objectQuestion);
-			flagAction = true;			
-		}else{	
-			keyQuestion = objectQuestion.getId(); 
-			//
-			List<EntityQuestionAttributes> questionAttributes = objectQuestion.getQuestionAttributes();
-			EntityQuestionAttributes qattr = addQuestionAttributes(imageLink, category,  complexityLevel, correctAnswer,answers, keyQuestion,numberOfResponsesInThePicture);
-			questionAttributes.add(qattr);
-			objectQuestion.setQuestionAttributes(questionAttributes);
-			em.persist(objectQuestion);
-			flagAction = true;
-		}
-		em.clear();	
+		////	
+		try{	
+			if((objectQuestion = em.find(EntityQuestion.class,(long) questionNumber)) == null){		
+				objectQuestion = new EntityQuestion();	
+				objectQuestion.setQuestionText(questionText);	
 
+				em.persist(objectQuestion);// sending to database (commit) TO DO -- if Question exist bat!!! em.find(EntityQuestion.class,(long) questionNumber)) returned  null !!!
+				//
+
+				keyQuestion = objectQuestion.getId(); 
+				//
+				List<EntityQuestionAttributes> questionAttributes = new ArrayList<EntityQuestionAttributes>();
+				EntityQuestionAttributes qattr = addQuestionAttributes(imageLink, category,  complexityLevel, correctAnswer,answers, keyQuestion,numberOfResponsesInThePicture);
+				questionAttributes.add(qattr);
+				//
+				objectQuestion.setQuestionAttributes(questionAttributes);
+				//
+				em.persist(objectQuestion);
+				flagAction = true;			
+			}else{	
+				keyQuestion = objectQuestion.getId(); 
+				//
+				List<EntityQuestionAttributes> questionAttributes = objectQuestion.getQuestionAttributes();
+				EntityQuestionAttributes qattr = addQuestionAttributes(imageLink, category,  complexityLevel, correctAnswer,answers, keyQuestion,numberOfResponsesInThePicture);
+				questionAttributes.add(qattr);
+				objectQuestion.setQuestionAttributes(questionAttributes);
+				em.persist(objectQuestion);
+				flagAction = true;
+			}
+			em.clear();	
+		}catch(javax.persistence.PersistenceException e){
+			flagAction = false;
+		}catch(org.hibernate.exception.ConstraintViolationException e){
+			flagAction = false;
+		}
+		//
 		return flagAction;
 	}
 	////
@@ -121,7 +131,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 
 	@Override
 	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW)	
-	public boolean ModuleForBuildingQuestions(String byCategory, int nQuestions) {
+	public boolean ModuleForBuildingQuestions(String byCategory, int nQuestions) throws javax.persistence.RollbackException {
 		//question text|| image link || category of question || level of complexity || correct answer char || number of question text if exist question in db witch that text || number answers on image ( A,B or A,B,C,D and ...) |
 		/*Sample - String[] question = {"What Wrong witch Code:","E11842F520AE11842F520AA24589A2458992AE532883CFA45EE4.png","logical","1","E","0","2"}; ////,"a51","a52","a53","a54" ??*/
 		////	question.length = 7
@@ -144,31 +154,48 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	////-------------- Reading from file and Adding Questions into DB Case ----------// BEGIN  //
 	@Override
 	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW)	
-	public boolean FillDataBaseFromTextResource(List<String> inputTextFromFile) {
+	public boolean FillDataBaseFromTextResource(List<String> inputTextFromFile) throws javax.persistence.RollbackException {
 		//sample for text in file question(one line!!!)
 		//questionText----imageLink----category----levelOfDifficulty----answer1----answer2----answer3----answer4----correctAnswerChar----questionIndexNumber
 		//		
 		boolean flagAction = false;
+		String imageLink = "";
+		String questionText = "";
+		String category = "";
+		int levelOfDifficulty = 1;
+		List<String> answers = null;
+		char correctAnswer = ' ';
+		int questionNumber = 0;
 		//
-		for(String line: inputTextFromFile){ 
-			//
+		for(String line: inputTextFromFile){ 		
 			String[] question_Parts = line.split(DELIMITER); //delimiter for text, from interface IMaintenanceService
 			//
-			String questionText = question_Parts[0];
-			String imageLink = question_Parts[1];			
-			String category = question_Parts[2];
-			int complexityLevel = Integer.parseInt(question_Parts[3]);
-			//
-			List<String> answers = new ArrayList<String>();
-			answers.add(question_Parts[4]);	
-			answers.add(question_Parts[5]);
-			answers.add(question_Parts[6]);
-			answers.add(question_Parts[7]);			
-			//
-			char correctAnswer = question_Parts[8].charAt(0);
-			int questionNumber = Integer.parseInt(question_Parts[9]);
-						//
-			flagAction = CreateNewQuestion(imageLink, questionText, category, complexityLevel, answers, correctAnswer, questionNumber, NUMBERofRESPONSESinThePICTURE );			
+			if(question_Parts.length == 10){		
+				questionText = question_Parts[0];
+				imageLink = question_Parts[1];			
+				category = question_Parts[2];
+				levelOfDifficulty = Integer.parseInt(question_Parts[3]);
+				//
+				answers = new ArrayList<String>();									
+				answers.add(question_Parts[4]);	
+				answers.add(question_Parts[5]);
+				answers.add(question_Parts[6]);
+				answers.add(question_Parts[7]);				
+				//
+				correctAnswer = question_Parts[8].charAt(0);
+				questionNumber = 0;				
+			}else{
+				//if question exist method added only new attributes for this question
+				//else if question not exist method added a new question full
+				questionNumber = Integer.parseInt(question_Parts[5]);	
+				questionText = question_Parts[0];
+				imageLink = question_Parts[1];			
+				category = question_Parts[2];
+				levelOfDifficulty = Integer.parseInt(question_Parts[3]);
+				correctAnswer = question_Parts[4].charAt(0);						
+			}
+			//----------------------------------------------------------------------------------------------------------------------------// this default = 4  
+			flagAction = CreateNewQuestion(imageLink, questionText, category, levelOfDifficulty, answers, correctAnswer, questionNumber, NUMBERofRESPONSESinThePICTURE );	
 		}	
 		return flagAction;
 	}
@@ -210,7 +237,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	////-------------- Method for delete question into DB ----------// BEGIN  //
 	@Override
 	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW)	
-	public String deleteQuetionById(String questionID){
+	public String deleteQuetionById(String questionID) throws javax.persistence.RollbackException {
 		String outMessageTextToJSP_Page = "";
 		try {
 			long id = Integer.parseInt(questionID);		
@@ -252,7 +279,8 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	////
 	/////-------------- Update  ONE Question into DB Case ----------// BEGIN  //
 	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW)	
-	public boolean UpdateTextQuestionInDataBase(String questionID, String imageLink, String questionText, String category, int complexityLevel, List<String> answers, char correctAnswer) {
+	public boolean UpdateTextQuestionInDataBase(String questionID, String imageLink, String questionText, 
+			String category, int complexityLevel, List<String> answers, char correctAnswer) throws javax.persistence.RollbackException{
 		boolean flagAction = false;
 		//
 		long id = (long)Integer.parseInt(questionID);
