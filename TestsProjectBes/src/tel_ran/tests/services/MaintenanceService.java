@@ -167,9 +167,9 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		char correctAnswer = ' ';
 		int questionNumber = 0;
 		//
-		try{
+		try{			
 		for(String line: inputTextFromFile){ 
-			
+			System.out.println("line--"+line);
 			String[] question_Parts = line.split(DELIMITER); //delimiter for text, from interface IMaintenanceService
 			//
 			if(question_Parts.length > 6){		
@@ -244,7 +244,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	////-------------- Method for delete question into DB ----------// BEGIN  //
 	@Override
 	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW)	
-	public String deleteQuetionById(String questionID) throws javax.persistence.RollbackException {
+	public String deleteQuetionById(String questionID){
 		String outMessageTextToJSP_Page = "";
 		try {
 			long id = Integer.parseInt(questionID);		
@@ -287,7 +287,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	/////-------------- Update  ONE Question into DB Case ----------// BEGIN  //
 	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW)	
 	public boolean UpdateTextQuestionInDataBase(String questionID, String imageLink, String questionText, 
-			String category, int complexityLevel, List<String> answers, char correctAnswer) throws javax.persistence.RollbackException{
+			String category, int complexityLevel, List<String> answers, char correctAnswer){
 		boolean flagAction = false;
 		//
 		long id = (long)Integer.parseInt(questionID);
