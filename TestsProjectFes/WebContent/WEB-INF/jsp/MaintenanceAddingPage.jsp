@@ -77,7 +77,7 @@ function FileReadeFunctionCalling(){
 </head>
 <body>		
     <p>Creating new Question </p>
-	<form action="add_actions">
+	<form action="add_actions" method="post">
 	
 	<table>
 	<tr>
