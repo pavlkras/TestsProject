@@ -38,8 +38,8 @@ public class EntityQuestionAttributes implements Serializable {
 	@Column(name = "category")
 	private String category;
 	////
-	@Column(name = "complexityLevel")
-	private int complexityLevel;
+	@Column(name = "levelOfDifficulty")
+	private int levelOfDifficulty;
 	////
 	@Column(name = "correctAnswer")
 	private char correctAnswer;
@@ -53,37 +53,30 @@ public class EntityQuestionAttributes implements Serializable {
 	public void setQuestionId(EntityQuestion questionId) {
 		this.questionId = questionId;
 	}
-	////
 	public String getImageLink() {
 		return imageLink;
 	}
 	public void setImageLink(String imageLink) {
 		this.imageLink = imageLink;
 	}
-	////
 	public String getCategory() {
 		return category;
 	}
 	public void setCategory(String category) {
 		this.category = category;
 	}
-	////
-	public int getComplexityLevel() {
-		return complexityLevel;
+	public int getLevelOfDifficulty() {
+		return levelOfDifficulty;
 	}
-	public void setComplexityLevel(int complexityLevel) {
-		this.complexityLevel = complexityLevel;
+	public void setLevelOfDifficulty(int levelOfDifficulty) {
+		this.levelOfDifficulty = levelOfDifficulty;
 	}
-	////
 	public char getCorrectAnswer() {
 		return correctAnswer;
 	}
 	public void setCorrectAnswer(char correctAnswer) {
 		this.correctAnswer = correctAnswer;
 	}
-	////
-	
-	////
 	public List<EntityAnswersText> getQuestionAnswersList() {
 		return questionAnswersList;
 	}
@@ -96,7 +89,6 @@ public class EntityQuestionAttributes implements Serializable {
 	public void setQuestionAnswersList(List<EntityAnswersText> questionAnswers) {
 		this.questionAnswersList = questionAnswers;
 	}
-	////
 	public long getId() {
 		return id;
 	}
@@ -106,7 +98,7 @@ public class EntityQuestionAttributes implements Serializable {
 		return questionId.getId()
 				+ IMaintenanceService.DELIMITER + imageLink 
 				+ IMaintenanceService.DELIMITER + category
-				+ IMaintenanceService.DELIMITER + complexityLevel
+				+ IMaintenanceService.DELIMITER + levelOfDifficulty
 				+ IMaintenanceService.DELIMITER + correctAnswer
 				+ IMaintenanceService.DELIMITER + numberOfResponsesInThePicture;
 	}

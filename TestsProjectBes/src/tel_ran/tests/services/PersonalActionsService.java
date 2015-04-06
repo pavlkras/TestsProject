@@ -9,7 +9,7 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 
 	////------- Control mode Test for Person case ----------------// BEGIN //
 	@Override
-	public String[] GetTestForPerson(String testId) {	
+	public String[] GetTestForPerson(String testId) {	// creation test for person
 		long testID = (long)Integer.parseInt(testId);		
 		EntityTest personTest = em.find(EntityTest.class, testID);		
 		int peRson = personTest.getEntityPerson().getPersonId();
@@ -18,12 +18,11 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 		String[] outResult = {peRson+"", pass, idQuestionsForTheTest};
 		return outResult;
 	}
-	////	
+	//// ------------------- save starting test	parameters
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
 	public boolean SaveStartPersonTestParam(String testId, String correctAnswers, long timeStartTest) {
 		boolean resAction = false;
-
 		try{
 			long testID = (long)Integer.parseInt(testId);		
 			EntityTest personTest = em.find(EntityTest.class, testID);		
@@ -38,12 +37,12 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 		}
 		return resAction;
 	}
-	////
+	//// ------------------- save ending test parameters
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
 	public boolean SaveEndPersonTestResult(String testId, String personAnswers,	String imagesLinks, long timeEndTest) {
 		String[] res = imagesLinks.split("@end_of_link@");  // here Links OF PersonIMAGE in array string as 1 string = 1 img link base64!!!
-		System.out.println("length of array witch imglinks-" + res.length);	
+		System.out.println("length of array witch imglinks-" + res.length);	//---------------------------------------------------------------------sysout
 		String links = getLinkImageFromBase64(res); //something.png,something.png
 		////
 		boolean resAction = false;
@@ -63,26 +62,9 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 			//e.printStackTrace();
 			System.out.println("catch save end test");
 		}
-
 		return resAction;
 	}
-
-	private String getLinkImageFromBase64(String [] res){
-		if(res!=null){
-			String [] decodedImages = decodeToBase64(res);
-		}
-		return null;
-	}
-
-
-	private String [] decodeToBase64(String[] res){
-		for(int i=0; i<res.length; i++){
-			res[i] = Base64.getDecoder().decode(res[i]).toString();  //decoding 
-		}
-		return res;
-	}
-	
-    ////
+	////  --------- auxiliary internal method
 	private int AmountOfAnswers(EntityTest personTest) {
 		char[] corrAns = personTest.getCorrectAnswers();
 		char[] persAns = personTest.getPersonAnswers();
@@ -95,4 +77,26 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 		return amountTrueAnswers;
 	}
 	////------- Control mode Test for Person case ----------------// END //
+
+	////------- decoding and save images  ---------------// Begin //
+	private String getLinkImageFromBase64(String [] res){
+		String outLinkText = " , , , , , ";// stub empty images links
+		
+		/*if(res!=null){
+			String [] decodedImages = decodeToBase64(res);
+			System.out.println("decodedImages length-"+decodedImages.length);
+		}*/
+		
+		return outLinkText;
+	}
+	////
+	private String [] decodeToBase64(String[] res){
+		String [] outRes = new String[res.length];
+		for(int i=0; i<res.length; i++){
+			outRes[i] = Base64.getDecoder().decode(res[i]).toString();  //decoding 
+			System.out.println("outRes[i]=="+outRes[i]);
+		}
+		return outRes;
+	}
+	////------- decoding and save images ----------------// END //
 }

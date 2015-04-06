@@ -73,7 +73,7 @@ public class UserActionService extends TestsPersistence implements IUserActionSe
 	////
 	@Override
 	public List<String> getComplexityLevelList() {
-		String query = "Select DISTINCT q.complexityLevel FROM EntityQuestionAttributes q ORDER BY q.complexityLevel";
+		String query = "Select DISTINCT q.levelOfDifficulty FROM EntityQuestionAttributes q ORDER BY q.levelOfDifficulty";
 		Query q = em.createQuery(query);
 		List<String> allLevels = q.getResultList();
 		return allLevels;
@@ -82,7 +82,7 @@ public class UserActionService extends TestsPersistence implements IUserActionSe
 	@Override
 	public String getMaxCategoryLevelQuestions(String catName,
 			String complexityLevel) {
-		String query = "SELECT q FROM EntityQuestionAttributes q WHERE q.category=?1 AND q.complexityLevel=?2";
+		String query = "SELECT q FROM EntityQuestionAttributes q WHERE q.category=?1 AND q.levelOfDifficulty=?2";
 		Query q = em.createQuery(query);
 		q.setParameter(1, catName);
 		q.setParameter(2, Integer.parseInt(complexityLevel));
@@ -93,7 +93,7 @@ public class UserActionService extends TestsPersistence implements IUserActionSe
 	////
 	@Override
 	public String getMaxCategoryQuestions(String catName, String level) {
-		String query = "SELECT q FROM EntityQuestionAttributes q WHERE q.category=?1 AND q.complexityLevel=?2";
+		String query = "SELECT q FROM EntityQuestionAttributes q WHERE q.category=?1 AND q.levelOfDifficulty=?2";
 		Query q = em.createQuery(query);
 		q.setParameter(1, catName);
 		q.setParameter(2, Integer.parseInt(level));
@@ -104,7 +104,7 @@ public class UserActionService extends TestsPersistence implements IUserActionSe
 	////	
 	@Override
 	public String getTraineeQuestions(String category, int level, int qAmount) {
-		String query = "SELECT q FROM EntityQuestionAttributes q WHERE q.category=?1 AND q.complexityLevel=?2";
+		String query = "SELECT q FROM EntityQuestionAttributes q WHERE q.category=?1 AND q.levelOfDifficulty=?2";
 		Query q = em.createQuery(query);
 		q.setParameter(1, category);
 		q.setParameter(2, level);

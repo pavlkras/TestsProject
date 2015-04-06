@@ -43,52 +43,55 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	@Override
 	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW) 
 	public boolean CreateNewQuestion(String imageLink, String questionText, 
-			String category, int complexityLevel, List<String> answers, 
-			char correctAnswer,int questionNumber, int numberOfResponsesInThePicture) throws javax.persistence.RollbackException {
+			String category, int levelOfDifficulty, List<String> answers, 
+			char correctAnswer,int questionNumber, int numberOfResponsesInThePicture){
 		////
 		boolean flagAction = false;	
 		long keyQuestion = 0;
-		EntityQuestion objectQuestion;		
-		////	
-		try{	
-			if((objectQuestion = em.find(EntityQuestion.class,(long) questionNumber)) == null){		
-				objectQuestion = new EntityQuestion();	
-				objectQuestion.setQuestionText(questionText);	
-
-				em.persist(objectQuestion);// sending to database (commit) TO DO -- if Question exist bat!!! em.find(EntityQuestion.class,(long) questionNumber)) returned  null !!!
-				//
-
-				keyQuestion = objectQuestion.getId(); 
-				//
-				List<EntityQuestionAttributes> questionAttributes = new ArrayList<EntityQuestionAttributes>();
-				EntityQuestionAttributes qattr = addQuestionAttributes(imageLink, category,  complexityLevel, correctAnswer,answers, keyQuestion,numberOfResponsesInThePicture);
-				questionAttributes.add(qattr);
-				//
-				objectQuestion.setQuestionAttributes(questionAttributes);
-				//
-				em.persist(objectQuestion);
-				flagAction = true;			
-			}else{	
-				keyQuestion = objectQuestion.getId(); 
-				//
-				List<EntityQuestionAttributes> questionAttributes = objectQuestion.getQuestionAttributes();
-				EntityQuestionAttributes qattr = addQuestionAttributes(imageLink, category,  complexityLevel, correctAnswer,answers, keyQuestion,numberOfResponsesInThePicture);
-				questionAttributes.add(qattr);
-				objectQuestion.setQuestionAttributes(questionAttributes);
-				em.persist(objectQuestion);
-				flagAction = true;
-			}
-			em.clear();	
-		}catch(javax.persistence.PersistenceException e){
-			flagAction = false;
-		}catch(org.hibernate.exception.ConstraintViolationException e){
-			flagAction = false;
+		EntityQuestion objectQuestion;	
+		Object queryTempObj;
+		//// query if question exist as text in Data Base
+		Query tempRes = em.createQuery("SELECT q FROM EntityQuestion q WHERE q.questionText='"+questionText+"'");
+		try{
+			tempRes.getSingleResult();
+			queryTempObj = tempRes.getSingleResult();				
+		}catch(javax.persistence.NoResultException e){
+			queryTempObj = null;			
 		}
-		//
+		//// if question not exist in DB creating a new question full flow
+		if(queryTempObj == null && em.find(EntityQuestion.class,(long) questionNumber) == null){				
+			objectQuestion = new EntityQuestion();	
+			objectQuestion.setQuestionText(questionText);	
+			em.persist(objectQuestion);
+			//
+			keyQuestion = objectQuestion.getId(); 
+			//
+			List<EntityQuestionAttributes> questionAttributes = new ArrayList<EntityQuestionAttributes>();
+			EntityQuestionAttributes qattr = addQuestionAttributes(imageLink, category,  levelOfDifficulty, correctAnswer,answers, keyQuestion,numberOfResponsesInThePicture);
+			questionAttributes.add(qattr);
+			//
+			objectQuestion.setQuestionAttributes(questionAttributes);
+			//
+			em.persist(objectQuestion);
+			flagAction = true;			
+		}
+		////  if the question exists, create new attributes question and add in DB in to question by 'questionNumber' thet ID of question
+		if(queryTempObj != null && (objectQuestion = em.find(EntityQuestion.class,(long) questionNumber)) != null){	
+			keyQuestion = objectQuestion.getId(); 
+			//
+			List<EntityQuestionAttributes> questionAttributes = objectQuestion.getQuestionAttributes();
+			EntityQuestionAttributes qattr = addQuestionAttributes(imageLink, category,  levelOfDifficulty, correctAnswer,answers, keyQuestion,numberOfResponsesInThePicture);
+			questionAttributes.add(qattr);
+			objectQuestion.setQuestionAttributes(questionAttributes);
+			em.persist(objectQuestion);
+			flagAction = true;
+		}
+		em.clear();	
+		//		
 		return flagAction;
 	}
 	////
-	private EntityQuestionAttributes addQuestionAttributes(String imageLink, String category, int complexityLevel, char correctAnswer, List<String> answers, long keyQuestion, int numberOfResponsesInThePicture) {
+	private EntityQuestionAttributes addQuestionAttributes(String imageLink, String category, int levelOfDifficulty, char correctAnswer, List<String> answers, long keyQuestion, int numberOfResponsesInThePicture) {
 		EntityQuestionAttributes questionAttributesList = new EntityQuestionAttributes();
 		EntityQuestion objectQuestion = em.find(EntityQuestion.class, keyQuestion);			
 		////
@@ -97,7 +100,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		}
 		////
 		questionAttributesList.setCategory(category);
-		questionAttributesList.setComplexityLevel(complexityLevel);
+		questionAttributesList.setLevelOfDifficulty(levelOfDifficulty);
 		questionAttributesList.setCorrectAnswer(correctAnswer);
 		questionAttributesList.setNumberOfResponsesInThePicture(numberOfResponsesInThePicture);
 		questionAttributesList.setQuestionId(objectQuestion);	
@@ -131,7 +134,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 
 	@Override
 	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW)	
-	public boolean ModuleForBuildingQuestions(String byCategory, int nQuestions) throws javax.persistence.RollbackException {
+	public boolean ModuleForBuildingQuestions(String byCategory, int nQuestions) {
 		//question text|| image link || category of question || level of complexity || correct answer char || number of question text if exist question in db witch that text || number answers on image ( A,B or A,B,C,D and ...) |
 		/*Sample - String[] question = {"What Wrong witch Code:","E11842F520AE11842F520AA24589A2458992AE532883CFA45EE4.png","logical","1","E","0","2"}; ////,"a51","a52","a53","a54" ??*/
 		////	question.length = 7
@@ -154,7 +157,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	////-------------- Reading from file and Adding Questions into DB Case ----------// BEGIN  //
 	@Override
 	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW)	
-	public boolean FillDataBaseFromTextResource(List<String> inputTextFromFile) throws javax.persistence.RollbackException {
+	public boolean FillDataBaseFromTextResource(List<String> inputTextFromFile){
 		//sample for text in file question(one line!!!)
 		//questionText----imageLink----category----levelOfDifficulty----answer1----answer2----answer3----answer4----correctAnswerChar----questionIndexNumber
 		//		
@@ -168,39 +171,38 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		int questionNumber = 0;
 		//
 		try{			
-		for(String line: inputTextFromFile){ 
-			System.out.println("line--"+line);
-			String[] question_Parts = line.split(DELIMITER); //delimiter for text, from interface IMaintenanceService
-			//
-			if(question_Parts.length > 6){		
-				questionText = question_Parts[0];
-				imageLink = question_Parts[1];			
-				category = question_Parts[2];
-				levelOfDifficulty = Integer.parseInt(question_Parts[3]);
+			for(String line: inputTextFromFile){ 			
+				String[] question_Parts = line.split(DELIMITER); //delimiter for text, from interface IMaintenanceService
 				//
-				answers = new ArrayList<String>();									
-				answers.add(question_Parts[4]);	
-				answers.add(question_Parts[5]);
-				answers.add(question_Parts[6]);
-				answers.add(question_Parts[7]);				
-				//
-				correctAnswer = question_Parts[8].charAt(0);
-				questionNumber = 0;				
-			}else{
-				//if question exist method added only new attributes for this question
-				//else if question not exist method added a new question full
-				questionNumber = Integer.parseInt(question_Parts[5]);	
-				questionText = question_Parts[0];
-				imageLink = question_Parts[1];			
-				category = question_Parts[2];
-				levelOfDifficulty = Integer.parseInt(question_Parts[3]);
-				correctAnswer = question_Parts[4].charAt(0);						
-			}
-			//----------------------------------------------------------------------------------------------------------------------------// this default = 4  
-			CreateNewQuestion(imageLink, questionText, category, levelOfDifficulty, answers, correctAnswer, questionNumber, NUMBERofRESPONSESinThePICTURE );
-		}	
-		flagAction = true;
+				if(question_Parts.length > 6){		
+					questionText = question_Parts[0];
+					imageLink = question_Parts[1];			
+					category = question_Parts[2];
+					levelOfDifficulty = Integer.parseInt(question_Parts[3]);
+					//
+					answers = new ArrayList<String>();									
+					answers.add(question_Parts[4]);	
+					answers.add(question_Parts[5]);
+					answers.add(question_Parts[6]);
+					answers.add(question_Parts[7]);				
+					//
+					correctAnswer = question_Parts[8].charAt(0);
+					questionNumber = 0;				
+				}else{
+					//if question exist method added only new attributes for this question
+					//else if question not exist method added a new question full
+					questionNumber = Integer.parseInt(question_Parts[5]);	
+					questionText = question_Parts[0];
+					imageLink = question_Parts[1];			
+					category = question_Parts[2];
+					levelOfDifficulty = Integer.parseInt(question_Parts[3]);
+					correctAnswer = question_Parts[4].charAt(0);						
+				}
+				//-------------------------------------------------------------------------------------------------------------------// this default = 4  
+				flagAction = CreateNewQuestion(imageLink, questionText, category, levelOfDifficulty, answers, correctAnswer, questionNumber, NUMBERofRESPONSESinThePICTURE );
+			}			
 		}catch(Exception e){
+			e.printStackTrace();
 			System.out.println("catch from adding from file method BES");
 		}
 		//
@@ -214,17 +216,21 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		long id = (long)Integer.parseInt(questionID);
 		//
 		EntityQuestion question = em.find(EntityQuestion.class, id);
-		outRes.append(question + DELIMITER);
-		//
-		List<EntityQuestionAttributes> attr = question.getQuestionAttributes();
-		for(EntityQuestionAttributes textAttr:attr){
-			outRes.append(textAttr + DELIMITER);		
-			List<EntityAnswersText> answers = textAttr.getQuestionAnswersList();
-			if(answers != null){
-				for(EntityAnswersText tAn :answers){
-					outRes.append(tAn + DELIMITER);	
-				}
-			}		
+		if(question != null){
+			outRes.append(question + DELIMITER);
+			//
+			List<EntityQuestionAttributes> attr = question.getQuestionAttributes();
+			for(EntityQuestionAttributes textAttr:attr){
+				outRes.append(textAttr + DELIMITER);		
+				List<EntityAnswersText> answers = textAttr.getQuestionAnswersList();
+				if(answers != null){
+					for(EntityAnswersText tAn :answers){
+						outRes.append(tAn + DELIMITER);	
+					}
+				}		
+			}
+		}else{
+			outRes.append("wrong request q.Id-"+questionID);// out text stub for tests 
 		}
 		return outRes.toString();// return to client 
 	}
@@ -271,23 +277,47 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		return outMessageTextToJSP_Page ;// return to client 
 	}
 	////-------------- Method for delete question into DB ----------// END  //
+
 	////-------------- Search Method by Category or Categories and level of difficulty ----------// BEGIN  //
 	@SuppressWarnings("unchecked")		
-	public List<String> SearchAllQuestionInDataBase(String category, int complexityLevel) {	
+	public List<String> SearchAllQuestionInDataBase(String category, int levelOfDifficulty) {			
 		List<String> outResult = new ArrayList<String>();
-		List<EntityQuestionAttributes> result = em.createQuery(	"SELECT c FROM EntityQuestionAttributes c WHERE c.category LIKE :custName").setParameter("custName","%"+category+"%").getResultList();
-		for(EntityQuestionAttributes q: result){
-			// TO DO query get by category and level of difficulty 
-			outResult.add(q.getQuestionId().getQuestionText() + IMaintenanceService.DELIMITER + q.toString());			
+		////
+		if(category != null && !category.equalsIgnoreCase("")){
+			String[] tempCat_1 = category.split(",");
+			StringBuffer[] tempCat_2 = new StringBuffer[tempCat_1.length];
+			StringBuffer condition = new StringBuffer();
+			for(int i=0; i<tempCat_1.length; i++){
+				String str = tempCat_1[i] + "%";
+				tempCat_2[i] = new StringBuffer(str);
+				if(i < (tempCat_1.length - 1)){
+					condition.append("(c.category LIKE ?" + (i+2) + ") OR "); 
+				}
+				else{
+					condition.append("(c.category LIKE ?" + (i+2) + ")");
+				}
+			}
+			Query query = em.createQuery("SELECT c.id FROM EntityQuestionAttributes c WHERE (c.levelOfDifficulty=?1) AND (" + condition.toString() + ")");
+			query.setParameter(1, levelOfDifficulty);
+			for(int i=0; i<tempCat_1.length; i++){
+				query.setParameter((i+2), tempCat_2[i].toString());
+			}
+			List<Long> result = query.getResultList();			
+			for(Long qN: result){
+				String q = getQuestionById(qN.toString());				
+				outResult.add(q);
+			}
+		}else{
+			outResult = null;
 		}
 		return outResult;// return to client 
 	}
 	////-------------- Search Method by Category or Categories and level of difficulty ----------// END  //
-	////
+
 	/////-------------- Update  ONE Question into DB Case ----------// BEGIN  //
 	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW)	
 	public boolean UpdateTextQuestionInDataBase(String questionID, String imageLink, String questionText, 
-			String category, int complexityLevel, List<String> answers, char correctAnswer){
+			String category, int levelOfDifficulty, List<String> answers, char correctAnswer){
 		boolean flagAction = false;
 		//
 		long id = (long)Integer.parseInt(questionID);
@@ -301,7 +331,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 				qattr.setCategory(category);
 				qattr.setCorrectAnswer(correctAnswer);
 				qattr.setImageLink(imageLink);
-				qattr.setComplexityLevel(complexityLevel);
+				qattr.setLevelOfDifficulty(levelOfDifficulty);
 				//
 				if(answers != null){
 					List<EntityAnswersText> answersList = qattr.getQuestionAnswersList();	 	
@@ -327,11 +357,11 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	////-------------- Method for test case group AlexFoox Company return id of unique set questions ----------// BEGIN  //
 	@SuppressWarnings("unchecked")	
 	@Override  
-	public List<Long> getUniqueSetQuestionsForTest(String category,String level,Long nQuestion){
+	public List<Long> getUniqueSetQuestionsForTest(String category,String levelOfDifficulty,Long nQuestion){
 		List<Long> outRes = new ArrayList<Long>();	
 		if(nQuestion > 0){
 			try{
-				int levelQuestion = Integer.parseInt(level);
+				int levelQuestion = Integer.parseInt(levelOfDifficulty);
 				int numbQuestions = nQuestion.intValue();
 				String[] categories = category.split(",");
 				StringBuffer[] categories1 = new StringBuffer[categories.length];
@@ -346,7 +376,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 						condition.append("(c.category LIKE ?" + (i+2) + ")");
 					}
 				}
-				Query query = em.createQuery("SELECT c.id FROM EntityQuestionAttributes c WHERE (c.complexityLevel=?1) AND (" + condition.toString() + ")");
+				Query query = em.createQuery("SELECT c.id FROM EntityQuestionAttributes c WHERE (c.levelOfDifficulty=?1) AND (" + condition.toString() + ")");
 				query.setParameter(1, levelQuestion);
 				for(int i=0; i<categories.length; i++){
 					query.setParameter((i+2), categories1[i].toString());
