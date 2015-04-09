@@ -25,7 +25,9 @@
 <script src="/TestsProjectFes/static_js/js/viewresultsjs/date-parser.js"></script>
 <script src="/TestsProjectFes/static_js/js/viewresultsjs/ngDialog.min.js"></script>
 <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.12.1.js"></script>
-<link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">       
+<link href="http://mgcrea.github.io/angular-strap/styles/libs.min.css" rel="stylesheet">
+
+<link href="http://cdn.jsdelivr.net/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">       
 <title>View tests results</title>
 </head>
 <body>
@@ -48,7 +50,7 @@
 						<div class='col-md-3 text-left' >
 							<div class="form-group">
 								<div class='input-group date'>
-									<input class="form-control" data-date-format="yyyy-MM-dd" data-max-date="today" ng-model="dateFrom" data-max-date="{{dateTo}}" placeholder="From" bs-datepicker type="text">
+									<input class="form-control" data-date-format="yyyy-MM-dd" data-max-date="today" ng-model="dateFrom" ng-required="display.calendar" data-max-date="{{dateTo}}" placeholder="From" bs-datepicker type="text">
 									<span class="input-group-addon">
 										<span class="glyphicon glyphicon-calendar">
 										</span>
@@ -59,7 +61,7 @@
 						<div class='col-md-3'>
 							<div class="form-group">
 								<div class='input-group date'>
-									<input id="dateTo" data-date-format="yyyy-MM-dd"  data-max-date="today" class="form-control" ng-model="dateTo" data-min-date="{{dateFrom}}" placeholder="Until" bs-datepicker type="text">
+									<input id="dateTo" data-date-format="yyyy-MM-dd" data-max-date="today" class="form-control" ng-model="dateTo" ng-required="display.calendar" data-min-date="{{dateFrom}}" placeholder="Until" bs-datepicker type="text">
 									<span ng-click="$('dateTo').focus();" class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
 								</span>
 							</div>
@@ -116,16 +118,25 @@
 	</div>
 </div>
 <script type="text/ng-template" id="testDetails">
-<div class="ngdialog-message">    
-<h1>Test details</h1>
-<p>duration = {{testDetails.duration}}</p>
-<p>complexityLevel = {{testDetails.complexityLevel}}</p>
-<p>amountOfCorrectAnswers = {{testDetails.amountOfCorrectAnswers}}</p>
-<p>amountOfQuestions = {{testDetails.amountOfQuestions}}</p>
-<p>percentage of right answers = {{testDetails.persentOfRightAnswers}}%</p>
-<p ng-repeat="pictures_ in testDetails.pictures">
-	<img src="{{pictures_.picture}}"/>
-</p> 
+<div class="ngdialog-message">
+ <div class="container">
+	<h1>Test details</h1>
+    <div class="row">
+        <div class="col-xs-3">
+			<ul>
+				<li>duration = {{testDetails.duration}}</li>
+				<li>complexityLevel = {{testDetails.complexityLevel}}</li>
+				<li>amountOfCorrectAnswers = {{testDetails.amountOfCorrectAnswers}}</li>
+				<li>amountOfQuestions = {{testDetails.amountOfQuestions}}</li>
+				<li>percentage of right answers = {{testDetails.persentOfRightAnswers}}%</li>
+			</ul>
+		</div>
+        <div class="col-xs-3">
+			<p ng-repeat="pictures_ in testDetails.pictures">
+				<img class="img-thumbnail img-previewSize" ng-src="{{pictures_.picture}}"/>
+			</p>
+		</div>
+ </div>
 </div>
 </script>
 </body>

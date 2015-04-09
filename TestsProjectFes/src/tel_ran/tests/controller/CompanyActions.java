@@ -284,12 +284,11 @@ f)	5 photos made during the test	------ IGOR ------*/
 	@RequestMapping({"/view_results"})
 	public String viewResults(Model model){
 		//Code for testing
-		//companyId = 8;
+//		companyId = 8;
 		
-		//if(companyId != -1){
-		//	model.addAttribute("token", encodeToken(companyId));
-		//}
-		model.addAttribute("token", companyId);
+		if(companyId != -1){
+			model.addAttribute("token", encodeToken(companyId));
+		}
 		return "CompanyViewTestsResults";
 	}
 	

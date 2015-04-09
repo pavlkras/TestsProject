@@ -42,7 +42,7 @@ app.controller('InputController', ['$scope','$http', 'ngDialog', function($scope
 				params = '';
 			break;
 			case 'range':
-				params = "/"+$scope.dateFrom+"/"+$scope.dateTo;
+				params = "/"+$scope.formatDate($scope.dateFrom)+"/"+$scope.formatDate($scope.dateTo);
 			break;
 			case 'id':
 				params = "/"+$scope.personID;
@@ -51,11 +51,22 @@ app.controller('InputController', ['$scope','$http', 'ngDialog', function($scope
 	  return params;
 	};
 	
+	$scope.formatDate = function(date_){
+		console.log(date_);
+		res="e";
+		if(date_!=undefined && date_!=""){
+			res = date_.getFullYear()+"-"+eval(date_.getMonth()+1)+"-"+date_.getDate();
+		}
+		date_="";
+		return res;
+	};
+	
 	//Test Details
 	$scope.getDetails = function(testid_){
-		$scope.link = "/TestsProjectBes/view_results_rest/test_details"+"/"+testid_+"/"+$scope.token;
+		$scope.link = "/TestsProjectBes/view_results_rest/test_details"+"/"+testid_;
 		console.log($scope.link);
-		$http.get($scope.link).success(function (response) {
+
+		$http.get($scope.link, $scope.httpConfig).success(function (response) {
 			$scope.testDetails = angular.fromJson(response);
 		});
 	};
@@ -71,12 +82,17 @@ app.controller('InputController', ['$scope','$http', 'ngDialog', function($scope
     	  scope: $scope
 		});
 	};
-	
+
+
 // Test Common Results	
   $scope.submit = function(){
-	$scope.link = "/TestsProjectBes/view_results_rest"+$scope.modePath+$scope.parameters()+"/"+$scope.token;
+	$scope.link = "/TestsProjectBes/view_results_rest"+$scope.modePath+$scope.parameters();
+	$scope.httpConfig = {headers: {
+        'Authorization': $scope.token,
+        'TimeZone': new Date().toString().match(/([A-Z]+[\+-][0-9]+)/)[1]
+    }};
 	console.log($scope.link);
-	$http.get($scope.link).success(function (response) {
+	$http.get($scope.link, $scope.httpConfig).success(function (response) {
 		$scope.results = response;
 	});
   };
