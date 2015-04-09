@@ -1,12 +1,14 @@
 package tel_ran.tests.entitys;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.Date;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.TimeZone;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -18,10 +20,6 @@ import org.json.JSONObject;
 
 import tel_ran.tests.services.common.ICommonData;
 import tel_ran.tests.services.interfaces.IMaintenanceService;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 
 @Entity
 public class EntityTest {
@@ -38,7 +36,7 @@ public class EntityTest {
 	private int amountOfCorrectAnswers;
 	private int amountOfQuestions;
 	private String pictures;           // format to string!! namefoto.jpg,nameAnotherfoto.jpg,xxx.jgg, ...
-	private Date testDate;
+//	private Date testDate;
 	private int duration;
 	private int complexityLevel;
 	private long startTestDate;
@@ -51,7 +49,7 @@ public class EntityTest {
 	//
 	public EntityTest() {}
 	//
-	public JSONObject getJsonObjectCommonData() {
+	public JSONObject getJsonObjectCommonData(String timeZone) {
 		JSONObject jsonObj = new JSONObject();
 		try {
 			jsonObj.put("personName",entityPerson.getPersonName());
@@ -59,7 +57,9 @@ public class EntityTest {
 			jsonObj.put("testid",testId);
 			jsonObj.put("testCategory",testCategory);
 			jsonObj.put("testName", testName);
-			jsonObj.put("testDate", testDate);
+			SimpleDateFormat sdf = new SimpleDateFormat(ICommonData.DATE_FORMAT);
+			sdf.setTimeZone(TimeZone.getTimeZone(timeZone));	
+			jsonObj.put("testDate", sdf.format(new Date(startTestDate)));
 		} catch (JSONException e) {}
 		return jsonObj;
 	}
@@ -184,13 +184,13 @@ public class EntityTest {
 		this.pictures = pictures;
 	}
 
-	public Date getTestDate() {
-		return testDate;
-	}
+//	public Date getTestDate() {
+//		return testDate;
+//	}
 
-	public void setTestDate(Date testDate) {
-		this.testDate = testDate;
-	}	
+//	public void setTestDate(Date testDate) {
+//		this.testDate = testDate;
+//	}	
 
 	public int getDuration() {
 		return duration;
@@ -213,7 +213,7 @@ public class EntityTest {
 	}
 
 	public void setStartTestDate(long startTestDate) {
-		this.testDate = new Date(startTestDate);
+//		this.testDate = new Date(startTestDate);
 		this.startTestDate = startTestDate;
 	}
 
@@ -263,7 +263,7 @@ public class EntityTest {
 				+ amountOfCorrectAnswers + IMaintenanceService.DELIMITER
 				+ amountOfQuestions + IMaintenanceService.DELIMITER		
 				+ pictures + IMaintenanceService.DELIMITER
-				+ testDate + IMaintenanceService.DELIMITER
+//				+ testDate + IMaintenanceService.DELIMITER
 				+ duration + IMaintenanceService.DELIMITER
 				+ complexityLevel + IMaintenanceService.DELIMITER
 

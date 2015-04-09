@@ -1,6 +1,5 @@
 package tel_ran.tests.services;
 
-import java.util.Date;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -131,7 +130,7 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 
 	//------------- Viewing test results  3.1.4.----------- //   BEGIN    ///
 	@Override
-	public String getTestsResultsAll(long companyId) {
+	public String getTestsResultsAll(long companyId, String timeZone) {
 		String res = "";
 		EntityCompany company = em.find(EntityCompany.class, companyId);
 		if(company!=null){
@@ -140,13 +139,13 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 			("SELECT t FROM EntityTest t WHERE t.entityCompany = :company ORDER BY t.entityPerson")
 			.setParameter("company", company)
 			.getResultList();
-			res = generateJsonResponse(tests);
+			res = generateJsonResponse(tests, timeZone);
 		}
 		return res;
 	}
 
 	@Override
-	public String getTestsResultsForPersonID(long companyId, int personID) {
+	public String getTestsResultsForPersonID(long companyId, int personID, String timeZone) {
 		String res = "";
 		EntityCompany company = em.find(EntityCompany.class, companyId);
 		EntityPerson person = em.find(EntityPerson.class, personID);
@@ -157,24 +156,24 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 			.setParameter("person", person)
 			.setParameter("company", company)
 			.getResultList();
-			res = generateJsonResponse(tests);
+			res = generateJsonResponse(tests, timeZone);
 		}
 		return res;
 	}
 
 	@Override
-	public String getTestsResultsForTimeInterval(long companyId, Date date_from, Date date_until) {
+	public String getTestsResultsForTimeInterval(long companyId, long date_from, long date_until, String timeZone) {
 		String res = "";
 		EntityCompany company = em.find(EntityCompany.class, companyId);
 		if(company!=null){
 			@SuppressWarnings("unchecked")
 			List<EntityTest> tests = (List<EntityTest>) em.createQuery
-			("SELECT t FROM EntityTest t WHERE t.testDate >= :date_from AND t.testDate <= :date_until AND t.entityCompany = :company ORDER BY t.entityPerson")
+			("SELECT t FROM EntityTest t WHERE t.startTestDate >= :date_from AND t.startTestDate <= :date_until AND t.entityCompany = :company ORDER BY t.entityPerson")
 			.setParameter("date_from", date_from)
 			.setParameter("date_until", date_until)
 			.setParameter("company", company)
 			.getResultList();
-			res = generateJsonResponse(tests);
+			res = generateJsonResponse(tests, timeZone);
 		}
 		return res;
 	}
@@ -194,10 +193,10 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 		return res;
 	}
 
-	private String generateJsonResponse(List<EntityTest> testresults) {
+	private String generateJsonResponse(List<EntityTest> testresults, String timeZone) {
 		JSONArray result = new JSONArray();
 		for (EntityTest test: testresults){
-			result.put(test.getJsonObjectCommonData());
+			result.put(test.getJsonObjectCommonData(timeZone));
 		}
 		return result.toString();
 	}
