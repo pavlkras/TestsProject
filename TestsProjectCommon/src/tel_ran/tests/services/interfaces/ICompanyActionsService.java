@@ -1,6 +1,5 @@
 package tel_ran.tests.services.interfaces;
 
-import java.util.Date;
 import java.util.List;
 
 public interface ICompanyActionsService {
@@ -19,8 +18,8 @@ long createIdTest(List<Long> list, int personId, String pass, String category, i
 int createPerson(int personId,String personName,String personSurname,String personEmail);
 
 //Company actions for 3.1.4. Viewing test results
-public String getTestsResultsAll(long companyId);
-public String getTestsResultsForPersonID(long companyId, int personID);
-public String getTestsResultsForTimeInterval(long companyId, Date date_from, Date date_until);
+public String getTestsResultsAll(long companyId, String timeZone);
+public String getTestsResultsForPersonID(long companyId, int personID, String timeZone);
+public String getTestsResultsForTimeInterval(long companyId, long date_from, long date_until, String timeZone);
 public String getTestResultDetails(long companyId, long testId);
 }
