@@ -7,4 +7,5 @@ public interface ICommonData {
 	static final String TEST_RESULT_DETAILS = "/test_details";
 	static final String DATE_FORMAT = "yyyy-MM-dd";
 	static final String delimiter = ",";
+	static final int TOKEN_VALID_IN_SECONDS = 300;
 }

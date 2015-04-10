@@ -22,4 +22,5 @@ public String getTestsResultsAll(long companyId, String timeZone);
 public String getTestsResultsForPersonID(long companyId, int personID, String timeZone);
 public String getTestsResultsForTimeInterval(long companyId, long date_from, long date_until, String timeZone);
 public String getTestResultDetails(long companyId, long testId);
+public String encodeIntoToken(long companyId);
 }
