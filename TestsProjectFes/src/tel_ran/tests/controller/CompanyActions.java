@@ -284,22 +284,13 @@ f)	5 photos made during the test	------ IGOR ------*/
 	@RequestMapping({"/view_results"})
 	public String viewResults(Model model){
 		//Code for testing
-//		companyId = 8;
+		//companyId = 8;
 		
 		if(companyId != -1){
-			model.addAttribute("token", encodeToken(companyId));
+			String token = companyService.encodeIntoToken(companyId);
+			model.addAttribute("token", token);
 		}
 		return "CompanyViewTestsResults";
-	}
-	
-	private String encodeToken(long companyId2) {
-		// TODO Token processing
-		// Create method of coding companyName & currentTime
-		// into token for BES authorize
-
-		//Temporary code
-		String token = Long.toString(companyId2);
-		return token;
 	}
 	// -----------------END  Use case Viewing test results-----------------
 
