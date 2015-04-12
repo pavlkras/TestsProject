@@ -54,5 +54,9 @@
 	</aop:config>
 	 -->
 	<bean id="company" class="tel_ran.tests.services.CompanyActionsService"/>
-
+	
+	<!-- Token processing -->
+ 	<bean id="cipher" class="tel_ran.tests.token_cipher.AESCipher" scope="singleton"/>
+ 	<bean id="tokenProc" class="tel_ran.tests.token_cipher.TokenProcessor" scope="singleton"/>
+ 	<!-- END OF Token processing -->
 </beans>
