@@ -9,17 +9,20 @@ import javax.persistence.Query;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import stubgeneratequestions.IGenerationQuestionsService;
-import stubgeneratequestions.StubCreateQuestion;
 import tel_ran.tests.entitys.EntityAnswersText;
 import tel_ran.tests.entitys.EntityQuestion;
 import tel_ran.tests.entitys.EntityQuestionAttributes;
 import tel_ran.tests.entitys.EntityUser;
+import tel_ran.tests.processor.TestProcessor;
 import tel_ran.tests.services.interfaces.IMaintenanceService;
 
 public class MaintenanceService extends TestsPersistence implements IMaintenanceService {	
-	////-------------- Authorization Case ----------// Begin  //
-	private static boolean flAdminAuthorized = false;
+	//
+	private static int NUMBERofRESPONSESinThePICTURE = 4;// number of responses in the picture, for text questions default = 4
+	private static int MIN_NUMBER_OF_CATEGORIES = 1;
+	private static boolean FLAG_AUTHORIZATION = false;
+	//
+	////-------------- Authorization Case ----------// Begin  //	
 	// ---------- stub method authorization ------------------//
 	@Override	
 	public boolean setAutorization(String userMail, String password) {
@@ -27,19 +30,17 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		EntityUser tmpUser = em.find(EntityUser.class, userMail);
 		//
 		if(tmpUser != null && tmpUser.getPassword().equalsIgnoreCase(password)){			
-			flAdminAuthorized = true;		
+			FLAG_AUTHORIZATION = true;		
 		}else{
-			flAdminAuthorized = true;	 
+			FLAG_AUTHORIZATION = true;	 
 		}
 		//
-		return MaintenanceService.flAdminAuthorized;	
+		return MaintenanceService.FLAG_AUTHORIZATION;	
 	}
-	public static boolean isAuthorized(){return flAdminAuthorized;}
+	public static boolean isAuthorized(){return FLAG_AUTHORIZATION;}
 	////-------------- Authorization users like Administrator DB ----------// END  //
+
 	////-------------- Creation and Adding ONE Question into DB Case ----------// BEGIN  //
-	//
-	private int NUMBERofRESPONSESinThePICTURE = 4;// number of responses in the picture, for text questions default = 4
-	//
 	@Override
 	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW) 
 	public boolean CreateNewQuestion(String imageLink, String questionText, 
@@ -135,25 +136,75 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	@Override
 	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW)	
 	public boolean ModuleForBuildingQuestions(String byCategory, int nQuestions) {
-		//question text|| image link || category of question || level of complexity || correct answer char || number of question text if exist question in db witch that text || number answers on image ( A,B or A,B,C,D and ...) |
-		/*Sample - String[] question = {"What Wrong witch Code:","E11842F520AE11842F520AA24589A2458992AE532883CFA45EE4.png","logical","1","E","0","2"}; ////,"a51","a52","a53","a54" ??*/
-		////	question.length = 7
+		/*------------------------------------------------------------------------------- TO DO add parameter for diff level of generated questions !!
+		 * question text|| image link || category of question || level of complexity || 
+		 * correct answer char || 
+		 * number of question text if exist question in db witch that text || number answers on image ( A,B or A,B,C,D and ...) |
+		 * Sample - String[] question = {"What Wrong witch Code:","E11842F520AE11842F520AA24589A2458992AE532883CFA45EE4.png","logical","1","E","0","2"};
+		 * question.length = 7. //// +4 or > for answers in text "a51","a52","a53","a54"  that bee letar */
+
 		boolean flagAction = false;	
-		List<String> answers;		
-		IGenerationQuestionsService gen = new StubCreateQuestion();
-		List<String[]> listQuestions = gen.methodToCreateQuestionsByCategory(byCategory, nQuestions);
-		//
-		for(String[] fres :listQuestions){				
-			answers = new ArrayList<String>();
-			if(fres.length > 7){				
-				answers.add(fres[7]);answers.add(fres[8]);answers.add(fres[9]);answers.add(fres[10]);
+		int DIF_LEVEL = 5;
+		int selectedCategory = 0;
+		List<String> answers;	
+		List<String[]> listQuestions = null;		
+		TestProcessor proc = new TestProcessor();// creating object of case generated question
+		////
+		if(byCategory.equalsIgnoreCase("abstract")){
+			selectedCategory = TestProcessor.ATTENTION;
+		}else if(byCategory.equalsIgnoreCase("attention")){
+			selectedCategory = TestProcessor.ABSTRACT;
+		}else if(byCategory.equalsIgnoreCase("quantative")){
+			selectedCategory = TestProcessor.QUANTATIVE;
+		}
+		////
+		try {			
+			/* TestProcessor proc = new TestProcessor();// creating object of case generated question
+			 * proc.processStart(TYPE, NUM, PATH, DIF_LEVEL); 
+			 * TYPE = TestProcessor.ATTENTION //TestProcessor.ABSTRACT //TestProcessor.QUANTATIVE
+			 * NUM - numbers of question for build
+			 * PATH - full path for saving images for questions
+			 * DIF_LEVEL - level of complexity
+			 * returned List<String[]>*/
+			String workingDir = System.getProperty("user.dir").replaceAll("\\\\", "/");
+			listQuestions =	proc.processStart(selectedCategory, nQuestions, workingDir + "/questions/", DIF_LEVEL );// - вызвать генерацию.
+		} catch (Exception e) {
+			System.out.println(" catch of test case generated q = ModuleForBuildingQuestions= ");
+			e.printStackTrace();
+		}  
+		////
+		if(listQuestions != null){
+			for(String[] fres :listQuestions){				
+				answers = new ArrayList<String>();
+				if(fres.length > 7){				
+					answers.add(fres[7]);answers.add(fres[8]);answers.add(fres[9]);answers.add(fres[10]);
+				}			
+				int numberOfResponsesInThePicture = Integer.parseInt(fres[6]);
+				Object queryTempObj;
+				//// query if question exist as text in Data Base
+				String questionT = fres[0].replace("'", "");
+				Query tempRes = em.createQuery("SELECT q FROM EntityQuestion q WHERE q.questionText='" + questionT + "'");
+				try{
+					tempRes.getSingleResult();
+					queryTempObj = tempRes.getSingleResult();				
+				}catch(javax.persistence.NoResultException e){
+					queryTempObj = null;			
+				}
+				////
+				if(queryTempObj != null){
+					questionT = fres[0].replace("'", "");
+					EntityQuestion enTq = (EntityQuestion) queryTempObj;
+					flagAction = CreateNewQuestion(fres[1], questionT, fres[2], Integer.parseInt(fres[3]), answers, fres[4].charAt(0), (int)enTq.getId(), numberOfResponsesInThePicture);
+				}else{
+					questionT = fres[0].replace("'", "");
+					flagAction = CreateNewQuestion(fres[1], questionT, fres[2], Integer.parseInt(fres[3]), answers, fres[4].charAt(0), 0, numberOfResponsesInThePicture);
+				}
 			}
-			int numberOfResponsesInThePicture = Integer.parseInt(fres[6]);
-			flagAction = CreateNewQuestion(fres[1], fres[0], fres[2], Integer.parseInt(fres[3]), answers, fres[4].charAt(0), Integer.parseInt(fres[5]), numberOfResponsesInThePicture);
 		}
 		return flagAction;
 	}
 	////-------------- Creation and Adding MANY Questions into DB from Generated Question Case ----------// END  //
+
 	////-------------- Reading from file and Adding Questions into DB Case ----------// BEGIN  //
 	@Override
 	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW)	
@@ -215,20 +266,16 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		StringBuffer  outRes = new StringBuffer();
 		long id = (long)Integer.parseInt(questionID);
 		//
-		EntityQuestion question = em.find(EntityQuestion.class, id);
+		EntityQuestionAttributes question = em.find(EntityQuestionAttributes.class, id);
 		if(question != null){
-			outRes.append(question + DELIMITER);
-			//
-			List<EntityQuestionAttributes> attr = question.getQuestionAttributes();
-			for(EntityQuestionAttributes textAttr:attr){
-				outRes.append(textAttr + DELIMITER);		
-				List<EntityAnswersText> answers = textAttr.getQuestionAnswersList();
-				if(answers != null){
-					for(EntityAnswersText tAn :answers){
-						outRes.append(tAn + DELIMITER);	
-					}
-				}		
-			}
+			outRes.append(question.getQuestionId().getQuestionText() + DELIMITER + question);	
+
+			List<EntityAnswersText> answers = question.getQuestionAnswersList();
+			if(answers != null){
+				for(EntityAnswersText tAn :answers){
+					outRes.append(DELIMITER + tAn);	
+				}
+			}	
 		}else{
 			outRes.append("wrong request q.Id-"+questionID);// out text stub for tests 
 		}
@@ -284,7 +331,13 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		List<String> outResult = new ArrayList<String>();
 		////
 		if(category != null && !category.equalsIgnoreCase("")){
-			String[] tempCat_1 = category.split(",");
+			List<EntityQuestionAttributes> query = em.createQuery("SELECT c FROM EntityQuestionAttributes c WHERE c.category='" + category + "'").getResultList();
+			for(EntityQuestionAttributes es: query){
+				outResult.add(es.getQuestionId().getQuestionText() + IMaintenanceService.DELIMITER + es.toString());
+				System.out.println(outResult);
+			}
+
+			/*		String[] tempCat_1 = category.split(",");
 			StringBuffer[] tempCat_2 = new StringBuffer[tempCat_1.length];
 			StringBuffer condition = new StringBuffer();
 			for(int i=0; i<tempCat_1.length; i++){
@@ -297,7 +350,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 					condition.append("(c.category LIKE ?" + (i+2) + ")");
 				}
 			}
-			Query query = em.createQuery("SELECT c.id FROM EntityQuestionAttributes c WHERE (c.levelOfDifficulty=?1) AND (" + condition.toString() + ")");
+			query = em.createQuery("SELECT c.id FROM EntityQuestionAttributes c WHERE (c.levelOfDifficulty=?1) AND (" + condition.toString() + ")");
 			query.setParameter(1, levelOfDifficulty);
 			for(int i=0; i<tempCat_1.length; i++){
 				query.setParameter((i+2), tempCat_2[i].toString());
@@ -306,10 +359,10 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 			for(Long qN: result){
 				String q = getQuestionById(qN.toString());				
 				outResult.add(q);
-			}
+			}*/
 		}else{
 			outResult = null;
-		}
+		}		
 		return outResult;// return to client 
 	}
 	////-------------- Search Method by Category or Categories and level of difficulty ----------// END  //
@@ -358,44 +411,43 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	@SuppressWarnings("unchecked")	
 	@Override  
 	public List<Long> getUniqueSetQuestionsForTest(String category,String levelOfDifficulty,Long nQuestion){
-		List<Long> outRes = new ArrayList<Long>();	
-		if(nQuestion > 0){
-			try{
-				int levelQuestion = Integer.parseInt(levelOfDifficulty);
-				int numbQuestions = nQuestion.intValue();
-				String[] categories = category.split(",");
-				StringBuffer[] categories1 = new StringBuffer[categories.length];
-				StringBuffer condition = new StringBuffer();
-				for(int i=0; i<categories.length; i++){
-					String str = "%" + categories[i] + "%";
-					categories1[i] = new StringBuffer(str);
-					if(i < (categories.length - 1)){
-						condition.append("(c.category LIKE ?" + (i+2) + ") OR "); 
-					}
-					else{
-						condition.append("(c.category LIKE ?" + (i+2) + ")");
-					}
-				}
-				Query query = em.createQuery("SELECT c.id FROM EntityQuestionAttributes c WHERE (c.levelOfDifficulty=?1) AND (" + condition.toString() + ")");
-				query.setParameter(1, levelQuestion);
-				for(int i=0; i<categories.length; i++){
-					query.setParameter((i+2), categories1[i].toString());
-				}
-				List<Long> res = query.getResultList();
-				if(res.size() > 0){ 
-					if(res.size() <= numbQuestions){
-						outRes = res;
-					}
-					else{
-						for(int i=0; i<numbQuestions; i++){
+		List<Long> outRes = new ArrayList<Long>();
+		int lengthCategoryArray = 0;
+		int level = 1;
+		int countArr = 0;
+		////
+		if(nQuestion > 0 && category != null){		
+			String[] categoryArray = category.split(",");			
+			if(categoryArray.length > MIN_NUMBER_OF_CATEGORIES){// -- Terms: Minimum number of categories.		
+				for(int i=0; i < nQuestion ;){// -- cycle works on the number of questions -nQuestion
+					if(lengthCategoryArray < categoryArray.length){// -- Terms: pass the array to the categories when adding a new question number in an array of longs list		
+						List<EntityQuestionAttributes> questionAttrList = em.createQuery("SELECT c FROM EntityQuestionAttributes c WHERE "
+								+ "(c.levelOfDifficulty="+level+") AND (c.category='"+categoryArray[lengthCategoryArray]+"')").getResultList();
+						if(questionAttrList.size() > 0){//  -- condition: if the questionAttrList.size is greater than zero.
 							Random rnd = new Random();
-							int rand =  rnd.nextInt(res.size());
-							outRes.add(res.get(rand));
+							int rand =  rnd.nextInt(questionAttrList.size());							
+							EntityQuestionAttributes re = questionAttrList.get(rand);							
+							outRes.add(re.getId());	
+							////
+							i++;
+						}else{//  -- condition: if the questionAttrList.size is equal to or less than zero.							
+							System.out.println("BES else condition i-" + i);//---------------------------sysout	
 						}
+						////	
+						//i++;    // -- cycle works on the number of questions -nQuestion	
+						lengthCategoryArray++;
+					}else{// -- Terms: pass the array to the categories when adding a new question number in the array sheet Long. NEW condition: the end of the array with categories !!!
+						/* Terms: pass the array to the categories when adding a new question number in the array sheet Long. add it according to the level of complexity. */
+						if(Integer.parseInt(levelOfDifficulty) != level){// that is max level from FES							
+							level++;// -- condition: the end of the array with the categories, the following passage levels of difficulty: +1.							
+						}
+						////
+						lengthCategoryArray = 0;// length array counter to 0.
 					}
 				}
-			}catch (NumberFormatException ex){
-				outRes = null;
+				////				
+			}else{// else for one category change
+				System.out.println("one category changed TO DO Method");
 			}
 		}
 		return outRes;

@@ -84,7 +84,7 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 	//------------- 	Use case Ordering Test 3.1.3 -------------/// BEGIN ////
 	@Override
 	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
-	public long  createIdTest(List<Long> list, int personId, String pass, String category, int complexityLevel) {
+	public long  createIdTest(List<Long> list, int personId, String pass, String category, int levelOfDifficulty) {
 		EntityPerson temp = em.find(EntityPerson.class, personId);	
 		//
 		EntityPerson pers = new EntityPerson();
@@ -101,7 +101,7 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 		test.setTestName("???????");// TO DO anyone ------------------------------------------------------------ stub
 		test.setIdQuestionsForCreationTest(idQuestion.toString());	
 		test.setPassword(pass); 		
-		test.setComplexityLevel(complexityLevel);
+		test.setComplexityLevel(levelOfDifficulty);
 		//
 		test.setEntityCompany(entityCompany);	
 		test.setEntityPerson(temp);

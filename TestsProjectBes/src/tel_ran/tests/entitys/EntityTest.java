@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Base64;
 import java.util.TimeZone;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -35,6 +36,7 @@ public class EntityTest {
 	private char[] correctAnswers;            //letter of the right answer
 	private int amountOfCorrectAnswers;
 	private int amountOfQuestions;
+	@Column(name = "pictures", length = 500)
 	private String pictures;           // format to string!! namefoto.jpg,nameAnotherfoto.jpg,xxx.jgg, ...
 //	private Date testDate;
 	private int duration;
