@@ -3,6 +3,7 @@ package tel_ran.tests.services;
 import java.util.List;
 
 import org.json.JSONArray;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,9 +11,12 @@ import tel_ran.tests.entitys.EntityCompany;
 import tel_ran.tests.entitys.EntityPerson;
 import tel_ran.tests.entitys.EntityTest;
 import tel_ran.tests.services.interfaces.ICompanyActionsService;
+import tel_ran.tests.token_cipher.TokenProcessor;
 
 public class CompanyActionsService extends TestsPersistence implements ICompanyActionsService {
 	private EntityCompany entityCompany;
+	@Autowired
+	private TokenProcessor tokenProcessor;
 	//-------------Use Case Company Login 3.1.1----------- //   BEGIN    ///
 	@Override
 	public boolean CompanyAuthorization(String companyName, String password) {
@@ -163,7 +167,7 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 
 	@Override
 	public String getTestsResultsForTimeInterval(long companyId, long date_from, long date_until, String timeZone) {
-		String res = "";
+		String res = "[]";
 		EntityCompany company = em.find(EntityCompany.class, companyId);
 		if(company!=null){
 			@SuppressWarnings("unchecked")
@@ -200,6 +204,12 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 		}
 		return result.toString();
 	}
-	//------------- Viewing test results  3.1.4.----------- // END ////
 
+	@Override
+	public String encodeIntoToken(long companyId) {
+		//encodes current timestamp and companyId into token
+		String token = tokenProcessor.encodeIntoToken(companyId);
+		return token;
+	}	
+	//------------- Viewing test results  3.1.4.----------- // END ////
 }

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import tel_ran.tests.services.common.ICommonData;
 import tel_ran.tests.services.interfaces.ICompanyActionsService;
+import tel_ran.tests.token_cipher.TokenProcessor;
 
 import com.fasterxml.jackson.annotation.JsonRawValue;
 
@@ -23,15 +24,17 @@ import com.fasterxml.jackson.annotation.JsonRawValue;
 @RequestMapping({"/view_results_rest"})
 public class TestsResultsRestController {
 	@Autowired
-	ICompanyActionsService company;
+	ICompanyActionsService companyActionsService;
+	@Autowired
+	TokenProcessor tokenProcessor;
 	
 	@RequestMapping(value=ICommonData.TESTS_RESULTS, method=RequestMethod.GET)
 	@ResponseBody @JsonRawValue
 	String all(@RequestHeader(value="TimeZone") String timeZone, @RequestHeader(value="Authorization") String token){
-		long companyId = decodeToken(token);
+		long companyId = tokenProcessor.decodeAndCheckToken(token);
 		String res = "";
 		if(companyId != -1){
-			res = company.getTestsResultsAll(companyId, timeZone);
+			res = companyActionsService.getTestsResultsAll(companyId, timeZone);
 		}
 		return res;
 	}
@@ -39,10 +42,10 @@ public class TestsResultsRestController {
 	@RequestMapping(value=ICommonData.TESTS_RESULTS_BY_PERSON_ID + "/{personId}", method=RequestMethod.GET)
 	@ResponseBody @JsonRawValue 
 	String byPersonId(@PathVariable int personId, @RequestHeader(value="TimeZone") String timeZone, @RequestHeader(value="Authorization") String token){  
-		long companyId = decodeToken(token);
+		long companyId = tokenProcessor.decodeAndCheckToken(token);
 		String res = "";
 		if(companyId != -1){
-			res = company.getTestsResultsForPersonID(companyId, personId, timeZone);
+			res = companyActionsService.getTestsResultsForPersonID(companyId, personId, timeZone);
 		}
 		return res;
 	}
@@ -51,8 +54,7 @@ public class TestsResultsRestController {
 	@ResponseBody @JsonRawValue
 	String byDates(@PathVariable String date1, @PathVariable String date2, @RequestHeader(value="TimeZone") String timeZone,
 			@RequestHeader(value="Authorization") String token){ 
-	//	System.out.println(timeZone);
-		long companyId = decodeToken(token);
+		long companyId = tokenProcessor.decodeAndCheckToken(token);
 		String res = "";
 		if(companyId != -1){
 			SimpleDateFormat dateFormat = new SimpleDateFormat(ICommonData.DATE_FORMAT);
@@ -72,29 +74,21 @@ public class TestsResultsRestController {
 				calend_until.set(Calendar.SECOND, 0);
 				calend_until.set(Calendar.MILLISECOND, 0);
 								
-				res = company.getTestsResultsForTimeInterval(companyId, calend_from.getTimeInMillis(), calend_until.getTimeInMillis(), timeZone);
+				res = companyActionsService.getTestsResultsForTimeInterval(companyId, calend_from.getTimeInMillis(), calend_until.getTimeInMillis(), timeZone);
 			} catch (ParseException e) {}
 		}
+		System.out.println("Daterange selector " +res);
 		return res;
 	}
 	
 	@RequestMapping(value=ICommonData.TEST_RESULT_DETAILS + "/{testId}", method=RequestMethod.GET)
 	@ResponseBody @JsonRawValue
 	String testDetails(@PathVariable long testId, @RequestHeader(value="Authorization") String token){
-		long companyId = decodeToken(token);
+		long companyId = tokenProcessor.decodeAndCheckToken(token);
 		String res = "";
 		if(companyId != -1){
-			res = company.getTestResultDetails(companyId, testId);
+			res = companyActionsService.getTestResultDetails(companyId, testId);
 		}
 		return res;
-	}
-
-	
-	private long decodeToken(String token) {
-		//TODO Token processing
-		// ERRORSTATE = -1
-		//Temporary code
-		long companyId = Long.parseLong(token);//for test
-		return companyId;
 	}
 }
