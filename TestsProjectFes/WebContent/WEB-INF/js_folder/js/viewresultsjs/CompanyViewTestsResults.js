@@ -85,7 +85,7 @@ app.controller('InputController', ['$scope','$http', 'ngDialog', function($scope
 
 
 // Test Common Results	
-  $scope.submit = function(){
+	$scope.submit = function(){
 	$scope.link = "/TestsProjectBes/view_results_rest"+$scope.modePath+$scope.parameters();
 	$scope.httpConfig = {headers: {
         'Authorization': $scope.token,
