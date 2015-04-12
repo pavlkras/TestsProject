@@ -18,18 +18,25 @@
 	<script type="text/javascript">
 	document.write("${categoryFill}");
 	</script><br>    
- Please select Level for Question: <br>   
-    1<input type="radio" name="level" value=1 checked="checked">
-    2<input type="radio" name="level" value=2>
-    3<input type="radio" name="level" value=3>
-    4<input type="radio" name="level" value=4>
-    5<input type="radio" name="level" value=5> <br> 
+ Level of Difficulty min: <br>   
+    1<input type="radio" name="levelmin" value=1 checked="checked">
+    2<input type="radio" name="levelmin" value=2>
+    3<input type="radio" name="levelmin" value=3>
+    4<input type="radio" name="levelmin" value=4>
+    5<input type="radio" name="levelmin" value=5> <br> 
+    Level of Difficulty max: <br>   
+    1<input type="radio" name="levelmax" value=1>
+    2<input type="radio" name="levelmax" value=2>
+    3<input type="radio" name="levelmax" value=3>
+    4<input type="radio" name="levelmax" value=4>
+    5<input type="radio" name="levelmax" value=5 checked="checked"> <br> 
     SelectQuestion Count:<br>
-    <select name="selectCountQuestions">
-    <option  value="5">5</option>
-    <option value="10">10</option>
-    <option value="15">15</option>
-    <option value="25">25</option>
+    <select name="selectCountQuestions">    
+    <option value="10">10test</option><!-- for deleting !!! -->
+    <option value="30">30</option>
+    <option value="40">40</option>
+    <option value="50">50</option>
+    <option value="60">60</option>    
     </select>
   <br><br> 
   Please fill data of Person:   <br>        

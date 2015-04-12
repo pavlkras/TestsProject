@@ -63,8 +63,11 @@ public class PersonalActions {
 	public String jobSeeker_authorization_event(String id, String password, HttpServletRequest request, Model model){		
 		StringBuffer createdTestTable = new StringBuffer();
 		StringBuffer correctAnswers = new StringBuffer();
-		String outResult;
+		String outResult = " ";
 		String[] testForPerson = personalService.GetTestForPerson(testId);
+		for(int i=0;i<testForPerson.length;i++){
+			System.out.println("testForPerson-"+testForPerson[i]);
+		}
 		////	
 		long timeStartTest = 0;
 		//
@@ -82,33 +85,35 @@ public class PersonalActions {
 			////
 			for(int i = 0;i<tempArray.length;i++){// Cycle long id questions for create one new question and add in out text
 				//
-				String tempQuestion = maintenanceService.getQuestionById(tempArray[i]);// getting one question by id from BES				
+				String tempQuestion = maintenanceService.getQuestionById(tempArray[i]);// getting one question by id from BES	
+				System.out.println("tempQuestion-"+tempQuestion);//-------------------sysout
+				/////
 				String[] tempQuestionText = tempQuestion.split(IMaintenanceService.DELIMITER);// Splitting text by delimiter
 				////				
 				createdTestTable.append("<tr><td><table id='tabTestPerson_"+i+"' class='tableStyle'>"
-						+ "<tr><th class='questionTextStyle' colspan='2'>"+tempQuestionText[1]+"</th></tr>");// table of question and attributes of question table N-2			
-				if(tempQuestionText[3].length() > 15){	// image link	
+						+ "<tr><th class='questionTextStyle' colspan='2'>"+tempQuestionText[0]+"</th></tr>");// table of question and attributes of question table N-2			
+				if(tempQuestionText[2].length() > 15){	// image link	
 					//TO DO get image link as full path !!!!!
-					createdTestTable.append("<tr><td colspan='2'><img src='static/images/questionImages/"+tempQuestionText[3]+"' alt='Image not supported'></td></tr>");
+					createdTestTable.append("<tr><td colspan='2'><img src='static/images/questionImages/"+tempQuestionText[2]+"' alt='Image not supported'></td></tr>");
 				}			
 				////
-				if(tempQuestionText.length > 8){
+				if(tempQuestionText.length > 7){
 					String[] answers = CreateAnswers(tempQuestionText);
-					if(tempQuestionText[7].equalsIgnoreCase("2")){	
+					if(tempQuestionText[6].equalsIgnoreCase("2")){	
 						//
 						createdTestTable.append("<tr onchange='onchangeClick(1)'>"
 								+ "<td><p class='answersCharParam'>A. <input type='checkbox' name='answerschecked' value='A'>&nbsp;&nbsp;<span class='textAnswerSpan'>" + answers[0] + "</span></p></td>"
 								+ "<td><p class='answersCharParam'>B. <input type='checkbox' name='answerschecked' value='B'>&nbsp;&nbsp;<span class='textAnswerSpan'>" + answers[1] + "</span></p></td>"
 								+ "</tr>");
 						//
-					}else if(tempQuestionText[7].equalsIgnoreCase("4") && answers[2].equalsIgnoreCase("0") && answers[3].equalsIgnoreCase("0")){
+					}else if(tempQuestionText[6].equalsIgnoreCase("4") && answers[2].equalsIgnoreCase("0") && answers[3].equalsIgnoreCase("0")){
 						//
 						createdTestTable.append("<tr onchange='onchangeClick(1)'>"
 								+ "<td><p class='answersCharParam'>A. <input type='checkbox' name='answerschecked' value='A'>&nbsp;&nbsp;<span class='textAnswerSpan'>" + answers[0] + "</span></p></td>"
 								+ "<td><p class='answersCharParam'>B. <input type='checkbox' name='answerschecked' value='B'>&nbsp;&nbsp;<span class='textAnswerSpan'>" + answers[1] + "</span></p></td>"
 								+ "</tr>");
 						//
-					}else if(tempQuestionText[7].equalsIgnoreCase("4") && !answers[2].equalsIgnoreCase("0") && !answers[3].equalsIgnoreCase("0")){
+					}else if(tempQuestionText[6].equalsIgnoreCase("4") && !answers[2].equalsIgnoreCase("0") && !answers[3].equalsIgnoreCase("0")){
 						//
 						createdTestTable.append("<tr onchange='onchangeClick(1)'>"
 								+ "<td><p class='answersCharParam'>A. <input type='checkbox' name='answerschecked' value='A'>&nbsp;&nbsp;<span class='textAnswerSpan'>" + answers[1] + "</span></p></td>"
@@ -119,26 +124,27 @@ public class PersonalActions {
 								+ "</tr>");
 					}
 					////
-				}else if(tempQuestionText.length == 8){
-					if(tempQuestionText[7].equalsIgnoreCase("2")){
+				}else if(tempQuestionText.length == 7){
+					if(tempQuestionText[6].equalsIgnoreCase("2")){
 						//
 						createdTestTable.append("<tr onchange='onchangeClick(1)'><td>"
 								+ "<p class='answersCharParam'>A. <input type='checkbox' name='answerschecked' value='A'>&nbsp;&nbsp;</p></td><td>"
 								+ "<p class='answersCharParam'>B. <input type='checkbox' name='answerschecked' value='B'>&nbsp;&nbsp;</p></td></tr>");
 						//
-					}else if(tempQuestionText[7].equalsIgnoreCase("4")){
+					}else if(tempQuestionText[6].equalsIgnoreCase("5") || tempQuestionText[6].equalsIgnoreCase("4")){
 						//
 						createdTestTable.append("<tr onchange='onchangeClick(1)'>"
 								+ "<td><p class='answersCharParam'>A. <input type='checkbox' name='answerschecked' value='A'>&nbsp;&nbsp;</p></td>"
 								+ "<td><p class='answersCharParam'>B. <input type='checkbox' name='answerschecked' value='B'>&nbsp;&nbsp;</p></td>"
 								+ "</tr><tr onchange='onchangeClick(1)'>"
 								+ "<td><p class='answersCharParam'>C. <input type='checkbox' name='answerschecked' value='C'>&nbsp;&nbsp;</p></td>"
-								+ "<td><p class='answersCharParam'>D. <input type='checkbox' name='answerschecked' value='D'>&nbsp;&nbsp;</p></td></tr>");
+								+ "<td><p class='answersCharParam'>D. <input type='checkbox' name='answerschecked' value='D'>&nbsp;&nbsp;</p></td>"
+								+ "<td><p class='answersCharParam'>E. <input type='checkbox' name='answerschecked' value='E'>&nbsp;&nbsp;</p></td></tr>");
 					}
 				}
 				////
 				createdTestTable.append("</table></td></tr>");
-				correctAnswers.append(tempQuestionText[6]);
+				correctAnswers.append(tempQuestionText[5]);
 			}	//end for
 			//				
 			createdTestTable.append("</table><br>"
@@ -158,7 +164,7 @@ public class PersonalActions {
 		//testId +="----" + testForPerson[0] + "----" + testForPerson[1];// TO DO on BES split for save action
 		String corrAnsw = correctAnswers.toString();
 		if(!personalService.SaveStartPersonTestParam(testId, corrAnsw, timeStartTest)){System.out.println("time start saved-"+timeStartTest);}// method for save parameters of test to generated test 
-		////
+		////*/
 		return outResult;		
 	}
 	////
@@ -166,7 +172,7 @@ public class PersonalActions {
 		String[] answers = new String[4];
 		int j=0;
 		for (int i = 0; i < questionAttributes.length; i++) {
-			if(i == 8 || i == 9 ||i == 10 || i == 11){		// by default this answers in text 		
+			if(i == 7 || i == 8 ||i == 9 || i == 10){		// by default this answers in text 		
 				String my_new_str = questionAttributes[i].replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 				answers[j] = my_new_str;				
 				j++;

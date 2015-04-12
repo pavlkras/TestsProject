@@ -33,7 +33,7 @@ public class CompanyActions {
 	String companyName;
 	//long companyId = -1;
 	long companyId;
-	
+
 	@Autowired
 	ICompanyActionsService companyService;
 	//
@@ -77,14 +77,14 @@ Wrong Password Flow:
 
 	@RequestMapping("/loginProcessing")
 	public String loginProcessing(String companyName, String password,Model model){
-		
-	////// Method getCompanyByName(companyName) - return companyId;
-	///	boolean IfExistCompany
+
+		////// Method getCompanyByName(companyName) - return companyId;
+		///	boolean IfExistCompany
 		companyId = companyService.getCompanyByName(companyName);
-		
+
 		String result;
 		int counter = 0;
-	////if(IfExistCompany){
+		////if(IfExistCompany){
 		if(companyId>0){
 			boolean ress = companyService.CompanyAuthorization(companyName, password);
 			if(ress ){ 				
@@ -164,7 +164,7 @@ User Registered Flow:
 	public String addProcessing(String C_Name,String C_Site, String C_Specialization,String C_AmountEmployes,String C_Password,Model model) {
 		boolean flag = false;
 		try{
-		 flag = companyService.createCompany(C_Name, C_Site, C_Specialization, C_AmountEmployes, C_Password);
+			flag = companyService.createCompany(C_Name, C_Site, C_Specialization, C_AmountEmployes, C_Password);
 		}catch(Throwable th){
 			th.printStackTrace();
 			System.out.println("catch creation company FES");
@@ -193,16 +193,15 @@ Normal Flow:
 6.	The System presents the link for performing the test in the control mode  */
 	//
 	@RequestMapping({"/add_test"})
-	public String createTest(String category,String level, String personId, String personName, String personSurname,String personEmail, String selectCountQuestions, Model model) {	
+	public String createTest(String category,String levelmin,String levelmax, String personId, String personName, String personSurname,String personEmail, String selectCountQuestions, Model model) {	
 		long counterOfQuestions = Integer.parseInt(selectCountQuestions);
-		List<Long> listIdQuestions = maintenanceService.getUniqueSetQuestionsForTest(category, level, (long) counterOfQuestions);
-
+		List<Long> listIdQuestions = maintenanceService.getUniqueSetQuestionsForTest(category, levelmin, (long) counterOfQuestions);
 		int personID = companyService.createPerson(Integer.parseInt(personId), personName, personSurname,personEmail);
 		String password = getRandomPassword();
-		long idTest = companyService.createIdTest(listIdQuestions, personID, password, category, Integer.parseInt(level));
-
-		String link = "http://localhost:8080/TestsProjectFes/jobSeeker_test_preparing_click_event?" + idTest;        
-		boolean flagMail = sendEmail(link,personEmail,password);
+		long idTest = companyService.createIdTest(listIdQuestions, personID, password, category, Integer.parseInt(levelmin));
+		String link = "http://localhost:8080/TestsProjectFes/jobSeeker_test_preparing_click_event?" + idTest;    
+		boolean flagMail = true;
+		sendEmail(link,personEmail,password);
 		if(flagMail){
 			model.addAttribute("myResult", link +"<br>" + "<H1>message was sent successfully</H1>");    	
 		}else{
@@ -284,14 +283,14 @@ f)	5 photos made during the test	------ IGOR ------*/
 	@RequestMapping({"/view_results"})
 	public String viewResults(Model model){
 		//Code for testing
-//		companyId = 8;
-		
+		//		companyId = 8;
+
 		if(companyId != -1){
 			model.addAttribute("token", encodeToken(companyId));
 		}
 		return "CompanyViewTestsResults";
 	}
-	
+
 	private String encodeToken(long companyId2) {
 		// TODO Token processing
 		// Create method of coding companyName & currentTime

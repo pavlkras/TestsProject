@@ -37,7 +37,7 @@
 						hideE("canvas");
 						hideE("button_test_video");
 						hideE("start_test");
-						hideE("tableTest");
+					    hideE("tableTest"); 
 						
 						$("#button_test_video").click(function() { // show or hide test div for development ...
 							if (flagTestVideo && flagMediaSupported) {

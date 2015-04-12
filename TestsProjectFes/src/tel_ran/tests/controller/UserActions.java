@@ -199,7 +199,8 @@ public class UserActions{
 	@RequestMapping({ "/UserTestLoop" })
 	public String test_run(HttpServletRequest request, Model model) {
 		String answerschecked = request.getParameter("answerschecked");	// getting answer from user 
-		if(userTest.getUserAnswers() == null){
+		String numberAnswersOnImage = "5";// counter
+		if(userTest.getUserAnswers() == null){// counter and writer for User answers 
 			userTest.setUserAnswers(answerschecked );
 		}else{
 			String userAnswers = userTest.getUserAnswers()+","+answerschecked;
@@ -238,29 +239,35 @@ public class UserActions{
 				nextQuestionInTest.append("<br><img src='" + questionAttributes[1] + "' alt='image not supported'>");
 			}
 			////
-			if(questionAttributes.length > 4){
+			if(questionAttributes.length > 4){				
 				String[] answers = CreateAnswers(questionAttributes);
-				if(questionAttributes[2].equalsIgnoreCase("2")){					
-					nextQuestionInTest.append("<p>A. <input type='checkbox' name='answerschecked' value='A'>&nbsp;&nbsp;" + answers[0] + "</p>"
-							+ "<p>B. <input type='checkbox' name='answerschecked' value='B'>&nbsp;&nbsp;" + answers[1] + "</p>");
-				}else if(questionAttributes[2].equalsIgnoreCase("4")){
-					nextQuestionInTest.append("<p>A. <input type='checkbox' name='answerschecked' value='A'>&nbsp;&nbsp;" + answers[0] + "</p>"
-							+ "<p>B. <input type='checkbox' name='answerschecked' value='B'>&nbsp;&nbsp;" + answers[1] + "</p>");
-					nextQuestionInTest.append("<p>C. <input type='checkbox' name='answerschecked' value='C'>&nbsp;&nbsp;" + answers[2] + "</p>"
-							+ "<p>D. <input type='checkbox' name='answerschecked' value='D'>&nbsp;&nbsp;" + answers[3] + "</p>");
-				}				
-			}else 
-				if(questionAttributes.length == 4){
-					if(questionAttributes[2].equalsIgnoreCase("2")){
-						nextQuestionInTest.append("<p>A. <input type='checkbox' name='answerschecked' value='A'>&nbsp;&nbsp;</p>"
-								+ "<p>B. <input type='checkbox' name='answerschecked' value='B'>&nbsp;&nbsp;</p>");
-					}else if(questionAttributes[2].equalsIgnoreCase("4") && questionAttributes.length == 4){
-						nextQuestionInTest.append("<p>A. <input type='checkbox' name='answerschecked' value='A'>&nbsp;&nbsp;</p>"
-								+ "<p>B. <input type='checkbox' name='answerschecked' value='B'>&nbsp;&nbsp;</p>");
-						nextQuestionInTest.append("<p>C. <input type='checkbox' name='answerschecked' value='C'>&nbsp;&nbsp;</p>"
-								+ "<p>D. <input type='checkbox' name='answerschecked' value='D'>&nbsp;&nbsp;</p>");
-					}
+				int countAnswersOnPic = Integer.parseInt(questionAttributes[2]);
+				switch(countAnswersOnPic){
+				case 2:nextQuestionInTest.append("<p>A. <input type='checkbox' name='answerschecked' value='A'>&nbsp;&nbsp;" + answers[0] + "</p>"
+						+ "<p>B. <input type='checkbox' name='answerschecked' value='B'>&nbsp;&nbsp;" + answers[1] + "</p>");break;
+				case 4:nextQuestionInTest.append("<p>A. <input type='checkbox' name='answerschecked' value='A'>&nbsp;&nbsp;" + answers[0] + "</p>"
+						+ "<p>B. <input type='checkbox' name='answerschecked' value='B'>&nbsp;&nbsp;" + answers[1] + "</p>"
+						+ "<p>C. <input type='checkbox' name='answerschecked' value='C'>&nbsp;&nbsp;" + answers[2] + "</p>"
+						+ "<p>D. <input type='checkbox' name='answerschecked' value='D'>&nbsp;&nbsp;" + answers[3] + "</p>");break;
+				default : ;
 				}
+			}else{
+				int countAnswersOnPic = Integer.parseInt(questionAttributes[2]);
+				switch(countAnswersOnPic){
+				case 2:nextQuestionInTest.append("<p>A. <input type='checkbox' name='answerschecked' value='A'>&nbsp;&nbsp;</p>"
+						+ "<p>B. <input type='checkbox' name='answerschecked' value='B'>&nbsp;&nbsp;</p>");break;
+				case 4:nextQuestionInTest.append("<p>A. <input type='checkbox' name='answerschecked' value='A'>&nbsp;&nbsp;</p>"
+						+ "<p>B. <input type='checkbox' name='answerschecked' value='B'>&nbsp;&nbsp;</p>"
+						+ "<p>C. <input type='checkbox' name='answerschecked' value='C'>&nbsp;&nbsp;</p>"
+						+ "<p>D. <input type='checkbox' name='answerschecked' value='D'>&nbsp;&nbsp;</p>");break;
+				case 5:nextQuestionInTest.append("<p>A. <input type='checkbox' name='answerschecked' value='A'>&nbsp;&nbsp;</p>"
+						+ "<p>B. <input type='checkbox' name='answerschecked' value='B'>&nbsp;&nbsp;</p>"
+						+ "<p>C. <input type='checkbox' name='answerschecked' value='C'>&nbsp;&nbsp;</p>"
+						+ "<p>D. <input type='checkbox' name='answerschecked' value='D'>&nbsp;&nbsp;</p>"
+						+ "<p>E. <input type='checkbox' name='answerschecked' value='E'>&nbsp;&nbsp;</p>");break;
+				default : ;
+				}
+			}
 			nextQuestionInTest.append("<br> <input type='submit' value='Next Question' />");				
 		}
 		//
