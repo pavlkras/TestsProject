@@ -1,12 +1,12 @@
 package tel_ran.tests.entitys;
 
-import java.io.FileInputStream;
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.TimeZone;
 
 import javax.persistence.Column;
@@ -79,32 +79,30 @@ public class EntityTest {
 				String[] picturePaths = pictures.split(",");  
 				for(String path:picturePaths){
 					JSONObject pic = new JSONObject();
-					pic.put("picture", "data:image/jpeg;base64,"+ encodeToBase64(path));
-					ar.put(pic);	
+					String picture = getPicturesBase64(path);
+					if(picture != null){
+						pic.put("picture", "data:image/jpeg;base64," + getPicturesBase64(path));
+						ar.put(pic);
+					}	
 				}
 			}
 		 	jsonObj.put("pictures", ar); 
 		} catch (JSONException e) {}
 		return jsonObj.toString();
 	}
-
-	public String encodeToBase64(String pathToPicture){
+	
+	public String getPicturesBase64(String pathToPicture){
 		String res = null;
-		byte[] bytes = null;
-		FileInputStream file;
 		try {
-			file = new FileInputStream(pathToPicture);
-			bytes = new byte[file.available()];
-			file.read(bytes);
-			file.close();
-			res = Base64.getEncoder().encodeToString(bytes);
-		} catch (FileNotFoundException e) {	
-		
-		} catch (IOException e) { 
-		
-		} catch (NullPointerException e) { 
-		
-		}
+			BufferedReader in = new BufferedReader(new FileReader(pathToPicture));
+			String line;
+			StringBuffer pictureBase64 = new StringBuffer();
+			while((line = in.readLine()) != null){
+				pictureBase64.append(line);
+			}
+			res = pictureBase64.toString();
+		} catch (FileNotFoundException e) {} 
+		  catch (IOException e) {}
 		return res;
 	}
 
