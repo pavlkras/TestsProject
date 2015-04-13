@@ -17,6 +17,7 @@ import tel_ran.tests.processor.TestProcessor;
 import tel_ran.tests.services.interfaces.IMaintenanceService;
 
 public class MaintenanceService extends TestsPersistence implements IMaintenanceService {	
+	private final int NEW_QUESTION = 0;
 	//
 	private static int NUMBERofRESPONSESinThePICTURE = 4;// number of responses in the picture, for text questions default = 4
 	private static int MIN_NUMBER_OF_CATEGORIES = 1;
@@ -137,11 +138,9 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW)	
 	public boolean ModuleForBuildingQuestions(String byCategory, int nQuestions) {
 		/*------------------------------------------------------------------------------- TO DO add parameter for diff level of generated questions !!
-		 * question text|| image link || category of question || level of complexity || 
-		 * correct answer char || 
-		 * number of question text if exist question in db witch that text || number answers on image ( A,B or A,B,C,D and ...) |
-		 * Sample - String[] question = {"What Wrong witch Code:","E11842F520AE11842F520AA24589A2458992AE532883CFA45EE4.png","logical","1","E","0","2"};
-		 * question.length = 7. //// +4 or > for answers in text "a51","a52","a53","a54"  that bee letar */
+		 * |question text|| image link || category of question || level of complexity ||correct answer char || number answers on image ( A,B or A,B,C,D and ...) |
+		 * Sample - String[] question = {"What Wrong witch Code:","E11842F520AE11842F520AA24589A2458992AE532883CFA45EE4.png","logical","1","E","2"};
+		 * question.length = 6. //// +4 or > for answers in text "a51","a52","a53","a54"  that bee letar */
 
 		boolean flagAction = false;	
 		int DIF_LEVEL = 5;
@@ -167,6 +166,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 			 * DIF_LEVEL - level of complexity
 			 * returned List<String[]>*/
 			String workingDir = System.getProperty("user.dir").replaceAll("\\\\", "/");
+			
 			listQuestions =	proc.processStart(selectedCategory, nQuestions, workingDir + "/questions/", DIF_LEVEL );// - вызвать генерацию.
 		} catch (Exception e) {
 			System.out.println(" catch of test case generated q = ModuleForBuildingQuestions= ");
@@ -197,7 +197,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 					flagAction = CreateNewQuestion(fres[1], questionT, fres[2], Integer.parseInt(fres[3]), answers, fres[4].charAt(0), (int)enTq.getId(), numberOfResponsesInThePicture);
 				}else{
 					questionT = fres[0].replace("'", "");
-					flagAction = CreateNewQuestion(fres[1], questionT, fres[2], Integer.parseInt(fres[3]), answers, fres[4].charAt(0), 0, numberOfResponsesInThePicture);
+					flagAction = CreateNewQuestion(fres[1], questionT, fres[2], Integer.parseInt(fres[3]), answers, fres[4].charAt(0), NEW_QUESTION, numberOfResponsesInThePicture);
 				}
 			}
 		}
@@ -437,6 +437,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 						//i++;    // -- cycle works on the number of questions -nQuestion	
 						lengthCategoryArray++;
 					}else{// -- Terms: pass the array to the categories when adding a new question number in the array sheet Long. NEW condition: the end of the array with categories !!!
+						
 						/* Terms: pass the array to the categories when adding a new question number in the array sheet Long. add it according to the level of complexity. */
 						if(Integer.parseInt(levelOfDifficulty) != level){// that is max level from FES							
 							level++;// -- condition: the end of the array with the categories, the following passage levels of difficulty: +1.							
