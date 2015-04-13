@@ -79,9 +79,9 @@ public class EntityTest {
 				String[] picturePaths = pictures.split(",");  
 				for(String path:picturePaths){
 					JSONObject pic = new JSONObject();
-					String picture = getPicturesBase64(path);
+					String picture = getPictureBase64(path);
 					if(picture != null){
-						pic.put("picture", "data:image/jpeg;base64," + getPicturesBase64(path));
+						pic.put("picture", "data:image/jpeg;base64," + getPictureBase64(path));
 						ar.put(pic);
 					}	
 				}
@@ -91,7 +91,7 @@ public class EntityTest {
 		return jsonObj.toString();
 	}
 	
-	public String getPicturesBase64(String pathToPicture){
+	public String getPictureBase64(String pathToPicture){
 		String res = null;
 		try {
 			BufferedReader in = new BufferedReader(new FileReader(pathToPicture));
