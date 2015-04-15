@@ -38,7 +38,6 @@ public class EntityTest {
 	private int amountOfQuestions;
 	@Column(name = "pictures", length = 500)
 	private String pictures;           // format to string!! namefoto.jpg,nameAnotherfoto.jpg,xxx.jgg, ...
-//	private Date testDate;
 	private int duration;
 	private int complexityLevel;
 	private long startTestDate;
@@ -81,7 +80,7 @@ public class EntityTest {
 					JSONObject pic = new JSONObject();
 					String picture = getPictureBase64(path);
 					if(picture != null){
-						pic.put("picture", "data:image/jpeg;base64," + getPictureBase64(path));
+						pic.put("picture", getPictureBase64(path));
 						ar.put(pic);
 					}	
 				}
@@ -93,16 +92,22 @@ public class EntityTest {
 	
 	public String getPictureBase64(String pathToPicture){
 		String res = null;
+		BufferedReader in=null;
 		try {
-			BufferedReader in = new BufferedReader(new FileReader(pathToPicture));
+			in = new BufferedReader(new FileReader(pathToPicture));
 			String line;
 			StringBuffer pictureBase64 = new StringBuffer();
 			while((line = in.readLine()) != null){
 				pictureBase64.append(line);
 			}
 			res = pictureBase64.toString();
-		} catch (FileNotFoundException e) {} 
-		  catch (IOException e) {}
+		} catch (FileNotFoundException e) {
+		} catch (IOException e) {
+		} finally{
+			try {
+				in.close();
+			} catch (IOException e) {}
+		}
 		return res;
 	}
 
@@ -184,14 +189,6 @@ public class EntityTest {
 		this.pictures = pictures;
 	}
 
-//	public Date getTestDate() {
-//		return testDate;
-//	}
-
-//	public void setTestDate(Date testDate) {
-//		this.testDate = testDate;
-//	}	
-
 	public int getDuration() {
 		return duration;
 	}
@@ -213,7 +210,6 @@ public class EntityTest {
 	}
 
 	public void setStartTestDate(long startTestDate) {
-//		this.testDate = new Date(startTestDate);
 		this.startTestDate = startTestDate;
 	}
 
@@ -263,7 +259,6 @@ public class EntityTest {
 				+ amountOfCorrectAnswers + IMaintenanceService.DELIMITER
 				+ amountOfQuestions + IMaintenanceService.DELIMITER		
 				+ pictures + IMaintenanceService.DELIMITER
-//				+ testDate + IMaintenanceService.DELIMITER
 				+ duration + IMaintenanceService.DELIMITER
 				+ complexityLevel + IMaintenanceService.DELIMITER
 
