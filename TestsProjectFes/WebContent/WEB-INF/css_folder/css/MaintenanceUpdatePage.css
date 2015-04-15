@@ -14,7 +14,7 @@ td:hover {
 td {
 	border-bottom: 0.1em solid black;
 }
-textarea:HOVER{
+tr:HOVER{
 background-color: silver;	
 }
 table {
@@ -75,4 +75,8 @@ visibility: hidden;
 .myButton:active {
 	position:relative;
 	top:1px;
+}
+.imageQuest{
+	width: 400px;
+	height: 200px
 }

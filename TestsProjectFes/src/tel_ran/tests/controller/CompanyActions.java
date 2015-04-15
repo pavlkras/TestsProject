@@ -28,8 +28,6 @@ import tel_ran.tests.services.interfaces.IMaintenanceService;
 @RequestMapping({"/","/CompanyActions"})
 public class CompanyActions {
 	// --- private fields 
-	private static int N_ROWS_CATEGORY = 10;
-	//
 	String companyName;
 	//long companyId = -1;
 	long companyId;
@@ -77,27 +75,18 @@ Wrong Password Flow:
 
 	@RequestMapping("/loginProcessing")
 	public String loginProcessing(String companyName, String password,Model model){
-
 		////// Method getCompanyByName(companyName) - return companyId;
 		///	boolean IfExistCompany
 		companyId = companyService.getCompanyByName(companyName);
-
-		String result;
-		int counter = 0;
+		String result;		
 		////if(IfExistCompany){
 		if(companyId>0){
 			boolean ress = companyService.CompanyAuthorization(companyName, password);
-			if(ress ){ 				
+			if(ress){ 				
 				StringBuffer categoryHtmlText = new StringBuffer();
 				List<String> resultCategory = maintenanceService.getAllCategoriesFromDataBase();
 				for(String catBox:resultCategory){					
-					if(counter < N_ROWS_CATEGORY){
-						categoryHtmlText.append("&nbsp;&nbsp;&nbsp;"+catBox + "&nbsp;-<input type='checkbox' name='category' value='" + catBox + "' />");
-						counter++;
-					}else{
-						counter = 0;
-						categoryHtmlText.append("<br>");
-					}
+					categoryHtmlText.append("&nbsp;"+catBox + ":&nbsp;<input type='checkbox' name='category' value='" + catBox + "' /><br>");
 				}
 				model.addAttribute("categoryFill", categoryHtmlText.toString());
 				result = "CompanyGenerateTest";

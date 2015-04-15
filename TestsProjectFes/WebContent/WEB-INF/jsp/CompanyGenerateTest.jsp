@@ -11,13 +11,27 @@
     else document.getElementById("e_login").style.display = "none";
   }
 </script>
+<style type="text/css">
+.categoryCheckBox{
+float: left;
+}
+.inputFormBox{
+float: left;
+ margin-left: 2em;
+}
+.otherButtonsOnPage{
+clear: left;
+margin-top: 4em;
+}
+</style>
 </head>
 <body>
- <form action="add_test"> 
- Please select a Category of Question: <br>   
+ <form action="add_test">
+ <div class="categoryCheckBox"> 
+ Please select a Category of Question: <br> <br>  
 	<script type="text/javascript">
 	document.write("${categoryFill}");
-	</script><br>    
+	</script></div>  <div class="inputFormBox">  
  Level of Difficulty min: <br>   
     1<input type="radio" name="levelmin" value=1 checked="checked">
     2<input type="radio" name="levelmin" value=2>
@@ -59,13 +73,15 @@
    </tr> 
    </table>    
    <input type="submit" value="Generate test" />
+   </div>
  </form>
- <br> 
-<br> 
-	<script type="text/javascript">
+ 
+ <div class="otherButtonsOnPage">
+  <a href=".">Home</a> &nbsp;&nbsp; <a href="view_results">Test Details</a>
+  </div>
+  <br><br>
+  <script type="text/javascript">
 	document.write("${result}");
 	</script>
-	<br> 
-  <a href=".">Home</a> &nbsp;&nbsp; <a href="view_results">Test Details</a>
 </body>
 </html>

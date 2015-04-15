@@ -198,8 +198,7 @@ public class UserActions{
 	////
 	@RequestMapping({ "/UserTestLoop" })
 	public String test_run(HttpServletRequest request, Model model) {
-		String answerschecked = request.getParameter("answerschecked");	// getting answer from user 
-		String numberAnswersOnImage = "5";// counter
+		String answerschecked = request.getParameter("answerschecked");	// getting answer from user 		
 		if(userTest.getUserAnswers() == null){// counter and writer for User answers 
 			userTest.setUserAnswers(answerschecked );
 		}else{

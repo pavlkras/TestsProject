@@ -93,8 +93,12 @@ public class PersonalActions {
 				createdTestTable.append("<tr><td><table id='tabTestPerson_"+i+"' class='tableStyle'>"
 						+ "<tr><th class='questionTextStyle' colspan='2'>"+tempQuestionText[0]+"</th></tr>");// table of question and attributes of question table N-2			
 				if(tempQuestionText[2].length() > 15){	// image link	
-					//TO DO get image link as full path !!!!!
-					createdTestTable.append("<tr><td colspan='2'><img src='static/images/questionImages/"+tempQuestionText[2]+"' alt='Image not supported'></td></tr>");
+					
+					String workingDir = System.getProperty("user.dir").replaceAll("\\\\", "/");
+					String replacedText = tempQuestionText[2].replaceAll("\\\\", "/");
+					String imageLink = workingDir + "/questions" + replacedText;
+					System.err.println(imageLink);
+					createdTestTable.append("<tr><td colspan='2'><img src='" + imageLink + "' alt='Image not supported'></td></tr>");
 				}			
 				////
 				if(tempQuestionText.length > 7){
@@ -131,7 +135,16 @@ public class PersonalActions {
 								+ "<p class='answersCharParam'>A. <input type='checkbox' name='answerschecked' value='A'>&nbsp;&nbsp;</p></td><td>"
 								+ "<p class='answersCharParam'>B. <input type='checkbox' name='answerschecked' value='B'>&nbsp;&nbsp;</p></td></tr>");
 						//
-					}else if(tempQuestionText[6].equalsIgnoreCase("5") || tempQuestionText[6].equalsIgnoreCase("4")){
+					}else if(tempQuestionText[6].equalsIgnoreCase("4")){
+						//
+						createdTestTable.append("<tr onchange='onchangeClick(1)'>"
+								+ "<td><p class='answersCharParam'>A. <input type='checkbox' name='answerschecked' value='A'>&nbsp;&nbsp;</p></td>"
+								+ "<td><p class='answersCharParam'>B. <input type='checkbox' name='answerschecked' value='B'>&nbsp;&nbsp;</p></td>"
+								+ "</tr><tr onchange='onchangeClick(1)'>"
+								+ "<td><p class='answersCharParam'>C. <input type='checkbox' name='answerschecked' value='C'>&nbsp;&nbsp;</p></td>"
+								+ "<td><p class='answersCharParam'>D. <input type='checkbox' name='answerschecked' value='D'>&nbsp;&nbsp;</p></td>");
+						////
+					}else if(tempQuestionText[6].equalsIgnoreCase("5")){
 						//
 						createdTestTable.append("<tr onchange='onchangeClick(1)'>"
 								+ "<td><p class='answersCharParam'>A. <input type='checkbox' name='answerschecked' value='A'>&nbsp;&nbsp;</p></td>"

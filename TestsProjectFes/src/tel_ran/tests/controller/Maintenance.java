@@ -174,12 +174,13 @@ public class Maintenance {
 			if(resultDB.size() > 0){				
 				outResultText.append("<table><tr><th>N</th><th>Question</th><th>Image</th></tr>");//<th>Level of difficulty</th>
 				////
-				for (String questionLine : resultDB) {						
+				for (String questionLine : resultDB) {
+					System.out.println(" questionLine-"+questionLine);
 					String[] element = questionLine.split(IMaintenanceService.DELIMITER);	
-					outResultText.append("<tr onclick='test(" + element[1] + ")'><td> "+ element[1]+ " </td>");// question id// set id for click event
+					outResultText.append("<tr onclick='test(" + element[3] + ")'><td> "+ element[2]+ " </td>");// question id// set id for click event
 					outResultText.append("<td> "+ element[0]+ " </td>");// question text					
-					if(element[2] != null && element[2].length() > 10){
-						outResultText.append("<td><img src='"+ element[2]+ "' alt='not img'></td>");// question text
+					if(element[1] != null && element[1].length() > 10){
+						outResultText.append("<td><img src='"+ element[1]+ "' alt='not img' class='imageQuest'></td>");// question text
 					}		
 				}	
 				outResultText.append("</table><br>");								
@@ -335,13 +336,13 @@ public class Maintenance {
 		try {
 			List<String> categoryList = maintenanceService.getAllCategoriesFromDataBase();
 			if (categoryList != null) {
-				int counter = 8;
+				int counter = 6;
 				for (String tresR : categoryList) {
-					if (counter == 8) {
+					if (counter == 6) {
 						counter = 0;
-						checkedFlyButtons.append("<br>");
+						checkedFlyButtons.append("<br><br>");
 					}
-					checkedFlyButtons.append(tresR + "&nbsp;-&nbsp;<input type='checkbox' name='category' value='" + tresR + "'> ");
+					checkedFlyButtons.append(tresR + "&nbsp;-><input type='checkbox' name='category' value='" + tresR + "'> ");
 					counter++;
 				}				
 			} else {
