@@ -1,5 +1,6 @@
 package tel_ran.tests.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -103,41 +104,44 @@ public class UserActionService extends TestsPersistence implements IUserActionSe
 	}
 	////	
 	@Override
-	public String getTraineeQuestions(String category, int level, int qAmount) {
-		String query = "SELECT q FROM EntityQuestionAttributes q WHERE q.category=?1 AND q.levelOfDifficulty=?2";
-		Query q = em.createQuery(query);
-		q.setParameter(1, category);
-		q.setParameter(2, level);
-		////
-		List<EntityQuestionAttributes> questionAttributesList = q.getResultList();
-		////	
-		StringBuffer outTextResult = new StringBuffer();
-		// if required number of the questions is less then questionList obtain
-		// then randomly choose some questions from list and fill new array till
-		// it reach required size		
-		if (qAmount != 0 && qAmount < questionAttributesList.size()) {
-			Random rand = new Random();		
-			for (int j = 0; j < qAmount; j++) {
-				// selection random number of the index 				
-				int num = rand.nextInt(questionAttributesList.size());
-				//
-				EntityQuestionAttributes tRes = questionAttributesList.get(num);
-				outTextResult.append(tRes.getQuestionId().getQuestionText() + IMaintenanceService.DELIMITER);
-				outTextResult.append(tRes.getImageLink() + IMaintenanceService.DELIMITER);
-				outTextResult.append(tRes.getNumberOfResponsesInThePicture() + IMaintenanceService.DELIMITER);
-				outTextResult.append(tRes.getCorrectAnswer());
-				//
-				if(tRes.getQuestionAnswersList() != null){					
-					List<EntityAnswersText> anRes = tRes.getQuestionAnswersList();
-					for(EntityAnswersText rRes :anRes){
-						outTextResult.append(IMaintenanceService.DELIMITER + rRes.getAnswerText());
-					}
+	public String getTraineeQuestions(String category, int levelOfDifficulty, int qAmount) {
+		StringBuffer outTextResult = new StringBuffer();	
+		int level = 1;	
+		if(qAmount > 0 && category != null){		
+			for(int i=0; i < qAmount ;){// -- cycle works on the number of questions -nQuestion	
+				if(levelOfDifficulty != level)			
+					level++;// -- condition: the end of the array with the categories, the following passage levels of difficulty: +1.	
+				List<EntityQuestionAttributes> questionAttrList = em.createQuery("SELECT c FROM EntityQuestionAttributes c WHERE "
+						+ "(c.levelOfDifficulty="+level+") AND (c.category='"+category+"')").getResultList();
+				if(questionAttrList.size() > 0){//  -- condition: if the questionAttrList.size is greater than zero.
+					Random rnd = new Random();
+					int rand =  rnd.nextInt(questionAttrList.size());							
+					EntityQuestionAttributes tmpRes = questionAttrList.get(rand);							
+					outTextResult.append(tmpRes.getQuestionId().getQuestionText() + IMaintenanceService.DELIMITER);
+					////
+					String workingDir = System.getProperty("user.dir").replaceAll("\\\\", "/");
+					String replacedText = tmpRes.getImageLink().replaceAll("\\\\", "/");
+					String imageLink = workingDir + "/questions" + replacedText;				
+					outTextResult.append(imageLink + IMaintenanceService.DELIMITER);
+					////
+					outTextResult.append(tmpRes.getNumberOfResponsesInThePicture() + IMaintenanceService.DELIMITER);
+					outTextResult.append(tmpRes.getCorrectAnswer());
+					//
+					if(tmpRes.getQuestionAnswersList() != null){					
+						List<EntityAnswersText> anRes = tmpRes.getQuestionAnswersList();
+						for(EntityAnswersText rRes :anRes){
+							outTextResult.append(IMaintenanceService.DELIMITER + rRes.getAnswerText());
+						}
+					}					
+					////
+					// removing this question from questionList
+					outTextResult.append(",");					
+					i++;// -- cycle works on the number of questions -nQuestion	 WITCH WRONG LOOP
+				}else{//  -- condition: if the questionAttrList.size is equal to or less than zero.							
+					System.out.println("BES User test else condition i-" + i);//---------------------------sysout	
 				}
-				// removing this question from questionList
-				outTextResult.append(",");
-				questionAttributesList.remove(num);
 			}			
-		}
+		}		
 		return outTextResult.toString();	
 	}
 	////------- Test mode Test for User case ----------------// END //

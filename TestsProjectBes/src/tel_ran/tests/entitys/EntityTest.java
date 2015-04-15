@@ -75,12 +75,18 @@ public class EntityTest {
 			jsonObj.put("persentOfRightAnswers",Math.round((float)amountOfCorrectAnswers/(float)amountOfQuestions*100));
 			JSONArray ar = new JSONArray();
 			if(!pictures.equals("")){
+				
 				String[] picturePaths = pictures.split(",");  
-				for(String path:picturePaths){
+				for(String path:picturePaths){					
 					JSONObject pic = new JSONObject();
-					String picture = getPictureBase64(path);
+					////
+					String workingDir = System.getProperty("user.dir").replaceAll("\\\\", "/");
+					String replacedText = path.replaceAll("\\\\", "/");
+					String imageLink = workingDir + "/" + replacedText.replaceAll(" ", "");
+					////
+					String picture = getPictureBase64(imageLink);
 					if(picture != null){
-						pic.put("picture", getPictureBase64(path));
+						pic.put("picture", getPictureBase64(imageLink));
 						ar.put(pic);
 					}	
 				}

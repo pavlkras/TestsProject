@@ -3,7 +3,6 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.springframework.transaction.annotation.Propagation;
@@ -51,7 +50,6 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
 	public boolean SaveEndPersonTestResult(String testId, String personAnswers,	String imagesLinks, long timeEndTest) {
 		String[] res = imagesLinks.split("@end_of_link@");  // here Links OF PersonIMAGE in array string as 1 string = 1 img link base64!!!
-		System.out.println("length of array witch imglinks-" + res.length);	//---------------------------------------------------------------------sysout
 		////
 		boolean resAction = false;
 		try{
@@ -100,12 +98,12 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 				BufferedWriter writer =  new BufferedWriter ( new FileWriter(workingDir + "/" + fileDirectory +"/comp_" + companyID + "/test_" + testID + "/pic_" + picNum + ".txt"));
 				writer.write(imagesLinksInBase64Text[picNum]);			 
 				writer.close();
-				outLinkText += workingDir + "/" + fileDirectory +"/comp_" + companyID + "/test_" + testID + "/pic_" + picNum + ".txt" + " , ";
+				outLinkText += fileDirectory +"/comp_" + companyID + "/test_" + testID + "/pic_" + picNum + ".txt" + " , ";
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}		
-		System.out.println("outLinkText-"+outLinkText);		
+		System.out.println("outLinkText-"+outLinkText);	//------------------------------sysout	
 		return outLinkText;
 	}
 	////-------  save images ----------------// END //	

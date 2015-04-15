@@ -139,7 +139,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	public boolean ModuleForBuildingQuestions(String byCategory, int nQuestions) {
 		/*------------------------------------------------------------------------------- TO DO add parameter for diff level of generated questions !!
 		 * |question text|| image link || category of question || level of complexity ||correct answer char || number answers on image ( A,B or A,B,C,D and ...) |
-		 * Sample - String[] question = {"What Wrong witch Code:","E11842F520AE11842F520AA24589A2458992AE532883CFA45EE4.png","logical","1","E","2"};
+		 * Sample - String[] oneQuestion = {"In which row the sequence is incorrect? ","\Attention Test\cdc922b32a0496f7b401cc3eedeaa59.jpg","LongAttentionLines","5","A","5"};
 		 * question.length = 6. //// +4 or > for answers in text "a51","a52","a53","a54"  that bee letar */
 
 		boolean flagAction = false;	
@@ -166,7 +166,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 			 * DIF_LEVEL - level of complexity
 			 * returned List<String[]>*/
 			String workingDir = System.getProperty("user.dir").replaceAll("\\\\", "/");
-			
+
 			listQuestions =	proc.processStart(selectedCategory, nQuestions, workingDir + "/questions/", DIF_LEVEL );// - вызвать генерацию.
 		} catch (Exception e) {
 			System.out.println(" catch of test case generated q = ModuleForBuildingQuestions= ");
@@ -176,10 +176,10 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		if(listQuestions != null){
 			for(String[] fres :listQuestions){				
 				answers = new ArrayList<String>();
-				if(fres.length > 7){				
-					answers.add(fres[7]);answers.add(fres[8]);answers.add(fres[9]);answers.add(fres[10]);
+				if(fres.length > 6){				
+					answers.add(fres[6]);answers.add(fres[7]);answers.add(fres[8]);answers.add(fres[9]);
 				}			
-				int numberOfResponsesInThePicture = Integer.parseInt(fres[6]);
+				int numberOfResponsesInThePicture = Integer.parseInt(fres[5]);
 				Object queryTempObj;
 				//// query if question exist as text in Data Base
 				String questionT = fres[0].replace("'", "");
@@ -208,7 +208,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	////-------------- Reading from file and Adding Questions into DB Case ----------// BEGIN  //
 	@Override
 	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW)	
-	public boolean FillDataBaseFromTextResource(List<String> inputTextFromFile){
+	public boolean FillDataBaseFromTextResource(List<String> inputTextFromFile){// !!!!!!!!!!! worked only in Mozila and Hrome !!!!!!!!!!!
 		//sample for text in file question(one line!!!)
 		//questionText----imageLink----category----levelOfDifficulty----answer1----answer2----answer3----answer4----correctAnswerChar----questionIndexNumber
 		//		
@@ -262,7 +262,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	////-------------- Reading from file and Adding Questions into DB Case ----------// END  //
 	////-------------- internal method for filling in the form update issue ----------// BEGIN  //
 	@Override
-	public String getQuestionById(String questionID) {// method return all attributes from Question and Answer Tables in string line  
+	public String getQuestionById(String questionID) {// getting question attributes by ID !!!!!!!!!!!!!!!!!!!!!!!!!  
 		StringBuffer  outRes = new StringBuffer();
 		long id = (long)Integer.parseInt(questionID);
 		//
@@ -297,7 +297,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	////-------------- Method for delete question into DB ----------// BEGIN  //
 	@Override
 	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW)	
-	public String deleteQuetionById(String questionID){
+	public String deleteQuetionById(String questionID){// !!!!!!!!!  delete one question witch all questions attributes !!!!!!!
 		String outMessageTextToJSP_Page = "";
 		try {
 			long id = Integer.parseInt(questionID);		
@@ -327,39 +327,23 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 
 	////-------------- Search Method by Category or Categories and level of difficulty ----------// BEGIN  //
 	@SuppressWarnings("unchecked")		
-	public List<String> SearchAllQuestionInDataBase(String category, int levelOfDifficulty) {			
-		List<String> outResult = new ArrayList<String>();
+	public List<String> SearchAllQuestionInDataBase(String category, int levelOfDifficulty) {	// !!!!!!!!!!!!!!!!!!!!!!!!!!!! not work in mazila		
+		List<String> outResult = new ArrayList<String>();		
 		////
 		if(category != null && !category.equalsIgnoreCase("")){
-			List<EntityQuestionAttributes> query = em.createQuery("SELECT c FROM EntityQuestionAttributes c WHERE c.category='" + category + "'").getResultList();
-			for(EntityQuestionAttributes es: query){
-				outResult.add(es.getQuestionId().getQuestionText() + IMaintenanceService.DELIMITER + es.toString());
-				System.out.println(outResult);
-			}
-
-			/*		String[] tempCat_1 = category.split(",");
-			StringBuffer[] tempCat_2 = new StringBuffer[tempCat_1.length];
-			StringBuffer condition = new StringBuffer();
-			for(int i=0; i<tempCat_1.length; i++){
-				String str = tempCat_1[i] + "%";
-				tempCat_2[i] = new StringBuffer(str);
-				if(i < (tempCat_1.length - 1)){
-					condition.append("(c.category LIKE ?" + (i+2) + ") OR "); 
-				}
-				else{
-					condition.append("(c.category LIKE ?" + (i+2) + ")");
-				}
-			}
-			query = em.createQuery("SELECT c.id FROM EntityQuestionAttributes c WHERE (c.levelOfDifficulty=?1) AND (" + condition.toString() + ")");
-			query.setParameter(1, levelOfDifficulty);
-			for(int i=0; i<tempCat_1.length; i++){
-				query.setParameter((i+2), tempCat_2[i].toString());
-			}
-			List<Long> result = query.getResultList();			
-			for(Long qN: result){
-				String q = getQuestionById(qN.toString());				
-				outResult.add(q);
-			}*/
+			String workingDir = System.getProperty("user.dir").replaceAll("\\\\", "/");
+			//
+			List<EntityQuestionAttributes> query = em.createQuery("SELECT c FROM EntityQuestionAttributes c WHERE "
+					+ "(c.levelOfDifficulty="+levelOfDifficulty+") AND (c.category='"+category+"')").getResultList();
+			////
+			for(EntityQuestionAttributes tempRes: query){							
+				String replacedText = tempRes.getImageLink().replaceAll("\\\\", "/");
+				String imageLink = workingDir + "/questions" + replacedText;
+				outResult.add(tempRes.getQuestionId().getQuestionText() + IMaintenanceService.DELIMITER 
+						+ imageLink + IMaintenanceService.DELIMITER 
+						+ tempRes.getId() + IMaintenanceService.DELIMITER
+						+ tempRes.getQuestionId().getId());
+			}		
 		}else{
 			outResult = null;
 		}		
@@ -413,8 +397,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	public List<Long> getUniqueSetQuestionsForTest(String category,String levelOfDifficulty,Long nQuestion){
 		List<Long> outRes = new ArrayList<Long>();
 		int lengthCategoryArray = 0;
-		int level = 1;
-		int countArr = 0;
+		int level = 1;	
 		////
 		if(nQuestion > 0 && category != null){		
 			String[] categoryArray = category.split(",");			
@@ -429,7 +412,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 							EntityQuestionAttributes re = questionAttrList.get(rand);							
 							outRes.add(re.getId());	
 							////
-							i++;
+							i++;// -- cycle works on the number of questions -nQuestion	 WITCH WRONG LOOP
 						}else{//  -- condition: if the questionAttrList.size is equal to or less than zero.							
 							System.out.println("BES else condition i-" + i);//---------------------------sysout	
 						}
@@ -437,7 +420,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 						//i++;    // -- cycle works on the number of questions -nQuestion	
 						lengthCategoryArray++;
 					}else{// -- Terms: pass the array to the categories when adding a new question number in the array sheet Long. NEW condition: the end of the array with categories !!!
-						
+
 						/* Terms: pass the array to the categories when adding a new question number in the array sheet Long. add it according to the level of complexity. */
 						if(Integer.parseInt(levelOfDifficulty) != level){// that is max level from FES							
 							level++;// -- condition: the end of the array with the categories, the following passage levels of difficulty: +1.							

@@ -192,7 +192,7 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 					.setParameter("testId", testId)
 					.setParameter("company", company)
 					.getSingleResult();
-			res = test.getJsonDetails();
+			res = test.getJsonDetails();// TO DO Throws actions NullPointerException !!!!!!!!!!!!!
 		}
 		return res;
 	}
