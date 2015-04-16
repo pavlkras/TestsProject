@@ -93,12 +93,15 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 		String fileDirectory = BASE_DIRECTORY_FOR_SAVING_PICTURES_TO_FILE;	
 		String workingDir = System.getProperty("user.dir").replaceAll("\\\\", "/");
 		try {			
-			Files.createDirectories(Paths.get(fileDirectory +"/comp_" + companyID + "/test_" + testID));	
+			//Files.createDirectories(Paths.get(fileDirectory +"/comp_" + companyID + "/test_" + testID));	
+			Files.createDirectories(Paths.get(fileDirectory +"\\comp_" + companyID + "\\test_" + testID));
 			for(int picNum=0; picNum < imagesLinksInBase64Text.length; picNum++){	
-				BufferedWriter writer =  new BufferedWriter ( new FileWriter(workingDir + "/" + fileDirectory +"/comp_" + companyID + "/test_" + testID + "/pic_" + picNum + ".txt"));
+				//BufferedWriter writer =  new BufferedWriter ( new FileWriter(workingDir + "/" + fileDirectory +"/comp_" + companyID + "/test_" + testID + "/pic_" + picNum + ".txt"));
+				BufferedWriter writer =  new BufferedWriter ( new FileWriter(workingDir + "\\" + fileDirectory +"\\comp_" + companyID + "\\test_" + testID + "\\pic_" + picNum + ".txt"));
 				writer.write(imagesLinksInBase64Text[picNum]);			 
 				writer.close();
-				outLinkText += fileDirectory +"/comp_" + companyID + "/test_" + testID + "/pic_" + picNum + ".txt" + " , ";
+				//outLinkText += fileDirectory +"/comp_" + companyID + "/test_" + testID + "/pic_" + picNum + ".txt" + " , ";
+				outLinkText += fileDirectory +"\\comp_" + companyID + "\\test_" + testID + "\\pic_" + picNum + ".txt" + ",";
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
