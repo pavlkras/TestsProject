@@ -50,6 +50,9 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
 	public boolean SaveEndPersonTestResult(String testId, String personAnswers,	String imagesLinks, long timeEndTest) {
 		String[] res = imagesLinks.split("@end_of_link@");  // here Links OF PersonIMAGE in array string as 1 string = 1 img link base64!!!
+		for(int i=0;i<res.length;i++){
+			res[i]=res[i].replaceFirst(",", "");
+		}
 		////
 		boolean resAction = false;
 		try{
