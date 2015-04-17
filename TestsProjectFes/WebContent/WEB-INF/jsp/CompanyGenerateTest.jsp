@@ -77,7 +77,7 @@ margin-top: 4em;
  </form>
  
  <div class="otherButtonsOnPage">
-  <a href=".">Home</a> &nbsp;&nbsp; <a href="view_results">Test Details</a>
+  <a href=".">Home</a> &nbsp;&nbsp; <a href="view_results">Test Results</a>
   </div>
   <br><br>
   <script type="text/javascript">
