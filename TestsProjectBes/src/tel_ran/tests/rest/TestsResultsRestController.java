@@ -35,6 +35,8 @@ public class TestsResultsRestController {
 		String res = "";
 		if(companyId != -1){
 			res = companyActionsService.getTestsResultsAll(companyId, timeZone);
+		} else {
+			res = getJsonErrorMessage();
 		}
 		return res;
 	}
@@ -46,6 +48,8 @@ public class TestsResultsRestController {
 		String res = "";
 		if(companyId != -1){
 			res = companyActionsService.getTestsResultsForPersonID(companyId, personId, timeZone);
+		} else {
+			res = getJsonErrorMessage();
 		}
 		return res;
 	}
@@ -76,8 +80,9 @@ public class TestsResultsRestController {
 								
 				res = companyActionsService.getTestsResultsForTimeInterval(companyId, calend_from.getTimeInMillis(), calend_until.getTimeInMillis(), timeZone);
 			} catch (ParseException e) {}
+		} else {
+			res = getJsonErrorMessage();
 		}
-		//System.out.println("Daterange selector " +res);
 		return res;
 	}
 	
@@ -88,7 +93,13 @@ public class TestsResultsRestController {
 		String res = "";
 		if(companyId != -1){
 			res = companyActionsService.getTestResultDetails(companyId, testId);
+		} else {
+			res = getJsonErrorMessage();
 		}
 		return res;
+	}
+	
+	private String getJsonErrorMessage(){
+		return "{\"Error\":\"Please relogin\"}";
 	}
 }

@@ -35,13 +35,14 @@ public class TokenProcessor {
 		try {
 			wasDecrypted = cipher.decrypt(token);
 			//System.out.println("wasDecrypted: "+wasDecrypted);
+			
+			String [] array = wasDecrypted.split(ICommonData.delimiter);
+			long currTimeStamp = new Date().getTime();
+			long validUntilTimeStamp = Long.parseLong(array[0]);
+			if(validUntilTimeStamp > currTimeStamp){
+				companyId = Long.parseLong(array[1]);
+			}
 		} catch (Exception e) {}
-		String [] array = wasDecrypted.split(ICommonData.delimiter);
-		long currTimeStamp = new Date().getTime();
-		long validUntilTimeStamp = Long.parseLong(array[0]);
-		if(validUntilTimeStamp > currTimeStamp){
-			companyId = Long.parseLong(array[1]);
-		}
 		return companyId;
 	}
 
