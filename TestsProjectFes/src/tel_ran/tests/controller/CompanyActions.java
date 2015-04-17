@@ -29,8 +29,7 @@ import tel_ran.tests.services.interfaces.IMaintenanceService;
 public class CompanyActions {
 	// --- private fields 
 	String companyName;
-	//long companyId = -1;
-	long companyId;
+	long companyId = -1;
 
 	@Autowired
 	ICompanyActionsService companyService;
@@ -273,11 +272,13 @@ f)	5 photos made during the test	------ IGOR ------*/
 	public String viewResults(Model model){
 		//Code for testing
 		//		companyId = 8;
+		String page = "ErrorPage";
 		if(companyId != -1){
 			String token = companyService.encodeIntoToken(companyId);
 			model.addAttribute("token", token);
+			page = "CompanyViewTestsResults";
 		}
-		return "CompanyViewTestsResults";
+		return page;
 	}	
 	// -----------------END  Use case Viewing test results-----------------
 }

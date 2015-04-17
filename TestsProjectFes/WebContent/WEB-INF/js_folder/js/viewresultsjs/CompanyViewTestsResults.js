@@ -67,7 +67,12 @@ app.controller('InputController', ['$scope','$http', 'ngDialog', function($scope
 		console.log($scope.link);
 
 		$http.get($scope.link, $scope.httpConfig).success(function (response) {
-			$scope.testDetails = angular.fromJson(response);
+			var details__ = angular.fromJson(response);
+			if(!details__.Error){
+				$scope.testDetails = details__;
+			}else{
+				alert(details__.Error);
+			}
 		});
 	};
 		  
@@ -86,17 +91,23 @@ app.controller('InputController', ['$scope','$http', 'ngDialog', function($scope
 
 // Test Common Results	
 	$scope.submit = function(){
-	$scope.link = "/TestsProjectBes/view_results_rest"+$scope.modePath+$scope.parameters();
-	$scope.httpConfig = {headers: {
-        'Authorization': $scope.token,
-        'TimeZone': new Date().toString().match(/([A-Z]+[\+-][0-9]+)/)[1]
-    }};
-	console.log($scope.link);
-	$http.get($scope.link, $scope.httpConfig).success(function (response) {
-		$scope.results = response;
-	});
-  };
-  
+		$scope.link = "/TestsProjectBes/view_results_rest"+$scope.modePath+$scope.parameters();
+		$scope.httpConfig = {headers: {
+	        'Authorization': $scope.token,
+	        'TimeZone': new Date().toString().match(/([A-Z]+[\+-][0-9]+)/)[1]
+	    }};
+		console.log($scope.link);
+		$http.get($scope.link, $scope.httpConfig).success(function (response) {
+			var results__ = angular.fromJson(response);
+			if(!results__.Error){
+				$scope.testDetails = results__;
+			}else{
+				alert(results__.Error);
+			}
+			
+			$scope.results = response;
+		});
+	};
 }]);
 
 app.directive('pageSelect', function() {
