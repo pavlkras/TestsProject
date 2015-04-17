@@ -420,9 +420,9 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 						////	
 						//i++;    // -- cycle works on the number of questions -nQuestion	
 						lengthCategoryArray++;
-					}else{// -- Terms: pass the array to the categories when adding a new question number in the array sheet Long. NEW condition: the end of the array with categories !!!
-
-						/* Terms: pass the array to the categories when adding a new question number in the array sheet Long. add it according to the level of complexity. */
+					}else{
+						/* -- Terms: pass the array to the categories when adding a new question number in the array sheet Long. NEW condition: the end of the array with categories !!!
+						      Terms: pass the array to the categories when adding a new question number in the array sheet Long. add it according to the level of complexity. */
 						if(Integer.parseInt(levelOfDifficulty) != level){// that is max level from FES							
 							level++;// -- condition: the end of the array with the categories, the following passage levels of difficulty: +1.							
 						}
