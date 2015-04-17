@@ -67,12 +67,7 @@ app.controller('InputController', ['$scope','$http', 'ngDialog', function($scope
 		console.log($scope.link);
 
 		$http.get($scope.link, $scope.httpConfig).success(function (response) {
-			var details__ = angular.fromJson(response);
-			if(!details__.Error){
-				$scope.testDetails = details__;
-			}else{
-				alert(details__.Error);
-			}
+			$scope.testDetails = response;
 		});
 	};
 		  
@@ -98,14 +93,11 @@ app.controller('InputController', ['$scope','$http', 'ngDialog', function($scope
 	    }};
 		console.log($scope.link);
 		$http.get($scope.link, $scope.httpConfig).success(function (response) {
-			var results__ = angular.fromJson(response);
-			if(!results__.Error){
-				$scope.testDetails = results__;
-			}else{
-				alert(results__.Error);
-			}
-			
 			$scope.results = response;
+			if(response.Error){
+				alert(response.Error);
+				$scope.results = "";
+			}
 		});
 	};
 }]);
