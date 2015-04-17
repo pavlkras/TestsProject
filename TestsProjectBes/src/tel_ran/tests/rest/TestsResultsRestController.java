@@ -77,7 +77,7 @@ public class TestsResultsRestController {
 				res = companyActionsService.getTestsResultsForTimeInterval(companyId, calend_from.getTimeInMillis(), calend_until.getTimeInMillis(), timeZone);
 			} catch (ParseException e) {}
 		}
-		System.out.println("Daterange selector " +res);
+		//System.out.println("Daterange selector " +res);
 		return res;
 	}
 	

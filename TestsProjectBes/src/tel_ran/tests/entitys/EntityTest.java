@@ -37,7 +37,7 @@ public class EntityTest {
 	private int amountOfCorrectAnswers;
 	private int amountOfQuestions;
 	@Column(name = "pictures", length = 500)
-	private String pictures;           // format to string!! namefoto.jpg,nameAnotherfoto.jpg,xxx.jgg, ...
+	private String pictures="";           // format to string!! namefoto.jpg,nameAnotherfoto.jpg,xxx.jgg, ...
 	private int duration;
 	private int complexityLevel;
 	private long startTestDate;
@@ -59,7 +59,7 @@ public class EntityTest {
 			jsonObj.put("testCategory",testCategory);
 			jsonObj.put("testName", testName);
 			SimpleDateFormat sdf = new SimpleDateFormat(ICommonData.DATE_FORMAT);
-			sdf.setTimeZone(TimeZone.getTimeZone(timeZone));	
+			sdf.setTimeZone(TimeZone.getTimeZone(timeZone));
 			jsonObj.put("testDate", sdf.format(new Date(startTestDate)));
 		} catch (JSONException e) {}
 		return jsonObj;
@@ -74,7 +74,7 @@ public class EntityTest {
 			jsonObj.put("amountOfCorrectAnswers",amountOfCorrectAnswers);
 			jsonObj.put("persentOfRightAnswers",Math.round((float)amountOfCorrectAnswers/(float)amountOfQuestions*100));
 			JSONArray ar = new JSONArray();
-			if(!pictures.equals("")){
+			if(!pictures.equals("")){ 
 				
 				String[] picturePaths = pictures.split(",");  
 				for(String path:picturePaths){					

@@ -23,10 +23,8 @@ public class TokenProcessor {
 		String token = "";
 		try {
 			token = cipher.encrypt(strbuf.toString());
-			System.out.println("wasEncrypted: "+strbuf.toString());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+			//System.out.println("wasEncrypted: "+strbuf.toString());
+		} catch (Exception e) {}
 		return token;
 	}
 
@@ -36,10 +34,8 @@ public class TokenProcessor {
 		String wasDecrypted = "";
 		try {
 			wasDecrypted = cipher.decrypt(token);
-			System.out.println("wasDecrypted: "+wasDecrypted);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+			//System.out.println("wasDecrypted: "+wasDecrypted);
+		} catch (Exception e) {}
 		String [] array = wasDecrypted.split(ICommonData.delimiter);
 		long currTimeStamp = new Date().getTime();
 		long validUntilTimeStamp = Long.parseLong(array[0]);

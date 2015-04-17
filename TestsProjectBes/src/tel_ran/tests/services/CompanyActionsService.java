@@ -140,7 +140,7 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 		if(company!=null){
 			@SuppressWarnings("unchecked")
 			List<EntityTest> tests = (List<EntityTest>) em.createQuery
-			("SELECT t FROM EntityTest t WHERE t.entityCompany = :company ORDER BY t.entityPerson")
+			("SELECT t FROM EntityTest t WHERE t.endTestDate!=0 AND t.entityCompany = :company ORDER BY t.entityPerson")
 			.setParameter("company", company)
 			.getResultList();
 			res = generateJsonResponse(tests, timeZone);
@@ -156,7 +156,7 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 		if(company!=null && person != null){
 			@SuppressWarnings("unchecked")
 			List<EntityTest> tests = (List<EntityTest>) em.createQuery
-			("SELECT t FROM EntityTest t WHERE t.entityPerson = :person AND t.entityCompany = :company")
+			("SELECT t FROM EntityTest t WHERE t.endTestDate!=0 AND t.entityPerson = :person AND t.entityCompany = :company")
 			.setParameter("person", person)
 			.setParameter("company", company)
 			.getResultList();
@@ -172,7 +172,7 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 		if(company!=null){
 			@SuppressWarnings("unchecked")
 			List<EntityTest> tests = (List<EntityTest>) em.createQuery
-			("SELECT t FROM EntityTest t WHERE t.startTestDate >= :date_from AND t.startTestDate <= :date_until AND t.entityCompany = :company ORDER BY t.entityPerson")
+			("SELECT t FROM EntityTest t WHERE t.endTestDate!=0 AND t.startTestDate >= :date_from AND t.startTestDate <= :date_until AND t.entityCompany = :company ORDER BY t.entityPerson")
 			.setParameter("date_from", date_from)
 			.setParameter("date_until", date_until)
 			.setParameter("company", company)
@@ -188,7 +188,7 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 		EntityCompany company = em.find(EntityCompany.class, companyId);
 		if(company!=null){
 			EntityTest test = (EntityTest) em.createQuery
-					("SELECT t FROM EntityTest t WHERE t.testId = :testId AND t.entityCompany = :company")
+					("SELECT t FROM EntityTest t WHERE t.endTestDate!=0 AND t.testId = :testId AND t.entityCompany = :company")
 					.setParameter("testId", testId)
 					.setParameter("company", company)
 					.getSingleResult();

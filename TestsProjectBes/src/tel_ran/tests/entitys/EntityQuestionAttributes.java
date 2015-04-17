@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -29,7 +30,7 @@ public class EntityQuestionAttributes implements Serializable {
 	@ManyToOne
 	private EntityQuestion questionId;
 	////
-	@OneToMany(mappedBy = "questionAttributeId")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "questionAttributeId")
 	List<EntityAnswersText> questionAnswersList;
 	//// pattern: D785JHGYT785J58R86JJ6776867TRJJ677TJ575JJ584K493K45J55.jpg or any resolution: HashCode.png
 	@Column(name = "imageLink", unique = false, nullable = true, length = 500)

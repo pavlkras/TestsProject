@@ -23,7 +23,7 @@ public class AESCipher {
 				secretKey = keyGenerator.generateKey();
 				cipher = Cipher.getInstance("AES");
 			} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
-				e.printStackTrace();
+				
 			}
 		}
 	}
