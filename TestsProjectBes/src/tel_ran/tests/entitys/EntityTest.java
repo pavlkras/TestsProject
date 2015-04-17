@@ -117,7 +117,7 @@ public class EntityTest {
 		} finally{
 			try {
 				in.close();
-			} catch (IOException e) {}
+			} catch (Exception e) {}
 		}
 		return res;
 	}
