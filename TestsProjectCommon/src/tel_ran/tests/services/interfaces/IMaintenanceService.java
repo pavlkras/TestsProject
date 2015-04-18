@@ -24,5 +24,5 @@ public interface IMaintenanceService {
 	boolean FillDataBaseFromTextResource(List<String> inputParsedText);	
 
 	// method for group generate test. AlexFoox returned Long ID of question 
-	public List<Long> getUniqueSetQuestionsForTest(String category,String level,Long nQuestion);
+	public List<Long> getUniqueSetQuestionsForTest(String category,String levelMin, String levelmax, Long nQuestion);
 }
