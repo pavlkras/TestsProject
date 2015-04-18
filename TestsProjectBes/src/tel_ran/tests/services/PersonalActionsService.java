@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import tel_ran.tests.entitys.EntityCompany;
 import tel_ran.tests.entitys.EntityTest;
 import tel_ran.tests.services.interfaces.IPersonalActionsService;
 
@@ -104,7 +105,11 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 				writer.write(imagesLinksInBase64Text[picNum]);			 
 				writer.close();
 				//outLinkText += fileDirectory +"/comp_" + companyID + "/test_" + testID + "/pic_" + picNum + ".txt" + " , ";
-				outLinkText += fileDirectory +"\\comp_" + companyID + "\\test_" + testID + "\\pic_" + picNum + ".txt" + ",";
+				EntityCompany compRes = em.find(EntityCompany.class, companyID);
+				String compName = compRes.getC_Name().replace(" ", "_");
+				EntityTest testRes = em.find(EntityTest.class, testID);
+				String testName = testRes.getTestName();
+				outLinkText += fileDirectory +"\\" + compName + "_" + companyID + "\\" + testName + "_" + testID + "\\pic_" + picNum + ".txt" + ",";
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -395,7 +395,10 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	////-------------- Method for test case group AlexFoox Company return id of unique set questions ----------// BEGIN  //
 	@SuppressWarnings("unchecked")	
 	@Override  
-	public List<Long> getUniqueSetQuestionsForTest(String category,String levelOfDifficulty,Long nQuestion){
+	public List<Long> getUniqueSetQuestionsForTest(String category, String levelOfDifficultyMin, String levelOfDifficultyMax, Long nQuestion){
+		
+		// -- for Valery -----------  TO DO generation questions id to list long witch new parameters !!!!!!  String levelOfDifficultyMin, String levelOfDifficultyMax,
+		
 		List<Long> outRes = new ArrayList<Long>();
 		int lengthCategoryArray = 0;
 		int level = 1;	
@@ -423,7 +426,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 					}else{
 						/* -- Terms: pass the array to the categories when adding a new question number in the array sheet Long. NEW condition: the end of the array with categories !!!
 						      Terms: pass the array to the categories when adding a new question number in the array sheet Long. add it according to the level of complexity. */
-						if(Integer.parseInt(levelOfDifficulty) != level){// that is max level from FES							
+						if(Integer.parseInt(levelOfDifficultyMax) != level){// that is max level from FES							
 							level++;// -- condition: the end of the array with the categories, the following passage levels of difficulty: +1.							
 						}
 						////
