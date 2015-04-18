@@ -28,18 +28,23 @@ import tel_ran.tests.services.interfaces.IMaintenanceService;
 @RequestMapping({"/","/CompanyActions"})
 public class CompanyActions {
 	// --- private fields 
-	String companyName;
-	long companyId = -1;
-
-	@Autowired
-	ICompanyActionsService companyService;
-	//
+	private	String companyName;
+	private long companyId = -1;
+	private static String PATH_ADDRESS_TO_SERVICE = "http://localhost:8080/TestsProjectFes/jobSeeker_test_preparing_click_event?";
 	RestTemplate restTemplate =  new RestTemplate();
-	//
 	@Autowired
-	IMaintenanceService maintenanceService;	
-
+	private ICompanyActionsService companyService;
+	@Autowired
+	private	IMaintenanceService maintenanceService;	
 	// --- private fields 
+	// -- getters and setters
+	public String getCompanyName() {
+		return companyName;
+	}
+
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
 	////
 	// Action Re-mapping for Send Ajax request to DB if equal  user and priority level, and set: flAuthorization=true;
 	@RequestMapping({"/CompanyActions"})
@@ -89,7 +94,7 @@ Wrong Password Flow:
 				}
 				model.addAttribute("categoryFill", categoryHtmlText.toString());
 				result = "CompanyGenerateTest";
-				this.companyName = companyName; 
+				this.setCompanyName(companyName); 
 			}else{
 				result = "CompanySignIn";
 				model.addAttribute("result", " This password not variable try again " );
@@ -183,11 +188,12 @@ Normal Flow:
 	@RequestMapping({"/add_test"})
 	public String createTest(String category,String levelmin,String levelmax, String personId, String personName, String personSurname,String personEmail, String selectCountQuestions, Model model) {	
 		long counterOfQuestions = Integer.parseInt(selectCountQuestions);
-		List<Long> listIdQuestions = maintenanceService.getUniqueSetQuestionsForTest(category, levelmin, (long) counterOfQuestions);
+		List<Long> listIdQuestions = maintenanceService.getUniqueSetQuestionsForTest(category, levelmin, levelmax, (long) counterOfQuestions);
 		int personID = companyService.createPerson(Integer.parseInt(personId), personName, personSurname,personEmail);
 		String password = getRandomPassword();
-		long idTest = companyService.createIdTest(listIdQuestions, personID, password, category, Integer.parseInt(levelmin));
-		String link = "http://localhost:8080/TestsProjectFes/jobSeeker_test_preparing_click_event?" + idTest;    
+		long idTest = companyService.createIdTest(listIdQuestions, personID, password, category, Integer.parseInt(levelmax));	//------------ TO DO levels change !!	add company name for
+		
+		String link = PATH_ADDRESS_TO_SERVICE + idTest;// -------------------------------------------------------------------------------------TO DO real address NOT text in string !!!
 		boolean flagMail = true;
 		sendEmail(link,personEmail,password);
 		if(flagMail){
@@ -280,5 +286,5 @@ f)	5 photos made during the test	------ IGOR ------*/
 		}
 		return page;
 	}	
-	// -----------------END  Use case Viewing test results-----------------
+	// -----------------END  Use case Viewing test results-----------------	
 }

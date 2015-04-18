@@ -174,7 +174,7 @@ public class PersonalActions {
 			// Create log about failed created test for person 
 		}
 		//// end if else
-		//testId +="----" + testForPerson[0] + "----" + testForPerson[1];// TO DO on BES split for save action
+		//testId +="----" + testForPerson[0] + "----" + testForPerson[1];//        -----------------------          TO DO on BES split for save action
 		String corrAnsw = correctAnswers.toString();
 		if(!personalService.SaveStartPersonTestParam(testId, corrAnsw, timeStartTest)){System.out.println("time start saved-"+timeStartTest);}// method for save parameters of test to generated test 
 		////*/
