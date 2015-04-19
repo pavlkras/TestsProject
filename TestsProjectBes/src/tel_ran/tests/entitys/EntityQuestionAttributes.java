@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import sun.misc.BASE64Decoder;
 import tel_ran.tests.services.interfaces.IMaintenanceService;
 
 @Entity
@@ -55,6 +56,11 @@ public class EntityQuestionAttributes implements Serializable {
 		this.questionId = questionId;
 	}
 	public String getImageLink() {
+		String imageBase64Text = getImage(imageLink);
+		return imageBase64Text;
+	}
+	private String getImage(String imageLink) {
+		//  ------- for Cristina -----------------  TO DO method getting jpg file and converting to base64 cript for sending to FES 		
 		return imageLink;
 	}
 	public void setImageLink(String imageLink) {
@@ -97,7 +103,7 @@ public class EntityQuestionAttributes implements Serializable {
 	@Override
 	public String toString() {
 		return questionId.getId()
-				+ IMaintenanceService.DELIMITER + imageLink 
+				+ IMaintenanceService.DELIMITER + getImageLink() 
 				+ IMaintenanceService.DELIMITER + category
 				+ IMaintenanceService.DELIMITER + levelOfDifficulty
 				+ IMaintenanceService.DELIMITER + correctAnswer
