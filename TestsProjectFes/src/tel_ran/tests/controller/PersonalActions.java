@@ -86,19 +86,20 @@ public class PersonalActions {
 			for(int i = 0;i<tempArray.length;i++){// Cycle long id questions for create one new question and add in out text
 				//
 				String tempQuestion = maintenanceService.getQuestionById(tempArray[i]);// getting one question by id from BES	
-				System.out.println("tempQuestion-"+tempQuestion);//-------------------sysout
 				/////
 				String[] tempQuestionText = tempQuestion.split(IMaintenanceService.DELIMITER);// Splitting text by delimiter
 				////				
 				createdTestTable.append("<tr><td><table id='tabTestPerson_"+i+"' class='tableStyle'>"
 						+ "<tr><th class='questionTextStyle' colspan='2'>"+tempQuestionText[0]+"</th></tr>");// table of question and attributes of question table N-2			
 				if(tempQuestionText[2].length() > 15){	// image link	
-					
+					/*
 					String workingDir = System.getProperty("user.dir").replaceAll("\\\\", "/");
 					String replacedText = tempQuestionText[2].replaceAll("\\\\", "/");
 					String imageLink = workingDir + "/questions" + replacedText;
 					System.err.println(imageLink);
 					createdTestTable.append("<tr><td colspan='2'><img src='" + imageLink + "' alt='Image not supported'></td></tr>");
+					*/ // ---- for Cristina ---------  if method for CRISTINA in to BES is worked  all in comments for deleted
+					createdTestTable.append("<tr><td colspan='2'><img src='" + tempQuestionText[2] + "' alt='Image not supported'></td></tr>");
 				}			
 				////
 				if(tempQuestionText.length > 7){

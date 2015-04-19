@@ -234,7 +234,10 @@ public class UserActions{
 			model.addAttribute("question", "' "+questionAttributes[0]+" '");
 			testResultList.add(questionAttributes[0]);			
 			//			
-			if(questionAttributes[1].length() > 15){
+			if(questionAttributes[1].length() > 15){ 
+				
+				// ---- for Cristina ---------  if method for CRISTINA in to BES is worked  all in comments for deleted
+				
 				nextQuestionInTest.append("<br><img src='" + questionAttributes[1] + "' alt='image not supported'>");
 			}
 			////
