@@ -1,7 +1,11 @@
 package tel_ran.tests.entitys;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Base64;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -60,8 +64,20 @@ public class EntityQuestionAttributes implements Serializable {
 		return imageBase64Text;
 	}
 	private String getImage(String imageLink) {
-		//  ------- for Cristina -----------------  TO DO method getting jpg file and converting to base64 cript for sending to FES 		
-		return imageLink;
+		//method getting jpg file and converting to base64 for sending to FES 		
+		String res = null;
+		byte[] bytes = null;
+		FileInputStream file;
+		try {
+			file = new FileInputStream(imageLink);
+			bytes = new byte[file.available()];
+			file.read(bytes);
+			file.close();
+			res = Base64.getEncoder().encodeToString(bytes);
+		} catch (FileNotFoundException e) {	} 
+		  catch (IOException e) { } 
+		  catch (NullPointerException e) { }
+		return res;
 	}
 	public void setImageLink(String imageLink) {
 		this.imageLink = imageLink;
