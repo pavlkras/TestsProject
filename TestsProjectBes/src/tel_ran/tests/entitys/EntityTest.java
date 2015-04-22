@@ -40,8 +40,8 @@ public class EntityTest {
 	private String pictures="";           // format to string!! namefoto.jpg,nameAnotherfoto.jpg,xxx.jgg, ...
 	private int duration;
 	private int complexityLevel;
-	private long startTestDate;
-	private long endTestDate;
+	private long startTestDate = 0L;
+	private long endTestDate = 0L;
 	//
 	@ManyToOne
 	private EntityCompany entityCompany;

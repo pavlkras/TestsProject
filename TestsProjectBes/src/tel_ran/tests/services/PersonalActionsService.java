@@ -24,7 +24,9 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 		int peRson = personTest.getEntityPerson().getPersonId();
 		String pass = personTest.getPassword();	
 		String idQuestionsForTheTest = personTest.getIdQuestionsForCreationTest();
-		String[] outResult = {peRson+"", pass, idQuestionsForTheTest};
+		String timeStart = Long.toString(personTest.getStartTestDate());
+		String timeEnd = Long.toString(personTest.getEndTestDate());
+		String[] outResult = {peRson+"", pass, idQuestionsForTheTest, timeStart, timeEnd};
 		return outResult;
 	}
 	//// ------------------- save starting test	parameters
@@ -36,7 +38,7 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 			long testID = (long)Integer.parseInt(testId);		
 			EntityTest personTest = em.find(EntityTest.class, testID);		
 			personTest.setCorrectAnswers(correctAnswers.toCharArray());			
-			personTest.setStartTestDate(timeStartTest);
+			personTest.setStartTestDate(timeStartTest);			
 			//
 			em.persist(personTest);
 			resAction = true;
@@ -105,7 +107,8 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 				writer.write(imagesLinksInBase64Text[picNum]);			 
 				writer.close();
 				//outLinkText += fileDirectory +"/comp_" + companyID + "/test_" + testID + "/pic_" + picNum + ".txt" + " , ";
-				EntityCompany compRes = em.find(EntityCompany.class, companyID);
+				long cId = (long)Integer.parseInt(companyID);
+				EntityCompany compRes = em.find(EntityCompany.class, cId);
 				String compName = compRes.getC_Name().replace(" ", "_");
 				EntityTest testRes = em.find(EntityTest.class, testID);
 				String testName = testRes.getTestName();

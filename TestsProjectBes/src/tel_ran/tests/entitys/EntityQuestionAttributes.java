@@ -33,7 +33,7 @@ public class EntityQuestionAttributes implements Serializable {
 	////
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "questionAttributeId")
 	List<EntityAnswersText> questionAnswersList;
-	//// pattern: D785JHGYT785J58R86JJ6776867TRJJ677TJ575JJ584K493K45J55.jpg or any resolution: HashCode.png
+	//// pattern: folder/D785JHGYT785J58R86JJ6776867TRJJ677TJ575JJ584K493K45J55.jpg or any resolution: HashCode.png
 	@Column(name = "imageLink", unique = false, nullable = true, length = 500)
 	private String imageLink;
 	////

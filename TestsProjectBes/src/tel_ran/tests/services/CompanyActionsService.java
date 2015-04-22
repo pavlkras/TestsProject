@@ -102,10 +102,12 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 		//
 		EntityTest test = new EntityTest();
 		test.setTestCategory(category);
-		test.setTestName("???????");// TO DO anyone ------------------------------------------------------------ stub
+		test.setTestName("???????");//  ------------------------------------------------------------ TO DO anyone //stub
 		test.setIdQuestionsForCreationTest(idQuestion.toString());	
 		test.setPassword(pass); 		
 		test.setComplexityLevel(levelOfDifficulty);
+		test.setStartTestDate(0L);// setting parameter for wotchig method in FES
+		test.setEndTestDate(0L);// setting parameter for wotchig method in FES
 		//
 		test.setEntityCompany(entityCompany);	
 		test.setEntityPerson(temp);
