@@ -60,10 +60,17 @@ public class EntityQuestionAttributes implements Serializable {
 		this.questionId = questionId;
 	}
 	public String getImageLink() {
-		String imageBase64Text = getImage(imageLink);
+		return imageLink;
+	}
+	public String getImageBase64() {
+		String imageBase64Text=null;
+		if(imageLink!=null){
+		    imageLink = ("questions").concat(imageLink);
+		    imageBase64Text = encodeImage(imageLink);
+		}
 		return imageBase64Text;
 	}
-	private String getImage(String imageLink) {
+	private String encodeImage(String imageLink) {
 		//method getting jpg file and converting to base64 for sending to FES 		
 		String res = null;
 		byte[] bytes = null;
