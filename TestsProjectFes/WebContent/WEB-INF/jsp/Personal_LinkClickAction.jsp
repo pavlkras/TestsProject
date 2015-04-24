@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
+	<%@ page
+	import="java.util.*, java.text.*,tel_ran.tests.controller.PersonalActions"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -27,8 +29,12 @@ color:red;
 			</tr>
 			<tr>
 				<td colspan="2" align="center"><input type="submit" /></td>
+			</tr>  
+			<tr><td><p><%= PersonalActions.WrongResponse() %></p></td>
 			</tr>
 		</table>
+		
 	</form>
+	
 </body>
 </html>

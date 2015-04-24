@@ -1,5 +1,17 @@
 @CHARSET "ISO-8859-1";
 
+/*@media screen and (max-width: 1024px) , screen and(max-device-width: 1996px) {*/
+ul{
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	position:fixed;
+	width: 1200px;
+	text-align: center;
+}
+
 h2 {
 	text-align: center;
 }
@@ -40,6 +52,7 @@ img {
 	max-width: 100%;
 	height: auto;
 }
+
 .firsthomecontent a {
 	float: left;
 }
@@ -53,13 +66,22 @@ img {
 }
 
 .formDiv {
+	position:absolute;
 	clear: both;
 	float: right;
+	top: 100px;
+	left:820px;	
 }
 
 li {
 	float: left;
-	margin-right: 2em;
+    margin-right: 2em; 
 	border: 0.1em solid black;
 	padding: 0.4em;
 }
+.linksContent{
+	position: absolute;
+	top:100px;
+	width: 70%;
+}
+/*}*/

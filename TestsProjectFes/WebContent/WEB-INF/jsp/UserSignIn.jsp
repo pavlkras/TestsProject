@@ -82,7 +82,7 @@
 			</p>
 		</form>
 	</div>
-	<div id="linksContent">
+	<div id="linksContent" class="linksContent">
 		<div class="firsthomecontent" id="popularLincs">
 			<a href="http://docs.oracle.com/javase/tutorial/">
 				<div class="homecontent">

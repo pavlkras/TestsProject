@@ -57,19 +57,19 @@ margin-top: 4em;
    <table>
    <tr>
     <td>Id:</td> 
-    <td> <input type="text" name="personId" onkeyup="check(this.value)"  maxlength="9" size = "7"/> <span id="e_login" style="display: none; color: #c00;">Not correct</span><br> </td>
+    <td> <input type="text" name="personId" placeholder="312645798" onkeyup="check(this.value)"  maxlength="9" size = "7"/> <span id="e_login" style="display: none; color: #c00;">Not correct</span><br> </td>
    </tr>
    <tr>
     <td>FirstName:</td>
-    <td><input type="text" name="personName" size=20 /></td> 
+    <td><input type="text" name="personName" placeholder="Josh" size=20 /></td> 
    </tr>
    <tr>
     <td>SurName: </td>
-    <td><input type="text" name="personSurname" size=20 /> <br> </td> 
+    <td><input type="text" name="personSurname" placeholder="Jekson"size=20 /> <br> </td> 
    </tr> 
     <tr>
     <td>E-mail: </td>
-    <td><input type="text" name="personEmail" size=20 /> <br> </td> 
+    <td><input type="text" name="personEmail" size=20  placeholder="josh-jakson@mail.com"/> <br> </td> 
    </tr> 
    </table>    
    <input type="submit" value="Generate test" />

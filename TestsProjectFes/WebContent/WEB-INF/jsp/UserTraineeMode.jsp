@@ -11,6 +11,12 @@
 <script
 	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js">	
 </script>
+<style type="text/css">
+.imageClass{
+width: 100%;
+height: 100%;
+}
+</style>
 <title>Trainee Test</title>
 </head>
 <body>

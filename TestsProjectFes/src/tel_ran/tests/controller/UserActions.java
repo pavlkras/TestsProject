@@ -213,7 +213,7 @@ public class UserActions{
 			userTest.setTestResultList(testResultList);
 			//
 			model.addAttribute("time", durTime);
-			model.addAttribute("resultsList", testResultList);			
+			model.addAttribute("resultsList", "Number Of Questions - " + questionList.size()/*testResultList*/);			
 			model.addAttribute("wrongAnswers",userTest.getUserAnswers());
 			model.addAttribute("rightAnswers",userTest.getRightAnswersChars());
 			clearTest();
@@ -233,12 +233,10 @@ public class UserActions{
 			//
 			model.addAttribute("question", "' "+questionAttributes[0]+" '");
 			testResultList.add(questionAttributes[0]);			
-			//			
-			if(questionAttributes[1].length() > 15){ 
-				
-				// ---- for Cristina ---------  if method for CRISTINA in to BES is worked  all in comments for deleted
-				
-				nextQuestionInTest.append("<br><img src='" + questionAttributes[1] + "' alt='image not supported'>");
+			//
+			String[] res = maintenanceService.getQuestionById(questionAttributes[1], IUserActionService.ACTION_GET_ARRAY);
+			if(res[1].length() > 15){ 
+				nextQuestionInTest.append("<br><img class='imageClass' src='" + res[1] + "' alt='image not supported'>");// image text in coding Base64 
 			}
 			////
 			if(questionAttributes.length > 4){				
