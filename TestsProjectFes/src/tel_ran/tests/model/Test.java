@@ -58,8 +58,8 @@ public class Test implements Serializable{
 	}
 	public void setTestResultList(List<String> testResultList) {
 		mTestResultList = new ArrayList<String>();
-		for(int i = 0; i < testResultList.size(); i++){
-			mTestResultList.add(testResultList.get(i));
+		for(String tl :testResultList){
+			mTestResultList.add(tl);
 		}
 	}
 	public void clearTestResultList() {
@@ -85,8 +85,8 @@ public class Test implements Serializable{
 	////////////////
 	public void setQstnNmList(List<Long> qstnNmList) {
 		testQuestionID_setNumbers = new ArrayList<Long>();
-		for(int i = 0; i < qstnNmList.size(); i++){
-			testQuestionID_setNumbers.add(qstnNmList.get(i));
+		for(long ltl :qstnNmList){
+			testQuestionID_setNumbers.add(ltl);
 		}
 	}
 	public int getLevel() {

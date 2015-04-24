@@ -213,7 +213,8 @@ public class UserActions{
 			userTest.setTestResultList(testResultList);
 			//
 			model.addAttribute("time", durTime);
-			model.addAttribute("resultsList", "Number Of Questions - " + questionList.size()/*testResultList*/);			
+			model.addAttribute("resultsList", testResultList);	
+			//model.addAttribute("resultsList", testResultList);	
 			model.addAttribute("wrongAnswers",userTest.getUserAnswers());
 			model.addAttribute("rightAnswers",userTest.getRightAnswersChars());
 			clearTest();
@@ -232,11 +233,14 @@ public class UserActions{
 			}
 			//
 			model.addAttribute("question", "' "+questionAttributes[0]+" '");
-			testResultList.add(questionAttributes[0]);			
 			//
 			String[] res = maintenanceService.getQuestionById(questionAttributes[1], IUserActionService.ACTION_GET_ARRAY);
 			if(res[1].length() > 15){ 
 				nextQuestionInTest.append("<br><img class='imageClass' src='" + res[1] + "' alt='image not supported'>");// image text in coding Base64 
+				testResultList.add("<p>" + questionAttributes[0] + "</p><img class='imageClass' src='" + res[1] + "' alt='no image'><p>Correct Answer : " + questionAttributes[3] 
+						+"&nbsp;&nbsp;&nbsp;&nbsp; Your Answer : </p>");// code for view result for user after the test 
+			}else{
+				testResultList.add(questionAttributes[0]);// that flow if question no image only text !!
 			}
 			////
 			if(questionAttributes.length > 4){				

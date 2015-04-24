@@ -16,11 +16,11 @@
 	<p>Test duration: ${time}</p>
 	<p>Results: </p><br>
      <c:forEach items="${resultsList}" var="element">
-			<p>"${element}"</p>
+			<p>${element}</p>
 	</c:forEach>
 	<br>
-	<p>Correct answers: "${rightAnswers}"</p>
-	<p>User answers: "${wrongAnswers}"</p>
+	<p>Correct answers: ${rightAnswers}</p>
+	<p>User answers: ${wrongAnswers}</p>
 
 <ul>
 <li><a href="createTestForUser">Try again</a></li>

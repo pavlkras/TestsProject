@@ -89,17 +89,18 @@ public class Maintenance {
 	@RequestMapping(value = "/add_actions" , method = RequestMethod.POST)
 	public String AddProcessingPage(String questionText, String category,
 			String levelOfDifficulty, String at1, String at2, String at3,
-			String at4, String correctAnswer, String questionIndex, String imageLink,  Model model) {		
+			String at4, String correctAnswer, String questionIndex, String imageLink, String numberAnswersOnPicture,  Model model) {		
 		boolean actionRes = false; // flag work action
 		List<String> answers = null;
-		if(at1.length() > 1 && at3.length() > 1){
-			answers = new ArrayList<String>();		
+		if(at1.length() > 0 && at3.length() > 0){
+			System.out.println("answers > 0");
+			answers = new ArrayList<String>();		 
 			answers.add(at1);		answers.add(at2);		answers.add(at3);		answers.add(at4);
 		}
 		//
 		try {			
 			int questioNumber = Integer.parseInt(questionIndex);// question ID number if question already exist in DB
-			int numberOfResponsesInThePicture = 4;// number of responses in the picture by default = 4
+			int numberOfResponsesInThePicture = Integer.parseInt(numberAnswersOnPicture);// number of responses in the picture by default = 4
 			//
 			actionRes = maintenanceService.CreateNewQuestion( imageLink ,  questionText,  category,  Integer.parseInt(levelOfDifficulty), answers,  correctAnswer.charAt(0), questioNumber , numberOfResponsesInThePicture );
 		} catch (Exception e) {
