@@ -1,11 +1,7 @@
 package tel_ran.tests.entitys;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
-import java.util.Base64;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,7 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import sun.misc.BASE64Decoder;
 import tel_ran.tests.services.interfaces.IMaintenanceService;
 
 @Entity
@@ -37,8 +32,8 @@ public class EntityQuestionAttributes implements Serializable {
 	////
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "questionAttributeId")
 	List<EntityAnswersText> questionAnswersList;
-	//// pattern: folder/D785JHGYT785J58R86JJ6776867TRJJ677TJ575JJ584K493K45J55.jpg or any resolution: HashCode.png
-	@Column(name = "imageLink", unique = false, nullable = true, length = 500)
+	////
+	@Column(name = "imageLink", unique = false, nullable = true, length = 500)//// pattern: folder/D785JHGYT785J58R86JJ6776867TRJJ677TJ575JJ584K493K45J55.jpg or any resolution: HashCode.png
 	private String imageLink;
 	////
 	@Column(name = "category")
@@ -61,31 +56,7 @@ public class EntityQuestionAttributes implements Serializable {
 	}
 	public String getImageLink() {
 		return imageLink;
-	}
-	public String getImageBase64() {
-		String imageBase64Text=null;
-		if(imageLink!=null){
-		    imageLink = ("questions").concat(imageLink);
-		    imageBase64Text = encodeImage(imageLink);
-		}
-		return imageBase64Text;
-	}
-	private String encodeImage(String imageLink) {
-		//method getting jpg file and converting to base64 for sending to FES 		
-		String res = null;
-		byte[] bytes = null;
-		FileInputStream file;
-		try {
-			file = new FileInputStream(imageLink);
-			bytes = new byte[file.available()];
-			file.read(bytes);
-			file.close();
-			res = Base64.getEncoder().encodeToString(bytes);
-		} catch (FileNotFoundException e) {	} 
-		  catch (IOException e) { } 
-		  catch (NullPointerException e) { }
-		return res;
-	}
+	}	
 	public void setImageLink(String imageLink) {
 		this.imageLink = imageLink;
 	}
@@ -126,7 +97,7 @@ public class EntityQuestionAttributes implements Serializable {
 	@Override
 	public String toString() {
 		return questionId.getId()
-				+ IMaintenanceService.DELIMITER + getImageLink() 
+				+ IMaintenanceService.DELIMITER + imageLink
 				+ IMaintenanceService.DELIMITER + category
 				+ IMaintenanceService.DELIMITER + levelOfDifficulty
 				+ IMaintenanceService.DELIMITER + correctAnswer

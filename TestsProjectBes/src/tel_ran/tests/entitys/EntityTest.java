@@ -78,17 +78,7 @@ public class EntityTest {
 				
 				String[] picturePaths = pictures.split(",");  
 				for(String path:picturePaths){					
-					JSONObject pic = new JSONObject();
-					////
-					//String workingDir = System.getProperty("user.dir").replaceAll("\\\\", "/");
-					//String replacedText = path.replaceAll("\\\\", "/");
-					//String imageLink = workingDir + "/" + replacedText.replaceAll(" ", "");
-					////
-					//String picture = getPictureBase64(imageLink);
-					//if(picture != null){
-					//	pic.put("picture", getPictureBase64(imageLink));
-					//	ar.put(pic);
-					//}
+					JSONObject pic = new JSONObject();				
 					String picture = getPictureBase64(path);
 					if(picture != null){
 						pic.put("picture", picture);

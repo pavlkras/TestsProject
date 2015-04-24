@@ -1,6 +1,5 @@
 package tel_ran.tests.services;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -117,26 +116,22 @@ public class UserActionService extends TestsPersistence implements IUserActionSe
 					Random rnd = new Random();
 					int rand =  rnd.nextInt(questionAttrList.size());							
 					EntityQuestionAttributes tmpRes = questionAttrList.get(rand);							
-					outTextResult.append(tmpRes.getQuestionId().getQuestionText() + IMaintenanceService.DELIMITER);
+					outTextResult.append(tmpRes.getQuestionId().getQuestionText() + DELIMITER);
+					////									
+					outTextResult.append(tmpRes.getId() + DELIMITER);
 					////
-					String workingDir = System.getProperty("user.dir").replaceAll("\\\\", "/");
-					String replacedText = tmpRes.getImageLink().replaceAll("\\\\", "/");
-					String imageLink = workingDir + "/questions" + replacedText;				
-					outTextResult.append(imageLink + IMaintenanceService.DELIMITER);
-					////
-					outTextResult.append(tmpRes.getNumberOfResponsesInThePicture() + IMaintenanceService.DELIMITER);
+					outTextResult.append(tmpRes.getNumberOfResponsesInThePicture() + DELIMITER);
 					outTextResult.append(tmpRes.getCorrectAnswer());
 					//
 					if(tmpRes.getQuestionAnswersList() != null){					
 						List<EntityAnswersText> anRes = tmpRes.getQuestionAnswersList();
 						for(EntityAnswersText rRes :anRes){
-							outTextResult.append(IMaintenanceService.DELIMITER + rRes.getAnswerText());
+							outTextResult.append(DELIMITER + rRes.getAnswerText());
 						}
 					}					
-					////
-					// removing this question from questionList
+					////				
 					outTextResult.append(",");					
-					i++;// -- cycle works on the number of questions -nQuestion	 WITCH WRONG LOOP
+					i++;// -- cycle works on the number of questions -nQuestion	!!!!!!!! WITCH WRONG LOOP  !!!!!!!!!!
 				}else{//  -- condition: if the questionAttrList.size is equal to or less than zero.							
 					System.out.println("BES User test else condition i-" + i);//---------------------------sysout	
 				}

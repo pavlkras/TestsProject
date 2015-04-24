@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import tel_ran.tests.entitys.EntityAdministrators;
 import tel_ran.tests.entitys.EntityCompany;
 import tel_ran.tests.entitys.EntityPerson;
 import tel_ran.tests.entitys.EntityTest;
@@ -34,9 +35,9 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 	}
 
 	@Override
-	public long getCompanyByName(String companyName) {
+	public long getCompanyByName(String companyName) {    
 		long result = 0;		
-		EntityCompany tempCompanyEntity = (EntityCompany) em.createQuery("Select c from EntityCompany c where c.C_Name='" + companyName+"'" ).getSingleResult();		
+		EntityCompany tempCompanyEntity = (EntityCompany) em.createQuery("Select c from EntityCompany c where c.C_Name='" + companyName+"'" ).getSingleResult();// TO DO ACTION 2 Company one name !!!!		
 		if(tempCompanyEntity != null && tempCompanyEntity.getC_Name().equalsIgnoreCase(companyName)){
 			result = tempCompanyEntity.getId();
 		}
@@ -47,7 +48,17 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 	//-------------Use Case Company Sign up 3.1.2----------- //   BEGIN    ///
 	@SuppressWarnings("unchecked")
 	@Override
+	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
 	public String[] getAnySingleQuery(String strQuery) {
+		if(em.find(EntityAdministrators.class,"qqq@qqq.qq") == null){
+			EntityAdministrators emad = new EntityAdministrators();
+			emad.setPassportNumber("12345");
+			emad.setUserMail("qqq@qqq.qq");
+			emad.setUserPassword("12345");
+			emad.setUserName("test");
+			emad.setUserAddress("californy");
+			em.persist(emad);
+		}
 		String[] outResult;
 		List<EntityCompany> result = em.createQuery(
 				"SELECT c FROM EntityCompany c WHERE c.C_Name LIKE :custName").setParameter("custName","%"+strQuery+"%").getResultList();// return to client result of operation
@@ -101,8 +112,7 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 		}
 		//
 		EntityTest test = new EntityTest();
-		test.setTestCategory(category);
-		test.setTestName("???????");//  ------------------------------------------------------------ TO DO anyone //stub
+		test.setTestCategory(category);		
 		test.setIdQuestionsForCreationTest(idQuestion.toString());	
 		test.setPassword(pass); 		
 		test.setComplexityLevel(levelOfDifficulty);
@@ -114,6 +124,9 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 		//
 		em.persist(test);
 		long testId = test.getTestId();
+		String nameOfTheTest = personId+"_"+levelOfDifficulty+"_"+testId;// this name is concat for this parameters 
+		test.setTestName(nameOfTheTest);
+		em.persist(test);
 		return testId;
 	}
 

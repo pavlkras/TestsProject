@@ -1,6 +1,13 @@
 package tel_ran.tests.services;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Random;
 
@@ -9,31 +16,38 @@ import javax.persistence.Query;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import tel_ran.tests.entitys.EntityAdministrators;
 import tel_ran.tests.entitys.EntityAnswersText;
 import tel_ran.tests.entitys.EntityQuestion;
 import tel_ran.tests.entitys.EntityQuestionAttributes;
-import tel_ran.tests.entitys.EntityUser;
 import tel_ran.tests.processor.TestProcessor;
 import tel_ran.tests.services.interfaces.IMaintenanceService;
 
 public class MaintenanceService extends TestsPersistence implements IMaintenanceService {	
-	private final int NEW_QUESTION = 0;
 	//
 	private static int NUMBERofRESPONSESinThePICTURE = 4;// number of responses in the picture, for text questions default = 4
 	private static int MIN_NUMBER_OF_CATEGORIES = 1;
-	private static boolean FLAG_AUTHORIZATION = false;
+	private static boolean FLAG_AUTHORIZATION = false;	
 	//
 	////-------------- Authorization Case ----------// Begin  //	
 	// ---------- stub method authorization ------------------//
 	@Override	
-	public boolean setAutorization(String userMail, String password) {
+	public boolean setAutorization(String userMail, String password) { 
 		////
-		EntityUser tmpUser = em.find(EntityUser.class, userMail);
+		EntityAdministrators tmpUser = null;
+		try {
+			tmpUser = em.find(EntityAdministrators.class, userMail);
+		} catch (Exception e) {
+			System.out.println("administratir catch em.find() action");
+			//e.printStackTrace();
+		}
 		//
-		if(tmpUser != null && tmpUser.getPassword().equalsIgnoreCase(password)){			
-			FLAG_AUTHORIZATION = true;		
+		if(tmpUser != null && tmpUser.getUserPassword().equalsIgnoreCase(password)){			
+			FLAG_AUTHORIZATION = true;	
+			System.out.println("administrator is ok");//------------------------------------------ susout
 		}else{
-			FLAG_AUTHORIZATION = true;	 
+			FLAG_AUTHORIZATION = true;	
+			System.out.println("administrator is wrong TO DO ADDING to EntityAdministrators !!!! BES");//--------------------------------------- susout
 		}
 		//
 		return MaintenanceService.FLAG_AUTHORIZATION;	
@@ -77,7 +91,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 			em.persist(objectQuestion);
 			flagAction = true;			
 		}
-		////  if the question exists, create new attributes question and add in DB in to question by 'questionNumber' thet ID of question
+		////  if the question exists, create new attributes question and add in DB in to question by 'questionNumber' that ID of question
 		if(queryTempObj != null && (objectQuestion = em.find(EntityQuestion.class,(long) questionNumber)) != null){	
 			keyQuestion = objectQuestion.getId(); 
 			//
@@ -165,9 +179,9 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 			 * PATH - full path for saving images for questions
 			 * DIF_LEVEL - level of complexity
 			 * returned List<String[]>*/
-			String workingDir = System.getProperty("user.dir").replaceAll("\\\\", "/");
-
-			listQuestions =	proc.processStart(selectedCategory, nQuestions, workingDir + "/questions/", DIF_LEVEL );// - вызвать генерацию.
+			String workingDir = System.getProperty("user.dir");
+			Files.createDirectories(Paths.get(workingDir + File.separator + NAME_FOLDER_FOR_SAVENG_QUESTION_PICTURES));
+			listQuestions =	proc.processStart(selectedCategory, nQuestions, workingDir + File.separator + NAME_FOLDER_FOR_SAVENG_QUESTION_PICTURES + File.separator, DIF_LEVEL );// - вызвать генерацию.
 		} catch (Exception e) {
 			System.out.println(" catch of test case generated q = ModuleForBuildingQuestions= ");
 			e.printStackTrace();
@@ -249,7 +263,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 					levelOfDifficulty = Integer.parseInt(question_Parts[3]);
 					correctAnswer = question_Parts[4].charAt(0);						
 				}
-				//-------------------------------------------------------------------------------------------------------------------// this default = 4  
+				//   --------------  --------------  --------------  ----------------  ------------------  -----  //NUMBERofRESPONSESinThePICTURE ----- default = 4  
 				flagAction = CreateNewQuestion(imageLink, questionText, category, levelOfDifficulty, answers, correctAnswer, questionNumber, NUMBERofRESPONSESinThePICTURE );
 			}			
 		}catch(Exception e){
@@ -262,25 +276,66 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	////-------------- Reading from file and Adding Questions into DB Case ----------// END  //
 	////-------------- internal method for filling in the form update issue ----------// BEGIN  //
 	@Override
-	public String  getQuestionById(String questionID) {// getting question attributes by ID !!!!!!!!!!!!!!!!!!!!!!!!!  
-		StringBuffer  outRes = new StringBuffer();
-		
+	public String[]  getQuestionById(String questionID, int actionKey) {// getting question attributes by ID !!!!!!!!!!!!!!!!!!!!!!!!!  
+		String[] outArray = new String[3];
+		String  outRes = "";
 		long id = (long)Integer.parseInt(questionID);
-		//
 		EntityQuestionAttributes question = em.find(EntityQuestionAttributes.class, id);
+		////
 		if(question != null){
-			outRes.append(question.getQuestionId().getQuestionText() + DELIMITER + question);	
-
+			String imageBase64Text=null;
+			String imageLink;
+			////
+			if((imageLink = question.getImageLink()) != null){
+				imageBase64Text = encodeImage(NAME_FOLDER_FOR_SAVENG_QUESTION_PICTURES  + imageLink);
+			}
+			////
+			if(actionKey == 0){
+				outRes = question.getQuestionId().getQuestionText() + DELIMITER // text of question or Description to pictures									
+						+ question.getCorrectAnswer() + DELIMITER // correct answer char 
+						+ question.getNumberOfResponsesInThePicture();// number of answers chars on image
+			}else{
+				outRes = question.getQuestionId().getQuestionText() + DELIMITER // text of question or Description to pictures									
+						+ question.getCorrectAnswer() + DELIMITER // correct answer char 
+						+ question.getNumberOfResponsesInThePicture() + DELIMITER// number of answers chars on image
+						+ question.getId() + DELIMITER// static information
+						+ question.getCategory() + DELIMITER// static information
+						+ question.getLevelOfDifficulty() + DELIMITER// static information
+						+ question.getNumberOfResponsesInThePicture();	// static information
+			}
 			List<EntityAnswersText> answers = question.getQuestionAnswersList();
 			if(answers != null){
 				for(EntityAnswersText tAn :answers){
-					outRes.append(DELIMITER + tAn);	
+					outRes += DELIMITER + tAn;	// answers on text if exist!!!
 				}
 			}	
+			outArray[0] = outRes;// question attributes in text
+			outArray[1] = "data:image/png;base64," + imageBase64Text; // TO DO delete!!! hard code -- data:image/png;base64,
+			outArray[2] = NAME_FOLDER_FOR_SAVENG_QUESTION_PICTURES + imageLink;// that static parameter for one operation!. when question is update from admin panel !!!
 		}else{
-			outRes.append("wrong request q.Id-"+questionID);// out text stub for tests 
+			outArray[0] = "wrong request q.Id-"+questionID;// out text stub for tests 
+		}		
+		return outArray ;// return to client 
+	}
+	////
+	private String encodeImage(String imageLink) {	//method getting jpg file and converting to base64 for sending to FES 		
+		String res = null;
+		byte[] bytes = null;
+		FileInputStream file;
+		try {
+			file = new FileInputStream(imageLink);
+			bytes = new byte[file.available()];
+			file.read(bytes);
+			file.close();
+			res = Base64.getEncoder().encodeToString(bytes);
+		} catch (FileNotFoundException e) {	} 
+		catch (IOException e) {
+			System.out.println("file not found");//-------------------------------------------------------------------------sysout	
+		} 
+		catch (NullPointerException e) {
+			System.out.println("Null Pointer Exception");//-----------------------------------------------------------------sysout	
 		}
-		return outRes.toString();// return to client 
+		return res;
 	}
 	////-------------- internal method for filling in the form update issue ----------// END  //
 	//// ------------- Build Data end ---
@@ -298,52 +353,53 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	////-------------- Method for delete question into DB ----------// BEGIN  //
 	@Override
 	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW)	
-	public String deleteQuetionById(String questionID){// !!!!!!!!!  delete one question witch all questions attributes !!!!!!!
+	public String deleteQuetionById(String questionID){// !!!!!!!!!  delete one question witch all questions attributes and image in folder !!!!!!!
 		String outMessageTextToJSP_Page = "";
 		try {
 			long id = Integer.parseInt(questionID);		
-			EntityQuestion objEntQue = em.find(EntityQuestion.class, id);
+			EntityQuestionAttributes objEntQue = em.find(EntityQuestionAttributes.class, id);
+			String linkForDelete = objEntQue.getImageLink();
 			//
-			List<EntityQuestionAttributes> liEntAttr = objEntQue.getQuestionAttributes();
-			for(EntityQuestionAttributes entAttr:liEntAttr){
-				//	
-				List<EntityAnswersText> liEntAns = entAttr.getQuestionAnswersList();
-				for(EntityAnswersText entAns:liEntAns){
-					em.remove(entAns);
-					em.flush();
-				}
-				em.remove(entAttr);
+			List<EntityAnswersText> liEntAns = objEntQue.getQuestionAnswersList();
+			for(EntityAnswersText entAns:liEntAns){
+				em.remove(entAns);
 				em.flush();
-			}				
-			//
+			}
 			em.remove(objEntQue);
 			em.flush();
+			DeleteImageFromFolder(linkForDelete);
 			outMessageTextToJSP_Page = "Object Question By ID="+questionID+". Has been Deleted";// return to client 
 		} catch (Exception e) {
 			outMessageTextToJSP_Page = "Error Deleting Object by ID"+questionID+". This Object Already DELETED";
 		}
 		return outMessageTextToJSP_Page ;// return to client 
 	}
+	////
+	private void DeleteImageFromFolder(String linkForDelete) {		
+		try {
+			Files.delete(Paths.get(System.getProperty("user.dir") + "\\" + NAME_FOLDER_FOR_SAVENG_QUESTION_PICTURES + linkForDelete));
+		} catch (IOException e) {
+			System.out.println("BES delete image from folder catch IOException");// ------------------------------------------------------- sysout
+			e.printStackTrace();   
+		}
+	}
 	////-------------- Method for delete question into DB ----------// END  //
+
 
 	////-------------- Search Method by Category or Categories and level of difficulty ----------// BEGIN  //
 	@SuppressWarnings("unchecked")		
 	public List<String> SearchAllQuestionInDataBase(String category, int levelOfDifficulty) {	// !!!!!!!!!!!!!!!!!!!!!!!!!!!! not work in mazila		
 		List<String> outResult = new ArrayList<String>();		
 		////
-		if(category != null && !category.equalsIgnoreCase("")){
-			String workingDir = System.getProperty("user.dir").replaceAll("\\\\", "/");
+		if(category != null && !category.equalsIgnoreCase("")){			
 			//
 			List<EntityQuestionAttributes> query = em.createQuery("SELECT c FROM EntityQuestionAttributes c WHERE "
 					+ "(c.levelOfDifficulty="+levelOfDifficulty+") AND (c.category='"+category+"')").getResultList();
 			////
-			for(EntityQuestionAttributes tempRes: query){							
-				String replacedText = tempRes.getImageLink().replaceAll("\\\\", "/");
-				String imageLink = workingDir + "/questions" + replacedText;
-				outResult.add(tempRes.getQuestionId().getQuestionText() + IMaintenanceService.DELIMITER 
-						+ imageLink + IMaintenanceService.DELIMITER 
-						+ tempRes.getId() + IMaintenanceService.DELIMITER
-						+ tempRes.getQuestionId().getId());
+			for(EntityQuestionAttributes tempRes: query){				
+				outResult.add(tempRes.getId() + DELIMITER
+						+ tempRes.getQuestionId().getQuestionText() + DELIMITER 
+						+ tempRes.getCategory());
 			}		
 		}else{
 			outResult = null;
@@ -361,32 +417,28 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		long id = (long)Integer.parseInt(questionID);
 		//
 		try{
-			Object res = em.createQuery("SELECT c FROM EntityQuestion c WHERE c.id="+id).getSingleResult();// element question table getting by ID
-			EntityQuestion elem = (EntityQuestion) res;
-			elem.setQuestionText(questionText);
-			List<EntityQuestionAttributes> questionAttributes = elem.getQuestionAttributes();
-			for(EntityQuestionAttributes qattr:questionAttributes){
-				qattr.setCategory(category);
-				qattr.setCorrectAnswer(correctAnswer);
-				qattr.setImageLink(imageLink);
-				qattr.setLevelOfDifficulty(levelOfDifficulty);
-				//
-				if(answers != null){
-					List<EntityAnswersText> answersList = qattr.getQuestionAnswersList();	 	
-					int i=0;			
-					for(EntityAnswersText text:answersList){					
-						text.setAnswerText(answers.get(i++));					
-						em.persist(text);
-					}  
-				}				
-			}			
-			elem.setQuestionAttributes(questionAttributes);
+			Object res = em.createQuery("SELECT c FROM EntityQuestionAttributes c WHERE c.id="+id).getSingleResult();// element question table getting by ID
+			EntityQuestionAttributes elem = (EntityQuestionAttributes) res;
+			elem.getQuestionId().setQuestionText(questionText);			
+			elem.setCategory(category);
+			elem.setCorrectAnswer(correctAnswer);
+			elem.setImageLink(imageLink);
+			elem.setLevelOfDifficulty(levelOfDifficulty);
+			//
+			if(answers != null){
+				List<EntityAnswersText> answersList = elem.getQuestionAnswersList();	 	
+				int i=0;			
+				for(EntityAnswersText text:answersList){					
+					text.setAnswerText(answers.get(i++));					
+					em.persist(text);
+				}  
+			}					
 			em.persist(elem);
 
 			flagAction = true;
 		}catch(Exception e){
 			e.printStackTrace();
-			System.out.println("not good in maintenance service update question");
+			System.out.println("BES not good in maintenance service update question");
 		}
 		return flagAction;// return to client 
 	}	
@@ -396,9 +448,9 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	@SuppressWarnings("unchecked")	
 	@Override  
 	public List<Long> getUniqueSetQuestionsForTest(String category, String levelOfDifficultyMin, String levelOfDifficultyMax, Long nQuestion){
-		
+
 		// -- for Valery -----------  TO DO generation questions id to list long witch new parameters !!!!!!  String levelOfDifficultyMin, String levelOfDifficultyMax,
-		
+
 		List<Long> outRes = new ArrayList<Long>();
 		int lengthCategoryArray = 0;
 		int level = 1;	
@@ -418,7 +470,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 							////
 							i++;// -- cycle works on the number of questions -nQuestion	 WITCH WRONG LOOP
 						}else{//  -- condition: if the questionAttrList.size is equal to or less than zero.							
-							System.out.println("BES else condition i-" + i);//---------------------------sysout	
+							System.out.println("BES else condition i-" + i);//------------------------------------------------------------------sysout	
 						}
 						////	
 						//i++;    // -- cycle works on the number of questions -nQuestion	
@@ -435,7 +487,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 				}
 				////				
 			}else{// else for one category change
-				System.out.println("one category changed TO DO Method");
+				System.out.println(" BES one category changed TO DO Method");//------------------------------------------------------------------sysout	
 			}
 		}
 		return outRes;

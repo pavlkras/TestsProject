@@ -1,5 +1,6 @@
 package tel_ran.tests.services;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -8,25 +9,31 @@ import java.nio.file.Paths;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import tel_ran.tests.entitys.EntityCompany;
 import tel_ran.tests.entitys.EntityTest;
 import tel_ran.tests.services.interfaces.IPersonalActionsService;
 
 public class PersonalActionsService extends TestsPersistence implements	IPersonalActionsService {
-
-	private  String BASE_DIRECTORY_FOR_SAVING_PICTURES_TO_FILE = "baseTests";
-
 	////------- Control mode Test for Person case ----------------// BEGIN //
 	@Override
 	public String[] GetTestForPerson(String testId) {	// creation test for person
-		long testID = (long)Integer.parseInt(testId);		
-		EntityTest personTest = em.find(EntityTest.class, testID);		
-		int peRson = personTest.getEntityPerson().getPersonId();
-		String pass = personTest.getPassword();	
-		String idQuestionsForTheTest = personTest.getIdQuestionsForCreationTest();
-		String timeStart = Long.toString(personTest.getStartTestDate());
-		String timeEnd = Long.toString(personTest.getEndTestDate());
-		String[] outResult = {peRson+"", pass, idQuestionsForTheTest, timeStart, timeEnd};
+		String[] outResult = null;	
+		////
+		EntityTest personTest = null;
+		if(testId != null && testId != ""){
+			long testID = (long)Integer.parseInt(testId);		
+			personTest = em.find(EntityTest.class, testID);	
+			System.out.println("BES get test - " + personTest);//-------------------------------------------------------------------------------------sysout
+		}
+		////
+		if(personTest != null){	
+			outResult = new String[5];
+			outResult[0] = personTest.getEntityPerson().getPersonId() + "";
+			outResult[1] = personTest.getPassword();
+			outResult[2] = personTest.getIdQuestionsForCreationTest();
+			outResult[3] = personTest.getStartTestDate() + "";
+			outResult[4] = personTest.getEndTestDate() + "";	
+		}	
+		////	
 		return outResult;
 	}
 	//// ------------------- save starting test	parameters
@@ -37,45 +44,46 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 		try{
 			long testID = (long)Integer.parseInt(testId);		
 			EntityTest personTest = em.find(EntityTest.class, testID);		
-			personTest.setCorrectAnswers(correctAnswers.toCharArray());			
-			personTest.setStartTestDate(timeStartTest);			
-			//
-			em.persist(personTest);
-			resAction = true;
+			personTest.setCorrectAnswers(correctAnswers.toCharArray());	
+			if(personTest.getStartTestDate() == 0){// if this first time!!!
+				personTest.setStartTestDate(timeStartTest);	
+				System.out.println("saved time -"+ timeStartTest);//-------------------------------------------------------------------------------------sysout
+				//
+				em.persist(personTest);
+				resAction = true;
+			}
 		}catch(Exception e){
 			//e.printStackTrace();
-			System.out.println("catch save start test");
+			System.out.println("catch save start test");//-------------------------------------------------------------------------------------sysout
 		}
 		return resAction;
 	}
 	//// ------------------- save ending test parameters
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
-	public boolean SaveEndPersonTestResult(String testId, String personAnswers,	String imagesLinks, long timeEndTest) {
-		String[] res = imagesLinks.split("@end_of_link@");  // here Links OF PersonIMAGE in array string as 1 string = 1 img link base64!!!
-		for(int i=0;i<res.length;i++){
-			res[i]=res[i].replaceFirst(",", "");
-		}
-		////
+	public boolean SaveEndPersonTestResult(String testId, String personAnswers,	String imagesLinks, long timeEndTest) {			
 		boolean resAction = false;
+		////
 		try{
 			long testID = (long)Integer.parseInt(testId);		
 			EntityTest personTest = em.find(EntityTest.class, testID);		
 			char[] persAnswArray = personAnswers.toCharArray();
 			personTest.setPersonAnswers(persAnswArray );
 			String companyId = personTest.getEntityCompany().getC_Name();
-			String links = getLinksForImages(res, companyId , testId); 
-			personTest.setPictures(links);	
-
-			personTest.setEndTestDate(timeEndTest);	
+			String links = getLinksForImages(imagesLinks, companyId , testId); 
+			personTest.setPictures(links);
+			if(personTest.getEndTestDate() == 0){
+				personTest.setEndTestDate(timeEndTest);
+			}
 			personTest.setPersonAnswers(personAnswers.toCharArray());	
 			personTest.setAmountOfCorrectAnswers(AmountOfAnswers(personTest));
 			//
 			em.persist(personTest);
+			System.out.println("BES end person Test -- "+personTest);//-------------------------------------------------------------------------------------sysout
 			resAction = true;			
 		}catch(Exception e){
 			e.printStackTrace();
-			System.out.println("catch save end test");
+			System.out.println("catch save end test");//-------------------------------------------------------------------------------------sysout
 		}
 		return resAction;
 	}
@@ -94,30 +102,28 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 	////------- Control mode Test for Person case ----------------// END //
 
 	////-------  save images  ---------------// Begin //
-	private String getLinksForImages(String [] imagesLinksInBase64Text, String companyID, String testID){
+	private String getLinksForImages(String imagesLinksInBase64Text, String companyID, String testID){		
 		String outLinkText = "";/// stub empty images links
-		String fileDirectory = BASE_DIRECTORY_FOR_SAVING_PICTURES_TO_FILE;	
-		String workingDir = System.getProperty("user.dir").replaceAll("\\\\", "/");
-		try {			
-			//Files.createDirectories(Paths.get(fileDirectory +"/comp_" + companyID + "/test_" + testID));	
-			Files.createDirectories(Paths.get(fileDirectory +"\\comp_" + companyID + "\\test_" + testID));
-			for(int picNum=0; picNum < imagesLinksInBase64Text.length; picNum++){	
-				//BufferedWriter writer =  new BufferedWriter ( new FileWriter(workingDir + "/" + fileDirectory +"/comp_" + companyID + "/test_" + testID + "/pic_" + picNum + ".txt"));
-				BufferedWriter writer =  new BufferedWriter ( new FileWriter(workingDir + "\\" + fileDirectory +"\\comp_" + companyID + "\\test_" + testID + "\\pic_" + picNum + ".txt"));
-				writer.write(imagesLinksInBase64Text[picNum]);			 
+		String workingDir = System.getProperty("user.dir");
+		try {
+			String[] tempPicturesArray = imagesLinksInBase64Text.split(IMAGE_DELIMITER);  // here Links OF PersonIMAGE in array string as 1 string = 1 img link base64!!!	
+			////
+			long idOfTest = (long)Integer.parseInt(testID);
+			EntityTest testRes = em.find(EntityTest.class, idOfTest );				
+			String testName = testRes.getTestName();
+			////
+			Files.createDirectories(Paths.get(NAME_FOLDER_FOR_SAVENG_TESTS_PICTURES + File.separator + companyID + File.separator + testName));// creating a new directiry for saving person test pictures  
+			for(int picNum=0; picNum < tempPicturesArray.length; picNum++){	
+				tempPicturesArray[picNum].replaceFirst(",", "");				
+				BufferedWriter writer =  new BufferedWriter ( new FileWriter(workingDir + File.separator + NAME_FOLDER_FOR_SAVENG_TESTS_PICTURES + File.separator + companyID + File.separator + testName + "\\pic_" + picNum + ".txt"));
+				writer.write(tempPicturesArray[picNum]);			 
 				writer.close();
-				//outLinkText += fileDirectory +"/comp_" + companyID + "/test_" + testID + "/pic_" + picNum + ".txt" + " , ";
-				long cId = (long)Integer.parseInt(companyID);
-				EntityCompany compRes = em.find(EntityCompany.class, cId);
-				String compName = compRes.getC_Name().replace(" ", "_");
-				EntityTest testRes = em.find(EntityTest.class, testID);
-				String testName = testRes.getTestName();
-				outLinkText += fileDirectory +"\\" + compName + "_" + companyID + "\\" + testName + "_" + testID + "\\pic_" + picNum + ".txt" + ",";
+				////				
+				outLinkText += NAME_FOLDER_FOR_SAVENG_TESTS_PICTURES + File.separator + companyID + File.separator + testName + "\\pic_" + picNum + ".txt" + ",";
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}		
-		System.out.println("outLinkText-"+outLinkText);	//------------------------------sysout	
 		return outLinkText;
 	}
 	////-------  save images ----------------// END //	

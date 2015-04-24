@@ -9,7 +9,7 @@ import javax.persistence.OneToMany;
 
 public class EntityPerson {
     @Id
-	@Column(name="personId",unique = true, nullable = false, length = 15)
+	@Column(name="personId",unique = true, nullable = false, length = 25)
     private int personId;
   
     @OneToMany(mappedBy = "entityPerson")
