@@ -1,9 +1,9 @@
 package tel_ran.tests.services.interfaces;
-
 import java.util.List;
 
-public interface IMaintenanceService {
-	public static final String DELIMITER = "----";// delimiter for entity's and filling from file
+import tel_ran.tests.services.fields.ApplicationFinalFields;
+
+public interface  IMaintenanceService extends ApplicationFinalFields{
 	//
 	boolean setAutorization(String username, String password);
 	//
@@ -13,7 +13,7 @@ public interface IMaintenanceService {
 	//
 	public List<String> SearchAllQuestionInDataBase(String category, int levelOfDifficulty);
 	//
-	public String getQuestionById(String questionID);
+	public String[] getQuestionById(String questionID, int actionKey);
 	//
 	public List<String> getAllCategoriesFromDataBase();
 	//
@@ -22,7 +22,6 @@ public interface IMaintenanceService {
 	public String deleteQuetionById(String questionID);
 	//
 	boolean FillDataBaseFromTextResource(List<String> inputParsedText);	
-
 	// method for group generate test. AlexFoox returned Long ID of question 
 	public List<Long> getUniqueSetQuestionsForTest(String category,String levelMin, String levelmax, Long nQuestion);
 }

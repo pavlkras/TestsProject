@@ -2,7 +2,9 @@ package tel_ran.tests.services.interfaces;
 
 import java.util.List;
 
-public interface ICompanyActionsService {
+import tel_ran.tests.services.fields.ApplicationFinalFields;
+
+public interface ICompanyActionsService extends ApplicationFinalFields{
 //Use case 3.1.1
 long getCompanyByName(String companyName);
 boolean CompanyAuthorization(String companyName , String password);
