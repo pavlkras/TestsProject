@@ -367,7 +367,9 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 			}
 			em.remove(objEntQue);
 			em.flush();
+			if(linkForDelete != null && linkForDelete.length() > 4){
 			DeleteImageFromFolder(linkForDelete);
+			}
 			outMessageTextToJSP_Page = "Object Question By ID="+questionID+". Has been Deleted";// return to client 
 		} catch (Exception e) {
 			outMessageTextToJSP_Page = "Error Deleting Object by ID"+questionID+". This Object Already DELETED";
