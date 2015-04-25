@@ -22,7 +22,6 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 	@Override
 	public boolean CompanyAuthorization(String companyName, String password) {
 		boolean result = false;
-
 		entityCompany = (EntityCompany) em.createQuery("Select c from EntityCompany c where c.C_Name='" + companyName+"'" ).getSingleResult();
 		if(entityCompany != null){
 			if( entityCompany.getPassword().equals(password)){
@@ -33,11 +32,17 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 		}
 		return result;
 	}
-
+	////
 	@Override
-	public long getCompanyByName(String companyName) {    
-		long result = 0;		
-		EntityCompany tempCompanyEntity = (EntityCompany) em.createQuery("Select c from EntityCompany c where c.C_Name='" + companyName+"'" ).getSingleResult();// TO DO ACTION 2 Company one name !!!!		
+	public long getCompanyByName(String companyName) {   
+		long result = -1;			
+		EntityCompany tempCompanyEntity = null;
+
+		try {
+			tempCompanyEntity = (EntityCompany) em.createQuery("Select c from EntityCompany c where c.C_Name='" + companyName+"'" ).getSingleResult();			
+		} catch (Exception e) {
+			//e.printStackTrace();
+		}		
 		if(tempCompanyEntity != null && tempCompanyEntity.getC_Name().equalsIgnoreCase(companyName)){
 			result = tempCompanyEntity.getId();
 		}
@@ -78,7 +83,7 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 	public boolean createCompany(String C_Name, String C_Site, String C_Specialization, String C_AmountEmployes, String C_Password) {
 		boolean result=false;		
 		try {
-			EntityCompany comp =new EntityCompany();
+			EntityCompany comp = new EntityCompany();
 			comp.setC_Name(C_Name);
 			comp.setC_Site(C_Site);
 			comp.setC_Specialization(C_Specialization);
@@ -99,7 +104,7 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 	//------------- 	Use case Ordering Test 3.1.3 -------------/// BEGIN ////
 	@Override
 	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
-	public long  createIdTest(List<Long> list, int personId, String pass, String category, int levelOfDifficulty) {
+	public long  createIdTest(List<Long> list, int personId, String pass, String category, String levelOfDifficulty) {
 		EntityPerson temp = em.find(EntityPerson.class, personId);	
 		//
 		EntityPerson pers = new EntityPerson();
@@ -115,7 +120,7 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 		test.setTestCategory(category);		
 		test.setIdQuestionsForCreationTest(idQuestion.toString());	
 		test.setPassword(pass); 		
-		test.setComplexityLevel(levelOfDifficulty);
+		test.setLevelOfDifficulty(levelOfDifficulty);
 		test.setStartTestDate(0L);// setting parameter for wotchig method in FES
 		test.setEndTestDate(0L);// setting parameter for wotchig method in FES
 		//

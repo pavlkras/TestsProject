@@ -39,7 +39,7 @@ public class EntityTest {
 	@Column(name = "pictures", length = 500)
 	private String pictures="";           // format to string!! namefoto.jpg,nameAnotherfoto.jpg,xxx.jgg, ...
 	private int duration;
-	private int complexityLevel;
+	private String levelOfDifficulty;
 	private long startTestDate = 0L;
 	private long endTestDate = 0L;
 	//
@@ -70,7 +70,7 @@ public class EntityTest {
 		try {
 			jsonObj.put("duration",duration);
 			jsonObj.put("amountOfQuestions",amountOfQuestions);
-			jsonObj.put("complexityLevel",complexityLevel);
+			jsonObj.put("complexityLevel",levelOfDifficulty);
 			jsonObj.put("amountOfCorrectAnswers",amountOfCorrectAnswers);
 			jsonObj.put("persentOfRightAnswers",Math.round((float)amountOfCorrectAnswers/(float)amountOfQuestions*100));
 			JSONArray ar = new JSONArray();
@@ -198,12 +198,12 @@ public class EntityTest {
 		this.duration = duration;
 	}
 
-	public int getComplexityLevel() {
-		return complexityLevel;
+	public String getLevelOfDifficulty() {
+		return levelOfDifficulty;
 	}
 
-	public void setComplexityLevel(int complexityLevel) {
-		this.complexityLevel = complexityLevel;
+	public void setLevelOfDifficulty(String complexityLevel) {
+		this.levelOfDifficulty = complexityLevel;
 	}
 
 	public long getStartTestDate() {
@@ -261,7 +261,7 @@ public class EntityTest {
 				+ amountOfQuestions + IMaintenanceService.DELIMITER		
 				+ pictures + IMaintenanceService.DELIMITER
 				+ duration + IMaintenanceService.DELIMITER
-				+ complexityLevel + IMaintenanceService.DELIMITER
+				+ levelOfDifficulty + IMaintenanceService.DELIMITER
 
 				+ startTestDate + IMaintenanceService.DELIMITER	
 				+ endTestDate + IMaintenanceService.DELIMITER;

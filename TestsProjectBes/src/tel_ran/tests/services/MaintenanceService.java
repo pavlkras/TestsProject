@@ -368,7 +368,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 			em.remove(objEntQue);
 			em.flush();
 			if(linkForDelete != null && linkForDelete.length() > 4){
-			DeleteImageFromFolder(linkForDelete);
+				DeleteImageFromFolder(linkForDelete);
 			}
 			outMessageTextToJSP_Page = "Object Question By ID="+questionID+". Has been Deleted";// return to client 
 		} catch (Exception e) {
@@ -449,41 +449,36 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	////-------------- Method for test case group AlexFoox Company return id of unique set questions ----------// BEGIN  //
 	@SuppressWarnings("unchecked")	
 	@Override  
-	public List<Long> getUniqueSetQuestionsForTest(String category, String levelOfDifficultyMin, String levelOfDifficultyMax, Long nQuestion){
+	public List<Long> getUniqueSetQuestionsForTest(String category, String levelsOfDifficulty,  Long nQuestion){
 
 		// -- for Valery -----------  TO DO generation questions id to list long witch new parameters !!!!!!  String levelOfDifficultyMin, String levelOfDifficultyMax,
 
 		List<Long> outRes = new ArrayList<Long>();
-		int lengthCategoryArray = 0;
-		int level = 1;	
+		int lengthCategoryArray = 0;		
 		////
 		if(nQuestion > 0 && category != null){		
-			String[] categoryArray = category.split(",");			
+			String[] categoryArray = category.split(",");	
+			String[] levelsArray = levelsOfDifficulty.split(",");	
+
 			if(categoryArray.length > MIN_NUMBER_OF_CATEGORIES){// -- Terms: Minimum number of categories.		
 				for(int i=0; i < nQuestion ;){// -- cycle works on the number of questions -nQuestion
 					if(lengthCategoryArray < categoryArray.length){// -- Terms: pass the array to the categories when adding a new question number in an array of longs list		
 						List<EntityQuestionAttributes> questionAttrList = em.createQuery("SELECT c FROM EntityQuestionAttributes c WHERE "
-								+ "(c.levelOfDifficulty="+level+") AND (c.category='"+categoryArray[lengthCategoryArray]+"')").getResultList();
+								+ "(c.levelOfDifficulty="+levelsArray[lengthCategoryArray]+") AND (c.category='"+categoryArray[lengthCategoryArray]+"')").getResultList();
 						if(questionAttrList.size() > 0){//  -- condition: if the questionAttrList.size is greater than zero.
 							Random rnd = new Random();
 							int rand =  rnd.nextInt(questionAttrList.size());							
 							EntityQuestionAttributes re = questionAttrList.get(rand);							
-							outRes.add(re.getId());	
-							////
-							i++;// -- cycle works on the number of questions -nQuestion	 WITCH WRONG LOOP
+							outRes.add(re.getId());
+							i++;	
 						}else{//  -- condition: if the questionAttrList.size is equal to or less than zero.							
-							System.out.println("BES else condition i-" + i);//------------------------------------------------------------------sysout	
-						}
-						////	
-						//i++;    // -- cycle works on the number of questions -nQuestion	
+							System.out.println("BES else condition i-" + i 
+									+ "  level - "+levelsArray[lengthCategoryArray]
+											+"   cat--" + categoryArray[lengthCategoryArray]);//---------------------------TO DO if Category + and level - !!---------------------------------------sysout	
+						}	
 						lengthCategoryArray++;
 					}else{
-						/* -- Terms: pass the array to the categories when adding a new question number in the array sheet Long. NEW condition: the end of the array with categories !!!
-						      Terms: pass the array to the categories when adding a new question number in the array sheet Long. add it according to the level of complexity. */
-						if(Integer.parseInt(levelOfDifficultyMax) != level){// that is max level from FES							
-							level++;// -- condition: the end of the array with the categories, the following passage levels of difficulty: +1.							
-						}
-						////
+						//-- Terms: pass the array to the categories when adding a new question number in the array sheet Long. NEW condition: the end of the array with categories !!!						    
 						lengthCategoryArray = 0;// length array counter to 0.
 					}
 				}
