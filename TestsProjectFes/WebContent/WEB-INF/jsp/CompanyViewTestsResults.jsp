@@ -31,8 +31,7 @@
 <title>View tests results</title>
 </head>
 <body>
-	<div class="container-fluid">
-		
+	<div class="container-fluid">		
 		<div class="row">
 			<form ng-submit="submit()" >
 				<div class="container">

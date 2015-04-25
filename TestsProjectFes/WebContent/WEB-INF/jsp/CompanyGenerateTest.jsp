@@ -1,14 +1,33 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html">
 <html>
 <head>
+<script
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<link href='<c:url value="/static/css_folder/company/CompanyMainPage.css"></c:url>'
+	rel="stylesheet">
 <title>Insert title here</title>
 <script type="text/javascript">
+$(document).ready(function(){	
+$("tr").on( "click", function() {
+		 var ind = $(this).index();	
+		 $(".category").each(function(i) {
+			   if (this.checked) {
+				   document.getElementsByName("level_num")[i].disabled = false;
+			    }else{
+				   document.getElementsByName("level_num")[i].disabled = true;
+				}
+			});		
+	});
+});
   function check(login) {
-    if (login.length != 9) document.getElementById("e_login").style.display = "inline";
-    else document.getElementById("e_login").style.display = "none";
+    if (login.length != 9) {document.getElementById("e_login").style.display = "inline";  
+    $("#generate_test").html('<input type="submit" value="Generate test" disabled/>');
+    }else{ document.getElementById("e_login").style.display = "none";
+    $("#generate_test").html('<input type="submit" value="Generate test"/>');
+    }
   }
 </script>
 <style type="text/css">
@@ -26,26 +45,15 @@ margin-top: 4em;
 </style>
 </head>
 <body>
- <form action="add_test">
- <div class="categoryCheckBox"> 
- Please select a Category of Question: <br> <br>  
-	<script type="text/javascript">
+ <form action="add_test" id="adding_form_company">
+ <div class="categoryCheckBox">  
+   	<script type="text/javascript">
 	document.write("${categoryFill}");
-	</script></div>  <div class="inputFormBox">  
- Level of Difficulty min: <br>   
-    1<input type="radio" name="levelmin" value=1 checked="checked">
-    2<input type="radio" name="levelmin" value=2>
-    3<input type="radio" name="levelmin" value=3>
-    4<input type="radio" name="levelmin" value=4>
-    5<input type="radio" name="levelmin" value=5> <br> 
-    Level of Difficulty max: <br>   
-    1<input type="radio" name="levelmax" value=1>
-    2<input type="radio" name="levelmax" value=2>
-    3<input type="radio" name="levelmax" value=3>
-    4<input type="radio" name="levelmax" value=4>
-    5<input type="radio" name="levelmax" value=5 checked="checked"> <br> 
+	</script>	
+	</div> 
+	 <div class="inputFormBox">  
     SelectQuestion Count:<br>
-    <select name="selectCountQuestions">    
+    <select name="selectCountQuestions" >    
     <option value="10">10test</option><!-- for deleting !!! -->
     <option value="30">30</option>
     <option value="40">40</option>
@@ -71,8 +79,10 @@ margin-top: 4em;
     <td>E-mail: </td>
     <td><input type="text" name="personEmail" size=20  placeholder="josh-jakson@mail.com"/> <br> </td> 
    </tr> 
-   </table>    
-   <input type="submit" value="Generate test" />
+   </table>   
+   <div id="generate_test">
+   <input   type="submit" value="Generate test" disabled/>
+   </div> 
    </div>
  </form>
  

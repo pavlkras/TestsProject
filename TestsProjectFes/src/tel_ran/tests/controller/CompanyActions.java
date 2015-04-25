@@ -12,16 +12,21 @@ import javax.mail.Transport;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
 import tel_ran.tests.services.interfaces.ICompanyActionsService;
 import tel_ran.tests.services.interfaces.IMaintenanceService;
+
+
 
 @Controller
 @Scope("session") /*session timer default = 20min*/
@@ -89,9 +94,12 @@ Wrong Password Flow:
 			if(ress){ 				
 				StringBuffer categoryHtmlText = new StringBuffer();
 				List<String> resultCategory = maintenanceService.getAllCategoriesFromDataBase();
+				categoryHtmlText.append("<table class='table_ind'><tr><th>Category of Question:</th><th  colspan='2'>Level of difficulty</th></tr>");
 				for(String catBox:resultCategory){					
-					categoryHtmlText.append("&nbsp;"+catBox + ":&nbsp;<input type='checkbox' name='category' value='" + catBox + "' /><br>");
+					categoryHtmlText.append("<tr class='tr_ind'><td>"+catBox + ":</td><td><input class='category' type='checkbox' name='category' value='" + catBox + "' /></td><td><select name='level_num' disabled><option value='1'>1</option>"
+							+ "<option value='2'>2</option><option value='3'>3</option><option value='4'>4</option><option value='5'>5</option></select></td></tr>");
 				}
+				categoryHtmlText.append("</table>");
 				model.addAttribute("categoryFill", categoryHtmlText.toString());
 				result = "CompanyGenerateTest";
 				this.setCompanyName(companyName); 
@@ -147,21 +155,54 @@ User Registered Flow:
 		model.addAttribute("myResult", buf.toString());
 		return "Company_search_form";
 	}
-
+////
 	@RequestMapping({"/companyadd"})
 	public String addCompany() {
 		return "Company_add_form";
 	}
-
+//// method response JSON, Ajax on company add page 
+	@RequestMapping(value="/add_processing_ajax",method=RequestMethod.POST)
+	public @ResponseBody JsonResponse ajaxRequestStream(HttpServletRequest request) {   
+		String name_company = request.getParameter("name");
+		JsonResponse res = new JsonResponse(); 
+		long tRes = companyService.getCompanyByName(name_company);
+		if(tRes == -1){    			
+			res.setStatus("SUCCESS");
+			res.setResult(name_company); 			
+		} else{
+			res.setStatus("ERROR");	
+			res.setResult(name_company); 
+		}
+		return res;
+	}
+//// static resurse class for JSON, Ajax on company add page 
+	class JsonResponse {
+		 private String status = null;
+	     private Object result = null;
+	     public String getStatus() {
+	             return status;
+	     }
+	     public void setStatus(String status) {
+	             this.status = status;
+	     }
+	     public Object getResult() {
+	             return result;
+	     }
+	     public void setResult(Object result) {
+	             this.result = result;
+	     }
+	}
+	////
 	@RequestMapping({"/add_processing"})
 	public String addProcessing(String C_Name,String C_Site, String C_Specialization,String C_AmountEmployes,String C_Password,Model model) {
-		boolean flag = false;
-		try{
-			flag = companyService.createCompany(C_Name, C_Site, C_Specialization, C_AmountEmployes, C_Password);
-		}catch(Throwable th){
-			th.printStackTrace();
-			System.out.println("catch creation company FES");
-		}
+		boolean flag = false;		
+			try{
+				flag = companyService.createCompany(C_Name, C_Site, C_Specialization, C_AmountEmployes, C_Password);
+			}catch(Throwable th){
+				th.printStackTrace();
+				System.out.println("catch creation company FES");
+			}
+			
 		if(flag){
 			model.addAttribute("myResult", "<H1>Company Added Success</H1>");
 			return "Company_search_form";
@@ -186,13 +227,15 @@ Normal Flow:
 6.	The System presents the link for performing the test in the control mode  */
 	//
 	@RequestMapping({"/add_test"})
-	public String createTest(String category,String levelmin,String levelmax, String personId, String personName, String personSurname,String personEmail, String selectCountQuestions, Model model) {	
+	public String createTest(String category, String level_num, String personId, String personName, String personSurname,String personEmail, String selectCountQuestions, Model model) {	
 		long counterOfQuestions = Integer.parseInt(selectCountQuestions);
-		List<Long> listIdQuestions = maintenanceService.getUniqueSetQuestionsForTest(category, levelmin, levelmax, (long) counterOfQuestions);
+		System.out.println("level_num--"+level_num);//-------------------------------sysout
+		System.out.println("category--"+category);//-------------------------------sysout
+		List<Long> listIdQuestions = maintenanceService.getUniqueSetQuestionsForTest(category, level_num, (long) counterOfQuestions);
 		int personID = companyService.createPerson(Integer.parseInt(personId), personName, personSurname,personEmail);
 		String password = getRandomPassword();
-		long idTest = companyService.createIdTest(listIdQuestions, personID, password, category, Integer.parseInt(levelmax));	//------------ TO DO levels change !!	add company name for
-		
+		long idTest = companyService.createIdTest(listIdQuestions, personID, password, category, level_num);	//------------ TO DO levels change !!	add company name for
+
 		String link = PATH_ADDRESS_TO_SERVICE + idTest;// -------------------------------------------------------------------------------------TO DO real address NOT text in string !!!
 		boolean flagMail = true;
 		sendEmail(link,personEmail,password);

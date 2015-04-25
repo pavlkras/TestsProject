@@ -12,24 +12,22 @@
 	rel="stylesheet">
 <script type="text/javascript">
 $(document).ready(function(){
-	$("#button_send").css("display","none");
-	//-----------------------------------------------------//
 	$("#addingForm").keyup(function(){
 	 var question_text = document.question_adding_form.questionText.value;	
 		if(question_text.length > 3){
 			var cat = document.question_adding_form.category.value;	
 			if(cat.length != 0){
 				var answer = document.question_adding_form.correctAnswer.value;	
-				if(answer.length == 1){					
-					$("#button_send").css("display","block");
+				if(answer.length == 1){							
+					 document.getElementsByName("button_send")[0].disabled = false;
 				}else{
-					$("#button_send").css("display","none");
+					document.getElementsByName("button_send")[0].disabled = true;
 				}
 			}else{
-				$("#button_send").css("display","none");
+				document.getElementsByName("button_send")[0].disabled = true;
 			}
 		}else{
-			$("#button_send").css("display","none");
+			 document.getElementsByName("button_send")[0].disabled = true;
 		}
 	});
 	////
@@ -92,8 +90,8 @@ $(document).ready(function(){
 					placeholder="/s7d9dejd78f6t4th47.jpg" /></td>
 			</tr>
 			<tr>
-				<th colspan="2"><input id="button_send" type="submit"
-					value="Add To DataBase"></th>
+				<th colspan="2"><input name="button_send" id="button_send" type="submit"
+					value="Add To DataBase" disabled ></th>
 			</tr>
 		</table>
 	</form>
