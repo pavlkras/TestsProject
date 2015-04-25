@@ -16,7 +16,7 @@ boolean createCompany(String C_Name,String C_Site, String C_Specialization,Strin
 String []getAnySingleQuery(String strQuery);
 
 //Use case Ordering Test 3.1.3
-long createIdTest(List<Long> list, int personId, String pass, String category, int complexityLevel);
+long createIdTest(List<Long> list, int personId, String pass, String category, String complexityLevel);
 int createPerson(int personId,String personName,String personSurname,String personEmail);
 
 //Company actions for 3.1.4. Viewing test results
