@@ -129,7 +129,7 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 		//
 		em.persist(test);
 		long testId = test.getTestId();
-		String nameOfTheTest = personId+"_"+levelOfDifficulty+"_"+testId;// this name is concat for this parameters 
+		String nameOfTheTest = personId + "_" + testId;// this name is concat for this parameters 
 		test.setTestName(nameOfTheTest);
 		em.persist(test);
 		return testId;
