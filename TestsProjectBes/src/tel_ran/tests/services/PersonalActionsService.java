@@ -114,7 +114,7 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 			////
 			Files.createDirectories(Paths.get(NAME_FOLDER_FOR_SAVENG_TESTS_PICTURES + File.separator + companyID + File.separator + testName));// creating a new directiry for saving person test pictures  
 			for(int picNum=0; picNum < tempPicturesArray.length; picNum++){	
-				tempPicturesArray[picNum].replaceFirst(",", "");				
+				tempPicturesArray[picNum] = tempPicturesArray[picNum].replaceFirst(",", "");				
 				BufferedWriter writer =  new BufferedWriter ( new FileWriter(workingDir + File.separator + NAME_FOLDER_FOR_SAVENG_TESTS_PICTURES + File.separator + companyID + File.separator + testName + "\\pic_" + picNum + ".txt"));
 				writer.write(tempPicturesArray[picNum]);			 
 				writer.close();
