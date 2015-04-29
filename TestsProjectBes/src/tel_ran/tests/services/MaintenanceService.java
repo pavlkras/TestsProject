@@ -455,38 +455,23 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		if(nQuestion > 0 && category != null){		
 			String[] categoryArray = category.split(",");	
 			String[] levelsArray = levelsOfDifficulty.split(",");
+			StringBuffer condition = new StringBuffer();
 			if(categoryArray.length > MIN_NUMBER_OF_CATEGORIES){      
-				StringBuffer condition = new StringBuffer();
-				for(int i=0; i<categoryArray.length; i=i+2){
-					if(categoryArray.length == 2){
-						condition = condition.append("((c.levelOfDifficulty=?" + (i+3) + ") AND (c.category=?" + (i+4) + "))");
-					}
-					else{
-						if(i < (categoryArray.length - 1)){
-							condition = condition.append("((c.levelOfDifficulty=?" + (i+3) + ") AND (c.category=?" + (i+4) + ")) OR ");
-						}
-						else{
-							condition = condition.append("((c.levelOfDifficulty=?" + (i+3) + ") AND (c.category=?" + (i+4) + "))");
-						}
-					}
+				for(int i=0, j=1; j<categoryArray.length; i=i+2, j++){
+					condition = condition.append(" OR ((c.levelOfDifficulty=?" + (i+3) + ") AND (c.category=?" + (i+4) + "))");
 				}
-				Query query = em.createQuery("SELECT c.id FROM EntityQuestionAttributes c WHERE ( ((c.levelOfDifficulty=?1) AND (c.category=?2)) OR " + condition.toString() + ")");
-				query.setParameter(1, Integer.parseInt(levelsArray[0]));
-				query.setParameter(2, categoryArray[0]);
-				for(int i=0, j=1; i<categoryArray.length; i=i+2, j++){				
+			}
+			Query query = em.createQuery("SELECT c.id FROM EntityQuestionAttributes c WHERE ((c.levelOfDifficulty=?1) AND (c.category=?2))" + condition.toString());
+			query.setParameter(1, Integer.parseInt(levelsArray[0]));
+			query.setParameter(2, categoryArray[0]);
+			if(categoryArray.length > MIN_NUMBER_OF_CATEGORIES){ 
+				for(int i=0, j=1; j<categoryArray.length; i=i+2, j++){				
 					query.setParameter((i+3), Integer.parseInt(levelsArray[j]));
 					query.setParameter((i+4), categoryArray[j]);
 				}
-				List<Long> allAttributeQuestionsId = query.getResultList();	
-				result = randomAttributeQuestionsId(allAttributeQuestionsId, nQuestion);
 			}
-			else{
-				Query query = em.createQuery("SELECT c.id FROM EntityQuestionAttributes c WHERE ((c.levelOfDifficulty=?1) AND (c.category=?2))");
-				query.setParameter(1, Integer.parseInt(levelsArray[0]));
-				query.setParameter(2, categoryArray[0]);
-				List<Long> allAttributeQuestionsId = query.getResultList();	
-				result = randomAttributeQuestionsId(allAttributeQuestionsId, nQuestion);
-			}
+			List<Long> allAttributeQuestionsId = query.getResultList();	
+			result = randomAttributeQuestionsId(allAttributeQuestionsId, nQuestion);
 		}
 		return result;
 	}
