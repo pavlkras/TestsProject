@@ -60,7 +60,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW) 
 	public boolean CreateNewQuestion(String imageLink, String questionText, 
 			String category, int levelOfDifficulty, List<String> answers, 
-			char correctAnswer,int questionNumber, int numberOfResponsesInThePicture){
+			char correctAnswer,int questionNumber, int numberOfResponsesInThePicture, String codeText){
 		////
 		boolean flagAction = false;	
 		long keyQuestion = 0;
@@ -83,7 +83,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 			keyQuestion = objectQuestion.getId(); 
 			//
 			List<EntityQuestionAttributes> questionAttributes = new ArrayList<EntityQuestionAttributes>();
-			EntityQuestionAttributes qattr = addQuestionAttributes(imageLink, category,  levelOfDifficulty, correctAnswer,answers, keyQuestion,numberOfResponsesInThePicture);
+			EntityQuestionAttributes qattr = addQuestionAttributes(imageLink, category,  levelOfDifficulty, correctAnswer, answers, keyQuestion, numberOfResponsesInThePicture, codeText);
 			questionAttributes.add(qattr);
 			//
 			objectQuestion.setQuestionAttributes(questionAttributes);
@@ -96,7 +96,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 			keyQuestion = objectQuestion.getId(); 
 			//
 			List<EntityQuestionAttributes> questionAttributes = objectQuestion.getQuestionAttributes();
-			EntityQuestionAttributes qattr = addQuestionAttributes(imageLink, category,  levelOfDifficulty, correctAnswer,answers, keyQuestion,numberOfResponsesInThePicture);
+			EntityQuestionAttributes qattr = addQuestionAttributes(imageLink, category,  levelOfDifficulty, correctAnswer,answers, keyQuestion,numberOfResponsesInThePicture, codeText);
 			questionAttributes.add(qattr);
 			objectQuestion.setQuestionAttributes(questionAttributes);
 			em.persist(objectQuestion);
@@ -107,12 +107,18 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		return flagAction;
 	}
 	////
-	private EntityQuestionAttributes addQuestionAttributes(String imageLink, String category, int levelOfDifficulty, char correctAnswer, List<String> answers, long keyQuestion, int numberOfResponsesInThePicture) {
+	private EntityQuestionAttributes addQuestionAttributes(String imageLink, String category,
+			int levelOfDifficulty, char correctAnswer, List<String> answers, long keyQuestion,
+			int numberOfResponsesInThePicture, String codeText) {
 		EntityQuestionAttributes questionAttributesList = new EntityQuestionAttributes();
 		EntityQuestion objectQuestion = em.find(EntityQuestion.class, keyQuestion);			
 		////
 		if(imageLink.length() > 15 && imageLink != null){
 			questionAttributesList.setImageLink(imageLink);
+		}
+		////
+		if(codeText.length() > 10 && codeText != null){		// parsing code for save in to db 				
+			questionAttributesList.setLineCod(codeText);			
 		}
 		////
 		questionAttributesList.setCategory(category);
@@ -157,7 +163,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		 * question.length = 6. //// +4 or > for answers in text "a51","a52","a53","a54"  that bee letar */
 
 		boolean flagAction = false;	
-		int DIF_LEVEL = 5;
+		int DIF_LEVEL = 3;
 		int selectedCategory = 0;
 		List<String> answers;	
 		List<String[]> listQuestions = null;		
@@ -208,10 +214,10 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 				if(queryTempObj != null){
 					questionT = fres[0].replace("'", "");
 					EntityQuestion enTq = (EntityQuestion) queryTempObj;
-					flagAction = CreateNewQuestion(fres[1], questionT, fres[2], Integer.parseInt(fres[3]), answers, fres[4].charAt(0), (int)enTq.getId(), numberOfResponsesInThePicture);
+					flagAction = CreateNewQuestion(fres[1], questionT, fres[2], Integer.parseInt(fres[3]), answers, fres[4].charAt(0), (int)enTq.getId(), numberOfResponsesInThePicture, null);
 				}else{
 					questionT = fres[0].replace("'", "");
-					flagAction = CreateNewQuestion(fres[1], questionT, fres[2], Integer.parseInt(fres[3]), answers, fres[4].charAt(0), NEW_QUESTION, numberOfResponsesInThePicture);
+					flagAction = CreateNewQuestion(fres[1], questionT, fres[2], Integer.parseInt(fres[3]), answers, fres[4].charAt(0), NEW_QUESTION, numberOfResponsesInThePicture, null);
 				}
 			}
 		}
@@ -264,7 +270,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 					correctAnswer = question_Parts[4].charAt(0);						
 				}
 				//   --------------  --------------  --------------  ----------------  ------------------  -----  //NUMBERofRESPONSESinThePICTURE ----- default = 4  
-				flagAction = CreateNewQuestion(imageLink, questionText, category, levelOfDifficulty, answers, correctAnswer, questionNumber, NUMBERofRESPONSESinThePICTURE );
+				flagAction = CreateNewQuestion(imageLink, questionText, category, levelOfDifficulty, answers, correctAnswer, questionNumber, NUMBERofRESPONSESinThePICTURE, null );
 			}			
 		}catch(Exception e){
 			e.printStackTrace();
@@ -290,19 +296,24 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 				imageBase64Text = encodeImage(NAME_FOLDER_FOR_SAVENG_QUESTION_PICTURES  + imageLink);
 			}
 			////
-			if(actionKey == 0){
-				outRes = question.getQuestionId().getQuestionText() + DELIMITER // text of question or Description to pictures									
-						+ question.getCorrectAnswer() + DELIMITER // correct answer char 
-						+ question.getNumberOfResponsesInThePicture();// number of answers chars on image
-			}else{
-				outRes = question.getQuestionId().getQuestionText() + DELIMITER // text of question or Description to pictures									
-						+ question.getCorrectAnswer() + DELIMITER // correct answer char 
-						+ question.getNumberOfResponsesInThePicture() + DELIMITER// number of answers chars on image
-						+ question.getId() + DELIMITER// static information
-						+ question.getCategory() + DELIMITER// static information
-						+ question.getLevelOfDifficulty() + DELIMITER// static information
-						+ question.getNumberOfResponsesInThePicture();	// static information
+			switch(actionKey){
+			case 0:outRes = question.getQuestionId().getQuestionText() + DELIMITER // text of question or Description to picture or code									
+					+ question.getCorrectAnswer() + DELIMITER // correct answer char 
+					+ question.getNumberOfResponsesInThePicture() + DELIMITER // number of answers chars on image
+					+ question.getLineCod();// code question text
+			break;
+			case 1:outRes = question.getQuestionId().getQuestionText() + DELIMITER // text of question or Description to pictures									
+					+ question.getCorrectAnswer() + DELIMITER // correct answer char 
+					+ question.getNumberOfResponsesInThePicture() + DELIMITER// number of answers chars on image
+					+ question.getId() + DELIMITER// static information
+					+ question.getCategory() + DELIMITER// static information
+					+ question.getLevelOfDifficulty() + DELIMITER// static information
+					+ question.getNumberOfResponsesInThePicture() + DELIMITER// static information
+					+ question.getLineCod();// static information
+			break;
+			default:System.out.println(" default switch");
 			}
+
 			List<EntityAnswersText> answers = question.getQuestionAnswersList();
 			if(answers != null){
 				for(EntityAnswersText tAn :answers){

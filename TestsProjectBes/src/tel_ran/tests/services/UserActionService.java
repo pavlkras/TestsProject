@@ -12,7 +12,6 @@ import tel_ran.tests.entitys.EntityAnswersText;
 import tel_ran.tests.entitys.EntityQuestion;
 import tel_ran.tests.entitys.EntityQuestionAttributes;
 import tel_ran.tests.entitys.EntityUser;
-import tel_ran.tests.services.interfaces.IMaintenanceService;
 import tel_ran.tests.services.interfaces.IUserActionService;
 @SuppressWarnings("unchecked")
 public class UserActionService extends TestsPersistence implements IUserActionService {

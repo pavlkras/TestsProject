@@ -26,7 +26,7 @@ public class EntityQuestionAttributes implements Serializable {
 	@GeneratedValue
 	@Column(name = "id")
 	private long id;
-	////
+	////codeQuestionTable
 	@ManyToOne
 	private EntityQuestion questionId;
 	////
@@ -48,6 +48,15 @@ public class EntityQuestionAttributes implements Serializable {
 	@Column(name = "numresponses")
 	private int numberOfResponsesInThePicture;
 	////
+	@Column(name = "codeLine", length = 500)
+	private String codeLine = null;	// pattern from generation questions - 'public void Foo([any param]){    System.out.println("Hello world");   }
+	////	
+	public String getLineCod() {
+		return codeLine;
+	}
+	public void setLineCod(String lineCod) {
+		this.codeLine = lineCod;
+	}	
 	public EntityQuestion getQuestionId() {
 		return questionId;
 	}
