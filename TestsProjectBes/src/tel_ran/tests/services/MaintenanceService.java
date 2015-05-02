@@ -461,44 +461,63 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	@SuppressWarnings("unchecked")	
 	@Override  
 	public List<Long> getUniqueSetQuestionsForTest(String category, String levelsOfDifficulty,  Long nQuestion){
-
-		// -- for Valery -----------  TO DO generation questions id to list long witch new parameters !!!!!!  String levelOfDifficultyMin, String levelOfDifficultyMax,
-
-		List<Long> outRes = new ArrayList<Long>();
+		List<Long> result = new ArrayList<Long>();
 		int lengthCategoryArray = 0;		
-		////
 		if(nQuestion > 0 && category != null){		
 			String[] categoryArray = category.split(",");	
-			String[] levelsArray = levelsOfDifficulty.split(",");	
-
-			if(categoryArray.length > MIN_NUMBER_OF_CATEGORIES){// -- Terms: Minimum number of categories.		
-				for(int i=0; i < nQuestion ;){// -- cycle works on the number of questions -nQuestion
-					if(lengthCategoryArray < categoryArray.length){// -- Terms: pass the array to the categories when adding a new question number in an array of longs list		
-						List<EntityQuestionAttributes> questionAttrList = em.createQuery("SELECT c FROM EntityQuestionAttributes c WHERE "
-								+ "(c.levelOfDifficulty="+levelsArray[lengthCategoryArray]+") AND (c.category='"+categoryArray[lengthCategoryArray]+"')").getResultList();
-						if(questionAttrList.size() > 0){//  -- condition: if the questionAttrList.size is greater than zero.
-							Random rnd = new Random();
-							int rand =  rnd.nextInt(questionAttrList.size());							
-							EntityQuestionAttributes re = questionAttrList.get(rand);							
-							outRes.add(re.getId());
-							i++;	
-						}else{//  -- condition: if the questionAttrList.size is equal to or less than zero.							
-							System.out.println("BES else condition i-" + i 
-									+ "  level - "+levelsArray[lengthCategoryArray]
-											+"   cat--" + categoryArray[lengthCategoryArray]);//---------------------------TO DO if Category + and level - !!---------------------------------------sysout	
-						}	
-						lengthCategoryArray++;
-					}else{
-						//-- Terms: pass the array to the categories when adding a new question number in the array sheet Long. NEW condition: the end of the array with categories !!!						    
-						lengthCategoryArray = 0;// length array counter to 0.
-					}
+			String[] levelsArray = levelsOfDifficulty.split(",");
+			StringBuffer condition = new StringBuffer();
+			if(categoryArray.length > MIN_NUMBER_OF_CATEGORIES){      
+				for(int i=0, j=1; j<categoryArray.length; i=i+2, j++){
+					condition = condition.append(" OR ((c.levelOfDifficulty=?" + (i+3) + ") AND (c.category=?" + (i+4) + "))");
 				}
-				////				
-			}else{// else for one category change
-				System.out.println(" BES one category changed TO DO Method");//------------------------------------------------------------------sysout	
+			}
+			Query query = em.createQuery("SELECT c.id FROM EntityQuestionAttributes c WHERE ((c.levelOfDifficulty=?1) AND (c.category=?2))" + condition.toString());
+			query.setParameter(1, Integer.parseInt(levelsArray[0]));
+			query.setParameter(2, categoryArray[0]);
+			if(categoryArray.length > MIN_NUMBER_OF_CATEGORIES){ 
+				for(int i=0, j=1; j<categoryArray.length; i=i+2, j++){				
+					query.setParameter((i+3), Integer.parseInt(levelsArray[j]));
+					query.setParameter((i+4), categoryArray[j]);
+				}
+			}
+			List<Long> allAttributeQuestionsId = query.getResultList();	
+			result = randomAttributeQuestionsId(allAttributeQuestionsId, nQuestion);
+		}
+		return result;
+	}
+	
+	private List<Long> randomAttributeQuestionsId(List<Long> allAttributeQuestionsId, Long nQuestion){
+		List<Long> result = new ArrayList<Long>();
+		if(allAttributeQuestionsId.size() > 0){
+			if(nQuestion >= allAttributeQuestionsId.size()){
+				result = allAttributeQuestionsId;
+			}
+			else{
+				for(int i=0; i<nQuestion;){	
+					Random rnd = new Random();
+					int rand =  rnd.nextInt(allAttributeQuestionsId.size());							
+					long questionAttributeId = allAttributeQuestionsId.get(rand);
+					if(result.size() > 1){
+						int flag = 0;          
+						for(Long num: result){
+							if(num == questionAttributeId){
+								flag = 1;
+							}
+						}	
+						if(flag == 0){
+							result.add(questionAttributeId);
+							i++;	
+						}						
+					}
+					else{
+						result.add(questionAttributeId);
+						i++;
+					}
+				}				
 			}
 		}
-		return outRes;
+		return result;
 	}
 	////-------------- Method for test case group AlexFoox Company return id of unique set questions ----------// END  //
 }
