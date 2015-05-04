@@ -120,7 +120,8 @@ public class UserActionService extends TestsPersistence implements IUserActionSe
 					outTextResult.append(tmpRes.getId() + DELIMITER);
 					////
 					outTextResult.append(tmpRes.getNumberOfResponsesInThePicture() + DELIMITER);
-					outTextResult.append(tmpRes.getCorrectAnswer());
+					outTextResult.append(tmpRes.getCorrectAnswer() + DELIMITER);
+					outTextResult.append(tmpRes.getLineCod());
 					//
 					if(tmpRes.getQuestionAnswersList() != null){					
 						List<EntityAnswersText> anRes = tmpRes.getQuestionAnswersList();
@@ -134,7 +135,7 @@ public class UserActionService extends TestsPersistence implements IUserActionSe
 				}else{//  -- condition: if the questionAttrList.size is equal to or less than zero.							
 					System.out.println("BES User test else condition i-" + i);//---------------------------sysout	
 				}
-			}			
+			}			   
 		}		
 		return outTextResult.toString();	
 	}

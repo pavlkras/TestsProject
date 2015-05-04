@@ -113,12 +113,14 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		EntityQuestionAttributes questionAttributesList = new EntityQuestionAttributes();
 		EntityQuestion objectQuestion = em.find(EntityQuestion.class, keyQuestion);			
 		////
-		if(imageLink.length() > 15 && imageLink != null){
+		if(imageLink != null && imageLink.length() > 15){
 			questionAttributesList.setImageLink(imageLink);
 		}
 		////
-		if(codeText.length() > 10 && codeText != null){		// parsing code for save in to db 				
+		if(codeText != null && codeText.length() > 10){		// parsing code for save in to db 				
 			questionAttributesList.setLineCod(codeText);			
+		}else{
+			questionAttributesList.setLineCod(null);
 		}
 		////
 		questionAttributesList.setCategory(category);
@@ -292,17 +294,18 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 			String imageBase64Text=null;
 			String imageLink;
 			////
-			if((imageLink = question.getImageLink()) != null){
+			if((imageLink = question.getImageLink()) != null && question.getImageLink().length() > 25){
 				imageBase64Text = encodeImage(NAME_FOLDER_FOR_SAVENG_QUESTION_PICTURES  + imageLink);
+				outArray[1] = "data:image/png;base64," + imageBase64Text; // TO DO delete!!! hard code -- data:image/png;base64,
 			}
 			////
 			switch(actionKey){
-			case 0:outRes = question.getQuestionId().getQuestionText() + DELIMITER // text of question or Description to picture or code									
+			case ACTION_GET_ARRAY: outRes = question.getQuestionId().getQuestionText() + DELIMITER // text of question or Description to picture or code									
 					+ question.getCorrectAnswer() + DELIMITER // correct answer char 
 					+ question.getNumberOfResponsesInThePicture() + DELIMITER // number of answers chars on image
 					+ question.getLineCod();// code question text
 			break;
-			case 1:outRes = question.getQuestionId().getQuestionText() + DELIMITER // text of question or Description to pictures									
+			case ACTION_GET_FULL_ARRAY: outRes = question.getQuestionId().getQuestionText() + DELIMITER // text of question or Description to pictures									
 					+ question.getCorrectAnswer() + DELIMITER // correct answer char 
 					+ question.getNumberOfResponsesInThePicture() + DELIMITER// number of answers chars on image
 					+ question.getId() + DELIMITER// static information
@@ -320,10 +323,10 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 					outRes += DELIMITER + tAn;	// answers on text if exist!!!
 				}
 			}	
-			outArray[0] = outRes;// question attributes in text
-			outArray[1] = "data:image/png;base64," + imageBase64Text; // TO DO delete!!! hard code -- data:image/png;base64,
+			outArray[0] = outRes;// question attributes in text			
 			outArray[2] = NAME_FOLDER_FOR_SAVENG_QUESTION_PICTURES + imageLink;// that static parameter for one operation!. when question is update from admin panel !!!
 		}else{
+			outArray[1] = " "; // TO DO delete!!! hard code -- data:image/png;base64,
 			outArray[0] = "wrong request q.Id-"+questionID;// out text stub for tests 
 		}		
 		return outArray ;// return to client 
@@ -392,8 +395,8 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		try {
 			Files.delete(Paths.get(System.getProperty("user.dir") + "\\" + NAME_FOLDER_FOR_SAVENG_QUESTION_PICTURES + linkForDelete));
 		} catch (IOException e) {
-			System.out.println("BES delete image from folder catch IOException");// ------------------------------------------------------- sysout
-			e.printStackTrace();   
+			System.out.println("BES delete image from folder catch IOException, image is not exist !!!");// ------------------------------------------------------- sysout
+			//e.printStackTrace();   
 		}
 	}
 	////-------------- Method for delete question into DB ----------// END  //
@@ -404,15 +407,21 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	public List<String> SearchAllQuestionInDataBase(String category, int levelOfDifficulty) {	// !!!!!!!!!!!!!!!!!!!!!!!!!!!! not work in mazila		
 		List<String> outResult = new ArrayList<String>();		
 		////
-		if(category != null && !category.equalsIgnoreCase("")){			
+		if(category != null && !category.equalsIgnoreCase("")){		
 			//
-			List<EntityQuestionAttributes> query = em.createQuery("SELECT c FROM EntityQuestionAttributes c WHERE "
-					+ "(c.levelOfDifficulty="+levelOfDifficulty+") AND (c.category='"+category+"')").getResultList();
-			////
-			for(EntityQuestionAttributes tempRes: query){				
-				outResult.add(tempRes.getId() + DELIMITER
-						+ tempRes.getQuestionId().getQuestionText() + DELIMITER 
-						+ tempRes.getCategory());
+			
+			try {
+				List<EntityQuestionAttributes> query = em.createQuery("SELECT c FROM EntityQuestionAttributes c WHERE "
+						+ "(c.levelOfDifficulty="+levelOfDifficulty+") AND (c.category='"+category+"')").getResultList();
+				////
+				for(EntityQuestionAttributes tempRes: query){				
+					outResult.add(tempRes.getId() + DELIMITER
+							+ tempRes.getQuestionId().getQuestionText() + DELIMITER 
+							+ tempRes.getCategory());
+				}
+			} catch (StringIndexOutOfBoundsException e) {
+				System.out.println(" BES Search all question in category ' catch case");
+				//e.printStackTrace();
 			}		
 		}else{
 			outResult = null;
@@ -424,7 +433,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	/////-------------- Update  ONE Question into DB Case ----------// BEGIN  //
 	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW)	
 	public boolean UpdateTextQuestionInDataBase(String questionID, String imageLink, String questionText, 
-			String category, int levelOfDifficulty, List<String> answers, char correctAnswer){
+			String category, int levelOfDifficulty, List<String> answers, char correctAnswer, String codeText, String numAnswersOnPictures){
 		boolean flagAction = false;
 		//
 		long id = (long)Integer.parseInt(questionID);
@@ -436,7 +445,10 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 			elem.setCategory(category);
 			elem.setCorrectAnswer(correctAnswer);
 			elem.setImageLink(imageLink);
+			elem.setLineCod(codeText);
 			elem.setLevelOfDifficulty(levelOfDifficulty);
+			int numberOfResponsesInThePicture = Integer.parseInt(numAnswersOnPictures);
+			elem.setNumberOfResponsesInThePicture(numberOfResponsesInThePicture );
 			//
 			if(answers != null){
 				List<EntityAnswersText> answersList = elem.getQuestionAnswersList();	 	
@@ -461,8 +473,8 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	@SuppressWarnings("unchecked")	
 	@Override  
 	public List<Long> getUniqueSetQuestionsForTest(String category, String levelsOfDifficulty,  Long nQuestion){
+		System.out.println("category-"+category+"  levelsOfDifficulty-"+levelsOfDifficulty+"  nQuestion-"+nQuestion);// ---------------------------sysout
 		List<Long> result = new ArrayList<Long>();
-		int lengthCategoryArray = 0;		
 		if(nQuestion > 0 && category != null){		
 			String[] categoryArray = category.split(",");	
 			String[] levelsArray = levelsOfDifficulty.split(",");
@@ -484,10 +496,11 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 			List<Long> allAttributeQuestionsId = query.getResultList();	
 			result = randomAttributeQuestionsId(allAttributeQuestionsId, nQuestion);
 		}
+		System.out.println("res--- in  bes --"+result);
 		return result;
 	}
 	
-	private List<Long> randomAttributeQuestionsId(List<Long> allAttributeQuestionsId, Long nQuestion){
+	private static List<Long> randomAttributeQuestionsId(List<Long> allAttributeQuestionsId, Long nQuestion){
 		List<Long> result = new ArrayList<Long>();
 		if(allAttributeQuestionsId.size() > 0){
 			if(nQuestion >= allAttributeQuestionsId.size()){

@@ -22,7 +22,6 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 		if(testId != null && testId != ""){
 			long testID = (long)Integer.parseInt(testId);		
 			personTest = em.find(EntityTest.class, testID);	
-			System.out.println("BES get test - " + personTest);//-------------------------------------------------------------------------------------sysout
 		}
 		////
 		if(personTest != null){	
@@ -47,8 +46,6 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 			personTest.setCorrectAnswers(correctAnswers.toCharArray());	
 			if(personTest.getStartTestDate() == 0){// if this first time!!!
 				personTest.setStartTestDate(timeStartTest);	
-				System.out.println("saved time -"+ timeStartTest);//-------------------------------------------------------------------------------------sysout
-				//
 				em.persist(personTest);
 				resAction = true;
 			}
@@ -61,7 +58,8 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 	//// ------------------- save ending test parameters
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
-	public boolean SaveEndPersonTestResult(String testId, String personAnswers,	String imagesLinks, long timeEndTest) {			
+	public boolean SaveEndPersonTestResult(String testId, String personAnswers,	String imagesLinks, long timeEndTest) {		
+		
 		boolean resAction = false;
 		////
 		try{
@@ -69,7 +67,7 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 			EntityTest personTest = em.find(EntityTest.class, testID);		
 			char[] persAnswArray = personAnswers.toCharArray();
 			personTest.setPersonAnswers(persAnswArray );
-			String companyId = personTest.getEntityCompany().getC_Name();
+			String companyId = personTest.getEntityCompany().getC_Name();//TO DO thet NullPointerException ( if company created test after back to page  creating test from page result of creating!!!)
 			String links = getLinksForImages(imagesLinks, companyId , testId); 
 			personTest.setPictures(links);
 			if(personTest.getEndTestDate() == 0){
@@ -79,11 +77,17 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 			personTest.setAmountOfCorrectAnswers(AmountOfAnswers(personTest));
 			//
 			em.persist(personTest);
-			System.out.println("BES end person Test -- "+personTest);//-------------------------------------------------------------------------------------sysout
 			resAction = true;			
-		}catch(Exception e){
-			e.printStackTrace();
-			System.out.println("catch save end test");//-------------------------------------------------------------------------------------sysout
+		}catch(Exception e){			
+			if(testId != null && personAnswers == null && imagesLinks == null && timeEndTest != 0L){
+				long testID = (long)Integer.parseInt(testId);	
+				EntityTest personTest = em.find(EntityTest.class, testID);	
+				personTest.setEndTestDate(timeEndTest);
+				em.persist(personTest);
+				System.out.println("BES test id-"+testID+"  time end-"+timeEndTest);//-------------------------------------------------sysout
+			}
+			//e.printStackTrace();
+			System.out.println("BES catch save end test");//---------------------------------------------------------------------------sysout
 		}
 		return resAction;
 	}
@@ -127,5 +131,24 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 		return outLinkText;
 	}
 	////-------  save images ----------------// END //	
+
+	////-------  Test Code From Users and Persons Case  ----------------// BEGIN //	
+	@Override
+	public boolean TestCodeQuestionCase(String codeText) {
+		boolean result = false;
+		//   --------------------  TO DO merhods and actions 
+		if(codeText != null)
+			result = true;
+		System.out.println(" BES code test case -\n " + codeText);
+		return result;
+	}
+
+	@Override
+	public String TestCodeQuestionUserCase(String codeText) {
+		//   --------------------  TO DO merhods and actions 
+		String result = "BES User Code Test Case RESPONSE Transfer is OK";	     
+		return result;
+	}
+	////-------  Test Code From Users and Persons Case  ----------------// END //	
 }
 
