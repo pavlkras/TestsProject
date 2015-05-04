@@ -9,7 +9,7 @@ public interface  IMaintenanceService extends ApplicationFinalFields{
 	//
 	boolean ModuleForBuildingQuestions(String category,int nQuestion);// Auto Generation many questions by any parameters	
 	//
-	boolean CreateNewQuestion(String imageLink, String questionText, String category, int levelOfDifficulty, List<String> answers, char correctAnswer,int questionNumber, int numberOfResponsesInThePicture);
+	boolean CreateNewQuestion(String imageLink, String questionText, String category, int levelOfDifficulty, List<String> answers, char correctAnswer,int questionNumber, int numberOfResponsesInThePicture, String codeText);
 	//
 	public List<String> SearchAllQuestionInDataBase(String category, int levelOfDifficulty);
 	//
@@ -17,7 +17,7 @@ public interface  IMaintenanceService extends ApplicationFinalFields{
 	//
 	public List<String> getAllCategoriesFromDataBase();
 	//
-	boolean UpdateTextQuestionInDataBase(String questionID, String imageLink, String questionText, String category, int levelOfDifficulty, List<String> answers, char correctAnswer);
+	boolean UpdateTextQuestionInDataBase(String questionID, String imageLink, String questionText, String category, int levelOfDifficulty, List<String> answers, char correctAnswer, String codeText, String numAnswersOnPictures);
 	//
 	public String deleteQuetionById(String questionID);
 	//
