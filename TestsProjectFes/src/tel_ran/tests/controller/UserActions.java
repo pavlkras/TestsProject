@@ -20,12 +20,13 @@ import tel_ran.tests.services.interfaces.IUserActionService;
 @RequestMapping({"/","/UserActions"})
 public class UserActions{ 	
 
+	private int i = 1;
 	@Autowired
 	IUserActionService userService; 
 	@Autowired
 	IMaintenanceService maintenanceService;	
 	@RequestMapping({"/"})
-	public String Index(){     return "UserSignIn";       }// this mapping to index page !!!!!! for all users and all company !!!!
+	public String Index(){     return "user/UserSignIn";       }// this mapping to index page !!!!!! for all users and all company !!!!
 	//--------------------- fields of this class ---------------------------
 	private List<String> testResultList;
 	private List<String> questionList = null;
@@ -60,17 +61,17 @@ public class UserActions{
 	//// ------  login case --------- // BEGIN //
 	@RequestMapping(value = "/login_action", method = {RequestMethod.POST, RequestMethod.GET})
 	public String login_action(String userEmail, String password, HttpServletRequest request, Model pageModel) {
-		String outPage = "UserSignIn";
+		String outPage = "user/UserSignIn";
 		String sign_up = request.getParameter("sign_up");
 		if(sign_up != null){
-			outPage = "UserRegistration";
+			outPage = "user/UserRegistration";
 		}else{
 			////		
 			boolean getUser = userService.IsUserExist(userEmail, password);
 
 			if (getUser) {	
 				userMailForSession = userEmail;
-				outPage = "UserAccountPage";
+				outPage = "user/UserAccountPage";
 			} else{
 				pageModel.addAttribute("logedUser", "wrong password");
 			}
@@ -105,16 +106,16 @@ public class UserActions{
 	////-----------  Registration case -------------- // BEGIN //
 	@RequestMapping(value = "/signup_action", method = RequestMethod.POST)
 	public String signup_action(String firstname, String lastname,String email, String password, Model model) {
-		String outPage = "UserSignIn";
+		String outPage = "user/UserSignIn";
 		//
 		if (email != null) {				
 			String[] userArgs = { firstname, lastname, email,  password};			
 			boolean actionRes = userService.AddingNewUser(userArgs);
 			if(actionRes){
 				userMailForSession = email;
-				outPage = "UserAccountPage";
+				outPage = "user/UserAccountPage";
 			}else{
-				outPage = "UserSignIn";
+				outPage = "user/UserSignIn";
 				model.addAttribute("logedUser","Registration is Failed !");
 			}
 		}
@@ -153,7 +154,7 @@ public class UserActions{
 		List<String> allLevels = userService.getComplexityLevelList();
 		model.addAttribute("categoryNames", allCategories);
 		model.addAttribute("cLevels", allLevels);
-		return "UserTraineeModeCreationTest_1";// rename to USER !!!
+		return "user/UserTraineeModeCreationTest_1";// rename to USER !!!
 	}	
 	////
 	@RequestMapping({"addQuestionsCount"})
@@ -168,7 +169,7 @@ public class UserActions{
 		model.addAttribute("catName", catName);
 		model.addAttribute("levelName", levelName);
 		model.addAttribute("questionsCountByCategoryLevel", questionsCount);
-		return "UserTraineeModeCreationTest_2";
+		return "user/UserTraineeModeCreationTest_2";
 	} 	
 	////------------------ Filling test parameters  ------------------// END //
 	//// ------------------ creation test for User ------------------// BEGIN //
@@ -191,9 +192,9 @@ public class UserActions{
 			nextQuestionInTest.append("<br> <input type='submit' value='Start The Test' />");
 			CreationTestForUser(questionsInText);		
 		}else{
-			return "UserTraineeModeCreationTest_1";
+			return "user/UserTraineeModeCreationTest_1";
 		}
-		return "UserTraineeMode";		
+		return "user/UserTraineeMode";		
 	}
 	////
 	@RequestMapping({ "/UserTestLoop" })
@@ -203,7 +204,7 @@ public class UserActions{
 			userTest.setUserAnswers(answerschecked );
 		}else{
 			String userAnswers = userTest.getUserAnswers()+","+answerschecked;
-			userTest.setUserAnswers(userAnswers );
+			userTest.setUserAnswers(userAnswers);
 		}
 		////
 		nextQuestionInTest = new StringBuffer();
@@ -218,32 +219,39 @@ public class UserActions{
 			model.addAttribute("wrongAnswers",userTest.getUserAnswers());
 			model.addAttribute("rightAnswers",userTest.getRightAnswersChars());
 			clearTest();
-			return "UserTestResultPage";
+			return "user/UserTestResultPage";
 		}else{
-			//
 			String tempQuestion = questionList.get(counter++);
 			//// --- Creation Test Page HTML Text  witch Parameters ------
 			String[] questionAttributes = tempQuestion.split(IMaintenanceService.DELIMITER);
-			//	
+			for(int y=0;y<questionAttributes.length;y++)
+				System.out.println(questionAttributes[y]);
+
 			if(userTest.getRightAnswersChars() == null){
 				userTest.setRightAnswersChars(questionAttributes[3]);
 			}else{
 				String rightAnswerChars = userTest.getRightAnswersChars() +","+ questionAttributes[3];
 				userTest.setRightAnswersChars(rightAnswerChars);
 			}
-			//
 			model.addAttribute("question", "' "+questionAttributes[0]+" '");
+			////
+			if(questionAttributes[4] != null && questionAttributes[4].length() > 10){	// code question code 					
+				nextQuestionInTest.append("<textarea id='codeText_"+ counter +"'>" + questionAttributes[3] + "</textarea>");
+				if(questionAttributes[2].equalsIgnoreCase("0")){		
+					nextQuestionInTest.append("<input checked='checked' hidden='hidden' type='checkbox' name='answerschecked' value='l'>"
+							+ "<div class='send_button'><span class='buttons'>handler-code</span></div>");					
+				}
+			}
+			////
 			//
 			String[] res = maintenanceService.getQuestionById(questionAttributes[1], IUserActionService.ACTION_GET_ARRAY);
-			if(res[1].length() > 15){ 
+			if(res[1] != null && res[1].length() > 15){    
 				nextQuestionInTest.append("<br><img class='imageClass' src='" + res[1] + "' alt='image not supported'>");// image text in coding Base64 
 				testResultList.add("<p>" + questionAttributes[0] + "</p><img class='imageClass' src='" + res[1] + "' alt='no image'><p>Correct Answer : " + questionAttributes[3] 
 						+"&nbsp;&nbsp;&nbsp;&nbsp; Your Answer : </p>");// code for view result for user after the test 
-			}else{
-				testResultList.add(questionAttributes[0]);// that flow if question no image only text !!
 			}
 			////
-			if(questionAttributes.length > 4){				
+			if(questionAttributes != null && questionAttributes.length > 5){				
 				String[] answers = CreateAnswers(questionAttributes);
 				int countAnswersOnPic = Integer.parseInt(questionAttributes[2]);
 				switch(countAnswersOnPic){
@@ -275,21 +283,23 @@ public class UserActions{
 			nextQuestionInTest.append("<br> <input type='submit' value='Next Question' />");				
 		}
 		//
-		return "UserTraineeMode";
+		return "user/UserTraineeMode";
 	}	
 	////
 	private String[] CreateAnswers(String[] questionAttributes) {
 		String[] answers = new String[4];
-		int j=0;
+		int j = 3;
+		int length = questionAttributes.length;
 		for (int i = 0; i < questionAttributes.length; i++) {
-			if(i == 4 || i == 5 ||i == 6 || i == 7){				
-				String my_new_str = questionAttributes[i].replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+			if(j != -1){		// by default this answers in text 		
+				String my_new_str = questionAttributes[length-1].replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 				answers[j] = my_new_str;				
-				j++;
+				j--;
+				length--;
 			}
 		}
 		return answers;
-	}
+	}	
 	////
 	private void CreationTestForUser(String questionsInText) {
 		String[] questionsArray = questionsInText.split(",");

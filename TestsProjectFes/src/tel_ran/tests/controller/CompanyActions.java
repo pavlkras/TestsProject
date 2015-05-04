@@ -28,6 +28,7 @@ import tel_ran.tests.services.interfaces.IMaintenanceService;
 
 
 
+
 @Controller
 @Scope("session") /*session timer default = 20min*/
 @RequestMapping({"/","/CompanyActions"})
@@ -35,7 +36,7 @@ public class CompanyActions {
 	// --- private fields 
 	private	String companyName;
 	private long companyId = -1;
-	private static String PATH_ADDRESS_TO_SERVICE = "http://localhost:8080/TestsProjectFes/jobSeeker_test_preparing_click_event?";
+	private static String PATH_ADDRESS_TO_SERVICE = "";
 	RestTemplate restTemplate =  new RestTemplate();
 	@Autowired
 	private ICompanyActionsService companyService;
@@ -53,14 +54,14 @@ public class CompanyActions {
 	////
 	// Action Re-mapping for Send Ajax request to DB if equal  user and priority level, and set: flAuthorization=true;
 	@RequestMapping({"/CompanyActions"})
-	public String signIn(){			
-		return "CompanySignIn";
+	public String signIn(){		
+		return "company/CompanySignIn";  
 	}
 
 	// IGOR Action Re-mapping
 	@RequestMapping({"/create_request"})
 	public String createRequest(){
-		return "CompanyTestsResultsStartPage";
+		return "company/CompanyTestsResultsStartPage";
 	}
 
 	/* ----------Use case Company Login--------------
@@ -101,14 +102,14 @@ Wrong Password Flow:
 				}
 				categoryHtmlText.append("</table>");
 				model.addAttribute("categoryFill", categoryHtmlText.toString());
-				result = "CompanyGenerateTest";
+				result = "company/CompanyGenerateTest";
 				this.setCompanyName(companyName); 
 			}else{
-				result = "CompanySignIn";
+				result = "company/CompanySignIn";
 				model.addAttribute("result", " This password not variable try again " );
 			}
 		}else {	       			
-			result = "CompanySignIn";
+			result = "company/CompanySignIn";
 			model.addAttribute("result", " This Company not exist - " + companyName);
 		}
 		return result;
@@ -143,7 +144,7 @@ User Registered Flow:
         	----------Company  ALEX FOOX -----------*/
 	@RequestMapping({"/search_form"})
 	public String query() {
-		return "Company_search_form";
+		return "company/Company_search_form";
 	}
 
 	@RequestMapping({"/query_processing"})
@@ -153,14 +154,14 @@ User Registered Flow:
 		for (String str : result)
 			buf.append(str).append("<br>");
 		model.addAttribute("myResult", buf.toString());
-		return "Company_search_form";
+		return "company/Company_search_form";
 	}
-////
+	////
 	@RequestMapping({"/companyadd"})
 	public String addCompany() {
-		return "Company_add_form";
+		return "company/Company_add_form";
 	}
-//// method response JSON, Ajax on company add page 
+	//// method response JSON, Ajax on company add page 
 	@RequestMapping(value="/add_processing_ajax",method=RequestMethod.POST)
 	public @ResponseBody JsonResponse ajaxRequestStream(HttpServletRequest request) {   
 		String name_company = request.getParameter("name");
@@ -175,41 +176,41 @@ User Registered Flow:
 		}
 		return res;
 	}
-//// static resurse class for JSON, Ajax on company add page 
+	//// static resurse class for JSON, Ajax on company add page 
 	class JsonResponse {
-		 private String status = null;
-	     private Object result = null;
-	     public String getStatus() {
-	             return status;
-	     }
-	     public void setStatus(String status) {
-	             this.status = status;
-	     }
-	     public Object getResult() {
-	             return result;
-	     }
-	     public void setResult(Object result) {
-	             this.result = result;
-	     }
+		private String status = null;
+		private Object result = null;
+		public String getStatus() {
+			return status;
+		}
+		public void setStatus(String status) {
+			this.status = status;
+		}
+		public Object getResult() {
+			return result;
+		}
+		public void setResult(Object result) {
+			this.result = result;
+		}
 	}
 	////
 	@RequestMapping({"/add_processing"})
 	public String addProcessing(String C_Name,String C_Site, String C_Specialization,String C_AmountEmployes,String C_Password,Model model) {
 		boolean flag = false;		
-			try{
-				flag = companyService.createCompany(C_Name, C_Site, C_Specialization, C_AmountEmployes, C_Password);
-			}catch(Throwable th){
-				th.printStackTrace();
-				System.out.println("catch creation company FES");
-			}
-			
+		try{
+			flag = companyService.createCompany(C_Name, C_Site, C_Specialization, C_AmountEmployes, C_Password);
+		}catch(Throwable th){
+			th.printStackTrace();
+			System.out.println("catch creation company FES");
+		}
+
 		if(flag){
 			model.addAttribute("myResult", "<H1>Company Added Success</H1>");
-			return "Company_search_form";
+			return "company/Company_search_form";
 		}
 		else{
 			model.addAttribute("myResult", "<H1>This Company - "+C_Name+".  Already Exist!</H1>");
-			return "Company_search_form";
+			return "company/Company_search_form";
 		}
 	}
 	//-------------Use Case Company Sign up 3.1.2-----------
@@ -227,7 +228,10 @@ Normal Flow:
 6.	The System presents the link for performing the test in the control mode  */
 	//
 	@RequestMapping({"/add_test"})
-	public String createTest(String category, String level_num, String personId, String personName, String personSurname,String personEmail, String selectCountQuestions, Model model) {	
+	public String createTest(String category, String level_num, String personId, String personName, String personSurname,String personEmail, String selectCountQuestions, Model model, HttpServletRequest request) {	
+		String url = request.getRequestURL().toString();
+		PATH_ADDRESS_TO_SERVICE = url.replace("add_test", "jobSeeker_test_preparing_click_event");
+		////
 		long counterOfQuestions = Integer.parseInt(selectCountQuestions);
 		System.out.println("level_num--"+level_num);//-------------------------------sysout
 		System.out.println("category--"+category);//-------------------------------sysout
@@ -235,8 +239,8 @@ Normal Flow:
 		int personID = companyService.createPerson(Integer.parseInt(personId), personName, personSurname,personEmail);
 		String password = getRandomPassword();
 		long idTest = companyService.createIdTest(listIdQuestions, personID, password, category, level_num);	//------------ TO DO levels change !!	add company name for
-
-		String link = PATH_ADDRESS_TO_SERVICE + idTest;// -------------------------------------------------------------------------------------TO DO real address NOT text in string !!!
+		////
+		String link = PATH_ADDRESS_TO_SERVICE + "?" + idTest;// -------------------------------------------------------------------------------------TO DO real address NOT text in string !!!
 		boolean flagMail = true;
 		sendEmail(link,personEmail,password);
 		if(flagMail){
@@ -244,7 +248,7 @@ Normal Flow:
 		}else{
 			model.addAttribute("myResult", "<H1>Error while sending message</H1>");
 		}
-		return "Company_TestLink";
+		return "company/Company_TestLink";
 	}
 
 	private String getRandomPassword() {
@@ -321,11 +325,11 @@ f)	5 photos made during the test	------ IGOR ------*/
 	public String viewResults(Model model){
 		//Code for testing
 		//		companyId = 8;
-		String page = "ErrorPage";
+		String page = "company/ErrorPage";
 		if(companyId != -1){
 			String token = companyService.encodeIntoToken(companyId);
 			model.addAttribute("token", token);
-			page = "CompanyViewTestsResults";
+			page = "company/CompanyViewTestsResults";
 		}
 		return page;
 	}	

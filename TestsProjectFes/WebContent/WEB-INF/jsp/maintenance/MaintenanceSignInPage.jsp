@@ -9,7 +9,7 @@
 <html>
  <head>
  <link
-	href='<c:url value="/static/css_folder/css/MaintenanceHomePage.css"></c:url>'
+	href='<c:url value="/static/css_folder/maintenance_styles/MaintenanceHomePage.css"></c:url>'
 	rel="stylesheet"> 
 <script
 	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>

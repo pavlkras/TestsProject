@@ -11,6 +11,31 @@
 <script
 	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js">	
 </script>
+<script type="text/javascript">
+$(document).ready(function(){
+	///// AJAX Tast Code Case Request/Response
+	$(".send_button").click(function(){							
+		var codeInText = $('#codeText_' + codeQuestionIdCount).val();		 
+		$.ajax({type: "POST",
+			url: "handler-code",
+			data: "personCode=" + codeInText,
+			success: function(response){
+				// we have the response				
+				if(response.status == "SUCCESS"){										
+					alert("sucsess");									 
+				}else if(response.status == "ERROR"){  
+					alert("code wrong try again!!!");
+				}		
+			},
+			error: function(e){
+				alert('Error: ' + e);			
+			}
+		}); 
+	});	
+});
+
+
+</script>
 <style type="text/css">
 .imageClass{
 width: 100%;

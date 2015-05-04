@@ -8,11 +8,11 @@
 <script
 	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <link
-	href='<c:url value="/static/css_folder/css/IndexPage.css"></c:url>'
+	href='<c:url value="/static/css_folder/user_styles/IndexPage.css"></c:url>'
 	rel="stylesheet">
 <script type="text/javascript">
 	$(document).ready(function() {
-
+		$(".miscStyle").css("display", "block");
 		$("#h2miscel").hover(function() {
 			$(".miscStyle").css("display", "block");
 
@@ -219,30 +219,16 @@
 					<img src="static/images/logo/javahome.png" alt="JAXB tutorial"><span
 						class="homespan">JAXB</span>
 				</div>
-			</a>
-		</div>
-
-		<div class="firsthomecontent miscStyle">
-			<a href="http://stackoverflow.com/">
+			</a><a href="http://stackoverflow.com/">
 				<div class="homecontent">
 					<img src="static/images/logo/forumhome3.png" alt="Forum tutorial"><span
 						class="homespan">Java Forum</span>
 				</div>
-			</a> <a href="http://tomcat.apache.org/tomcat-7.0-doc/jasper-howto.html">
+			</a><a href="http://tomcat.apache.org/tomcat-7.0-doc/jasper-howto.html">
 				<div class="homecontent">
 					<img src="static/images/logo/javacompiler.png"
 						alt="Online java compiler"> <span class="homespan">J
 						Compiler</span>
-				</div>
-			</a><a href="http://stackoverflow.com/">
-				<div class="homecontent">
-					<img src="static/images/logo/quizhome.png" alt="Online forum"><span
-						class="homespan">Forum</span>
-				</div>
-			</a> <a href="Ma">
-				<div class="homecontent">
-					<img src="static/images/logo/interviewhome.png"
-						alt="Interview Questions"><span class="homespan">HoMa</span>
 				</div>
 			</a> <a href="http://www.javatpoint.com/free-java-projects">
 				<div class="homecontent">
@@ -253,6 +239,20 @@
 				<div class="homecontent">
 					<img src="static/images/logo/full-form.jpg" alt="Full Form"><span
 						class="homespan">Acronyms</span>
+				</div>
+			</a>
+		</div>
+
+		<div class="firsthomecontent miscStyle">
+			<a href="maintenanceadd">
+				<div class="homecontent">
+					<img src="static/images/logo/quizhome.png" alt="Online forum"><span
+						class="homespan">Adding Questions</span>
+				</div>
+			</a><a href="Ma">
+				<div class="homecontent">
+					<img src="static/images/logo/interviewhome.png" alt="admin panel"><span
+						class="homespan">Admins</span>
 				</div>
 			</a>
 		</div>

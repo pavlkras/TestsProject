@@ -5,12 +5,12 @@
 	import="java.util.*, java.text.*,tel_ran.tests.controller.PersonalActions"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <!DOCTYPE html>
-<html>
+<html>   
 <head>
 <title>TEST CONTROL MODE</title>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <link
-	href='<c:url value="/static/css_folder/css/WebCamStyle.css"></c:url>'
+	href='<c:url value="/static/css_folder/person_styles/WebCamStyle.css"></c:url>'
 	rel="stylesheet">
 <script
 	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
@@ -26,7 +26,7 @@
 	var showId;
 	var canvas;
 	var context;
-
+    var codeQuestionIdCount = 0;
 	$(document)
 			.ready(
 					function() {
@@ -105,7 +105,27 @@
 						} else {
 							document.getElementById("message").innerHTML = "Sorry camera not supported,  testing impossible ";
 						//	hideE('button_test');
-						} // end if (flagMediaSupported)												
+						} // end if (flagMediaSupported)	
+							///// AJAX Tast Code Case Request/Response
+						$(".send_button").click(function(){							
+							var codeInText = $('#codeText_' + codeQuestionIdCount).val();		 
+							$.ajax({type: "POST",
+								url: "handler-code",
+								data: "personCode=" + codeInText,
+								success: function(response){
+									// we have the response				
+									if(response.status == "SUCCESS"){										
+										 onchangeClick(1);	
+										 codeQuestionIdCount++;										 
+									}else if(response.status == "ERROR"){  
+										alert("code wrong try again!!!");
+									}		
+								},
+								error: function(e){
+									alert('Error: ' + e);			
+								}
+							}); 
+						});
 					}); // end onload
 
 	//////////// show an hide by id functions
@@ -162,12 +182,13 @@
 	}
 	////
 	var counterQuestions = 0;
-	function onchangeClick(incrementValue){
+	function onchangeClick(incrementValue){		
 		counterQuestions  +=  incrementValue;
+	var elem;
 	var lengthOfQuestionTableList =	document.getElementsByTagName("th").length;
 	if(lengthOfQuestionTableList > counterQuestions){	
 		$("#tabTestPerson_"+counterQuestions).show("slow");
-		var elem = eval(parseInt(counterQuestions)-1);		
+		elem = eval(parseInt(counterQuestions)-1);		
 		$("#tabTestPerson_"+elem).hide();
 	}else{	
 		document.getElementById("message").innerHTML = "All your answers and pictures is ready,<br> to saving please click on button 'Send Test'";
@@ -175,7 +196,7 @@
 		$("#sendTestButton").css("display","block");
 		$("#tabTestPerson_"+elem).hide();
 	}	
-	}
+	}	
 </script>
 </head>
 <body>
@@ -194,7 +215,6 @@
 			value="Test video" />
 	</div>  -->
 	<h1 id="message"></h1>
-
 	<input type="button" id="start_test" class="buttons"
 		value="Start your test" />
 	<br>

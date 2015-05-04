@@ -8,8 +8,9 @@
 <script
 	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<link href='<c:url value="/static/css_folder/css/CreateQuestionPage.css"></c:url>'
-	rel="stylesheet">
+ <link
+	href='<c:url value="/static/css_folder/maintenance_styles/CreateQuestionPage.css"></c:url>'
+	rel="stylesheet"> 
 <script type="text/javascript">
 $(document).ready(function(){
 	$("#addingForm").keyup(function(){
@@ -18,7 +19,8 @@ $(document).ready(function(){
 			var cat = document.question_adding_form.category.value;	
 			if(cat.length != 0){
 				var answer = document.question_adding_form.correctAnswer.value;	
-				if(answer.length == 1){							
+				var codeT = document.question_adding_form.codeText.value;
+				if(answer.length == 1 || codeT.length != 0){							
 					 document.getElementsByName("button_send")[0].disabled = false;
 				}else{
 					document.getElementsByName("button_send")[0].disabled = true;
@@ -41,7 +43,7 @@ $(document).ready(function(){
 		name="question_adding_form">
 		<table>
 			<tr>
-				<th class="thFloatText">Please input Question text</th>
+				<th class="thFloatText">Input Question text</th>
 				<td class="tdFloatContent"><textarea name="questionText"
 						id="questionText" rows="3"
 						placeholder="Type here question text or description for image"></textarea></td>
@@ -54,7 +56,7 @@ $(document).ready(function(){
 			<tr>
 				<th class="thFloatText">Insert Category</th>
 				<td class="tdFloatContent"><input type="text" name="category"
-					onchange="testIsInputsFull(1)" placeholder="Java,Html" /></td>
+					placeholder="Java,Html" /></td>
 			</tr>
 			<tr>
 				<th class="thFloatText">Select Level</th>
@@ -66,6 +68,26 @@ $(document).ready(function(){
 					type="radio" name="levelOfDifficulty" value=5>
 				</td>
 			</tr>
+			<tr>
+				<th class="thFloatText">Input Code by pattern<div>
+				<pre style="color: red; ">
+				class main{
+				NewCode() test = new NewCode();
+				test.Foo();
+				}
+				
+				public class NewCode{
+				public NewCode(){}
+				
+				public Foo(){
+				  //any action				
+				}
+				</pre></div></th>
+				<td class="tdFloatContent"><textarea name="codeText" rows="14" cols="23"></textarea></td>
+			</tr>			
+			<tr><td class="tdFloatContent" colspan="2"><div>Test Code</div></td>
+			</tr>
+			
 			<tr id="answersTr">
 				<th class="thFloatText">Input Answer</th>
 				<td class="tdFloatContent">A. <textarea name="at1"></textarea><br>
@@ -76,13 +98,13 @@ $(document).ready(function(){
 			<tr>
 				<th class="thFloatText">Input Char a right question answer</th>
 				<td class="tdFloatContent"><input type="text"
-					name="correctAnswer" onchange="testIsInputsFull(1)" placeholder="D">
+					name="correctAnswer" placeholder="D">
 				</td>
 			</tr>
 			<tr>
 				<th class="thFloatText">Input number answers on image</th>
 				<td class="tdFloatContent"><input type="text"
-					name="numberAnswersOnPicture" value="4"></td>
+					name="numberAnswersOnPicture" value="0"></td>
 			</tr>
 			<tr id="imageLinkTr">
 				<th class="thFloatText">Image Link</th>
@@ -90,8 +112,8 @@ $(document).ready(function(){
 					placeholder="/s7d9dejd78f6t4th47.jpg" /></td>
 			</tr>
 			<tr>
-				<th colspan="2"><input name="button_send" id="button_send" type="submit"
-					value="Add To DataBase" disabled ></th>
+				<th colspan="2"><input name="button_send" id="button_send"
+					type="submit" value="Add To DataBase" disabled></th>
 			</tr>
 		</table>
 	</form>
@@ -101,6 +123,6 @@ $(document).ready(function(){
 		document.write("${result}");
 	</script>
 	<a class="myButton" href='.'>home</a>&nbsp;&nbsp;&nbsp;&nbsp;
-	<a class="myButton" href='update'>update</a>
+	<a class="myButton" href='update'>update (link for erase)</a>
 </body>
 </html>

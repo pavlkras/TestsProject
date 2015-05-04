@@ -7,7 +7,7 @@
 <script
 	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="/TestsProjectFes/static_js/js/CompanyJS/add_company.js"></script>
-<link href="static/css_folder/css/Company/add_company.css" rel="stylesheet">
+<link href="static/css_folder/company_styles/add_company.css" rel="stylesheet">
 <title>Company Adding</title>
 </head>
 <body>

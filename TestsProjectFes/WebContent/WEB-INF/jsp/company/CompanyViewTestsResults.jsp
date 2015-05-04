@@ -12,9 +12,9 @@
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.js"></script>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/angular-strap/2.1.2/angular-strap.min.js"></script>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/angular-strap/2.1.2/angular-strap.tpl.min.js"></script>
-<link href="/TestsProjectFes/static/css_folder/css/viewresults/CompanyViewTestResults.css" rel="stylesheet">
-<link href="/TestsProjectFes/static/css_folder/css/viewresults/ngDialog.min.css" rel="stylesheet">
-<link href="/TestsProjectFes/static/css_folder/css/viewresults/ngDialog-theme-default.min.css" rel="stylesheet">
+<link href="/TestsProjectFes/static/css_folder/company_styles/viewresults/CompanyViewTestResults.css" rel="stylesheet">
+<link href="/TestsProjectFes/static/css_folder/company_styles/viewresults/ngDialog.min.css" rel="stylesheet">
+<link href="/TestsProjectFes/static/css_folder/company_styles/viewresults/ngDialog-theme-default.min.css" rel="stylesheet">
 <script src="/TestsProjectFes/static_js/js/viewresultsjs/CompanyViewTestsResults.js"></script>
 <script src="/TestsProjectFes/static_js/js/viewresultsjs/smart-table.min.js"></script>
 <script src="/TestsProjectFes/static_js/js/viewresultsjs/angular-bootstrap-select.min.js"></script>

@@ -72,7 +72,7 @@ body {
 	font-family: "Abel", Helvetica, sans-serif;
 }
 
-.personTestForm,.contentFormDiv{
+.personTestForm, .contentFormDiv {
 	left: 5em;
 	top: 15em;
 	position: absolute;
@@ -83,6 +83,7 @@ body {
 	width: 90%;
 	height: 10%;
 }
+
 .tableStyle {
 	margin-left: 10em;
 	display: none;
@@ -140,8 +141,6 @@ video {
 	-webkit-transform: scaleX(-1);
 }
 
-img {
-	/* width: 128px;
-	height: 96px;
-	margin: 6px; */
+.contentBox {
+	position: absolute;
 }

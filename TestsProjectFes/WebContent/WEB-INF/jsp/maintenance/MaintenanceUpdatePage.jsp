@@ -11,7 +11,7 @@
 	content="text/html; charset=windows-1251">
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
  <link
-	href='<c:url value="/static/css_folder/css/MaintenanceUpdatePage.css"></c:url>'
+	href='<c:url value="/static/css_folder/maintenance_styles/MaintenanceUpdatePage.css"></c:url>'
 	rel="stylesheet"> 
 <script type="text/javascript">	
     function test(questionId) {	    	
