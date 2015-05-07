@@ -84,4 +84,20 @@ li {
 	top:100px;
 	width: 70%;
 }
+
+.outTextInfo{
+	border:0.1em solid red;
+	padding: 2px;
+	color: blue;
+	font-size: 19px;
+	font-style: italic;
+}
+
+.outTextInfoAdded{
+	border:0.1em solid red;
+	padding: 2px;
+	color: green;
+	font-size: 19px;
+	font-style: italic;
+}
 /*}*/

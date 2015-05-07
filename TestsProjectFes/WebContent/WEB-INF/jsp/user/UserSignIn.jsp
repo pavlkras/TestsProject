@@ -74,7 +74,7 @@
 				type="password" name="password" id="first_password" /><br> <br>
 			<input type="submit" class="buttonStyle" name="login" value="Login" />
 			<input type="submit" name="sign_up" value="Registration" />
-			<p style='color: red; text-align: center;'>
+			<p>
 				<script type="text/javascript">
 					document.write("${logedUser}");
 				</script>
@@ -257,6 +257,7 @@
 			</a>
 		</div>
 	</div>
+	<br>	
 </body>
 </html>
 
