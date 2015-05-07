@@ -8,7 +8,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import javax.persistence.Query;
@@ -60,7 +62,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW) 
 	public boolean CreateNewQuestion(String imageLink, String questionText, 
 			String category, int levelOfDifficulty, List<String> answers, 
-			char correctAnswer,int questionNumber, int numberOfResponsesInThePicture, String codeText){
+			String correctAnswer,int questionNumber, int numberOfResponsesInThePicture, String codeText){
 		////
 		boolean flagAction = false;	
 		long keyQuestion = 0;
@@ -108,7 +110,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	}
 	////
 	private EntityQuestionAttributes addQuestionAttributes(String imageLink, String category,
-			int levelOfDifficulty, char correctAnswer, List<String> answers, long keyQuestion,
+			int levelOfDifficulty, String correctAnswer, List<String> answers, long keyQuestion,
 			int numberOfResponsesInThePicture, String codeText) {
 		EntityQuestionAttributes questionAttributesList = new EntityQuestionAttributes();
 		EntityQuestion objectQuestion = em.find(EntityQuestion.class, keyQuestion);			
@@ -216,10 +218,10 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 				if(queryTempObj != null){
 					questionT = fres[0].replace("'", "");
 					EntityQuestion enTq = (EntityQuestion) queryTempObj;
-					flagAction = CreateNewQuestion(fres[1], questionT, fres[2], Integer.parseInt(fres[3]), answers, fres[4].charAt(0), (int)enTq.getId(), numberOfResponsesInThePicture, null);
+					flagAction = CreateNewQuestion(fres[1], questionT, fres[2], Integer.parseInt(fres[3]), answers, fres[4], (int)enTq.getId(), numberOfResponsesInThePicture, null);
 				}else{
 					questionT = fres[0].replace("'", "");
-					flagAction = CreateNewQuestion(fres[1], questionT, fres[2], Integer.parseInt(fres[3]), answers, fres[4].charAt(0), NEW_QUESTION, numberOfResponsesInThePicture, null);
+					flagAction = CreateNewQuestion(fres[1], questionT, fres[2], Integer.parseInt(fres[3]), answers, fres[4], NEW_QUESTION, numberOfResponsesInThePicture, null);
 				}
 			}
 		}
@@ -235,12 +237,12 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		//questionText----imageLink----category----levelOfDifficulty----answer1----answer2----answer3----answer4----correctAnswerChar----questionIndexNumber
 		//		
 		boolean flagAction = false;
-		String imageLink = "";
-		String questionText = "";
-		String category = "";
+		String imageLink = null;
+		String questionText = null;
+		String category = null;
 		int levelOfDifficulty = 1;
 		List<String> answers = null;
-		char correctAnswer = ' ';
+		String correctAnswer = null;
 		int questionNumber = 0;
 		//
 		try{			
@@ -259,7 +261,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 					answers.add(question_Parts[6]);
 					answers.add(question_Parts[7]);				
 					//
-					correctAnswer = question_Parts[8].charAt(0);
+					correctAnswer = question_Parts[8];
 					questionNumber = 0;				
 				}else{
 					//if question exist method added only new attributes for this question
@@ -269,7 +271,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 					imageLink = question_Parts[1];			
 					category = question_Parts[2];
 					levelOfDifficulty = Integer.parseInt(question_Parts[3]);
-					correctAnswer = question_Parts[4].charAt(0);						
+					correctAnswer = question_Parts[4];						
 				}
 				//   --------------  --------------  --------------  ----------------  ------------------  -----  //NUMBERofRESPONSESinThePICTURE ----- default = 4  
 				flagAction = CreateNewQuestion(imageLink, questionText, category, levelOfDifficulty, answers, correctAnswer, questionNumber, NUMBERofRESPONSESinThePICTURE, null );
@@ -409,7 +411,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		////
 		if(category != null && !category.equalsIgnoreCase("")){		
 			//
-			
+
 			try {
 				List<EntityQuestionAttributes> query = em.createQuery("SELECT c FROM EntityQuestionAttributes c WHERE "
 						+ "(c.levelOfDifficulty="+levelOfDifficulty+") AND (c.category='"+category+"')").getResultList();
@@ -421,7 +423,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 				}
 			} catch (StringIndexOutOfBoundsException e) {
 				System.out.println(" BES Search all question in category ' catch case");
-				//e.printStackTrace();
+				e.printStackTrace();
 			}		
 		}else{
 			outResult = null;
@@ -433,7 +435,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	/////-------------- Update  ONE Question into DB Case ----------// BEGIN  //
 	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW)	
 	public boolean UpdateTextQuestionInDataBase(String questionID, String imageLink, String questionText, 
-			String category, int levelOfDifficulty, List<String> answers, char correctAnswer, String codeText, String numAnswersOnPictures){
+			String category, int levelOfDifficulty, List<String> answers, String correctAnswer, String codeText, String numAnswersOnPictures){
 		boolean flagAction = false;
 		//
 		long id = (long)Integer.parseInt(questionID);
@@ -499,7 +501,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		System.out.println("res--- in  bes --"+result);
 		return result;
 	}
-	
+
 	private static List<Long> randomAttributeQuestionsId(List<Long> allAttributeQuestionsId, Long nQuestion){
 		List<Long> result = new ArrayList<Long>();
 		if(allAttributeQuestionsId.size() > 0){

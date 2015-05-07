@@ -46,7 +46,8 @@ public class EntityTest {
 	@ManyToOne
 	private EntityCompany entityCompany;
 	@ManyToOne
-	private EntityPerson entityPerson; 
+	private EntityPerson entityPerson;
+	private String resultTestCodeFromPerson; 
 	//
 	public EntityTest() {}
 	//
@@ -75,7 +76,7 @@ public class EntityTest {
 			jsonObj.put("persentOfRightAnswers",Math.round((float)amountOfCorrectAnswers/(float)amountOfQuestions*100));
 			JSONArray ar = new JSONArray();
 			if(!pictures.equals("")){ 
-				
+
 				String[] picturePaths = pictures.split(",");  
 				for(String path:picturePaths){					
 					JSONObject pic = new JSONObject();				
@@ -86,11 +87,11 @@ public class EntityTest {
 					}
 				}
 			}
-		 	jsonObj.put("pictures", ar); 
+			jsonObj.put("pictures", ar); 
 		} catch (JSONException e) {}
 		return jsonObj.toString();
 	}
-	
+
 	public String getPictureBase64(String pathToPicture){
 		String res = null;
 		BufferedReader in=null;
@@ -247,6 +248,13 @@ public class EntityTest {
 			this.pictures += ICommonData.delimiter + pictureLink;
 		}
 	}
+	public void setResultTestingCodeFromPerson(String resultTestCodeFromPerson) {
+		this.resultTestCodeFromPerson = resultTestCodeFromPerson;
+
+	}
+	public String getResultTestingCodeFromPerson() {
+		return resultTestCodeFromPerson;		
+	}
 	////
 	@Override
 	public String toString() {
@@ -266,5 +274,6 @@ public class EntityTest {
 				+ startTestDate + IMaintenanceService.DELIMITER	
 				+ endTestDate + IMaintenanceService.DELIMITER;
 	}
+
 
 }

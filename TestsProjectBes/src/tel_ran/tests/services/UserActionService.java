@@ -127,7 +127,7 @@ public class UserActionService extends TestsPersistence implements IUserActionSe
 						List<EntityAnswersText> anRes = tmpRes.getQuestionAnswersList();
 						for(EntityAnswersText rRes :anRes){
 							outTextResult.append(DELIMITER + rRes.getAnswerText());
-						}
+						}//  --------------------------------------------   TO DO factory method for this case !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 					}					
 					////				
 					outTextResult.append(",");					
@@ -140,4 +140,13 @@ public class UserActionService extends TestsPersistence implements IUserActionSe
 		return outTextResult.toString();	
 	}
 	////------- Test mode Test for User case ----------------// END //
+	
+////-------  Test Code From Users and Persons Case  ----------------// BEGIN //		
+	@Override
+	public String TestCodeQuestionUserCase(String codeText) {
+		//   --------------------  TO DO methods and actions 
+		String result = "BES User Code Test Case RESPONSE Transfer is OK";	     // TO DO !!!!!!!!!  for Intelege case
+		return result;
+	}
+	////-------  Test Code From Users and Persons Case  ----------------// END //	
 }

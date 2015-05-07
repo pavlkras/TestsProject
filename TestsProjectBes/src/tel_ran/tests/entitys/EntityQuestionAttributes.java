@@ -43,7 +43,7 @@ public class EntityQuestionAttributes implements Serializable {
 	private int levelOfDifficulty;
 	////
 	@Column(name = "correctAnswer")
-	private char correctAnswer;
+	private String correctAnswer;
 	////
 	@Column(name = "numresponses")
 	private int numberOfResponsesInThePicture;
@@ -81,10 +81,10 @@ public class EntityQuestionAttributes implements Serializable {
 	public void setLevelOfDifficulty(int levelOfDifficulty) {
 		this.levelOfDifficulty = levelOfDifficulty;
 	}
-	public char getCorrectAnswer() {
+	public String getCorrectAnswer() {
 		return correctAnswer;
 	}
-	public void setCorrectAnswer(char correctAnswer) {
+	public void setCorrectAnswer(String correctAnswer) {
 		this.correctAnswer = correctAnswer;
 	}
 	public List<EntityAnswersText> getQuestionAnswersList() {

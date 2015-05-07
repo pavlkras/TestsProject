@@ -59,7 +59,7 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
 	public boolean SaveEndPersonTestResult(String testId, String personAnswers,	String imagesLinks, long timeEndTest) {		
-		
+
 		boolean resAction = false;
 		////
 		try{
@@ -92,15 +92,18 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 		return resAction;
 	}
 	////  --------- auxiliary internal method
-	private int AmountOfAnswers(EntityTest personTest) {
+	private int AmountOfAnswers(EntityTest personTest) {// ------------------------- TO DO sampfing for true amount for answers
 		char[] corrAns = personTest.getCorrectAnswers();
 		char[] persAns = personTest.getPersonAnswers();
+		//String persCodeAns = personTest.getResultTestingCodeFromPerson();
 		int amountTrueAnswers=0;
 		for(int i=0;i<corrAns.length;i++){
 			if(corrAns[i] == persAns[i]){
 				amountTrueAnswers++;
 			}
+			
 		}
+
 		return amountTrueAnswers;
 	}
 	////------- Control mode Test for Person case ----------------// END //
@@ -126,7 +129,7 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 				outLinkText += NAME_FOLDER_FOR_SAVENG_TESTS_PICTURES + File.separator + companyID + File.separator + testName + "\\pic_" + picNum + ".txt" + ",";
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			e.printStackTrace();  
 		}		
 		return outLinkText;
 	}
@@ -134,19 +137,18 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 
 	////-------  Test Code From Users and Persons Case  ----------------// BEGIN //	
 	@Override
-	public boolean TestCodeQuestionCase(String codeText) {
+	public boolean TestCodeQuestionCase(String codeText, String questionID, long idOfTest) {
 		boolean result = false;
-		//   --------------------  TO DO merhods and actions 
-		if(codeText != null)
-			result = true;
-		System.out.println(" BES code test case -\n " + codeText);
-		return result;
-	}
+		EntityTest testRes = em.find(EntityTest.class, idOfTest);	
 
-	@Override
-	public String TestCodeQuestionUserCase(String codeText) {
-		//   --------------------  TO DO merhods and actions 
-		String result = "BES User Code Test Case RESPONSE Transfer is OK";	     
+		//   --------------------  TO DO methods and actions 
+		if(codeText != null){
+			testRes.setResultTestingCodeFromPerson(questionID + "-true");
+			result = true;
+		}else{
+			//testRes.setResultTestingCodeFromPerson(questionID + "-false");
+		}
+		System.out.println(" BES code test case -\n " + codeText); // TO DO !!!!!!!!!  for Intelege case
 		return result;
 	}
 	////-------  Test Code From Users and Persons Case  ----------------// END //	
