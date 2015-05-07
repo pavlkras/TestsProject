@@ -17,8 +17,6 @@ import tel_ran.tests.services.interfaces.IPersonalActionsService;
 @Scope("session")
 @RequestMapping({"/","/PersonalActions"})
 public class PersonalActions {
-
-	private int counterOfFaultSavingActions = 1;
 	@Autowired
 	IPersonalActionsService personalService; 
 	@Autowired
@@ -43,20 +41,27 @@ public class PersonalActions {
 		String returnToPage = "person/Personal_LinkClickAction";	
 		StringBuffer createdTestTable = new StringBuffer();
 		StringBuffer correctAnswers = new StringBuffer();
-		////
-		/* pattern array is: testForPerson[0] - id, testForPerson[1] - password, testForPerson[2] - id questions in list<long>, testForPerson[3] - Time start, testForPerson[4] - Time end  */		 
+		/**pattern array is:
+		 * testForPerson[0] - id,
+		 * testForPerson[1] - password,
+		 * testForPerson[2] - id questions in list<long>,
+		 * testForPerson[3] - Time start,
+		 * testForPerson[4] - Time end 
+		 */		 
 		String[] testForPerson = personalService.GetTestForPerson(testId);	
 
 		if(testForPerson != null && testForPerson.length == 5){
 			if (testForPerson != null && testForPerson[0].equals(id) && testForPerson[1].equals(password) && testForPerson[4].length() < 3) {						
 				String[] tempArray = testForPerson[2].split(",");// split string witch numbers id of question (long)				
-				createdTestTable.append("<div class='contentBox'><form action='endPersonTest' id='formTestPerson'  method='post'>"
+				createdTestTable.append("<div class='contentBox'>"
+						+ "<form action='endPersonTest' id='formTestPerson'  method='post'>"// Test table form
 						+ "<table>");// table of tables witch questions 
 				////
 				for(int i = 0;i<tempArray.length;i++){// Cycle long id questions for create one new question and add in out text				
 					String[] tempQueryResult = maintenanceService.getQuestionById(tempArray[i], IPersonalActionsService.ACTION_GET_ARRAY);// getting one question by id from BES								
 					String[] tempQuestionText = tempQueryResult[0].split(IPersonalActionsService.DELIMITER);// Splitting text by delimiter
-					////				
+					////	
+					String tempIdQ = tempArray[i];
 					createdTestTable.append("<tr><td>"// table question begin 
 							+ "<table id='tabTestPerson_"+i+"' class='tableStyle'>"
 							+ "<tr><th class='questionTextStyle' colspan='2'>"
@@ -66,9 +71,9 @@ public class PersonalActions {
 					}
 					////
 					if(tempQuestionText[3] != null && tempQuestionText[3].length() > 10){	// code question code 					
-						createdTestTable.append("<tr><td><textarea id='codeText_"+i+"'>" + tempQuestionText[3] + "</textarea>");
+						createdTestTable.append("<tr><td><textarea rows='20' cols='25' id='codeText_"+i+"'>" + tempQuestionText[3] + "</textarea>");
 						if(tempQuestionText[2].equalsIgnoreCase("0")){		
-							createdTestTable.append("<input checked='checked' hidden='hidden' type='checkbox' name='answerschecked' value='l'></td>"
+							createdTestTable.append("<p hidden='hidden' id='idQuestion_"+i+"'>"+tempIdQ+"</p></td>"
 									+ "<td><div class='send_button'><span class='buttons'>handler-code</span></div></td></tr>");	
 						}
 					}
@@ -117,7 +122,8 @@ public class PersonalActions {
 						}					
 					}			
 					createdTestTable.append("</table></td></tr>");// table close
-					correctAnswers.append(tempQuestionText[1]);				
+					if(tempQuestionText[1] != null && !tempQuestionText[1].equals(" "))
+						correctAnswers.append(tempQuestionText[1]);				
 				}	//end for
 				//				
 				createdTestTable.append("</table><br>"
@@ -161,8 +167,11 @@ public class PersonalActions {
 	////
 	@RequestMapping(value = "/endPersonTest", method = RequestMethod.POST)
 	String EndingTestActions(String answerschecked, String imageLinkText, String testID, Model model){	
-		String pageOut = "user/UserSignIn";
-		String newAnswerString = answerschecked.replaceAll(",,", "").replaceAll(",", "");	
+		String pageOut = "user/UserSignIn";		
+		String newAnswerString = null;
+		if(answerschecked != null){
+			newAnswerString = answerschecked.replaceAll(",,", "").replaceAll(",", "");	
+		}
 		long timeEndTest = System.currentTimeMillis();
 		if(!personalService.SaveEndPersonTestResult(testID, newAnswerString, imageLinkText, timeEndTest)){			
 			wrongResponse = "Sorry test is not sended, try again.";				
@@ -172,7 +181,7 @@ public class PersonalActions {
 			personalService.SaveEndPersonTestResult(testID, null, null, timeEndTest);
 			pageOut = "person/Personal_LinkClickAction";
 			counterOfFaultSavingActions = 1;
-		
+
 		}*/
 		//		
 		return pageOut;	// end of control mode test flow	
@@ -206,10 +215,18 @@ public class PersonalActions {
 	}	
 	////
 	@RequestMapping(value="/handler-code", method=RequestMethod.POST)
-	public @ResponseBody JsonResponse HandlerCode(HttpServletRequest request) {  		
-		String personCode = request.getParameter("personCode");
+	public @ResponseBody JsonResponse HandlerCode(HttpServletRequest request) { 
+		boolean tRes = false;
 		JsonResponse res = new JsonResponse(); 
-		boolean tRes = personalService.TestCodeQuestionCase(personCode);
+		try{
+			String personCode = request.getParameter("personCode");
+			String questionID = request.getParameter("questionID");
+			long idTest = (long)Integer.parseInt(testId);
+			tRes = personalService.TestCodeQuestionCase(personCode, questionID, idTest);
+		}catch(Exception e){
+			System.out.println("FES AJAX method");
+		}
+
 		if(tRes){    			
 			res.setStatus("SUCCESS");
 			res.setResult(true); 			

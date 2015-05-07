@@ -108,10 +108,12 @@
 						} // end if (flagMediaSupported)	
 							///// AJAX Tast Code Case Request/Response
 						$(".send_button").click(function(){							
-							var codeInText = $('#codeText_' + codeQuestionIdCount).val();		 
+							var $codeInText = $('#codeText_' + codeQuestionIdCount).val();	
+							var $questionID = $('#idQuestion_' + codeQuestionIdCount).text();
+							
 							$.ajax({type: "POST",
 								url: "handler-code",
-								data: "personCode=" + codeInText,
+								data: {"personCode" : $codeInText , "questionID" : $questionID },					
 								success: function(response){
 									// we have the response				
 									if(response.status == "SUCCESS"){										

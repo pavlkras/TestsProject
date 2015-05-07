@@ -247,7 +247,7 @@
 			<a href="maintenanceadd">
 				<div class="homecontent">
 					<img src="static/images/logo/quizhome.png" alt="Online forum"><span
-						class="homespan">Adding Questions</span>
+						class="homespan">Add Question</span>
 				</div>
 			</a><a href="Ma">
 				<div class="homecontent">

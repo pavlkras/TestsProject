@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import tel_ran.tests.model.Test;
 import tel_ran.tests.services.interfaces.IMaintenanceService;
@@ -19,8 +20,6 @@ import tel_ran.tests.services.interfaces.IUserActionService;
 @Scope("session")
 @RequestMapping({"/","/UserActions"})
 public class UserActions{ 	
-
-	private int i = 1;
 	@Autowired
 	IUserActionService userService; 
 	@Autowired
@@ -224,23 +223,19 @@ public class UserActions{
 			String tempQuestion = questionList.get(counter++);
 			//// --- Creation Test Page HTML Text  witch Parameters ------
 			String[] questionAttributes = tempQuestion.split(IMaintenanceService.DELIMITER);
-			for(int y=0;y<questionAttributes.length;y++)
-				System.out.println(questionAttributes[y]);
-
-			if(userTest.getRightAnswersChars() == null){
+			if(userTest.getRightAnswersChars() == null && questionAttributes[3] != null){
 				userTest.setRightAnswersChars(questionAttributes[3]);
-			}else{
+			}else if(userTest.getRightAnswersChars() != null && questionAttributes[3] != null){
 				String rightAnswerChars = userTest.getRightAnswersChars() +","+ questionAttributes[3];
 				userTest.setRightAnswersChars(rightAnswerChars);
 			}
 			model.addAttribute("question", "' "+questionAttributes[0]+" '");
 			////
-			if(questionAttributes[4] != null && questionAttributes[4].length() > 10){	// code question code 					
-				nextQuestionInTest.append("<textarea id='codeText_"+ counter +"'>" + questionAttributes[3] + "</textarea>");
+			if(questionAttributes[4] != null && questionAttributes[4].length() > 10){	// ---------- code question code 					
 				if(questionAttributes[2].equalsIgnoreCase("0")){		
-					nextQuestionInTest.append("<input checked='checked' hidden='hidden' type='checkbox' name='answerschecked' value='l'>"
-							+ "<div class='send_button'><span class='buttons'>handler-code</span></div>");					
-				}
+					nextQuestionInTest.append("<div class='send_button'><span class='buttons'>handler-code</span></div><br>");					
+				} 
+				nextQuestionInTest.append("<textarea id='codeText_"+ counter +"' rows='20' cols='25'>" + questionAttributes[4] + "</textarea>");
 			}
 			////
 			//
@@ -330,4 +325,37 @@ public class UserActions{
 		testResultList = null;
 	}
 	////------------------ creation test for User ------------------// END //
+
+	////
+	@RequestMapping(value="/handler-user-code", method=RequestMethod.POST)
+	public @ResponseBody JsonResponse HandlerCode(HttpServletRequest request) {  		
+		String userCode = request.getParameter("userCode");
+		JsonResponse res = new JsonResponse(); 
+		String tRes = userService.TestCodeQuestionUserCase(userCode);
+		if(tRes != null){    			
+			res.setStatus("SUCCESS");
+			res.setResult(tRes); 			
+		} else{
+			res.setStatus("ERROR");	
+			res.setResult(tRes); 
+		}
+		return res;
+	}
+	////static resurse class for JSON, Ajax on company add page 
+	class JsonResponse {
+		private String status = null;
+		private Object result = null;
+		public String getStatus() {
+			return status;
+		}
+		public void setStatus(String status) {
+			this.status = status;
+		}
+		public Object getResult() {
+			return result;
+		}
+		public void setResult(Object result) {
+			this.result = result;
+		}
+	}
 }
