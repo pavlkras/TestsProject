@@ -14,4 +14,5 @@ public interface IUserActionService extends ApplicationFinalFields{
 		String getTraineeQuestions(String category, int level, int qAmount);
 		List<String> getComplexityLevelList();
 		String getMaxCategoryLevelQuestions(String catName, String complexityLevel);
+		public String TestCodeQuestionUserCase(String codeText);
 }
