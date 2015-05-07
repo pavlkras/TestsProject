@@ -92,7 +92,7 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 		return resAction;
 	}
 	////  --------- auxiliary internal method
-	private int AmountOfAnswers(EntityTest personTest) {// ------------------------- TO DO sampfing for true amount for answers
+	private int AmountOfAnswers(EntityTest personTest) {                           // ------------------------- TO DO sampfing for true amount for answers
 		char[] corrAns = personTest.getCorrectAnswers();
 		char[] persAns = personTest.getPersonAnswers();
 		//String persCodeAns = personTest.getResultTestingCodeFromPerson();
@@ -101,9 +101,7 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 			if(corrAns[i] == persAns[i]){
 				amountTrueAnswers++;
 			}
-			
 		}
-
 		return amountTrueAnswers;
 	}
 	////------- Control mode Test for Person case ----------------// END //
@@ -121,8 +119,12 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 			////
 			Files.createDirectories(Paths.get(NAME_FOLDER_FOR_SAVENG_TESTS_PICTURES + File.separator + companyID + File.separator + testName));// creating a new directiry for saving person test pictures  
 			for(int picNum=0; picNum < tempPicturesArray.length; picNum++){	
-				tempPicturesArray[picNum] = tempPicturesArray[picNum].replaceFirst(",", "");				
-				BufferedWriter writer =  new BufferedWriter ( new FileWriter(workingDir + File.separator + NAME_FOLDER_FOR_SAVENG_TESTS_PICTURES + File.separator + companyID + File.separator + testName + "\\pic_" + picNum + ".txt"));
+				tempPicturesArray[picNum] = tempPicturesArray[picNum].replaceFirst(",", "");
+				////
+				BufferedWriter writer =  new BufferedWriter ( new FileWriter(workingDir 
+						+ File.separator + NAME_FOLDER_FOR_SAVENG_TESTS_PICTURES 
+						+ File.separator + companyID 
+						+ File.separator + testName + "\\pic_" + picNum + ".txt"));
 				writer.write(tempPicturesArray[picNum]);			 
 				writer.close();
 				////				
@@ -141,14 +143,13 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 		boolean result = false;
 		EntityTest testRes = em.find(EntityTest.class, idOfTest);	
 
-		//   --------------------  TO DO methods and actions 
+		//   --------------------  TO DO methods and actions // TO DO !!!!!!!!!  for Intelege case
 		if(codeText != null){
 			testRes.setResultTestingCodeFromPerson(questionID + "-true");
 			result = true;
 		}else{
-			//testRes.setResultTestingCodeFromPerson(questionID + "-false");
-		}
-		System.out.println(" BES code test case -\n " + codeText); // TO DO !!!!!!!!!  for Intelege case
+			testRes.setResultTestingCodeFromPerson(questionID + "-false");
+		} 
 		return result;
 	}
 	////-------  Test Code From Users and Persons Case  ----------------// END //	
