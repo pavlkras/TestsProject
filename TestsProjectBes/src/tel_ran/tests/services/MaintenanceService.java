@@ -38,7 +38,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		try {
 			tmpUser = em.find(EntityAdministrators.class, userMail);
 		} catch (Exception e) {
-			System.out.println("administratir catch em.find() action");
+			System.out.println("administratir catch em.find() action");//------------------------------------------ susout
 			//e.printStackTrace();
 		}
 		//
@@ -91,7 +91,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 			em.persist(objectQuestion);
 			flagAction = true;			
 		}
-		////  if the question exists, create new attributes question and add in DB in to question by 'questionNumber' that ID of question
+		////  When the question exists, create new attributes question and add in DB in to question by 'questionNumber' that ID of question
 		if(queryTempObj != null && (objectQuestion = em.find(EntityQuestion.class,(long) questionNumber)) != null){	
 			keyQuestion = objectQuestion.getId(); 
 			//
@@ -151,11 +151,9 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		em.persist(temp);
 		return temp;
 	}
-
 	////-------------- Creation and Adding ONE Question into DB Case ----------// END  //
 	//// ------------- Build Data 
-	////-------------- Creation and Adding MANY Questions into DB from Generated Question Case ----------// BEGIN  //-------------------------------------------------------------------
-
+	////-------------- Creation and Adding MANY Questions into DB from Generated Question Case ----------// BEGIN  //
 	@Override
 	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW)	
 	public boolean ModuleForBuildingQuestions(String byCategory, int nQuestions) {
@@ -188,8 +186,13 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 			 * DIF_LEVEL - level of complexity
 			 * returned List<String[]>*/
 			String workingDir = System.getProperty("user.dir");
-			Files.createDirectories(Paths.get(workingDir + File.separator + NAME_FOLDER_FOR_SAVENG_QUESTION_PICTURES));
-			listQuestions =	proc.processStart(selectedCategory, nQuestions, workingDir + File.separator + NAME_FOLDER_FOR_SAVENG_QUESTION_PICTURES + File.separator, DIF_LEVEL );// - вызвать генерацию.
+			Files.createDirectories(Paths.get(workingDir + File.separator + NAME_FOLDER_FOR_SAVENG_QUESTION_PICTURES/* + File.separator + byCategory*/));
+			////
+			listQuestions =	proc.processStart(selectedCategory,
+					nQuestions, 
+					workingDir + File.separator + NAME_FOLDER_FOR_SAVENG_QUESTION_PICTURES + File.separator /*+ byCategory + File.separator*/,
+					DIF_LEVEL );// - вызвать генерацию.
+			////
 		} catch (Exception e) {
 			System.out.println(" catch of test case generated q = ModuleForBuildingQuestions= ");
 			e.printStackTrace();
@@ -262,7 +265,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 					correctAnswer = question_Parts[8];
 					questionNumber = 0;				
 				}else{
-					//if question exist method added only new attributes for this question
+					//When question exist method added only new attributes for this question
 					//else if question not exist method added a new question full
 					questionNumber = Integer.parseInt(question_Parts[5]);	
 					questionText = question_Parts[0];
@@ -282,6 +285,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		return flagAction;
 	}
 	////-------------- Reading from file and Adding Questions into DB Case ----------// END  //
+	
 	////-------------- internal method for filling in the form update issue ----------// BEGIN  //
 	@Override
 	public String[]  getQuestionById(String questionID, int actionKey) {// getting question attributes by ID !!!!!!!!!!!!!!!!!!!!!!!!!  
@@ -401,7 +405,6 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	}
 	////-------------- Method for delete question into DB ----------// END  //
 
-
 	////-------------- Search Method by Category or Categories and level of difficulty ----------// BEGIN  //
 	@SuppressWarnings("unchecked")		
 	public List<String> SearchAllQuestionInDataBase(String category, int levelOfDifficulty) {	// !!!!!!!!!!!!!!!!!!!!!!!!!!!! not work in mazila		
@@ -409,7 +412,6 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		////
 		if(category != null && !category.equalsIgnoreCase("")){		
 			//
-
 			try {
 				List<EntityQuestionAttributes> query = em.createQuery("SELECT c FROM EntityQuestionAttributes c WHERE "
 						+ "(c.levelOfDifficulty="+levelOfDifficulty+") AND (c.category='"+category+"')").getResultList();
@@ -496,10 +498,9 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 			List<Long> allAttributeQuestionsId = query.getResultList();	
 			result = randomAttributeQuestionsId(allAttributeQuestionsId, nQuestion);
 		}
-		System.out.println("res--- in  bes --"+result);
 		return result;
 	}
-
+////
 	private static List<Long> randomAttributeQuestionsId(List<Long> allAttributeQuestionsId, Long nQuestion){
 		List<Long> result = new ArrayList<Long>();
 		if(allAttributeQuestionsId.size() > 0){
@@ -533,5 +534,15 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		return result;
 	}
 	////-------------- Method for test case group AlexFoox Company return id of unique set questions ----------// END  //
+	@Override
+	public List<String> GetGeneratedExistCategory(){
+		List<String> result = new ArrayList<String>();
+		//TestProcessor proc = new TestProcessor();
+		//List<String> result = proc.getMetaCategoryes();
+		result.add("Abstract");
+		result.add("Attention");
+		result.add("Quantative");		
+		return result;
+	}	
 }
 //// ----- END Code -----
