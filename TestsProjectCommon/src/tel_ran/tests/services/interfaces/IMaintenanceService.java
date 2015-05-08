@@ -22,6 +22,8 @@ public interface  IMaintenanceService extends ApplicationFinalFields{
 	public String deleteQuetionById(String questionID);
 	//
 	boolean FillDataBaseFromTextResource(List<String> inputParsedText);	
+	//
+	public List<String> GetGeneratedExistCategory();
 	// method for group generate test. AlexFoox returned Long ID of question 
 	public List<Long> getUniqueSetQuestionsForTest(String category,String level_num, Long nQuestion);
 }
