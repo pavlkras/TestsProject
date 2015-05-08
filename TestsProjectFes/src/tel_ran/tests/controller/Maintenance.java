@@ -3,12 +3,15 @@ package tel_ran.tests.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import tel_ran.tests.services.interfaces.IMaintenanceService;
 
@@ -191,7 +194,7 @@ public class Maintenance {
 		////
 		return "maintenance/MaintenanceUpdatePage";// return too page after action
 	}
-    //------- getting question and attributes for change ---------// Begin //
+	//------- getting question and attributes for change ---------// Begin //
 	@RequestMapping({ "/fillFormForUpdateQuestion" })
 	public String CreationUpdateForm(String questionID, Model model) {	
 		clearStringBuffer();
@@ -385,4 +388,34 @@ public class Maintenance {
 		}	
 		return outTextResult;		
 	}	
+	//// ajax meta category question creation onload page action 
+	@RequestMapping(value="/categoryCreationAction", method=RequestMethod.POST)
+	public @ResponseBody JsonResponse HandlerCode(HttpServletRequest request) {	
+		JsonResponse res = new JsonResponse(); 
+		String concatRes = " ";
+		List<String> result = maintenanceService.GetGeneratedExistCategory();
+		for(String re:result){		
+			concatRes += "<option value='" + re + "'>"+ re +"</option>";
+			}
+		res.setStatus("SUCCESS");
+		res.setResult(concatRes);
+		return res;
+	}
+	////static resurse class for JSON, Ajax on company add page 
+	class JsonResponse {
+		private String status = null;
+		private Object result = null;
+		public String getStatus() {
+			return status;
+		}
+		public void setStatus(String status) {
+			this.status = status;
+		}
+		public Object getResult() {
+			return result;
+		}
+		public void setResult(Object result) {
+			this.result = result;
+		}
+	}
 }

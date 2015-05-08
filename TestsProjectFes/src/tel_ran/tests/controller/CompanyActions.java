@@ -97,8 +97,16 @@ Wrong Password Flow:
 				List<String> resultCategory = maintenanceService.getAllCategoriesFromDataBase();
 				categoryHtmlText.append("<table class='table_ind'><tr><th>Category of Question:</th><th  colspan='2'>Level of difficulty</th></tr>");
 				for(String catBox:resultCategory){					
-					categoryHtmlText.append("<tr class='tr_ind'><td>"+catBox + ":</td><td><input class='category' type='checkbox' name='category' value='" + catBox + "' /></td><td><select name='level_num' disabled><option value='1'>1</option>"
-							+ "<option value='2'>2</option><option value='3'>3</option><option value='4'>4</option><option value='5'>5</option></select></td></tr>");
+					categoryHtmlText.append("<tr class='tr_ind'>"
+							+ "<td>"+catBox + ":</td>"
+							+ "<td><input class='category' type='checkbox' name='category' value='" + catBox + "' /></td>"
+							+ "<td><select name='level_num' disabled>"
+							+ "<option value='1'>1</option>"
+							+ "<option value='2'>2</option>"
+							+ "<option value='3'>3</option>"
+							+ "<option value='4'>4</option>"
+							+ "<option value='5'>5</option>"
+							+ "</select></td></tr>");
 				}
 				categoryHtmlText.append("</table>");
 				model.addAttribute("categoryFill", categoryHtmlText.toString());
