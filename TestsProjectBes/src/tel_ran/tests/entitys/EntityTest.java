@@ -25,6 +25,8 @@ import tel_ran.tests.services.interfaces.IMaintenanceService;
 @Entity
 public class EntityTest {
 
+	private int counterStartsOfThisTest = 0;
+	////
 	@Id
 	@GeneratedValue
 	private long testId; 
@@ -255,6 +257,12 @@ public class EntityTest {
 	public String getResultTestingCodeFromPerson() {
 		return resultTestCodeFromPerson;		
 	}
+	public int getCounterPicturesOfTheTest() {
+		return counterStartsOfThisTest;
+	}
+	public void setCounterPicturesOfTheTest(int counterStartsTheTest) {
+		this.counterStartsOfThisTest = counterStartsTheTest;
+	}
 	////
 	@Override
 	public String toString() {
@@ -274,6 +282,4 @@ public class EntityTest {
 				+ startTestDate + IMaintenanceService.DELIMITER	
 				+ endTestDate + IMaintenanceService.DELIMITER;
 	}
-
-
 }
