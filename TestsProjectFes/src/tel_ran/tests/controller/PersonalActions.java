@@ -127,10 +127,8 @@ public class PersonalActions {
 				}	//end for
 				//				
 				createdTestTable.append("</table><br>"
-						+ "<input type='text' hidden='hidden' name='testID' value='"+testId+"'>"					
-						+ "<input id='sendTestButton' type='submit' value='Send Test'>"
-						+ "<textArea name='imageLinkText' hidden='hidden'  id='imageLinkText'></textArea></form></div>"); 	// adding image links text (base64 decoding) as string witch delimiter beetwin links
-				// delimiter is --  @end_of_link@		
+						+ "<input id='testID' type='text' hidden='hidden' name='testID' value='"+testId+"'>"					
+						+ "<input id='sendTestButton' type='submit' value='Send Test'></form></div>"); 
 				setTableTest(createdTestTable);// that created table of questions for one test 
 				returnToPage = "person/PersonalTestWebCamFlow";
 				////			
@@ -166,24 +164,17 @@ public class PersonalActions {
 	}
 	////
 	@RequestMapping(value = "/endPersonTest", method = RequestMethod.POST)
-	String EndingTestActions(String answerschecked, String imageLinkText, String testID, Model model){	
+	String EndingTestActions(String answerschecked, String testID, Model model){	
 		String pageOut = "user/UserSignIn";		
 		String newAnswerString = null;
 		if(answerschecked != null){
 			newAnswerString = answerschecked.replaceAll(",,", "").replaceAll(",", "");	
 		}
 		long timeEndTest = System.currentTimeMillis();
-		if(!personalService.SaveEndPersonTestResult(testID, newAnswerString, imageLinkText, timeEndTest)){			
+		if(!personalService.SaveEndPersonTestResult(testID, newAnswerString, null, timeEndTest)){			
 			wrongResponse = "Sorry test is not sended, try again.";				
 			pageOut = "person/Personal_LinkClickAction";			
-		}/*else{
-			wrongResponse = "Sorry test is broken, please call to you'r company.";				
-			personalService.SaveEndPersonTestResult(testID, null, null, timeEndTest);
-			pageOut = "person/Personal_LinkClickAction";
-			counterOfFaultSavingActions = 1;
-
-		}*/
-		//		
+		}	
 		return pageOut;	// end of control mode test flow	
 	}
 
@@ -211,8 +202,29 @@ public class PersonalActions {
 				length--;
 			}
 		}
-		return answers;
+		return answers;  
 	}	
+	////	
+	@RequestMapping(value="/save_image_to_db", method=RequestMethod.POST)
+	public @ResponseBody JsonResponse SaveImageOfPersonToDB(HttpServletRequest request) { 
+		boolean tRes = false;
+		JsonResponse res = new JsonResponse(); 
+		try{
+			String imageToDB = request.getParameter("imageB64");	
+			String testId = request.getParameter("test_id");
+			tRes = personalService.SaveEndPersonTestResult(testId, null, imageToDB, 0);
+		}catch(Exception e){
+			System.out.println("FES AJAX method save picture");
+		}
+		if(tRes){    			
+			res.setStatus("SUCCESS");
+			res.setResult(true); 			
+		}else{
+			res.setStatus("ERROR");	
+			res.setResult(false); 
+		}
+		return res;
+	}
 	////
 	@RequestMapping(value="/handler-code", method=RequestMethod.POST)
 	public @ResponseBody JsonResponse HandlerCode(HttpServletRequest request) { 
