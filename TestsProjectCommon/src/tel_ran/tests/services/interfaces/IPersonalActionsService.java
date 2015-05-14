@@ -8,6 +8,5 @@ public interface IPersonalActionsService extends ApplicationFinalFields{
 	boolean SavePersonImageTestResult(Object imageToDB);
 	// case save result of test for Person
 	boolean SaveStartPersonTestParam(String id, String correctAnswers, long timeStartTest);
-	boolean SaveEndPersonTestResult(String id, String personAnswers, String imageLinkText, long timeEndTest);
-	boolean TestCodeQuestionCase(String codeText, String questionID, long idOfTest);
+	boolean SaveEndPersonTestResult(String id, String personAnswers, String personAnswersCode, String imageLinkText, long timeEndTest);
 	}
