@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import tel_ran.tests.services.fields.ApplicationFinalFields;
 import tel_ran.tests.services.interfaces.IMaintenanceService;
 import tel_ran.tests.services.interfaces.IPersonalActionsService;
 
@@ -25,6 +26,7 @@ public class PersonalActions {
 	private	String testId  = "";	
 	private static String wrongResponse = "";
 	private static String tableTestCreated;
+	private StringBuffer personAnswersCode = new StringBuffer();
 	////
 	@RequestMapping({"/PersonalActions"})
 	public String startPageToPerson(){ 		return "user/UserSignIn";     } 
@@ -171,7 +173,7 @@ public class PersonalActions {
 			newAnswerString = answerschecked.replaceAll(",,", "").replaceAll(",", "");	
 		}
 		long timeEndTest = System.currentTimeMillis();
-		if(!personalService.SaveEndPersonTestResult(testID, newAnswerString, null, timeEndTest)){			
+		if(!personalService.SaveEndPersonTestResult(testID, newAnswerString, personAnswersCode.toString(), null, timeEndTest)){			
 			wrongResponse = "Sorry test is not sended, try again.";				
 			pageOut = "person/Personal_LinkClickAction";			
 		}	
@@ -212,7 +214,7 @@ public class PersonalActions {
 		try{
 			String imageToDB = request.getParameter("imageB64");	
 			String testId = request.getParameter("test_id");
-			tRes = personalService.SaveEndPersonTestResult(testId, null, imageToDB, 0);
+			tRes = personalService.SaveEndPersonTestResult(testId, null, null, imageToDB, 0);
 		}catch(Exception e){
 			System.out.println("FES AJAX method save picture");
 		}
@@ -233,13 +235,13 @@ public class PersonalActions {
 		try{
 			String personCode = request.getParameter("personCode");
 			String questionID = request.getParameter("questionID");
-			long idTest = (long)Integer.parseInt(testId);
-			tRes = personalService.TestCodeQuestionCase(personCode, questionID, idTest);
+			System.out.println("!!!! AJAX: personCode = " + personCode + ", questionID = " + questionID);
+			personAnswersCode.append(personCode).append(ApplicationFinalFields.IMAGE_DELIMITER).append(questionID).append(ApplicationFinalFields.IMAGE_DELIMITER);
+			tRes = true;
 		}catch(Exception e){
 			System.out.println("FES AJAX method");
 		}
-
-		if(tRes){    			
+		if(tRes){ 			
 			res.setStatus("SUCCESS");
 			res.setResult(true); 			
 		} else{
