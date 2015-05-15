@@ -43,7 +43,7 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 		try{
 			long testID = (long)Integer.parseInt(testId);		
 			EntityTest personTest = em.find(EntityTest.class, testID);		
-			personTest.setCorrectAnswers(correctAnswers.toCharArray());	
+			personTest.setCorrectAnswers(correctAnswers.toCharArray());	// TO DO --------------------------
 			if(personTest.getStartTestDate() == 0){//   if this first time!!!
 				personTest.setStartTestDate(timeStartTest);	
 				personTest.setCounterPicturesOfTheTest(1);// start counter of pictures

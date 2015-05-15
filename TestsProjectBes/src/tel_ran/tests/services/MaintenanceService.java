@@ -168,7 +168,21 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		List<String> answers;	
 		List<String[]> listQuestions = null;		
 		TestProcessor proc = new TestProcessor();// creating object of case generated question
-		////
+		try {
+			List<String[]> genere_1 = proc.processStart(null, 0, null, 0);
+			
+		} catch (Exception e1) {
+			//e1.printStackTrace();
+			System.out.println("catch of TestProcessor.processStart(String, int, String, int);");
+		}
+		//// integration witch auto generation questions and adding them to DB question for APP
+		try {
+			proc.testProcessStart(null, 0, null, 0);
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		/*///
 		if(byCategory.equalsIgnoreCase("abstract")){
 			selectedCategory = TestProcessor.ATTENTION;
 		}else if(byCategory.equalsIgnoreCase("attention")){
@@ -176,7 +190,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		}else if(byCategory.equalsIgnoreCase("quantative")){
 			selectedCategory = TestProcessor.QUANTATIVE;
 		}
-		////
+		///*/
 		try {			
 			/* TestProcessor proc = new TestProcessor();// creating object of case generated question
 			 * proc.processStart(TYPE, NUM, PATH, DIF_LEVEL); 
@@ -186,12 +200,12 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 			 * DIF_LEVEL - level of complexity
 			 * returned List<String[]>*/
 			String workingDir = System.getProperty("user.dir");
-			Files.createDirectories(Paths.get(workingDir + File.separator + NAME_FOLDER_FOR_SAVENG_QUESTION_PICTURES/* + File.separator + byCategory*/));
-			////
+			Files.createDirectories(Paths.get(workingDir + File.separator + NAME_FOLDER_FOR_SAVENG_QUESTION_PICTURES));
+			/*///
 			listQuestions =	proc.processStart(selectedCategory,
 					nQuestions, 
-					workingDir + File.separator + NAME_FOLDER_FOR_SAVENG_QUESTION_PICTURES + File.separator /*+ byCategory + File.separator*/,
-					DIF_LEVEL );// - вызвать генерацию.
+					workingDir + File.separator + NAME_FOLDER_FOR_SAVENG_QUESTION_PICTURES + File.separator,
+					DIF_LEVEL );// - вызвать генерацию.*/
 			////
 		} catch (Exception e) {
 			System.out.println(" catch of test case generated q = ModuleForBuildingQuestions= ");
