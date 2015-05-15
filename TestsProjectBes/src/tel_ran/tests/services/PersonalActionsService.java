@@ -59,11 +59,10 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 	//// ------------------- save ending test parameters
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
-	public boolean SaveEndPersonTestResult(String testId, String personAnswers,	String imagesLinks, long timeEndTest) {		
+	public boolean SaveEndPersonTestResult(String testId, String personAnswers,	String personAnswersCode, String imagesLinks, long timeEndTest) {		
 		boolean resAction = false;
 		long testID = (long)Integer.parseInt(testId);	
 		EntityTest personTest = em.find(EntityTest.class, testID);
-		////
 		if(testId.length() >= 1 && personAnswers == null && imagesLinks.length() > 10 && timeEndTest == 0 && personTest.getCounterPicturesOfTheTest() <= 5){// condition IN TEST saving person pictures
 			try{							
 				String links = personTest.getPictures();
@@ -78,19 +77,24 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 			}
 			////
 		}else if(imagesLinks == null && personTest.getCounterPicturesOfTheTest() > 5){// condition end of test , preparing to save parameters
-			////
 			try{
 				char[] persAnswArray = personAnswers.toCharArray();
-				personTest.setPersonAnswers(persAnswArray );
+				personTest.setPersonAnswers(persAnswArray);
 				if(personTest.getEndTestDate() == 0){
 					personTest.setEndTestDate(timeEndTest);
 				}
-				personTest.setPersonAnswers(personAnswers.toCharArray());	
-				personTest.setAmountOfCorrectAnswers(AmountOfAnswers(personTest));
-				//
+				int amountCorrectAnswers = 0;
+				int amountCorrectAnswersCode = 0;
+				if(personAnswers != null){
+					amountCorrectAnswers = AmountOfAnswers(personTest);
+				}
+				if(personAnswersCode != null){
+					amountCorrectAnswersCode = AmountOfAnswersCode(personAnswersCode, testId);
+				}
+				personTest.setAmountOfCorrectAnswers(amountCorrectAnswers + amountCorrectAnswersCode);
 				em.persist(personTest);
 				resAction = true;			
-			}catch(Exception e){			
+			}catch(Exception e){	
 				if(testId != null && personAnswers == null && imagesLinks == null && timeEndTest != 0L){
 					personTest.setEndTestDate(timeEndTest);
 					em.persist(personTest);
@@ -104,6 +108,7 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 	}
 	////-------  save images  ---------------// Begin //
 	private String getLinkForImages(String imagesLinks, String companyId,String testId) {
+		System.out.println("in getLinkForImages");
 		String outLinkText = "";/// stub empty images links
 		String workingDir = System.getProperty("user.dir");
 		try {
@@ -133,7 +138,6 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 	private int AmountOfAnswers(EntityTest personTest) {               // ------------------------- TO DO sampfing for true amount for answers
 		char[] corrAns = personTest.getCorrectAnswers();
 		char[] persAns = personTest.getPersonAnswers();
-		//String persCodeAns = personTest.getResultTestingCodeFromPerson();
 		int amountTrueAnswers=0;
 		for(int i=0;i<corrAns.length;i++){
 			if(corrAns[i] == persAns[i]){
@@ -144,20 +148,68 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 	}
 	////------- Control mode Test for Person case ----------------// END //
 	////-------  Test Code From Users and Persons Case  ----------------// BEGIN //	
-	@Override
-	public boolean TestCodeQuestionCase(String codeText, String questionID, long idOfTest) {
-		boolean result = false;
-		EntityTest testRes = em.find(EntityTest.class, idOfTest);	
-
-		//   --------------------  TO DO methods and actions // TO DO !!!!!!!!!  for Intelege case
-		if(codeText != null){
-			testRes.setResultTestingCodeFromPerson(questionID + "-true");
-			result = true;
-		}else{
-			testRes.setResultTestingCodeFromPerson(questionID + "-false");
-		} 
+	private int AmountOfAnswersCode(String personAnswersCode, String testId) {
+		int result = 0;
+		long testID = (long)Integer.parseInt(testId);
+		String[] str = personAnswersCode.split(IMAGE_DELIMITER);
+		EntityTest testRes = em.find(EntityTest.class, testID);	
+		StringBuffer pathToAnswersCode = new StringBuffer();
+		StringBuffer resultAnswersCode = new StringBuffer();
+		for(int i=0; i<str.length; i=i+2){
+			String path= "";
+			path = getPathToCodeAnswer(str[i], str[i+1], testID);
+			boolean answer = getResultOfExecutionCode(path);       // + path to zip
+			if(i < str.length-2){
+				pathToAnswersCode.append(path + ",");				
+				resultAnswersCode.append(String.valueOf(answer) + ",");
+			}
+			else{
+				pathToAnswersCode.append(path);
+				resultAnswersCode.append(String.valueOf(answer));
+			}		
+			if(answer){
+				result++;
+			}	
+		}
+		testRes.setTestCodeFromPerson(pathToAnswersCode.toString());
+		testRes.setResultTestingCodeFromPerson(resultAnswersCode.toString());       
 		return result;
 	}
+	
+	private String getPathToCodeAnswer(String codeText, String questionID, long idOfTest) {
+		String res = "";
+		String workingDir = System.getProperty("user.dir");
+		try {
+			EntityTest testRes = em.find(EntityTest.class, idOfTest);	
+			String testName = testRes.getTestName();
+			String companyName = testRes.getEntityCompany().getC_Name(); 
+			Files.createDirectories(Paths.get(NAME_FOLDER_FOR_SAVENG_TESTS_PICTURES + File.separator + companyName + File.separator + testName + File.separator + "codeAnswers")); 
+			BufferedWriter writer =  new BufferedWriter ( new FileWriter(workingDir 
+					+ File.separator + NAME_FOLDER_FOR_SAVENG_TESTS_PICTURES 
+					+ File.separator + companyName 
+					+ File.separator + testName 
+					+ File.separator + "codeAnswers" +
+					"\\question_" + questionID + ".txt"));
+			writer.write(codeText);			 
+			writer.close();
+			////				
+			res = NAME_FOLDER_FOR_SAVENG_TESTS_PICTURES + File.separator + companyName + File.separator + testName + File.separator + "codeAnswers" + "\\question_" + questionID + ".txt";			
+		} catch (IOException e) {
+			e.printStackTrace();  
+		}		
+		return res;
+	}
+	
+	private boolean getResultOfExecutionCode(String path) {   //start of Gradle job
+		// TODO Auto-generated method stub
+		return true;
+	}
+	@Override
+	public boolean SavePersonImageTestResult(Object arg0) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
 	////-------  Test Code From Users and Persons Case  ----------------// END //	
 }
 
