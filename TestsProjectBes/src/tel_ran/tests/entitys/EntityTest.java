@@ -49,6 +49,8 @@ public class EntityTest {
 	private EntityCompany entityCompany;
 	@ManyToOne
 	private EntityPerson entityPerson;
+	@Column(name = "testCodeFromPerson", length = 1000)
+	private String testCodeFromPerson; 
 	private String resultTestCodeFromPerson; 
 	//
 	public EntityTest() {}
@@ -262,6 +264,13 @@ public class EntityTest {
 	}
 	public void setCounterPicturesOfTheTest(int counterStartsTheTest) {
 		this.counterStartsOfThisTest = counterStartsTheTest;
+	}
+	
+	public String getTestCodeFromPerson() {
+		return testCodeFromPerson;
+	}
+	public void setTestCodeFromPerson(String testCodeFromPerson) {
+		this.testCodeFromPerson = testCodeFromPerson;
 	}
 	////
 	@Override
