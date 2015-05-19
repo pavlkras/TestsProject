@@ -39,7 +39,7 @@ public class EntityTest {
 	private int amountOfCorrectAnswers;
 	private int amountOfQuestions;
 	@Column(name = "pictures", length = 500)
-	private String pictures="";           // format to string!! namefoto.jpg,nameAnotherfoto.jpg,xxx.jgg, ...
+	private String pictures;           // format to string!! namefoto.jpg,nameAnotherfoto.jpg,xxx.jgg, ...
 	private int duration;
 	private String levelOfDifficulty;
 	private long startTestDate = 0L;
@@ -77,36 +77,82 @@ public class EntityTest {
 			jsonObj.put("amountOfQuestions",amountOfQuestions);
 			jsonObj.put("complexityLevel",levelOfDifficulty);
 			jsonObj.put("amountOfCorrectAnswers",amountOfCorrectAnswers);
-			jsonObj.put("persentOfRightAnswers",Math.round((float)amountOfCorrectAnswers/(float)amountOfQuestions*100));
-			JSONArray ar = new JSONArray();
-			if(!pictures.equals("")){ 
-
-				String[] picturePaths = pictures.split(",");  
-				for(String path:picturePaths){					
-					JSONObject pic = new JSONObject();				
-					String picture = getPictureBase64(path);
-					if(picture != null){
-						pic.put("picture", picture);
-						ar.put(pic);
-					}
-				}
-			}
-			jsonObj.put("pictures", ar); 
+			jsonObj.put("persentOfRightAnswers",Math.round((float)amountOfCorrectAnswers/(float)amountOfQuestions*100)); // Add calculations from the resultTestCodeFromPerson field  
+			jsonObj.put("pictures", getJsonArrayImage(pictures));
+			jsonObj.put("codesFromPerson", getJsonArrayCode(testCodeFromPerson, resultTestCodeFromPerson, "java,csharp,cpp,css,"));
 		} catch (JSONException e) {}
 		return jsonObj.toString();
 	}
+	
+	private JSONArray getJsonArrayImage(String paths){
+		JSONArray ar = new JSONArray();
+		if(!paths.equals(null)||!paths.equals("")){ 
 
-	public String getPictureBase64(String pathToPicture){
+			String[] pathsArray = paths.split(",");  
+			for(String path:pathsArray){					
+				JSONObject jsonObj = new JSONObject();		
+				String file = getFileWithinString(path);
+
+				if(file != null){
+					try {
+						jsonObj.put("picture", file);
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+					ar.put(jsonObj);
+				}
+			}
+		}
+		return ar;
+	}
+	
+	private JSONArray getJsonArrayCode(String paths, String codeAnalyseResults, String programmingLanguages){
+		JSONArray ar = new JSONArray();
+		if(	!paths.equals(null)&&
+			!paths.equals("")&&
+			!codeAnalyseResults.equals(null)&&
+			!codeAnalyseResults.equals("")&&
+			!programmingLanguages.equals(null)&&
+			!programmingLanguages.equals("")){ 
+
+			String[] pathsArray = paths.split(",");  
+			String[] codeAnalyseResultsArray = codeAnalyseResults.split(",");
+			String[] programmingLanguagesArray = programmingLanguages.split(",");
+			
+			if(pathsArray.length == codeAnalyseResultsArray.length && codeAnalyseResultsArray.length == programmingLanguagesArray.length){
+				for(int i=0; i<pathsArray.length; i++){
+					JSONObject jsonObj = new JSONObject();		
+					
+					String file = getFileWithinString(pathsArray[i]);
+
+					if(file != null){
+						try {
+							jsonObj.put("code", file);
+							jsonObj.put("codeAnalyseResult", codeAnalyseResultsArray[i]);
+							jsonObj.put("programmingLanguage", programmingLanguagesArray[i]);
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+						ar.put(jsonObj);
+					}
+				}
+			}
+		}
+		return ar;
+	}
+
+	public String getFileWithinString(String path){
 		String res = null;
 		BufferedReader in=null;
 		try {
-			in = new BufferedReader(new FileReader(pathToPicture));
+			in = new BufferedReader(new FileReader(path));
 			String line;
-			StringBuffer pictureBase64 = new StringBuffer();
+			StringBuffer stringBuffWithFileContent = new StringBuffer();
 			while((line = in.readLine()) != null){
-				pictureBase64.append(line);
+				stringBuffWithFileContent.append(line);
+				stringBuffWithFileContent.append("\n");
 			}
-			res = pictureBase64.toString();
+			res = stringBuffWithFileContent.toString();
 		} catch (FileNotFoundException e) {
 		} catch (IOException e) {
 		} finally{
