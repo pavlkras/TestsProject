@@ -1,11 +1,15 @@
-var app = angular.module('app', ['smart-table','mgcrea.ngStrap','ngDialog'])
+var app = angular.module('app', ['smart-table','mgcrea.ngStrap','ngDialog']);
 
 app.controller('InputController', ['$scope','$http', 'ngDialog', function($scope, $http, ngDialog) {
+	
   $scope.selectedMode = -1;
 
   $scope.display = {
 	calendar: false,
-	id: false
+	id: false,
+	test_details: true,
+	pictures: false,
+	code: false
   };
   
   $scope.isButtonDisabled = true;
@@ -35,7 +39,33 @@ app.controller('InputController', ['$scope','$http', 'ngDialog', function($scope
 	}
   };
   
-  	$scope.parameters = function(){
+  $scope.showTestDetails = function(arg){
+	  switch(arg){
+		case 'details': 
+			$scope.display.test_details = true;
+			$scope.display.pictures = false;
+			$scope.display.code = false;
+		break;
+		case 'camera_snapshots':
+			$scope.display.test_details = false;
+			$scope.display.pictures = true;
+			$scope.display.code = false;
+		break;
+		case 'code':
+			$scope.display.test_details = false;
+			$scope.display.pictures = false;
+			$scope.display.code = true;
+		break;
+		default:
+			$scope.display.test_details = true;
+			$scope.display.pictures = false;
+			$scope.display.code = false;
+	}
+  };
+  
+  
+  
+  $scope.parameters = function(){
 		var params = '';
 		switch($scope.selectedMode){
 			case 'all': 
@@ -52,7 +82,6 @@ app.controller('InputController', ['$scope','$http', 'ngDialog', function($scope
 	};
 	
 	$scope.formatDate = function(date_){
-		console.log(date_);
 		res="e";
 		if(date_!=undefined && date_!=""){
 			res = date_.getFullYear()+"-"+eval(date_.getMonth()+1)+"-"+date_.getDate();
@@ -64,16 +93,26 @@ app.controller('InputController', ['$scope','$http', 'ngDialog', function($scope
 	//Test Details
 	$scope.getDetails = function(testid_){
 		$scope.link = "/TestsProjectBes/view_results_rest/test_details"+"/"+testid_;
-		console.log($scope.link);
-
 		$http.get($scope.link, $scope.httpConfig).success(function (response) {
 			$scope.testDetails = response;
+			$scope.showTestDetails();
 		});
+	};
+	
+	$scope.getProcessingResultStyle = function(arg_){
+	//	console.log('got arg = '+arg_);
+		var res = '';
+		if(arg_ == "true"){
+			res = "label-success";
+		} else if(arg_ == "false"){
+			res = "label-danger";
+		};
+		return res;
 	};
 		  
 	$scope.showDetails = function(testid){
 		$scope.getDetails(testid);
-		console.log(testid);
+	//	console.log(testid);
 
 		ngDialog.open({ 
     	  controller: 'InputController',
@@ -82,8 +121,17 @@ app.controller('InputController', ['$scope','$http', 'ngDialog', function($scope
     	  scope: $scope
 		});
 	};
-
-
+	  
+	$scope.showCode = function(){
+		ngDialog.open({ 
+    	  controller: 'InputController',
+    	  className: 'ngdialog-theme-default',
+    	  template: 'code',
+    	  scope: $scope
+		});
+	};
+	
+	
 // Test Common Results	
 	$scope.submit = function(){
 		$scope.link = "/TestsProjectBes/view_results_rest"+$scope.modePath+$scope.parameters();
@@ -91,12 +139,12 @@ app.controller('InputController', ['$scope','$http', 'ngDialog', function($scope
 	        'Authorization': $scope.token,
 	        'TimeZone': new Date().toString().match(/([A-Z]+[\+-][0-9]+)/)[1]
 	    }};
-		console.log($scope.link);
+//		console.log($scope.link);
 		$http.get($scope.link, $scope.httpConfig).success(function (response) {
 			$scope.results = response;
 			if(response.Error){
-				alert(response.Error);
 				$scope.results = "";
+				alert(response.Error);
 			}
 		});
 	};
@@ -122,3 +170,21 @@ app.directive('stRatio',function(){
     	}
      };
  });
+
+app.directive('nagPrism', [function() {
+    return {
+        restrict: 'A',
+        scope: {
+            source: '@'
+        },
+        link: function(scope, element, attrs) {
+            scope.$watch('source', function(v) {
+                if(v) {
+                    Prism.highlightElement(element.find("code")[0]);
+                }
+            });
+        },
+        template: "<code ng-bind='source'></code>"
+    };
+
+}]);
