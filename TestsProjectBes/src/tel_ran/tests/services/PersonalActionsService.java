@@ -156,8 +156,7 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 		StringBuffer pathToAnswersCode = new StringBuffer();
 		StringBuffer resultAnswersCode = new StringBuffer();
 		for(int i=0; i<str.length; i=i+2){
-			String pathCode = "";
-			pathCode = getPathToCodeAnswer(str[i], str[i+1], testID);
+			String pathCode = getPathToCodeAnswer(str[i], str[i+1], testID);
 			long questionID = (long)Integer.parseInt(str[i+1]);
 			EntityQuestionAttributes question = em.find(EntityQuestionAttributes.class, questionID);
 			String pathZip = question.getImageLink();            //String pathZip = question.getFileLocationZip();
