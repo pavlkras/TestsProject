@@ -156,15 +156,18 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 		StringBuffer pathToAnswersCode = new StringBuffer();
 		StringBuffer resultAnswersCode = new StringBuffer();
 		for(int i=0; i<str.length; i=i+2){
-			String path= "";
-			path = getPathToCodeAnswer(str[i], str[i+1], testID);
-			boolean answer = getResultOfExecutionCode(path);       // + path to zip
+			String pathCode = "";
+			pathCode = getPathToCodeAnswer(str[i], str[i+1], testID);
+			long questionID = (long)Integer.parseInt(str[i+1]);
+			EntityQuestionAttributes question = em.find(EntityQuestionAttributes.class, questionID);
+			String pathZip = question.getImageLink();            //String pathZip = question.getFileLocationZip();
+			boolean answer = getResultOfExecutionCode(pathZip, pathCode);     
 			if(i < str.length-2){
-				pathToAnswersCode.append(path + ",");				
+				pathToAnswersCode.append(pathCode + ",");				
 				resultAnswersCode.append(String.valueOf(answer) + ",");
 			}
 			else{
-				pathToAnswersCode.append(path);
+				pathToAnswersCode.append(pathCode);
 				resultAnswersCode.append(String.valueOf(answer));
 			}		
 			if(answer){
@@ -200,7 +203,7 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 		return res;
 	}
 	
-	private boolean getResultOfExecutionCode(String path) {   //start of Gradle job
+	private boolean getResultOfExecutionCode(String pathZip, String pathCode) {   //start of Gradle job
 		// TODO Auto-generated method stub
 		return true;
 	}
