@@ -1,7 +1,7 @@
 package tel_ran.tests.services;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import javax.persistence.Query;
 
@@ -100,52 +100,53 @@ public class UserActionService extends TestsPersistence implements IUserActionSe
 		String res = String.valueOf(qlist.size());
 		return res;
 	}
-	////	
+	////	//  --------------------------------------------   TO DO factory method for this case !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	@Override
-	public String getTraineeQuestions(String category, int levelOfDifficulty, int qAmount) {
-		StringBuffer outTextResult = new StringBuffer();	
-		int level = 1;	
-		if(qAmount > 0 && category != null){		
-			for(int i=0; i < qAmount ;){// -- cycle works on the number of questions -nQuestion	
-				if(levelOfDifficulty != level)			
-					level++;// -- condition: the end of the array with the categories, the following passage levels of difficulty: +1.	
-				List<EntityQuestionAttributes> questionAttrList = em.createQuery("SELECT c FROM EntityQuestionAttributes c WHERE "
-						+ "(c.levelOfDifficulty="+level+") AND (c.category='"+category+"')").getResultList();
-				if(questionAttrList.size() > 0){//  -- condition: if the questionAttrList.size is greater than zero.
-					Random rnd = new Random();
-					int rand =  rnd.nextInt(questionAttrList.size());							
-					EntityQuestionAttributes tmpRes = questionAttrList.get(rand);							
-					outTextResult.append(tmpRes.getQuestionId().getQuestionText() + DELIMITER);
-					////									
-					outTextResult.append(tmpRes.getId() + DELIMITER);
-					////
-					outTextResult.append(tmpRes.getNumberOfResponsesInThePicture() + DELIMITER);
-					outTextResult.append(tmpRes.getCorrectAnswer() + DELIMITER);
-					outTextResult.append(tmpRes.getLineCod());
-					//
-					if(tmpRes.getQuestionAnswersList() != null){					
-						List<EntityAnswersText> anRes = tmpRes.getQuestionAnswersList();
-						for(EntityAnswersText rRes :anRes){
-							outTextResult.append(DELIMITER + rRes.getAnswerText());
-						}//  --------------------------------------------   TO DO factory method for this case !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-					}					
-					////				
-					outTextResult.append(",");					
-					i++;// -- cycle works on the number of questions -nQuestion	!!!!!!!! WITCH WRONG LOOP  !!!!!!!!!!
-				}else{//  -- condition: if the questionAttrList.size is equal to or less than zero.							
+	public List<String> getTraineeQuestions(String category, int levelOfDifficulty, int qAmount) {
+		List<String> outTextResult = new ArrayList<String>();	
+
+		if(qAmount > 0 && category != null){
+			for(int i=0; i < qAmount ; i++){// -- cycle works on the number of questions -nQuestion							
+				List<EntityQuestionAttributes> questionAttrList = em.createQuery("SELECT c FROM EntityQuestionAttributes c WHERE (c.levelOfDifficulty="+levelOfDifficulty+") AND (c.category='"+category+"')").getResultList();		
+
+				if(questionAttrList != null && questionAttrList.size() > 0){
+					EntityQuestionAttributes tmpRes = questionAttrList.get(i);
+					outTextResult.add(tmpRes.getId() + DELIMITER                   // - 0 = id
+							+ tmpRes.getQuestionId().getQuestionText() + DELIMITER // - 1 = question
+							+ tmpRes.getQuestionId().getDescription() + DELIMITER  // - 2 = description
+							+ tmpRes.getLineCod() + DELIMITER                      // - 3 = code text
+							+ tmpRes.getLanguageName() + DELIMITER				   // - 4 = lang cod			
+							+ tmpRes.getCorrectAnswer() + DELIMITER                // - 5 = corr answer
+							+ tmpRes.getNumberOfResponsesInThePicture() + DELIMITER// - 6 = num ansers on picture
+							+ tmpRes.getMetaCategory() + DELIMITER                 // - 7 = meta category 
+							// when question not include meta cetgory ! meta cat = language code
+							+ GetAnswers(tmpRes));                   // optionaly 8-12
+				}else{					
 					System.out.println("BES User test else condition i-" + i);//---------------------------sysout	
 				}
 			}			   
 		}		
-		return outTextResult.toString();	
+		return outTextResult;	
+	}
+	private String GetAnswers(EntityQuestionAttributes tmpRes) {
+		List<EntityAnswersText> anRes;
+		String outRes = "";
+		if(tmpRes.getQuestionAnswersList() != null){					
+			anRes = tmpRes.getQuestionAnswersList();
+			for(EntityAnswersText rRes :anRes){
+				outRes += rRes.getAnswerText() + DELIMITER;
+			}
+		}
+		return outRes;
 	}
 	////------- Test mode Test for User case ----------------// END //
-	
-////-------  Test Code From Users and Persons Case  ----------------// BEGIN //		
+
+	////-------  Test Code From Users and Persons Case  ----------------// BEGIN //		
+	////  //  --------------------------------------------   TO DO factory method for this case !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	@Override
 	public String TestCodeQuestionUserCase(String codeText) {
-		//   --------------------  TO DO methods and actions 
-		String result = "BES User Code Test Case RESPONSE Transfer is OK";	     // TO DO !!!!!!!!!  for Intelege case
+		String result = "BES User Code Test Case "
+				+ "RESPONSE Transfer is OK\n" + codeText;	     // TO DO !!!!!!!!!  for Intelege case
 		return result;
 	}
 	////-------  Test Code From Users and Persons Case  ----------------// END //	

@@ -28,6 +28,9 @@ public class EntityQuestion implements Serializable {
 	@Column(name = "questionText", unique = true, nullable = false, length = 500)
 	private String questionText;
 	////
+	@Column(name = "description", length = 1500)
+	private String description;
+	////
 	@OneToMany(mappedBy = "questionId")
 	List<EntityQuestionAttributes> questionAttributes;
 	////
@@ -37,21 +40,25 @@ public class EntityQuestion implements Serializable {
 	public void setQuestionText(String questionText) {
 		this.questionText = questionText;
 	}
-	////
 	public List<EntityQuestionAttributes> getQuestionAttributes() {
 		return questionAttributes;
 	}
 	public void setQuestionAttributes(
 			List<EntityQuestionAttributes> questionAttributes) {
 		this.questionAttributes = questionAttributes;
+	}	
+	public String getDescription() {
+		return description;
 	}
-	////
+	public void setDescription(String description) {
+		this.description = description;
+	}
 	public long getId() {
 		return id;
 	}
 	////
 	@Override
 	public String toString() {
-		return id + IMaintenanceService.DELIMITER + questionText;
+		return id + IMaintenanceService.DELIMITER + questionText + IMaintenanceService.DELIMITER + description;
 	}
 }

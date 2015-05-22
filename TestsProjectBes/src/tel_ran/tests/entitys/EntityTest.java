@@ -25,7 +25,7 @@ import tel_ran.tests.services.interfaces.IMaintenanceService;
 @Entity
 public class EntityTest {
 
-	private int counterStartsOfThisTest = 0;
+
 	////
 	@Id
 	@GeneratedValue
@@ -38,8 +38,12 @@ public class EntityTest {
 	private char[] correctAnswers;            //letter of the right answer
 	private int amountOfCorrectAnswers;
 	private int amountOfQuestions;
-	@Column(name = "pictures", length = 500)
-	private String pictures="";           // format to string!! namefoto.jpg,nameAnotherfoto.jpg,xxx.jgg, ...
+	////
+	@Column(name = "pictures", length = 1000)
+	private String pictures;   
+	@Column(name = "screens", length = 1000)
+	private String screens;
+	////
 	private int duration;
 	private String levelOfDifficulty;
 	private long startTestDate = 0L;
@@ -259,13 +263,13 @@ public class EntityTest {
 	public String getResultTestingCodeFromPerson() {
 		return resultTestCodeFromPerson;		
 	}
-	public int getCounterPicturesOfTheTest() {
-		return counterStartsOfThisTest;
+	public String getScreensOfPerson() {
+		return screens;
 	}
-	public void setCounterPicturesOfTheTest(int counterStartsTheTest) {
-		this.counterStartsOfThisTest = counterStartsTheTest;
+	public void setScreensOfPerson(String screenPictures) {
+		this.screens = screenPictures;
 	}
-	
+
 	public String getTestCodeFromPerson() {
 		return testCodeFromPerson;
 	}

@@ -23,6 +23,7 @@ import tel_ran.tests.entitys.EntityQuestionAttributes;
 import tel_ran.tests.processor.TestProcessor;
 import tel_ran.tests.services.interfaces.IMaintenanceService;
 
+
 public class MaintenanceService extends TestsPersistence implements IMaintenanceService {	
 	//
 	private static int NUMBERofRESPONSESinThePICTURE = 4;// number of responses in the picture, for text questions default = 4
@@ -36,9 +37,9 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		////
 		EntityAdministrators tmpUser = null;
 		try {
-			tmpUser = em.find(EntityAdministrators.class, userMail);
+			tmpUser = em.find(EntityAdministrators.class, userMail); 
 		} catch (Exception e) {
-			System.out.println("administratir catch em.find() action");//------------------------------------------ susout
+			System.out.println("administrator catch em.find() action");//------------------------------------------ susout
 			//e.printStackTrace();
 		}
 		//
@@ -46,7 +47,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 			FLAG_AUTHORIZATION = true;	
 			System.out.println("administrator is ok");//------------------------------------------ susout
 		}else{
-			FLAG_AUTHORIZATION = true;	
+			FLAG_AUTHORIZATION = true;	   
 			System.out.println("administrator is wrong TO DO ADDING to EntityAdministrators !!!! BES");//--------------------------------------- susout
 		}
 		//
@@ -58,9 +59,11 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	////-------------- Creation and Adding ONE Question into DB Case ----------// BEGIN  //
 	@Override
 	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW) 
-	public boolean CreateNewQuestion(String imageLink, String questionText, 
-			String category, int levelOfDifficulty, List<String> answers, 
-			String correctAnswer,int questionNumber, int numberOfResponsesInThePicture, String codeText){
+	public boolean CreateNewQuestion(String questionText,
+			String fileLocationLink, String metaCategory, String category, 
+			int levelOfDifficulty, List<String> answers, String correctAnswer,
+			int questionNumber, int numberOfResponsesInThePicture, String description, 
+			String codeText, String languageName){
 		////
 		boolean flagAction = false;	
 		long keyQuestion = 0;
@@ -77,28 +80,25 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		//// if question not exist in DB creating a new question full flow
 		if(queryTempObj == null && em.find(EntityQuestion.class,(long) questionNumber) == null){				
 			objectQuestion = new EntityQuestion();	
-			objectQuestion.setQuestionText(questionText);	
+			objectQuestion.setQuestionText(questionText);
+			objectQuestion.setDescription(description);
 			em.persist(objectQuestion);
 			//
 			keyQuestion = objectQuestion.getId(); 
 			//
 			List<EntityQuestionAttributes> questionAttributes = new ArrayList<EntityQuestionAttributes>();
-			EntityQuestionAttributes qattr = addQuestionAttributes(imageLink, category,  levelOfDifficulty, correctAnswer, answers, keyQuestion, numberOfResponsesInThePicture, codeText);
-			questionAttributes.add(qattr);
-			//
+			questionAttributes.add(createAttributes(fileLocationLink, category,  levelOfDifficulty, 
+					correctAnswer, answers, keyQuestion, numberOfResponsesInThePicture, codeText, languageName, metaCategory));			
 			objectQuestion.setQuestionAttributes(questionAttributes);
-			//
 			em.persist(objectQuestion);
 			flagAction = true;			
 		}
 		////  When the question exists, create new attributes question and add in DB in to question by 'questionNumber' that ID of question
-		if(queryTempObj != null && (objectQuestion = em.find(EntityQuestion.class,(long) questionNumber)) != null){	
-			keyQuestion = objectQuestion.getId(); 
-			//
-			List<EntityQuestionAttributes> questionAttributes = objectQuestion.getQuestionAttributes();
-			EntityQuestionAttributes qattr = addQuestionAttributes(imageLink, category,  levelOfDifficulty, correctAnswer,answers, keyQuestion,numberOfResponsesInThePicture, codeText);
-			questionAttributes.add(qattr);
-			objectQuestion.setQuestionAttributes(questionAttributes);
+		if(queryTempObj != null && (objectQuestion = em.find(EntityQuestion.class,(long) questionNumber)) != null){
+			objectQuestion
+			.getQuestionAttributes()
+			.add(createAttributes(fileLocationLink, category,  levelOfDifficulty, correctAnswer,	
+					answers, objectQuestion.getId(),numberOfResponsesInThePicture, codeText, metaCategory, metaCategory));		
 			em.persist(objectQuestion);
 			flagAction = true;
 		}
@@ -107,136 +107,143 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		return flagAction;
 	}
 	////
-	private EntityQuestionAttributes addQuestionAttributes(String imageLink, String category,
-			int levelOfDifficulty, String correctAnswer, List<String> answers, long keyQuestion,
-			int numberOfResponsesInThePicture, String codeText) {
-		EntityQuestionAttributes questionAttributesList = new EntityQuestionAttributes();
-		EntityQuestion objectQuestion = em.find(EntityQuestion.class, keyQuestion);			
+	private EntityQuestionAttributes createAttributes(String fileLocationFullPath, 
+			String category,
+			int levelOfDifficulty, 
+			String correctAnswer, 
+			List<String> answers, 
+			long keyQuestion,
+			int numberOfResponsesInThePicture, 
+			String codeText, 
+			String languageName, 
+			String metaCategory){
+		EntityQuestionAttributes questionAttributesList = new EntityQuestionAttributes();// new question attributes creation		
+		EntityQuestion objectQuestion = em.find(EntityQuestion.class, keyQuestion);	//selecting from DB question by id (long)
 		////
-		if(imageLink != null && imageLink.length() > 15){
-			questionAttributesList.setImageLink(imageLink);
-		}
-		////
-		if(codeText != null && codeText.length() > 10){		// parsing code for save in to db 				
-			questionAttributesList.setLineCod(codeText);			
-		}else{
-			questionAttributesList.setLineCod(null);
-		}
-		////
+		questionAttributesList.setQuestionId(objectQuestion);		
+		questionAttributesList.setFileLocationLink(fileLocationFullPath);// file location path (string) 
 		questionAttributesList.setCategory(category);
-		questionAttributesList.setLevelOfDifficulty(levelOfDifficulty);
-		questionAttributesList.setCorrectAnswer(correctAnswer);
+		questionAttributesList.setLevelOfDifficulty(levelOfDifficulty);	
+		questionAttributesList.setCorrectAnswer(correctAnswer);		
 		questionAttributesList.setNumberOfResponsesInThePicture(numberOfResponsesInThePicture);
-		questionAttributesList.setQuestionId(objectQuestion);	
+		questionAttributesList.setLineCod(codeText);// example code text for question witch any language sintax qwestion ,user write any code by this pattern !	
+		questionAttributesList.setLanguageName(languageName);
+		questionAttributesList.setMetaCategory(metaCategory);
 		////
 		em.persist(questionAttributesList);	
-
-		if(answers != null){
+		long keyAttr = questionAttributesList.getId();
+		if(answers != null)	{			
 			List<EntityAnswersText> answersList = new ArrayList<EntityAnswersText>();
-			for (String answerText : answers) {				
-				long keyAttr = questionAttributesList.getId();
-				EntityAnswersText ans = addAnswersList(answerText, keyAttr ); 
+			for (String answerText : answers) {					
+				EntityAnswersText ans = WriteNewAnswer(answerText, keyAttr); 
 				answersList.add(ans);  				
 			}			
 			questionAttributesList.setQuestionAnswersList(answersList);// mapping to answers
 		}
+		em.persist(questionAttributesList);	
 		return questionAttributesList;
 	}
 	////
-	private EntityAnswersText addAnswersList(String answer, long keyAttr) {		
+	private EntityAnswersText WriteNewAnswer(String answer, long keyAttr){		
 		EntityAnswersText temp = new EntityAnswersText();
 		EntityQuestionAttributes qAttrId = em.find(EntityQuestionAttributes.class, keyAttr);
 		temp.setAnswerText(answer);		
 		temp.setQuestionAttributeId(qAttrId);	
-		em.persist(temp);
+		em.persist(temp);		
 		return temp;
 	}
 	////-------------- Creation and Adding ONE Question into DB Case ----------// END  //
 	//// ------------- Build Data 
 	////-------------- Creation and Adding MANY Questions into DB from Generated Question Case ----------// BEGIN  //
+	/** Что оно делает:
+	 * 1. Генерирует задачи в том числе для программирования (для запуска надо указать константу
+	 * TestProcessor.PROGRAMMING или можно использовать 4-е (индекс=3) значение из списка метакатегорий
+	 * 2. Пишет архивы по указанному пути (создает папку Programming Task, в нее кладет архивы)
+	 * 3. архивы формата zip содержат три файла: Readme.txt с содержанием (сейчас везде одинаково):
+	 * Interface: SCalculator.java
+	 * JUnit: SCalculator_Test.java		
+	 * 4. Функция генерации (это все тот же метод startProcess) возвращает лист массивов стрингов (как и прежде)		 
+	 */	
 	@Override
 	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW)	
-	public boolean ModuleForBuildingQuestions(String byCategory, int nQuestions) {
-		/*------------------------------------------------------------------------------- TO DO add parameter for diff level of generated questions !!
-		 * |question text|| image link || category of question || level of complexity ||correct answer char || number answers on image ( A,B or A,B,C,D and ...) |
-		 * Sample - String[] oneQuestion = {"In which row the sequence is incorrect? ","\Attention Test\cdc922b32a0496f7b401cc3eedeaa59.jpg","LongAttentionLines","5","A","5"};
-		 * question.length = 6. //// +4 or > for answers in text "a51","a52","a53","a54"  that bee letar */
-
+	public boolean ModuleForBuildingQuestions(String byCategory, int diffLevel, int nQuestions) {
 		boolean flagAction = false;	
-		int DIF_LEVEL = 3;
-		int selectedCategory = 0;
+		int DIF_LEVEL = diffLevel;
 		List<String> answers;	
 		List<String[]> listQuestions = null;		
-		TestProcessor proc = new TestProcessor();// creating object of case generated question
+		TestProcessor proc = new TestProcessor();
+		////
 		try {
-			List<String[]> genere_1 = proc.processStart(null, 0, null, 0);
-			
+			String workingDir = System.getProperty("user.dir") + File.separator + NAME_FOLDER_FOR_SAVENG_QUESTIONS_FILES;			
+			Files.createDirectories(Paths.get(workingDir));
+			listQuestions = proc.processStart(byCategory, nQuestions, workingDir + File.separator, DIF_LEVEL);
 		} catch (Exception e1) {
-			//e1.printStackTrace();
-			System.out.println("catch of TestProcessor.processStart(String, int, String, int);");
-		}
-		//// integration witch auto generation questions and adding them to DB question for APP
-		try {
-			proc.testProcessStart(null, 0, null, 0);
-		} catch (Exception e1) {
-			// TODO Auto-generated catch block
+			System.err.println("catch of TestProcessor.testProcessStart(String category, int, String, int);");
 			e1.printStackTrace();
-		}
-		/*///
-		if(byCategory.equalsIgnoreCase("abstract")){
-			selectedCategory = TestProcessor.ATTENTION;
-		}else if(byCategory.equalsIgnoreCase("attention")){
-			selectedCategory = TestProcessor.ABSTRACT;
-		}else if(byCategory.equalsIgnoreCase("quantative")){
-			selectedCategory = TestProcessor.QUANTATIVE;
-		}
-		///*/
-		try {			
-			/* TestProcessor proc = new TestProcessor();// creating object of case generated question
-			 * proc.processStart(TYPE, NUM, PATH, DIF_LEVEL); 
-			 * TYPE = TestProcessor.ATTENTION //TestProcessor.ABSTRACT //TestProcessor.QUANTATIVE
-			 * NUM - numbers of question for build
-			 * PATH - full path for saving images for questions
-			 * DIF_LEVEL - level of complexity
-			 * returned List<String[]>*/
-			String workingDir = System.getProperty("user.dir");
-			Files.createDirectories(Paths.get(workingDir + File.separator + NAME_FOLDER_FOR_SAVENG_QUESTION_PICTURES));
-			/*///
-			listQuestions =	proc.processStart(selectedCategory,
-					nQuestions, 
-					workingDir + File.separator + NAME_FOLDER_FOR_SAVENG_QUESTION_PICTURES + File.separator,
-					DIF_LEVEL );// - вызвать генерацию.*/
-			////
-		} catch (Exception e) {
-			System.out.println(" catch of test case generated q = ModuleForBuildingQuestions= ");
-			e.printStackTrace();
-		}  
+		}		
 		////
 		if(listQuestions != null){
-			for(String[] fres :listQuestions){				
-				answers = new ArrayList<String>();
-				if(fres.length > 6){				
-					answers.add(fres[6]);answers.add(fres[7]);answers.add(fres[8]);answers.add(fres[9]);
-				}			
+			for(String[] fres :listQuestions){	
+				//for(int i=0;i<fres.length;i++){	System.out.println(i+ " - "+fres[i]+"\n");}// -------------------------------------------- test - susout
+				int EXIST_QUESTION_NUM = 0;
+				answers = new ArrayList<String>();						
 				int numberOfResponsesInThePicture = Integer.parseInt(fres[5]);
 				Object queryTempObj;
 				//// query if question exist as text in Data Base
-				String questionT = fres[0].replace("'", "");
-				Query tempRes = em.createQuery("SELECT q FROM EntityQuestion q WHERE q.questionText='" + questionT + "'");
+				String questionText = fres[0].replace("'", "");
+				Query tempRes = em.createQuery("SELECT q FROM EntityQuestion q WHERE q.questionText='" + questionText + "'");
 				try{
 					tempRes.getSingleResult();
-					queryTempObj = tempRes.getSingleResult();				
+					queryTempObj = tempRes.getSingleResult();	
+					EntityQuestion enTq = (EntityQuestion) queryTempObj;
+					EXIST_QUESTION_NUM = (int)enTq.getId();
 				}catch(javax.persistence.NoResultException e){
 					queryTempObj = null;			
 				}
 				////
-				if(queryTempObj != null){
-					questionT = fres[0].replace("'", "");
-					EntityQuestion enTq = (EntityQuestion) queryTempObj;
-					flagAction = CreateNewQuestion(fres[1], questionT, fres[2], Integer.parseInt(fres[3]), answers, fres[4], (int)enTq.getId(), numberOfResponsesInThePicture, null);
+				/* 0 - question text  ("Реализуйте интерфейс")
+				 * 1 - description (текст интерфейса и траляля) - тут был прежде линк на картинку( this field may bee null!!!)
+				 * 2 - category (маленькой. тут - Калькулятор)
+				 * 3 - level of difficulty = 1-5
+				 * 4 - char rhite answer = ( this field may bee null!!!)
+				 * 5 - number responses on pictures = 1-...
+				 * 6 - file location linc (for all saving files)  ( this field may bee null!!!)
+				 * 7 - languageName	(bee as meta category for question witch code example)  ( this field may bee null!!!)
+				 * 8 - code pattern	 (pattern code for Person)	( this field may bee null!!!)
+				 */				
+
+				if(queryTempObj != null){					
+					questionText = fres[0].replace("'", "");
+					String fileLocationLink = fres[6];
+					String metaCategory = byCategory;// TO DO !!!!!!!!!!!!!!!!!! by what category that bee save ???
+					String category = fres[2];				
+					int levelOfDifficulty = Integer.parseInt(fres[3]);
+					String correctAnswer = fres[4];
+					String codeText = "";
+					if(fres[8] != null && fres[8].length() > 3){
+						codeText = fres[8];
+					}
+					String description = fres[1];
+					String languageName = fres[7];
+					//                           /*questionText, fileLocationLink, metaCategory, category, levelOfDifficulty, answers, correctAnswer, questionNumber, numberOfResponsesInThePicture, description, codeText, languageName*/					
+					flagAction = CreateNewQuestion(questionText, fileLocationLink, metaCategory, category, levelOfDifficulty, answers, correctAnswer, 
+							EXIST_QUESTION_NUM, numberOfResponsesInThePicture, description, codeText, languageName);
 				}else{
-					questionT = fres[0].replace("'", "");
-					flagAction = CreateNewQuestion(fres[1], questionT, fres[2], Integer.parseInt(fres[3]), answers, fres[4], NEW_QUESTION, numberOfResponsesInThePicture, null);
+					questionText = fres[0].replace("'", "");
+					String fileLocationLink = fres[6];
+					String metaCategory = byCategory;// TO DO !!!!!!!!!!!!!!!!!! by what category that bee save ???
+					String category = fres[2];				
+					int levelOfDifficulty = Integer.parseInt(fres[3]);
+					String correctAnswer = fres[4];
+					String codeText = "";
+					if(fres[8] != null && fres[8].length() > 3){
+						codeText = fres[8];
+					}
+					String description = fres[1];
+					String languageName = fres[7];
+					//                            /*questionText, fileLocationLink, metaCategory, category, levelOfDifficulty, answers, correctAnswer, questionNumber, numberOfResponsesInThePicture, description, codeText, languageName*/	
+					flagAction = CreateNewQuestion(questionText, fileLocationLink, metaCategory, category, levelOfDifficulty, answers, 	correctAnswer, 
+							NEW_QUESTION, numberOfResponsesInThePicture, description, codeText, languageName);
 				}
 			}
 		}
@@ -245,20 +252,32 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	////-------------- Creation and Adding MANY Questions into DB from Generated Question Case ----------// END  //
 
 	////-------------- Reading from file and Adding Questions into DB Case ----------// BEGIN  //
+	//  //  --------------------------------------------   TO DO factory method for this case !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	@Override
 	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW)	
-	public boolean FillDataBaseFromTextResource(List<String> inputTextFromFile){// !!!!!!!!!!! worked only in Mozila and Hrome !!!!!!!!!!!
-		//sample for text in file question(one line!!!)
-		//questionText----imageLink----category----levelOfDifficulty----answer1----answer2----answer3----answer4----correctAnswerChar----questionIndexNumber
-		//		
+	public boolean FillDataBaseFromTextResource(List<String> inputTextFromFile){
+		// !!!!!!!!!!! worked only in Mozila and Hrome !!!!!!!!!!!
+		/*
+		 *  sample for text in file witch questions (THIS ONLY ONE LINE!!!)
+		 * 
+		 * questionText----description----fileLocationLink----
+		 * metaCategory----category----levelOfDifficulty----
+		 * answer1----answer2----answer3----answer4----
+		 * correctAnswerChar----questionIndexNumber----languageName
+		 * 
+		 */
 		boolean flagAction = false;
-		String imageLink = null;
+		String fileLocationLink = null;
 		String questionText = null;
 		String category = null;
 		int levelOfDifficulty = 1;
 		List<String> answers = null;
 		String correctAnswer = null;
 		int questionNumber = 0;
+		String languageName = null;
+		String metaCategory = null;
+		String description = null; 
+		String codeText = null;
 		//
 		try{			
 			for(String line: inputTextFromFile){ 			
@@ -266,7 +285,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 				//
 				if(question_Parts.length > 6){		
 					questionText = question_Parts[0];
-					imageLink = question_Parts[1];			
+					fileLocationLink = question_Parts[1];			
 					category = question_Parts[2];
 					levelOfDifficulty = Integer.parseInt(question_Parts[3]);
 					//
@@ -277,72 +296,91 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 					answers.add(question_Parts[7]);				
 					//
 					correctAnswer = question_Parts[8];
-					questionNumber = 0;				
+					questionNumber = 0;	
+					languageName = null;
+					metaCategory = null;
+					description = null; 
+					if(question_Parts[8] != null && question_Parts[8].length() > 3){
+						codeText = question_Parts[8];
+					}
 				}else{
 					//When question exist method added only new attributes for this question
 					//else if question not exist method added a new question full
 					questionNumber = Integer.parseInt(question_Parts[5]);	
 					questionText = question_Parts[0];
-					imageLink = question_Parts[1];			
+					fileLocationLink = question_Parts[1];			
 					category = question_Parts[2];
 					levelOfDifficulty = Integer.parseInt(question_Parts[3]);
-					correctAnswer = question_Parts[4];						
+					correctAnswer = question_Parts[4];
+					languageName = null;
+					metaCategory = null;// TO DO !!!!! create conections for field witch txt file
+					description = null; 
+					if(question_Parts[8] != null && question_Parts[8].length() > 3){
+						codeText = question_Parts[8];
+					}
 				}
-				//   --------------  --------------  --------------  ----------------  ------------------  -----  //NUMBERofRESPONSESinThePICTURE ----- default = 4  
-				flagAction = CreateNewQuestion(imageLink, questionText, category, levelOfDifficulty, answers, correctAnswer, questionNumber, NUMBERofRESPONSESinThePICTURE, null );
+				//   -------------- !!! TO DO get to user question.sql file for fill users database !!!--------  ------------------  -----  //NUMBERofRESPONSESinThePICTURE ----- default = 4  
+				/*(questionText, fileLocationLink, metaCategory, category, levelOfDifficulty, answers, correctAnswer, questionNumber, numberOfResponsesInThePicture, description, codeText, languageName*/
+				flagAction = CreateNewQuestion(questionText, fileLocationLink, metaCategory, category, levelOfDifficulty, answers, correctAnswer, questionNumber, NUMBERofRESPONSESinThePICTURE, description ,  codeText, languageName );
 			}			
 		}catch(Exception e){
-			e.printStackTrace();
-			System.out.println("catch from adding from file method BES");
+			//e.printStackTrace();
+			System.out.println("catch from adding from file method BES");// ----- -------------- sysout
 		}
 		//
 		return flagAction;
 	}
 	////-------------- Reading from file and Adding Questions into DB Case ----------// END  //
-	
 	////-------------- internal method for filling in the form update issue ----------// BEGIN  //
 	@Override
 	public String[]  getQuestionById(String questionID, int actionKey) {// getting question attributes by ID !!!!!!!!!!!!!!!!!!!!!!!!!  
-		String[] outArray = new String[3];
+		String[] outArray = new String[4];
 		String  outRes = "";
+		String outAnsRes = " ";		
+		List<EntityAnswersText> answers;
 		long id = (long)Integer.parseInt(questionID);
 		EntityQuestionAttributes question = em.find(EntityQuestionAttributes.class, id);
 		////
 		if(question != null){
+			answers = question.getQuestionAnswersList();
 			String imageBase64Text=null;
-			String imageLink;
+			String fileLocation;
 			////
-			if((imageLink = question.getImageLink()) != null && question.getImageLink().length() > 25){
-				imageBase64Text = encodeImage(NAME_FOLDER_FOR_SAVENG_QUESTION_PICTURES  + imageLink);
+			if((fileLocation = question.getFileLocationLink()) != null && question.getFileLocationLink().length() > 25 && !question.getMetaCategory().equals("Programming_Task")){
+				imageBase64Text = encodeImage(NAME_FOLDER_FOR_SAVENG_QUESTIONS_FILES  + fileLocation);
 				outArray[1] = "data:image/png;base64," + imageBase64Text; // TO DO delete!!! hard code -- data:image/png;base64,
+			}else{
+				outArray[1] = null;
 			}
 			////
 			switch(actionKey){
 			case ACTION_GET_ARRAY: outRes = question.getQuestionId().getQuestionText() + DELIMITER // text of question or Description to picture or code									
 					+ question.getCorrectAnswer() + DELIMITER // correct answer char 
 					+ question.getNumberOfResponsesInThePicture() + DELIMITER // number of answers chars on image
-					+ question.getLineCod();// code question text
-			break;
-			case ACTION_GET_FULL_ARRAY: outRes = question.getQuestionId().getQuestionText() + DELIMITER // text of question or Description to pictures									
-					+ question.getCorrectAnswer() + DELIMITER // correct answer char 
-					+ question.getNumberOfResponsesInThePicture() + DELIMITER// number of answers chars on image
+					+ question.getLineCod() + DELIMITER // code question text
+					+ question.getMetaCategory();
+			break;		
+			case ACTION_GET_FULL_ARRAY: outRes = question.getQuestionId().getQuestionText() + DELIMITER// text of question
+					+ question.getQuestionId().getDescription() + DELIMITER  	// text of  Description 	
+					+ question.getLineCod() + DELIMITER // code question text	
+					+ question.getLanguageName() + DELIMITER // language of sintax code in question
+					+ question.getMetaCategory() + DELIMITER // meta category 
+					+ question.getCategory() + DELIMITER// category of question
 					+ question.getId() + DELIMITER// static information
-					+ question.getCategory() + DELIMITER// static information
-					+ question.getLevelOfDifficulty() + DELIMITER// static information
-					+ question.getNumberOfResponsesInThePicture() + DELIMITER// static information
-					+ question.getLineCod();// static information
+					+ question.getCorrectAnswer() + DELIMITER // correct answer char 
+					+ question.getNumberOfResponsesInThePicture() + DELIMITER// number of answers chars on image					
+					+ question.getLevelOfDifficulty();// level of difficulty for question
 			break;
 			default:System.out.println(" default switch");
-			}
-
-			List<EntityAnswersText> answers = question.getQuestionAnswersList();
+			}				
 			if(answers != null){
 				for(EntityAnswersText tAn :answers){
-					outRes += DELIMITER + tAn;	// answers on text if exist!!!
+					outAnsRes += tAn.getAnswerText() + DELIMITER;	// answers on text if exist!!!
 				}
+				outArray[3] = outAnsRes.toString();
 			}	
 			outArray[0] = outRes;// question attributes in text			
-			outArray[2] = NAME_FOLDER_FOR_SAVENG_QUESTION_PICTURES + imageLink;// that static parameter for one operation!. when question is update from admin panel !!!
+			outArray[2] = NAME_FOLDER_FOR_SAVENG_QUESTIONS_FILES + fileLocation;// that static parameter for one operation!. when question is update from admin panel !!!
 		}else{
 			outArray[1] = " "; // TO DO delete!!! hard code -- data:image/png;base64,
 			outArray[0] = "wrong request q.Id-"+questionID;// out text stub for tests 
@@ -390,7 +428,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		try {
 			long id = Integer.parseInt(questionID);		
 			EntityQuestionAttributes objEntQue = em.find(EntityQuestionAttributes.class, id);
-			String linkForDelete = objEntQue.getImageLink();
+			String linkForDelete = objEntQue.getFileLocationLink();
 			//
 			List<EntityAnswersText> liEntAns = objEntQue.getQuestionAnswersList();
 			for(EntityAnswersText entAns:liEntAns){
@@ -411,7 +449,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	////
 	private void DeleteImageFromFolder(String linkForDelete) {		
 		try {
-			Files.delete(Paths.get(System.getProperty("user.dir") + "\\" + NAME_FOLDER_FOR_SAVENG_QUESTION_PICTURES + linkForDelete));
+			Files.delete(Paths.get(System.getProperty("user.dir") + "\\" + NAME_FOLDER_FOR_SAVENG_QUESTIONS_FILES + linkForDelete));
 		} catch (IOException e) {
 			System.out.println("BES delete image from folder catch IOException, image is not exist !!!");// ------------------------------------------------------- sysout
 			//e.printStackTrace();   
@@ -448,24 +486,27 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 
 	/////-------------- Update  ONE Question into DB Case ----------// BEGIN  //
 	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW)	
-	public boolean UpdateTextQuestionInDataBase(String questionID, String imageLink, String questionText, 
-			String category, int levelOfDifficulty, List<String> answers, String correctAnswer, String codeText, String numAnswersOnPictures){
-		boolean flagAction = false;
-		//
+	public boolean UpdateTextQuestionInDataBase(String questionID, 
+			String questionText, String descriptionText, String codeText, String languageName, 
+			String metaCategory, String category, int levelOfDifficulty, List<String> answers, String correctAnswer, 
+			String fileLocationPath, String numAnswersOnPictures){		
+		boolean flagAction = false;	
 		long id = (long)Integer.parseInt(questionID);
-		//
+		////  ---- chang question data
 		try{
-			Object res = em.createQuery("SELECT c FROM EntityQuestionAttributes c WHERE c.id="+id).getSingleResult();// element question table getting by ID
-			EntityQuestionAttributes elem = (EntityQuestionAttributes) res;
-			elem.getQuestionId().setQuestionText(questionText);			
+			EntityQuestionAttributes elem = em.find(EntityQuestionAttributes.class, id);
+			elem.getQuestionId().setQuestionText(questionText);	
+			elem.getQuestionId().setDescription(descriptionText);
+			elem.setMetaCategory(metaCategory);
 			elem.setCategory(category);
-			elem.setCorrectAnswer(correctAnswer);
-			elem.setImageLink(imageLink);
 			elem.setLineCod(codeText);
+			elem.setLanguageName(languageName);	
 			elem.setLevelOfDifficulty(levelOfDifficulty);
+			elem.setCorrectAnswer(correctAnswer);
+			elem.setFileLocationLink(fileLocationPath);
 			int numberOfResponsesInThePicture = Integer.parseInt(numAnswersOnPictures);
 			elem.setNumberOfResponsesInThePicture(numberOfResponsesInThePicture );
-			//
+			//      
 			if(answers != null){
 				List<EntityAnswersText> answersList = elem.getQuestionAnswersList();	 	
 				int i=0;			
@@ -489,7 +530,6 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 	@SuppressWarnings("unchecked")	
 	@Override  
 	public List<Long> getUniqueSetQuestionsForTest(String category, String levelsOfDifficulty,  Long nQuestion){
-		System.out.println("category-"+category+"  levelsOfDifficulty-"+levelsOfDifficulty+"  nQuestion-"+nQuestion);// ---------------------------sysout
 		List<Long> result = new ArrayList<Long>();
 		if(nQuestion > 0 && category != null){		
 			String[] categoryArray = category.split(",");	
@@ -514,14 +554,13 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 		}
 		return result;
 	}
-////
+	////
 	private static List<Long> randomAttributeQuestionsId(List<Long> allAttributeQuestionsId, Long nQuestion){
 		List<Long> result = new ArrayList<Long>();
 		if(allAttributeQuestionsId.size() > 0){
 			if(nQuestion >= allAttributeQuestionsId.size()){
 				result = allAttributeQuestionsId;
-			}
-			else{
+			}else{
 				for(int i=0; i<nQuestion;){	
 					Random rnd = new Random();
 					int rand =  rnd.nextInt(allAttributeQuestionsId.size());							
@@ -537,8 +576,7 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 							result.add(questionAttributeId);
 							i++;	
 						}						
-					}
-					else{
+					}else{
 						result.add(questionAttributeId);
 						i++;
 					}
@@ -546,17 +584,13 @@ public class MaintenanceService extends TestsPersistence implements IMaintenance
 			}
 		}
 		return result;
-	}
-	////-------------- Method for test case group AlexFoox Company return id of unique set questions ----------// END  //
+	}////-------------- Method for test case group AlexFoox Company return id of unique set questions ----------// END  //
+
 	@Override
 	public List<String> GetGeneratedExistCategory(){
-		List<String> result = new ArrayList<String>();
-		//TestProcessor proc = new TestProcessor();
-		//List<String> result = proc.getMetaCategoryes();
-		result.add("Abstract");
-		result.add("Attention");
-		result.add("Quantative");		
-		return result;
+		// Новый метод (статический) - TestProcessor.getMetaCategory() - возвращает лист стрингов с названием мета-категорий
+		return  TestProcessor.getMetaCategory();
 	}	
 }
+
 //// ----- END Code -----

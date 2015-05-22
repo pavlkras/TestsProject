@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tel_ran.tests.entitys.EntityTest;
 import tel_ran.tests.services.interfaces.IPersonalActionsService;
 
-public class PersonalActionsService extends TestsPersistence implements	IPersonalActionsService {
+public class PersonalActionsService extends TestsPersistence implements	IPersonalActionsService {	
 	////------- Control mode Test for Person case ----------------// BEGIN //
 	@Override
 	public String[] GetTestForPerson(String testId) {	// creation test for person
@@ -45,8 +45,7 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 			EntityTest personTest = em.find(EntityTest.class, testID);		
 			personTest.setCorrectAnswers(correctAnswers.toCharArray());	// TO DO --------------------------
 			if(personTest.getStartTestDate() == 0){//   if this first time!!!
-				personTest.setStartTestDate(timeStartTest);	
-				personTest.setCounterPicturesOfTheTest(1);// start counter of pictures
+				personTest.setStartTestDate(timeStartTest);					
 				em.persist(personTest);
 				resAction = true;
 			}
@@ -59,82 +58,82 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 	//// ------------------- save ending test parameters
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
-	public boolean SaveEndPersonTestResult(String testId, String personAnswers,	String personAnswersCode, String imagesLinks, long timeEndTest) {		
+	public boolean SaveEndPersonTestResult(String testId, String personAnswers,	String personAnswersCode, String imagesOfPerson, String screenShoots, long timeEndTest) {		
 		boolean resAction = false;
-		long testID = (long)Integer.parseInt(testId);	
-		EntityTest personTest = em.find(EntityTest.class, testID);
-		if(testId.length() >= 1 && personAnswers == null && imagesLinks.length() > 10 && timeEndTest == 0 && personTest.getCounterPicturesOfTheTest() <= 5){// condition IN TEST saving person pictures
-			try{							
-				String links = personTest.getPictures();
-				String companyId = personTest.getEntityCompany().getC_Name();
-				links += getLinkForImages(imagesLinks, companyId , testId) + ","; // saving pictures and save to db link to picture (delimlter = , )
-				personTest.setPictures(links);
-				personTest.setCounterPicturesOfTheTest(personTest.getCounterPicturesOfTheTest()+1);
-				em.persist(personTest);
-			}catch(Exception e){
-				//e.printStackTrace();
-				System.out.println("BES catch Save pictures");//-------------------------------------------------sysout
+		long testID = (long)Integer.parseInt(testId);
+		String links[] = {};
+
+		EntityTest personTest = em.find(EntityTest.class, testID);		
+		try{
+			String companyId = personTest.getEntityCompany().getC_Name();
+			links = getLinkForImages(imagesOfPerson, screenShoots, companyId , testId); // saving pictures and save to db link to picture 
+			personTest.setPictures(links[0]);
+			personTest.setScreensOfPerson(links[1]);				
+			char[] persAnswArray = personAnswers.toCharArray();
+			personTest.setPersonAnswers(persAnswArray);
+			if(personTest.getEndTestDate() == 0){
+				personTest.setEndTestDate(timeEndTest);
 			}
-			////
-		}else if(imagesLinks == null && personTest.getCounterPicturesOfTheTest() > 5){// condition end of test , preparing to save parameters
-			try{
-				char[] persAnswArray = personAnswers.toCharArray();
-				personTest.setPersonAnswers(persAnswArray);
-				if(personTest.getEndTestDate() == 0){
-					personTest.setEndTestDate(timeEndTest);
-				}
-				int amountCorrectAnswers = 0;
-				int amountCorrectAnswersCode = 0;
-				if(personAnswers != null){
-					amountCorrectAnswers = AmountOfAnswers(personTest);
-				}
-				if(personAnswersCode != null){
-					amountCorrectAnswersCode = AmountOfAnswersCode(personAnswersCode, testId);
-				}
-				personTest.setAmountOfCorrectAnswers(amountCorrectAnswers + amountCorrectAnswersCode);
-				em.persist(personTest);
-				resAction = true;			
-			}catch(Exception e){	
-				if(testId != null && personAnswers == null && imagesLinks == null && timeEndTest != 0L){
-					personTest.setEndTestDate(timeEndTest);
-					em.persist(personTest);
-					System.out.println("BES test id-"+testID+"  time end-"+timeEndTest);//-------------------------------------------------sysout
-				}
-				//e.printStackTrace();
-				System.out.println("BES catch save end test");//---------------------------------------------------------------------------sysout
+			int amountCorrectAnswers = 0;
+			int amountCorrectAnswersCode = 0;
+			if(personAnswers != null){
+				amountCorrectAnswers = AmountOfAnswers(personTest);
 			}
-		}// end first if/else
+			if(personAnswersCode != null){
+				amountCorrectAnswersCode = AmountOfAnswersCode(personAnswersCode, testId);
+			}
+			personTest.setAmountOfCorrectAnswers(amountCorrectAnswers + amountCorrectAnswersCode);
+			em.persist(personTest);
+			resAction = true;			
+		}catch(Exception e){	
+			if(testId != null && personAnswers == null && imagesOfPerson == null && timeEndTest != 0L){
+				personTest.setEndTestDate(timeEndTest);
+				em.persist(personTest);
+				System.out.println("BES test id-"+testID+"  time end-"+timeEndTest);//-------------------------------------------------sysout
+			}
+			//e.printStackTrace();
+			System.out.println("BES catch save end test");//---------------------------------------------------------------------------sysout
+		}
+
 		return resAction;
 	}
 	////-------  save images  ---------------// Begin //
-	private String getLinkForImages(String imagesLinks, String companyId,String testId) {
-		System.out.println("in getLinkForImages");
-		String outLinkText = "";/// stub empty images links
+	private String[] getLinkForImages(String imagesOfPerson, String screenShoots, String companyId, String testId) {
+		String[] res_pic = imagesOfPerson.split(IMAGE_DELIMITER);
+		String[] res_screen = screenShoots.split(IMAGE_DELIMITER);
+		String tempResScreen = "";
+		String tempResPictures = "";
+		String[] outLinkText = {};/// stub empty images links
 		String workingDir = System.getProperty("user.dir");
 		try {
-			long idOfTest = (long)Integer.parseInt(testId);
-			EntityTest testRes = em.find(EntityTest.class, idOfTest );	
-			int picNum = testRes.getCounterPicturesOfTheTest();
+			EntityTest testRes = em.find(EntityTest.class, (long)Integer.parseInt(testId) );
 			String testName = testRes.getTestName();
 			////
-			Files.createDirectories(Paths.get(NAME_FOLDER_FOR_SAVENG_TESTS_PICTURES + File.separator + companyId + File.separator + testName));// creating a new directiry for saving person test pictures  
+			String s_path = NAME_FOLDER_FOR_SAVENG_TESTS_FILES + File.separator + companyId + File.separator + testName;
+			Files.createDirectories(Paths.get(s_path));// creating a new directiry for saving person test pictures  
 			////
-			BufferedWriter writer =  new BufferedWriter ( new FileWriter(workingDir 
-					+ File.separator + NAME_FOLDER_FOR_SAVENG_TESTS_PICTURES 
-					+ File.separator + companyId 
-					+ File.separator + testName + "\\pic_" + picNum + ".txt"));
-			writer.write(imagesLinks);			 
-			writer.close();
-			////				
-			outLinkText = NAME_FOLDER_FOR_SAVENG_TESTS_PICTURES + File.separator + companyId + File.separator + testName + "\\pic_" + picNum + ".txt";			
+			for(int i=0;i<res_pic.length;i++){
+				BufferedWriter writer =  new BufferedWriter ( new FileWriter(workingDir + s_path + "\\picture_" + i + ".txt"));
+				writer.write(res_pic[i]);			 
+				writer.close();
+				////		
+				writer =  new BufferedWriter ( new FileWriter(workingDir + s_path + "\\screen_" + i + ".txt"));
+				writer.write(res_screen[i]);			 
+				writer.close();
+				////
+				tempResPictures += s_path + "\\picture_" + i + ".txt" + IMAGE_DELIMITER;	
+				tempResScreen += s_path + "\\screen_"  + i + ".txt" + IMAGE_DELIMITER;
+			}
+			outLinkText[0] = tempResPictures;
+			outLinkText[1] = tempResScreen;
+
 		} catch (IOException e) {
 			e.printStackTrace();  
 		}		
-		System.out.println("outLinkText="+outLinkText);//---------------------------------------------------------------------------sysout
 		return outLinkText;		
 	}
 	////-------  save images ----------------// END //	
-	////  --------- auxiliary internal method
+	//       auxiliary internal method
 	private int AmountOfAnswers(EntityTest personTest) {               // ------------------------- TO DO sampfing for true amount for answers
 		char[] corrAns = personTest.getCorrectAnswers();
 		char[] persAns = personTest.getPersonAnswers();
@@ -175,7 +174,7 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 		testRes.setResultTestingCodeFromPerson(resultAnswersCode.toString());       
 		return result;
 	}
-	
+	////
 	private String getPathToCodeAnswer(String codeText, String questionID, long idOfTest) {
 		String res = "";
 		String workingDir = System.getProperty("user.dir");
@@ -183,9 +182,9 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 			EntityTest testRes = em.find(EntityTest.class, idOfTest);	
 			String testName = testRes.getTestName();
 			String companyName = testRes.getEntityCompany().getC_Name(); 
-			Files.createDirectories(Paths.get(NAME_FOLDER_FOR_SAVENG_TESTS_PICTURES + File.separator + companyName + File.separator + testName + File.separator + "codeAnswers")); 
+			Files.createDirectories(Paths.get(NAME_FOLDER_FOR_SAVENG_TESTS_FILES + File.separator + companyName + File.separator + testName + File.separator + "codeAnswers")); 
 			BufferedWriter writer =  new BufferedWriter ( new FileWriter(workingDir 
-					+ File.separator + NAME_FOLDER_FOR_SAVENG_TESTS_PICTURES 
+					+ File.separator + NAME_FOLDER_FOR_SAVENG_TESTS_FILES 
 					+ File.separator + companyName 
 					+ File.separator + testName 
 					+ File.separator + "codeAnswers" +
@@ -193,23 +192,17 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 			writer.write(codeText);			 
 			writer.close();
 			////				
-			res = NAME_FOLDER_FOR_SAVENG_TESTS_PICTURES + File.separator + companyName + File.separator + testName + File.separator + "codeAnswers" + "\\question_" + questionID + ".txt";			
+			res = NAME_FOLDER_FOR_SAVENG_TESTS_FILES + File.separator + companyName + File.separator + testName + File.separator + "codeAnswers" + "\\question_" + questionID + ".txt";			
 		} catch (IOException e) {
 			e.printStackTrace();  
 		}		
 		return res;
 	}
-	
+	////
 	private boolean getResultOfExecutionCode(String path) {   //start of Gradle job
 		// TODO Auto-generated method stub
 		return true;
-	}
-	@Override
-	public boolean SavePersonImageTestResult(Object arg0) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-	
+	}	
 	////-------  Test Code From Users and Persons Case  ----------------// END //	
 }
 

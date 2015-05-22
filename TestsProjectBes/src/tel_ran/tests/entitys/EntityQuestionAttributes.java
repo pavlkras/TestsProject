@@ -33,8 +33,11 @@ public class EntityQuestionAttributes implements Serializable {
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "questionAttributeId")
 	List<EntityAnswersText> questionAnswersList;
 	////
-	@Column(name = "imageLink", unique = false, nullable = true, length = 500)//// pattern: folder/D785JHGYT785J58R86JJ6776867TRJJ677TJ575JJ584K493K45J55.jpg or any resolution: HashCode.png
-	private String imageLink;
+	@Column(name = "fileLocationLink", unique = false, nullable = true, length = 500)
+	private String fileLocationLink;
+	////
+	@Column(name = "metaCategory")
+	private String metaCategory;
 	////
 	@Column(name = "category")
 	private String category;
@@ -48,9 +51,12 @@ public class EntityQuestionAttributes implements Serializable {
 	@Column(name = "numresponses")
 	private int numberOfResponsesInThePicture;
 	////
-	@Column(name = "codeLine", length = 500)
-	private String codeLine = null;	// pattern from generation questions - 'public void Foo([any param]){    System.out.println("Hello world");   }
-	////	
+	@Column(name = "codeLine", length = 1500)
+	private String codeLine;	
+	////
+	@Column(name = "languageName")
+	private String languageName;
+	////
 	public String getLineCod() {
 		return codeLine;
 	}
@@ -63,11 +69,11 @@ public class EntityQuestionAttributes implements Serializable {
 	public void setQuestionId(EntityQuestion questionId) {
 		this.questionId = questionId;
 	}
-	public String getImageLink() {
-		return imageLink;
+	public String getFileLocationLink() {
+		return fileLocationLink;
 	}	
-	public void setImageLink(String imageLink) {
-		this.imageLink = imageLink;
+	public void setFileLocationLink(String fileLocationLink) {
+		this.fileLocationLink = fileLocationLink;
 	}
 	public String getCategory() {
 		return category;
@@ -90,26 +96,40 @@ public class EntityQuestionAttributes implements Serializable {
 	public List<EntityAnswersText> getQuestionAnswersList() {
 		return questionAnswersList;
 	}
+	public void setQuestionAnswersList(List<EntityAnswersText> questionAnswers) {
+		this.questionAnswersList = questionAnswers;
+	}
 	public int getNumberOfResponsesInThePicture() {
 		return numberOfResponsesInThePicture;
 	}
 	public void setNumberOfResponsesInThePicture(int numberOfResponsesInThePicture) {
 		this.numberOfResponsesInThePicture = numberOfResponsesInThePicture;
-	}
-	public void setQuestionAnswersList(List<EntityAnswersText> questionAnswers) {
-		this.questionAnswersList = questionAnswers;
-	}
+	}	
 	public long getId() {
 		return id;
+	}	
+	public String getMetaCategory() {
+		return metaCategory;
+	}
+	public void setMetaCategory(String metaCategory) {
+		this.metaCategory = metaCategory;
+	}
+	public String getLanguageName() {
+		return languageName;
+	}
+	public void setLanguageName(String languageName) {
+		this.languageName = languageName;
 	}
 	////
 	@Override
 	public String toString() {
 		return questionId.getId()
-				+ IMaintenanceService.DELIMITER + imageLink
+				+ IMaintenanceService.DELIMITER + fileLocationLink
 				+ IMaintenanceService.DELIMITER + category
 				+ IMaintenanceService.DELIMITER + levelOfDifficulty
 				+ IMaintenanceService.DELIMITER + correctAnswer
-				+ IMaintenanceService.DELIMITER + numberOfResponsesInThePicture;
+				+ IMaintenanceService.DELIMITER + numberOfResponsesInThePicture
+				+ IMaintenanceService.DELIMITER + languageName
+				+ IMaintenanceService.DELIMITER + metaCategory;
 	}
 }
