@@ -77,28 +77,25 @@ public class Maintenance {
 	}	
 	/*
 	 * 3.3.1. Adding test question Pre-Conditions: 
-	 * 1. The System is running up
-	 * 2. The Administrator (the user with username â€œadminâ€� and password â€œ12345.comâ€�) is signed in Normal Flow: 
-	 * 1. The System shows internal link with the text â€œcreate new questionâ€� 
-	 * (under the link there will be table with existing questions but it is used in this flow) 
-	 * 2. User presses the link 
-	 * 3. The system shows form for filling the following data: 
-	 * â€¢ Question text (typing)
-	 * â€¢ Category (selection)
-	 * â€¢ Complexity level (selection from 1 to 5) 
-	 * â€¢ 4 answers with numbers (1-4) 
-	 * â€¢ Number of the right question 
-	 * 4. User types/select required data and press submit button 
-	 * 5. The System saves the question data in the Database with message â€œ the question <question text> has been added successfullyâ€�
+	 * String questionText,
+	 * String fileLocationLink,  
+	 * String metaCategory,
+	 * String category, 
+	 * int levelOfDifficulty,
+	 * List<String> answers, 
+	 * String correctAnswer,
+	 * int questionNumber,
+	 * int numberOfResponsesInThePicture,
+	 * String description, 
+	 * String codeText, 
+	 * String languageName
 	 */
 	@RequestMapping(value = "/add_actions" , method = RequestMethod.POST)
-	public String AddProcessingPage(String questionText, String category,
-			String levelOfDifficulty, String at1, String at2, String at3,
-			String at4, String correctAnswer, String questionIndex,
-			String imageLink, String numberAnswersOnPicture, String codeText, Model model)
-	{		
-		// ------------!!!!!!!!!!!!!!!!-------------------!!!!!!!!!!!!!!!!---------- TO DO Actions for uppload new image and convert to Base64 and save on DB!!!!!
-
+	public String AddProcessingPage(String questionIndex, String questionText, String descriptionText, String codeText,
+			String  languageName, String metaCategory, String category, String levelOfDifficulty, 
+			String fileLocationLink, String correctAnswer, String numberAnswersOnPicture, 
+			String at1, String at2, String at3, String at4,  Model model)
+	{	
 		boolean actionRes = false; // flag work action
 		List<String> answers = null;
 		if(at1.length() > 0 && at3.length() > 0){			
@@ -109,13 +106,11 @@ public class Maintenance {
 		try {			
 			int questioNumber = Integer.parseInt(questionIndex);// question ID number if question already exist in DB
 			int numberOfResponsesInThePicture = Integer.parseInt(numberAnswersOnPicture);// number of responses in the picture by default = 4
-			//
 			String repCategory = category.replaceAll(",", "").replaceAll("none", ""); 
-			System.out.println("repCategory--"+repCategory);
-			actionRes = maintenanceService.CreateNewQuestion( imageLink ,  questionText, 
-					repCategory,  Integer.parseInt(levelOfDifficulty), answers, correctAnswer ,
-					questioNumber , numberOfResponsesInThePicture,	codeText);
-
+			String repMetaCategory = metaCategory.replaceAll(",", "").replaceAll("none", ""); 
+			////
+			actionRes = maintenanceService.CreateNewQuestion(questionText, fileLocationLink, repMetaCategory, repCategory, Integer.parseInt(levelOfDifficulty), answers, correctAnswer, 
+					questioNumber, numberOfResponsesInThePicture, descriptionText, codeText, languageName);
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("maintenance addProcessingPage :method: Exception");//----------------------------------------------------sysout
@@ -137,22 +132,24 @@ public class Maintenance {
 	// use case 3.3.2 Update Test Question
 	//
 	@RequestMapping(value =  "/updateOneQuestion" , method = RequestMethod.POST)
-	public String UpdateProcessingPage(String questionID, String questionText,
-			String category, String levelOfDifficulty, String at1, String at2,
-			String at3, String at4, String correctAnswer, String QuTextNumber,
-			String imageLinkText, String codeText, String numAnswersOnPictures, Model model) {
+	public String UpdateProcessingPage(String questionID, String questionText, String descriptionText,
+			String metaCategory, String category, String levelOfDifficulty, String at0, String at1,
+			String at2, String at3, String correctAnswer, String QuTextNumber,
+			String fileLocationPath, String codeText, String languageName, String numAnswersOnPictures, Model model) {
 		//
 		clearStringBuffer();
 		////
 		List<String> answers = null;
 		if(at1 != null){
-			if(at1.length() > 1 && at3.length() > 1){
-				answers = new ArrayList<String>();			answers.add(at1);			answers.add(at2);			answers.add(at3);			answers.add(at4);
+			if(at0.length() > 1 && at2.length() > 1){
+				answers = new ArrayList<String>();			answers.add(at0);			answers.add(at1);			answers.add(at2);			answers.add(at3);
 			}
 		}
-		// -----------------------------------------------          !!!! TO DO Actions for uppload new image and convert to Base64 and refresh old Base64 file this !!!!!
-		boolean result = maintenanceService.UpdateTextQuestionInDataBase( questionID,  imageLinkText,  questionText,  category,
-				Integer.parseInt(levelOfDifficulty),  answers,  correctAnswer , codeText, numAnswersOnPictures);
+		// ----------------- !!!! TO DO Actions for uppload new image and convert to Base64 and refresh old Base64 file this !!!!!
+
+		boolean result = maintenanceService.UpdateTextQuestionInDataBase(questionID, 
+				questionText, descriptionText, codeText, languageName, metaCategory, category,
+				Integer.parseInt(levelOfDifficulty), answers, correctAnswer, fileLocationPath, numAnswersOnPictures);	
 		String outRes = "";
 		if (result) {
 			outRes = "<p>Changed Question successfully added</p>";
@@ -197,72 +194,76 @@ public class Maintenance {
 	//------- getting question and attributes for change ---------// Begin //
 	@RequestMapping({ "/fillFormForUpdateQuestion" })
 	public String CreationUpdateForm(String questionID, Model model) {	
+		/*  indexes in array
+		 *          0  QuestionText()                  + DELIMITER// text of question
+					1  Description()                  + DELIMITER// text of  Description 	
+					2  LineCod()                       + DELIMITER// code question text	
+					3  LanguageName()                  + DELIMITER// language of sintax code in question
+					4  MetaCategory()                  + DELIMITER// meta category 
+					5  Category()                      + DELIMITER// category of question
+					6  Id()                            + DELIMITER// static information
+					7  CorrectAnswer()                 + DELIMITER// correct answer char 
+					8  NumberOfResponsesInThePicture() + DELIMITER// number of answers chars on image					
+					9  LevelOfDifficulty()             + DELIMITER// level of difficulty for question*/
 		clearStringBuffer();
 		try {
 			if ((Integer.parseInt(questionID)) > 0) {				
-				String[] tempQueryRessult = maintenanceService.getQuestionById(questionID,IMaintenanceService.ACTION_GET_FULL_ARRAY);	// returned array witch 2 elements, [0] = question elementd by delimiter in text, [1] = image in text (coding Base64	)		
-				String[] questionElementsArray = tempQueryRessult[0].split(IMaintenanceService.DELIMITER);// split by delimiter text on [0] end getting array elements length = 
-
-				System.out.println("questionElementsArray length---" + questionElementsArray.length);//-----------------------------------sysout
-
+				String[] tempQueryRessult = maintenanceService.getQuestionById(questionID,IMaintenanceService.ACTION_GET_FULL_ARRAY);	
+				String[] questionElementsArray = tempQueryRessult[0].split(IMaintenanceService.DELIMITER);
+				////  ------- question id and question text
 				AutoGeneratedHTMLFormText.append("<form name='formTag' action='updateOneQuestion' method='post'>"
-						+ "<h2>Question Number: " + questionElementsArray[3] + ".</h2><br>"
+						+ "<h2>Question Number: " + questionElementsArray[6] + ".</h2><br>"
 						+ "Question text<br><textarea name='questionText' rows='7'>" + questionElementsArray[0] + "</textarea><br>");
+				//// ---- description text area
+				AutoGeneratedHTMLFormText.append("Description text<br><textarea name='descriptionText' rows='7'>" + questionElementsArray[1] + "</textarea><br>");
 				//// --- image block
-				AutoGeneratedHTMLFormText.append("<br><img src='"+tempQueryRessult[1]+"' alt='image not support'><br>");
-				if(tempQueryRessult[1] != null && tempQueryRessult[1].length() > 15){	
-					AutoGeneratedHTMLFormText.append("Image Link<br><textarea name='imageLinkText'>" + tempQueryRessult[2] + "</textarea><br>");
+				if(tempQueryRessult[1] != null){
+					AutoGeneratedHTMLFormText.append("<br><img src='"+tempQueryRessult[1]+"' alt='image not support'><br>");	
+					AutoGeneratedHTMLFormText.append("Image Link<br><textarea name='fileLocationPath'>" + tempQueryRessult[2] + "</textarea><br>");
+				}else{
+					AutoGeneratedHTMLFormText.append("Resurs Full Path <br><textarea name='fileLocationPath'>" + tempQueryRessult[2] + "</textarea><br>");
 				}
 				//// ---- code question block								
-				AutoGeneratedHTMLFormText.append("Code Text <br><textarea name='codeText' rows='7'>" + questionElementsArray[7] + "</textarea><br>");						
-				//
-				AutoGeneratedHTMLFormText.append("Question Category<br> <input type='text' name='category' value='"	+ questionElementsArray[4] + "'><br>");
+				AutoGeneratedHTMLFormText.append("Code Text <br><textarea name='codeText' rows='7'>" + questionElementsArray[2] + "</textarea><br>");						
+				//// --- meta category of question
+				AutoGeneratedHTMLFormText.append("Question Meta Category<br> <input type='text' name='metaCategory' value='"	+ questionElementsArray[4] + "'><br>");
+				//// ---- category
+				AutoGeneratedHTMLFormText.append("Question Category<br> <input type='text' name='category' value='"	+ questionElementsArray[5] + "'><br>");
 				// --- adding level check box							
-				String check = questionElementsArray[5];
+				String check = questionElementsArray[9];
 				int checkRes = Integer.parseInt(check);				
 				AutoGeneratedHTMLFormText.append("Question Level<br>");
 				for(int i=1 ; i <= 5 ; i++){
 					if (checkRes == i) {
 						AutoGeneratedHTMLFormText.append("<input checked='checked' type='radio' name='levelOfDifficulty' value='" + i+"'>"+ i);
 					} else {
-						AutoGeneratedHTMLFormText.append("<input type='radio' name='levelOfDifficulty' value='" + i+"'>"+ i);
+						AutoGeneratedHTMLFormText.append("<input type='radio' name='levelOfDifficulty' value='" + i +"'>" + i);
 					}
 				}			
-				////  adding answers list if exist
-				if(questionElementsArray != null && questionElementsArray.length == 12){
-					if(questionElementsArray[6].equalsIgnoreCase("2")){
-						AutoGeneratedHTMLFormText.append("<br> Answers for Question <br>");
-						AutoGeneratedHTMLFormText.append(" A. <textarea name='at1'>"
-								+ questionElementsArray[8] + "</textarea><br>");
-						AutoGeneratedHTMLFormText.append(" B. <textarea name='at2'>"
-								+ questionElementsArray[9] + "</textarea><br>");					
-					}else if(questionElementsArray[6].equalsIgnoreCase("4")){
-						AutoGeneratedHTMLFormText.append("<br> Answers for Question <br>");
-						AutoGeneratedHTMLFormText.append(" A. <textarea name='at1'>"
-								+ questionElementsArray[8] + "</textarea><br>");
-						AutoGeneratedHTMLFormText.append(" B. <textarea name='at2'>"
-								+ questionElementsArray[9] + "</textarea><br>");
-						AutoGeneratedHTMLFormText.append(" C. <textarea name='at3'>"
-								+ questionElementsArray[10] + "</textarea><br>");
-						AutoGeneratedHTMLFormText.append(" D. <textarea name='at4'>"
-								+ questionElementsArray[11] + "</textarea>");
-					}
+				////  adding answers list if exist			
+				if(tempQueryRessult[3] != null){					
+					String[] tempRes = tempQueryRessult[3].split(IMaintenanceService.DELIMITER);
+
+					AutoGeneratedHTMLFormText.append("<br> Answers for Question <br>");
+					for(int i=0; i < tempRes.length; i++){
+						AutoGeneratedHTMLFormText.append(IMaintenanceService.ANSWER_CHAR_ARRAY[i] + ". <textarea name='at" + i +"'>"
+								+ tempRes[i] + "</textarea><br>");						
+					}				
 				}else{   
 					// if not exist
 					AutoGeneratedHTMLFormText.append("<p> No Answers For this question</p>");
 				}
-				//if(questionElementsArray[1].equalsIgnoreCase("a") || questionElementsArray[1].equalsIgnoreCase("b") ||
-				//questionElementsArray[1].equalsIgnoreCase("c") ||questionElementsArray[1].equalsIgnoreCase("d")){					
-				//// ---- adding correct answer char
+				////   ---- language of sintax code
+				AutoGeneratedHTMLFormText.append("<br>Language Name<br>");			
+				AutoGeneratedHTMLFormText.append("<input type='text' name='languageName' value='" + questionElementsArray[3] + "'><br>");
+				//// ----- correct answer char 
 				AutoGeneratedHTMLFormText.append("<br>Correct Answer<br>");			
-				AutoGeneratedHTMLFormText.append("<input type='text' name='correctAnswer' value='" + questionElementsArray[1] + "' size='2'><br>");
+				AutoGeneratedHTMLFormText.append("<input type='text' name='correctAnswer' value='" + questionElementsArray[7] + "' size='2'><br>");
+				//// --- number responses on picture
 				AutoGeneratedHTMLFormText.append("<br>Number Answers on Pictures<br>");			
-				AutoGeneratedHTMLFormText.append("<input type='text' name='numAnswersOnPictures' value='" + questionElementsArray[6] + "' size='2'><br>");
-				//}else{
-				//	AutoGeneratedHTMLFormText.append("<br>");
-				//}
-				//// ----- adding flag ID and submit button 
-				AutoGeneratedHTMLFormText.append("<input type='text' name='questionID' value='" + questionElementsArray[3] + "' style='visibility: hidden;'><br>");
+				AutoGeneratedHTMLFormText.append("<input type='text' name='numAnswersOnPictures' value='" + questionElementsArray[8] + "' size='2'><br>");
+				AutoGeneratedHTMLFormText.append("<input type='text' name='questionID' value='" + questionElementsArray[6] + "' style='visibility: hidden;'><br>");
+				//// ---- button send and change question
 				AutoGeneratedHTMLFormText.append("<input type='submit' value='Change Question'>");
 				AutoGeneratedHTMLFormText.append("</form>");
 			} else {
@@ -320,17 +321,17 @@ public class Maintenance {
 		return "maintenance/MaintenanceOtherResurses";// return too page after action
 	}
 	// --------- adding questions from any.txt file on user computer -----//  END  //
-
 	// -------------- Module For Building Questions in to DB ----------------////
 	@RequestMapping({ "/moduleForBuildingQuestions" })
-	public String ModuleForBuildingQuestions(String category, String nQuestions, Model model) {		
+	public String ModuleForBuildingQuestions(String category, String nQuestions, String levelOfDifficulty, Model model) {		
 		int nQuest = Integer.parseInt(nQuestions);
 		boolean actionRes = false;
 		try {
-			actionRes = maintenanceService.ModuleForBuildingQuestions(category, nQuest);
+			int differentLevel = Integer.parseInt(levelOfDifficulty);
+			actionRes = maintenanceService.ModuleForBuildingQuestions(category, differentLevel , nQuest);
 		} catch (Exception e) {
 			System.out.println("catch call maintenanceaction from FES moduleForBuildingQuestions");//----------------------------------------------------sysout
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		//
 		if(actionRes){				
@@ -387,21 +388,32 @@ public class Maintenance {
 			AutoGeneratedInformationTextHTML.delete(0, AutoGeneratedInformationTextHTML.length());// clear stringbuffer
 		}	
 		return outTextResult;		
-	}	
+	}
+	//// AJAX for upload picture for new question on creating
+	@RequestMapping(value="/upload-file", method=RequestMethod.POST)
+	public @ResponseBody JsonResponse UploadFile(HttpServletRequest request) {	
+		JsonResponse res = new JsonResponse(); 
+		String concatRes = " ";
+
+		// TO DO Method !!!!
+		res.setStatus("SUCCESS");
+		res.setResult(concatRes);
+		return res;
+	}
 	//// ajax meta category question creation onload page action 
-	@RequestMapping(value="/categoryCreationAction", method=RequestMethod.POST)
+	@RequestMapping(value="/categoryCreationAction", method=RequestMethod.POST)  
 	public @ResponseBody JsonResponse HandlerCode(HttpServletRequest request) {	
 		JsonResponse res = new JsonResponse(); 
 		String concatRes = " ";
 		List<String> result = maintenanceService.GetGeneratedExistCategory();
 		for(String re:result){		
 			concatRes += "<option value='" + re + "'>"+ re +"</option>";
-			}
-		res.setStatus("SUCCESS");
+		}
+		res.setStatus("SUCCESS"); 
 		res.setResult(concatRes);
 		return res;
 	}
-	////static resurse class for JSON, Ajax on company add page 
+	////static resurse class for JSON, Ajax on company add page TO DO Class ?? or not TO DO :)
 	class JsonResponse {
 		private String status = null;
 		private Object result = null;

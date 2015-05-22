@@ -36,26 +36,7 @@ public class UserActions{
 
 	/*
 	 3.2. User Actions 
-	3.2.1. Login
-	Pre-conditions:
-	3. The System is running up
-	4. The user is registered in the System
-	Login Normal Flow: 
-	4. The user enters a username and password. 
-	5. The user presses a submit button
-	6. The System moves to a home page for the specific user. Alternative flows: Wrong Username, Wrong Password
-	3.1.1.1. Wrong Username
-	Pre-Conditions:
-	2. The user enters wrong username
-	Wrong Username Flow:
-	3. The alert window appears with message: “User with <username> is not registered. Type the right username or  go to registration”
-	4. Returns to the Login
-	3.1.1.1. Wrong Password
-	Pre-Conditions:
-	2. The user enters wrong password
-	Wrong Password Flow:
-	3. The alert window appears with message: “Wrong password. Type the right password”
-	4. Returns to the Login
+	3.2.1. Login	
 	 */
 	//// ------  login case --------- // BEGIN //
 	@RequestMapping(value = "/login_action", method = {RequestMethod.POST, RequestMethod.GET})
@@ -79,28 +60,6 @@ public class UserActions{
 	}
 	/*
 	3.2.2. Registration (Sign up)
-	Pre-conditions:
-	3. The System is running up
-	4. The user is not registered in the System
-	Registration Normal Flow:
-	9. The user enters a username
-	10. The user enters an email
-	11. The user enters password
-	12. The user enters password confirmation. Alternative flow: Wrong Password Confirmation
-	13. The user presses a submit button
-	14. The System moves to Login page. Alternative flow: User Registered 
-	3.1.1.1. Wrong Password Confirmation
-	Pre-Conditions:
-	2. The user enters wrong password confirmation
-	Wrong Password Confirmation Flow
-	3. The alert window appears with message: “Wrong password confirmation. Type the same password”
-	4. Returns to the Registration Flow with #4. That is all fields except password confirmation should remain filled
-	3.1.1.1. User Registered
-	Pre-Conditions:
-	2. The user enters username that already has been registered
-	User Registered Flow:
-	3. The alert window appears with message: “The <username> already registered. Type another username or go to Login with this one”
-	4. Returns to  the Registration Flow
 	 */ 
 	////-----------  Registration case -------------- // BEGIN //
 	@RequestMapping(value = "/signup_action", method = RequestMethod.POST)
@@ -124,27 +83,6 @@ public class UserActions{
 	////------  Registration case -- // END //
 	/*
 	3.2.3. Performing Test – Trainee Mode
-	Pre-conditions:
-	1. The System is running up
-	2. The user is signed in
-	3. There are prepared test questions
-	Normal Flow:
-	1. The user selects a test category
-	2. The system shows maximal number of the questions in the selected category
-	3. The user enters number of questions from 1 up to the maximal number. Alternative Flow: Wrong Questions Number
-	4. The System shows a question with several answers. (American method)
-	5. The user selects an answer
-	6. The items 4 and 5 are repeated for the selected number of the questions
-	7. The System shows the test results containing the following:
-	Test duration 
-	List of the questions with marking of right or wrong
-	3.1.1.1. Wrong Questions Number
-	Pre-conditions:
-	1. During running performing test in the trainee mode the user entered wrong number of the questions
-	Flow:
-	1. The alert window appears with the message: “Wrong number of the questions. Type the right number that is not more than maximal questions number”
-	2. Returns to the Normal Flow of the Performing Test in the Trainee Mode #3
-
 	 */
 	////------------------ Filling test parameters  ------------------// BEGIN //
 	@RequestMapping(value = "/createTestForUser")
@@ -181,7 +119,7 @@ public class UserActions{
 			userTest.setCountOfQuestionsFromUser(Integer.parseInt(questionCountNumber));
 			userTest.setStartTimeMillis(System.currentTimeMillis());
 			//test creation
-			String questionsInText = userService.getTraineeQuestions(userTest.getCategoryName(), userTest.getLevel(), userTest.getCountOfQuestionsFromUser());
+			List<String> questionsInText = userService.getTraineeQuestions(userTest.getCategoryName(), userTest.getLevel(), userTest.getCountOfQuestionsFromUser());
 			//
 			nextQuestionInTest = new StringBuffer();
 			String testAttributes = "<p>Category  - "+userTest.getCategoryName()+"</p>"
@@ -195,7 +133,7 @@ public class UserActions{
 		}
 		return "user/UserTraineeMode";		
 	}
-	////
+	////-------------------------------------------------------------------------------- test loop method new question reload all page
 	@RequestMapping({ "/UserTestLoop" })
 	public String test_run(HttpServletRequest request, Model model) {
 		String answerschecked = request.getParameter("answerschecked");	// getting answer from user 		
@@ -207,103 +145,88 @@ public class UserActions{
 		}
 		////
 		nextQuestionInTest = new StringBuffer();
-		////
+		//// ---------------------------------  out test result on result page 
 		if (counter >= questionList.size()) {			
 			String durTime = getTestDurationTime(userTest);
 			userTest.setTestResultList(testResultList);
 			//
 			model.addAttribute("time", durTime);
-			model.addAttribute("resultsList", testResultList);	
-			//model.addAttribute("resultsList", testResultList);	
+			model.addAttribute("resultsList", testResultList);				
 			model.addAttribute("wrongAnswers",userTest.getUserAnswers());
 			model.addAttribute("rightAnswers",userTest.getRightAnswersChars());
 			clearTest();
 			return "user/UserTestResultPage";
-		}else{
+		}else{// ---------------- TO DO REST FOR the case  bilding question for user on test
+
 			String tempQuestion = questionList.get(counter++);
-			//// --- Creation Test Page HTML Text  witch Parameters ------
 			String[] questionAttributes = tempQuestion.split(IMaintenanceService.DELIMITER);
-			if(userTest.getRightAnswersChars() == null && questionAttributes[3] != null){
-				userTest.setRightAnswersChars(questionAttributes[3]);
-			}else if(userTest.getRightAnswersChars() != null && questionAttributes[3] != null){
-				String rightAnswerChars = userTest.getRightAnswersChars() +","+ questionAttributes[3];
+			//	for(int i=0;i<questionAttributes.length;i++){	System.out.println(i+ " - "+questionAttributes[i]+"\n");}// -------------------------------------------- test - susout
+			if(userTest.getRightAnswersChars() == null && questionAttributes[5] != null){
+				userTest.setRightAnswersChars(questionAttributes[5]);
+			}else if(userTest.getRightAnswersChars() != null && questionAttributes[5] != null){
+				String rightAnswerChars = userTest.getRightAnswersChars() +","+ questionAttributes[5];
 				userTest.setRightAnswersChars(rightAnswerChars);
 			}
-			model.addAttribute("question", "' "+questionAttributes[0]+" '");
-			////
-			if(questionAttributes[4] != null && questionAttributes[4].length() > 10){	// ---------- code question code 					
-				if(questionAttributes[2].equalsIgnoreCase("0")){		
+			/* 0 = id
+			 * 1 = question
+			 * 2 = description
+			 * 3 = code text
+			 * 4 = lang cod			
+			 * 5 = corr answer
+			 * 6 = num ansers on picture
+			 * 7 = meta category 
+			 *** when question not included meta cetgory ! meta cat = language name			 
+			 * */
+			// ----------------------------- question text
+			model.addAttribute("question", "' "+questionAttributes[1]+" '"); 
+			//// ----------------------------  description text	
+			if(questionAttributes[2] != null && questionAttributes[2].length() > 10 && !questionAttributes[2].equals(" ")){					
+				model.addAttribute("descriptionText", "' "+questionAttributes[2]+" '");
+			}
+			////  -------------------------  question witch code: code text 
+			if(questionAttributes[3] != null && questionAttributes[3].length() > 10 && !questionAttributes[3].equals(" ")){						
+				if(questionAttributes[6].equalsIgnoreCase("0")){		
 					nextQuestionInTest.append("<div class='send_button'><span class='buttons'>handler-code</span></div><br>");					
 				} 
-				nextQuestionInTest.append("<textarea id='codeText_"+ counter +"' rows='20' cols='25'>" + questionAttributes[4] + "</textarea>");
+				nextQuestionInTest.append("Code text<br><textarea id='codeText' rows='20' cols='25'>" + questionAttributes[3] + "</textarea>");
 			}
-			////
-			//
-			String[] res = maintenanceService.getQuestionById(questionAttributes[1], IUserActionService.ACTION_GET_ARRAY);
-			if(res[1] != null && res[1].length() > 15){    
+			////  ------------------------- 
+			String[] res = maintenanceService.getQuestionById(questionAttributes[0], IUserActionService.ACTION_GET_ARRAY);
+			if(res[1] != null && res[1].length() > 15){
+				String[] tempres = res[0].split(IMaintenanceService.DELIMITER);  		
+
 				nextQuestionInTest.append("<br><img class='imageClass' src='" + res[1] + "' alt='image not supported'>");// image text in coding Base64 
-				testResultList.add("<p>" + questionAttributes[0] + "</p><img class='imageClass' src='" + res[1] + "' alt='no image'><p>Correct Answer : " + questionAttributes[3] 
-						+"&nbsp;&nbsp;&nbsp;&nbsp; Your Answer : </p>");// code for view result for user after the test 
+				// -------------- testResultList.add: view result for user after the test 
+				testResultList.add("<p>" + questionAttributes[0] + "</p><img class='imageClass' src='" + res[1] + "' alt='no image'><p>Correct Answer : " + questionAttributes[5] +"</p>");
+				if(tempres[3] != null && tempres[3].length() > 20){
+					nextQuestionInTest.append("<br><textarea rows='20' cols='25'>"+tempres[3]+"</textarea>");
+				}
 			}
-			////
-			if(questionAttributes != null && questionAttributes.length > 5){				
-				String[] answers = CreateAnswers(questionAttributes);
-				int countAnswersOnPic = Integer.parseInt(questionAttributes[2]);
-				switch(countAnswersOnPic){
-				case 2:nextQuestionInTest.append("<p>A. <input type='checkbox' name='answerschecked' value='A'>&nbsp;&nbsp;" + answers[0] + "</p>"
-						+ "<p>B. <input type='checkbox' name='answerschecked' value='B'>&nbsp;&nbsp;" + answers[1] + "</p>");break;
-				case 4:nextQuestionInTest.append("<p>A. <input type='checkbox' name='answerschecked' value='A'>&nbsp;&nbsp;" + answers[0] + "</p>"
-						+ "<p>B. <input type='checkbox' name='answerschecked' value='B'>&nbsp;&nbsp;" + answers[1] + "</p>"
-						+ "<p>C. <input type='checkbox' name='answerschecked' value='C'>&nbsp;&nbsp;" + answers[2] + "</p>"
-						+ "<p>D. <input type='checkbox' name='answerschecked' value='D'>&nbsp;&nbsp;" + answers[3] + "</p>");break;
-				default : ;
+			//// ----------------- answers check boxses bilder 
+			if(res[3] != null && res[3].length() > 10){	
+				String[] tempAnswers = res[3].split(IUserActionService.DELIMITER);
+				for(int i=0; i < tempAnswers.length ;i++){					
+					char tempChar = IUserActionService.ANSWER_CHAR_ARRAY[i];
+					nextQuestionInTest.append("<p>"+tempChar+". <input type='checkbox' name='answerschecked' value='"+tempChar+"'>&nbsp;&nbsp;" + tempAnswers[i] + "</p>");
 				}
 			}else{
-				int countAnswersOnPic = Integer.parseInt(questionAttributes[2]);
-				switch(countAnswersOnPic){
-				case 2:nextQuestionInTest.append("<p>A. <input type='checkbox' name='answerschecked' value='A'>&nbsp;&nbsp;</p>"
-						+ "<p>B. <input type='checkbox' name='answerschecked' value='B'>&nbsp;&nbsp;</p>");break;
-				case 4:nextQuestionInTest.append("<p>A. <input type='checkbox' name='answerschecked' value='A'>&nbsp;&nbsp;</p>"
-						+ "<p>B. <input type='checkbox' name='answerschecked' value='B'>&nbsp;&nbsp;</p>"
-						+ "<p>C. <input type='checkbox' name='answerschecked' value='C'>&nbsp;&nbsp;</p>"
-						+ "<p>D. <input type='checkbox' name='answerschecked' value='D'>&nbsp;&nbsp;</p>");break;
-				case 5:nextQuestionInTest.append("<p>A. <input type='checkbox' name='answerschecked' value='A'>&nbsp;&nbsp;</p>"
-						+ "<p>B. <input type='checkbox' name='answerschecked' value='B'>&nbsp;&nbsp;</p>"
-						+ "<p>C. <input type='checkbox' name='answerschecked' value='C'>&nbsp;&nbsp;</p>"
-						+ "<p>D. <input type='checkbox' name='answerschecked' value='D'>&nbsp;&nbsp;</p>"
-						+ "<p>E. <input type='checkbox' name='answerschecked' value='E'>&nbsp;&nbsp;</p>");break;
-				default : ;
-				}
+				int countAnswersOnPic = Integer.parseInt(questionAttributes[6]);				
+				for(int i=0; i < countAnswersOnPic ;i++){					
+					char tempChar = IUserActionService.ANSWER_CHAR_ARRAY[i];
+					nextQuestionInTest.append("<p>"+tempChar+". <input type='checkbox' name='answerschecked' value='"+tempChar+"'></p>");
+				}				
 			}
 			nextQuestionInTest.append("<br> <input type='submit' value='Next Question' />");				
 		}
-		//
+		// ------ end bilding question
 		return "user/UserTraineeMode";
 	}	
-	////
-	private String[] CreateAnswers(String[] questionAttributes) {
-		String[] answers = new String[4];
-		int j = 3;
-		int length = questionAttributes.length;
-		for (int i = 0; i < questionAttributes.length; i++) {
-			if(j != -1){		// by default this answers in text 		
-				String my_new_str = questionAttributes[length-1].replaceAll("<", "&lt;").replaceAll(">", "&gt;");
-				answers[j] = my_new_str;				
-				j--;
-				length--;
-			}
-		}
-		return answers;
-	}	
-	////
-	private void CreationTestForUser(String questionsInText) {
-		String[] questionsArray = questionsInText.split(",");
-		questionList = new ArrayList<String>();
-		for(int i=0;i<questionsArray.length;i++){
-			questionList.add(questionsArray[i]);
-		}		
+	//// ----------------------------------- 
+	private void CreationTestForUser(List<String> questionsInText) {		
+		questionList = new ArrayList<String>();		
+		questionList.addAll(questionsInText);
 	}
-	////
+	//// ------------------------------------
 	private String getTestDurationTime(Test test) {
 		test.setEndTimeMillis(System.currentTimeMillis());
 		test.setTotalTimeMillis(test.getEndTimeMillis()
@@ -325,11 +248,9 @@ public class UserActions{
 		testResultList = null;
 	}
 	////------------------ creation test for User ------------------// END //
-
-	////
 	@RequestMapping(value="/handler-user-code", method=RequestMethod.POST)
 	public @ResponseBody JsonResponse HandlerCode(HttpServletRequest request) {  		
-		String userCode = request.getParameter("userCode");
+		String userCode = request.getParameter("userCode");		
 		JsonResponse res = new JsonResponse(); 
 		String tRes = userService.TestCodeQuestionUserCase(userCode);
 		if(tRes != null){    			

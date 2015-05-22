@@ -17,7 +17,7 @@ $(document).ready(function(){
 	$("#CodeTestArea").css("display","none")
 	///// AJAX Tast Code Case Request/Response
 	$(".send_button").click(function(){							
-		var codeInText = $('#codeText_' + codeQuestionIdCount).val();		 
+		var codeInText = $('#codeText').val();		 
 		$.ajax({type: "POST",
 			url: "handler-user-code",
 			data: "userCode=" + codeInText,
@@ -112,6 +112,9 @@ float: right;
 		<!-- creating table table rows and data -->
 		<tr>
 			<td colspan="2"><h2>${question}</h2></td>
+		</tr>
+		<tr>
+		<td colspan="2"><h3>Description:</h3><pre>${descriptionText}</pre></td>
 		</tr>
 		<tr>
 			<td>

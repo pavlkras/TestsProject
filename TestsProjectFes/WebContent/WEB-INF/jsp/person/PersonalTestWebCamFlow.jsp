@@ -31,5 +31,7 @@
 	<input type="button" id="start_test" class="buttons"
 		value="Start your test" />
 	<br>
+	<textarea name="personPictures" id="personPictures" hidden="hidden"></textarea>
+	<textarea name="screenPictures" id="screenPictures" hidden="hidden"></textarea>
 </body>
 </html>

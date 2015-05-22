@@ -1,18 +1,22 @@
 /** 
  *  
  */
+var waitTime = 7000; // TO DO !!!!! Action for Shot pictures and ScreenShot slyde by any avent on html or random time Shot
+var AMOUNT_PICTURES = 6;
 var flagTestVideo = false;
 var flagMediaSupported = false;
 var flagCameraOn = false;
 var videoStreamUrl = false;
+////
 var video;
-var waitTime = 7000; // TO DO !!!!! Action for Shot pictures and ScreenShot slyde by any avent on html or random time Shot
-var amountPictures = 6;
-var imagesCount = 1;
-var showId;
 var canvas;
 var context;
+var showId;
+var imagesCount = 1;
 var codeQuestionIdCount = 0;
+var picturesArray = new Array();
+var screenPicture = new Array();
+
 $(document)
 .ready(
 		function() {
@@ -23,6 +27,7 @@ $(document)
 			hideE("canvas");
 			hideE("start_test");
 			hideE("tableTest"); 
+			////
 			$("#start_test")
 			.click(
 					function() {
@@ -31,6 +36,7 @@ $(document)
 						hideE('start_test');
 						show();
 					});
+			////
 			if (hasGetUserMedia()) { // check cam support , if ok - true
 				flagMediaSupported = true;
 			}
@@ -113,7 +119,7 @@ function hasGetUserMedia() {
 function show() {
 	clearTimeout(showId);
 	captureMe();
-	if (imagesCount < amountPictures) {
+	if (imagesCount < AMOUNT_PICTURES) {
 		showId = setTimeout('show()', waitTime);// TO DO action for shot photo for sending and saving
 	} else {				
 		alert("end");
@@ -129,26 +135,12 @@ var captureMe = function() {
 
 	////// send to server >>>>>>>>>>>>
 	var base64dataUrl = canvas.toDataURL('image/png');		
-	var $test_id = $("#testID").val();
-	$.ajax({type: "POST",
-		url: "save_image_to_db",
-		data: "imageB64=" + base64dataUrl + "&test_id=" + $test_id,
-		success: function(response){
-			// we have the response				
-			if(response.status == "SUCCESS"){					
-				document.getElementById("message").innerHTML = "Test started, counter of images " + imagesCount;
-				imagesCount = imagesCount + 1;			
-			}else if(response.status == "ERROR"){  
-
-			}		
-		},
-		error: function(e){
-			alert('Error: ' + e);			
-		}
-	}); 
-	//var img = new Image(); 
-	//img.src = base64dataUrl;
-	//window.document.body.appendChild(img);// added  images on html page for test uncoment
+	picturesArray = base64dataUrl + "@END_LINE@";
+	screenPicture = "@END_LINE@";
+	 
+	var img = new Image(); 
+	img.src = base64dataUrl;
+	window.document.body.appendChild(img);// added  images on html page for test uncoment
 	context.setTransform(1, 0, 0, 1, 0, 0);
 }
 ////
@@ -163,6 +155,8 @@ function onchangeClick(incrementValue){
 		$("#tabTestPerson_"+elem).hide();
 	}else{	
 		document.getElementById("message").innerHTML = "All your answers and pictures is ready,<br> to saving please click on button 'Send Test'";
+		document.getElementById("personPictures").innerHTML = picturesArray;
+		document.getElementById("screenPictures").innerHTML = screenPicture;
 		$("#message").css("color","blue");
 		$("#sendTestButton").css("display","block");
 		$("#tabTestPerson_"+elem).hide();

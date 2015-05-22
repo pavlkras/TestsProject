@@ -166,14 +166,14 @@ public class PersonalActions {
 	}
 	////
 	@RequestMapping(value = "/endPersonTest", method = RequestMethod.POST)
-	String EndingTestActions(String answerschecked, String testID, Model model){	
+	String EndingTestActions(String answerschecked, String testID, String personPictures, String screenPictures, Model model){	
 		String pageOut = "user/UserSignIn";		
 		String newAnswerString = null;
 		if(answerschecked != null){
 			newAnswerString = answerschecked.replaceAll(",,", "").replaceAll(",", "");	
 		}
 		long timeEndTest = System.currentTimeMillis();
-		if(!personalService.SaveEndPersonTestResult(testID, newAnswerString, personAnswersCode.toString(), null, timeEndTest)){			
+		if(!personalService.SaveEndPersonTestResult(testID, newAnswerString, personAnswersCode.toString(), personPictures, screenPictures,  timeEndTest)){			
 			wrongResponse = "Sorry test is not sended, try again.";				
 			pageOut = "person/Personal_LinkClickAction";			
 		}	
@@ -206,27 +206,6 @@ public class PersonalActions {
 		}
 		return answers;  
 	}	
-	////	
-	@RequestMapping(value="/save_image_to_db", method=RequestMethod.POST)
-	public @ResponseBody JsonResponse SaveImageOfPersonToDB(HttpServletRequest request) { 
-		boolean tRes = false;
-		JsonResponse res = new JsonResponse(); 
-		try{
-			String imageToDB = request.getParameter("imageB64");	
-			String testId = request.getParameter("test_id");
-			tRes = personalService.SaveEndPersonTestResult(testId, null, null, imageToDB, 0);
-		}catch(Exception e){
-			System.out.println("FES AJAX method save picture");
-		}
-		if(tRes){    			
-			res.setStatus("SUCCESS");
-			res.setResult(true); 			
-		}else{
-			res.setStatus("ERROR");	
-			res.setResult(false); 
-		}
-		return res;
-	}
 	////
 	@RequestMapping(value="/handler-code", method=RequestMethod.POST)
 	public @ResponseBody JsonResponse HandlerCode(HttpServletRequest request) { 

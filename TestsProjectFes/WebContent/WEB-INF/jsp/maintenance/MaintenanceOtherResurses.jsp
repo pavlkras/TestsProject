@@ -13,53 +13,8 @@
 	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 <script
 	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<title>Maintenance service</title>
-<script type="text/javascript">
-    //// JQuery actions
-	$(document).ready(function() {
-	///// AJAX  Request/Response creating category for generated questions
-	var $RtemP = "request";
-		$.ajax({type: "POST",
-			url: "categoryCreationAction",
-			data: "request" + $RtemP,					
-			success: function(response){
-				// we have the response				
-				if(response.status == "SUCCESS"){
-					var gres = response.result;
-					$('#categoryOfQuestions').html(gres);													 
-				}else{
-					alert("wrong BES not Responsed");
-				}		
-			},
-			error: function(e){
-				alert('Error: ' + e);			
-			}
-		}); 
-	    ////
-		$(".formCategory").css("display", "none");
-		$(".formFileAdding").css("display", "none");
-		////
-		$("#readTextFromFile").click(function() {
-			$(".generateQuestions,.fillfromfile").css("display", "none");
-			$(".formFileAdding").css("display", "block");
-		});
-		////
-		$("#generateQuestionsByCategory").click(function() {
-			$(".generateQuestions,.fillfromfile").css("display", "none");
-			$(".formCategory").css("display", "block");
-		});
-	});
-	/////
-	var openFile = function(event) {
-		var input = event.target;
-		var reader = new FileReader();
-		reader.onload = function() {
-			var text = reader.result;
-			$("#hiddenTextFromFile").text(reader.result);
-		};
-		reader.readAsText(input.files[0]);
-	};
-</script>
+<script src="static/js_folder/maintenance_scripts/other_resurses_page.js"></script>
+<title>OTHER RESURSES</title>
 </head>
 <body>
 	<div class="fillfromfile">
@@ -76,9 +31,11 @@
 		<form action='moduleForBuildingQuestions'>
 			<select name="category" id="categoryOfQuestions">
 				<option value="none">Select Category For Generation</option>
-			</select> <br>Enter the number of questions : <input type="number"
-				name='nQuestions' value='50' size="5"><br> <input
-				type='submit' value="Generate Questions">
+			</select> <br>Number of questions : <input type="number"
+				name='nQuestions' value='50' size="5"> <br>Level Of
+			difficulty : <input type="number" name='levelOfDifficulty' value='3'
+				size="5"> <br> <input type='submit'
+				value="Generate Questions">
 		</form>
 	</div>
 	<br>
