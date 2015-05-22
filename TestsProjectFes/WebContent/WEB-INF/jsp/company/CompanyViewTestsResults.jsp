@@ -26,6 +26,10 @@
 <script src="/TestsProjectFes/static_js/js/viewresultsjs/ngDialog.min.js"></script>
 <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.12.1.js"></script>
 <link href="http://mgcrea.github.io/angular-strap/styles/libs.min.css" rel="stylesheet">
+<!-- Code Highlighter  -->
+<link rel="stylesheet" href="/TestsProjectFes/static/css_folder/company_styles/viewresults/prism.css">
+<script src="/TestsProjectFes/static_js/js/viewresultsjs/prism.js"></script>
+<!-- EOF Code Highlighter  -->
 
 <link href="http://cdn.jsdelivr.net/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">       
 <title>View tests results</title>
@@ -117,25 +121,77 @@
 	</div>
 </div>
 <script type="text/ng-template" id="testDetails">
-<div class="ngdialog-message">
- <div class="container">
-	<h1>Test details</h1>
-    <div class="row">
-        <div class="col-xs-3">
-			<ul>
-				<li>duration = {{testDetails.duration}}</li>
-				<li>complexityLevel = {{testDetails.complexityLevel}}</li>
-				<li>amountOfCorrectAnswers = {{testDetails.amountOfCorrectAnswers}}</li>
-				<li>amountOfQuestions = {{testDetails.amountOfQuestions}}</li>
-				<li>percentage of right answers = {{testDetails.persentOfRightAnswers}}%</li>
+<div class="ngdialog ngdialog-overlay">
+<div class="ngdialog-content">
+ <div class="bs-example">    
+	<div class="panel panel-primary">
+		<a href="#"> 		
+			<div class="panel-heading" ng-click="showTestDetails('details')">
+				<h3 id="panel-title" class="panel-title">Test details<a class="anchorjs-link" href="#panel-title"></a></h3>
+			</div>
+		</a>
+		<div class="panel-body" ng-show="display.test_details">
+    		<ul class="list-group">
+      			<li class="list-group-item">
+        			<span class="badge">{{testDetails.duration}}</span>
+        			duration
+	      		</li>
+    	  		<li class="list-group-item">
+        			<span class="badge">{{testDetails.complexityLevel}}</span>
+        			complexityLevel
+	      		</li>
+    	  		<li class="list-group-item">
+        			<span class="badge">{{testDetails.amountOfCorrectAnswers}}</span>
+        			amountOfCorrectAnswers
+	      		</li>
+				<li class="list-group-item">
+        			<span class="badge">{{testDetails.amountOfQuestions}}</span>
+        			amountOfQuestions
+	      		</li>
+    	  		<li class="list-group-item">
+        			<span class="badge">{{testDetails.persentOfRightAnswers}}%</span>
+        			percentage of right answers
+	      		</li>
 			</ul>
 		</div>
-        <div class="col-xs-3">
+	</div>
+	<div class="panel panel-primary">
+		<a href="#">
+			<div class="panel-heading" ng-click="showTestDetails('camera_snapshots')">
+				<h3 id="panel-title" class="panel-title">Camera snapshots<a class="anchorjs-link" href="#panel-title"></a></h3>
+			</div>
+		</a>
+		<div class="panel-body" ng-show="display.pictures">
 			<p ng-repeat="pictures_ in testDetails.pictures">
 				<img class="img-thumbnail img-previewSize" ng-src="{{pictures_.picture}}"/>
 			</p>
 		</div>
+	</div>
+	<div class="panel panel-primary">
+		<a href="#">
+			<div class="panel-heading" ng-click="showTestDetails('code')">
+				<h3 id="panel-title" class="panel-title">Code written by Person<a class="anchorjs-link" href="#panel-title"></a></h3>
+			</div>
+		</a>
+		<div class="panel-body" ng-show="display.code">
+			<div ng-repeat="codesFromPerson_ in testDetails.codesFromPerson">
+				<div class="container-fluid">
+				<ul class="list-group">
+	      			<li class="list-group-item">
+    	    			<h3>
+							Result of analyse:
+							<span class="label {{getProcessingResultStyle(codesFromPerson_.codeAnalyseResult)}}">{{codesFromPerson_.codeAnalyseResult}}</span>
+						</h3>
+	      			</li>
+				</ul>
+
+				<pre nag-prism source="{{codesFromPerson_.code}}" class="{{'language-'+codesFromPerson_.programmingLanguage}}"></pre>
+				</div>
+			</div>
+		</div> 
+	</div>
  </div>
+</div>
 </div>
 </script>
 </body>
