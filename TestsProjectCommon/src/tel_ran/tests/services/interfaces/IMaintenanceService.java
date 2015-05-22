@@ -7,9 +7,10 @@ public interface  IMaintenanceService extends ApplicationFinalFields{
 	//
 	boolean setAutorization(String username, String password);
 	//
-	boolean ModuleForBuildingQuestions(String category,int nQuestion);// Auto Generation many questions by any parameters	
+	boolean ModuleForBuildingQuestions(String byCategory, int diffLevel, int nQuestions);// Auto Generation many questions by any parameters	
 	//
-	boolean CreateNewQuestion(String imageLink, String questionText, String category, int levelOfDifficulty, List<String> answers, String correctAnswer,int questionNumber, int numberOfResponsesInThePicture, String codeText);
+	boolean  CreateNewQuestion(String questionText,String fileLocationLink, String metaCategory, String category, int levelOfDifficulty, List<String> answers, 
+			String correctAnswer,int questionNumber, int numberOfResponsesInThePicture,	String description, String codeText, String languageName);
 	//
 	public List<String> SearchAllQuestionInDataBase(String category, int levelOfDifficulty);
 	//
@@ -17,7 +18,10 @@ public interface  IMaintenanceService extends ApplicationFinalFields{
 	//
 	public List<String> getAllCategoriesFromDataBase();
 	//
-	boolean UpdateTextQuestionInDataBase(String questionID, String imageLink, String questionText, String category, int levelOfDifficulty, List<String> answers, String correctAnswer, String codeText, String numAnswersOnPictures);
+	boolean UpdateTextQuestionInDataBase(String questionID, 
+			String questionText, String descriptionText, String codeText, String languageName, 
+			String metaCategory, String category, int levelOfDifficulty, List<String> answers, String correctAnswer, 
+			String fileLocationPath, String numAnswersOnPictures);
 	//
 	public String deleteQuetionById(String questionID);
 	//
