@@ -54,7 +54,7 @@
 
 	});
 </script>
-<title>Home Page</title>
+<title>FALOSS</title>
 </head>
 <body>
 	<div>
