@@ -12,6 +12,7 @@ import tel_ran.tests.entitys.EntityCompany;
 import tel_ran.tests.entitys.EntityPerson;
 import tel_ran.tests.entitys.EntityTest;
 import tel_ran.tests.services.interfaces.ICompanyActionsService;
+import tel_ran.tests.services.interfaces.IFileManagerService;
 import tel_ran.tests.token_cipher.TokenProcessor;
 
 public class CompanyActionsService extends TestsPersistence implements ICompanyActionsService {
@@ -54,16 +55,7 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
-	public String[] getAnySingleQuery(String strQuery) {
-		if(em.find(EntityAdministrators.class,"qqq@qqq.qq") == null){
-			EntityAdministrators emad = new EntityAdministrators();
-			emad.setPassportNumber("12345");
-			emad.setUserMail("qqq@qqq.qq");
-			emad.setUserPassword("12345");
-			emad.setUserName("test");
-			emad.setUserAddress("californy");
-			em.persist(emad);
-		}
+	public String[] getAnySingleQuery(String strQuery) {		
 		String[] outResult;
 		List<EntityCompany> result = em.createQuery(
 				"SELECT c FROM EntityCompany c WHERE c.C_Name LIKE :custName").setParameter("custName","%"+strQuery+"%").getResultList();// return to client result of operation
@@ -129,6 +121,11 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 		//
 		em.persist(test);
 		long testId = test.getTestId();
+		long company_id = entityCompany.getId();
+		////  creating folder treee for test
+		IFileManagerService fm = new FileManagerService();
+		fm.initializeTestFileStructure(company_id, testId);
+		////
 		String nameOfTheTest = personId + "_" + testId;// this name is concat for this parameters 
 		test.setTestName(nameOfTheTest);
 		em.persist(test);
