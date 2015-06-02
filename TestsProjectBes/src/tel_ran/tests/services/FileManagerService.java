@@ -16,7 +16,7 @@ import java.util.List;
 import tel_ran.tests.services.interfaces.IFileManagerService;
 @SuppressWarnings("resource")
 public class FileManagerService implements IFileManagerService{
-	static String workingDir;
+	private String workingDir;
 	public FileManagerService(){
 		workingDir = System.getProperty("user.dir") + File.separator + NAME_FOLDER_FOR_SAVENG_TESTS_FILES; //  this global directory for saving files
 	}
@@ -165,7 +165,7 @@ public class FileManagerService implements IFileManagerService{
 	public boolean deleteCompany(long compId) {		
 		boolean result = false;		
 		try {
-			recurrCleanWorkFolder(new File(workingDir + File.separator + compId));
+			recurrCleanFolder(new File(workingDir + File.separator + compId));
 			result = true;
 		} catch (Exception e) {			
 			e.printStackTrace();
@@ -177,7 +177,7 @@ public class FileManagerService implements IFileManagerService{
 	public boolean deleteTest(long compId, long testId) {
 		boolean result = false;		
 		try {
-			recurrCleanWorkFolder(new File(workingDir + File.separator + compId + File.separator + testId));
+			recurrCleanFolder(new File(workingDir + File.separator + compId + File.separator + testId));
 			result = true;
 		} catch (Exception e) {			
 			e.printStackTrace();
@@ -185,12 +185,12 @@ public class FileManagerService implements IFileManagerService{
 		return result;
 	}
 	////
-	private void recurrCleanWorkFolder (File folder) {
+	private void recurrCleanFolder (File folder) {
 		File[] files = folder.listFiles();
 		if(files!=null) {
 			for(File f: files) {
 				if(f.isDirectory()) {
-					recurrCleanWorkFolder(f);
+					recurrCleanFolder(f);
 				} else {
 					f.delete();
 				}

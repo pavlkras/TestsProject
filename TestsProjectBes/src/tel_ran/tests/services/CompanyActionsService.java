@@ -13,12 +13,16 @@ import tel_ran.tests.entitys.EntityPerson;
 import tel_ran.tests.entitys.EntityTest;
 import tel_ran.tests.services.interfaces.ICompanyActionsService;
 import tel_ran.tests.services.interfaces.IFileManagerService;
+import tel_ran.tests.services.testhandler.IPersonTestHandler;
+import tel_ran.tests.services.testhandler.PersonTestHandler;
 import tel_ran.tests.token_cipher.TokenProcessor;
 
 public class CompanyActionsService extends TestsPersistence implements ICompanyActionsService {
 	private EntityCompany entityCompany;
 	@Autowired
 	private TokenProcessor tokenProcessor;
+
+	IFileManagerService fm = new FileManagerService();
 	//-------------Use Case Company Login 3.1.1----------- //   BEGIN    ///
 	@Override
 	public boolean CompanyAuthorization(String companyName, String password) {
@@ -55,7 +59,16 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
-	public String[] getAnySingleQuery(String strQuery) {		
+	public String[] getAnySingleQuery(String strQuery) {
+		if(em.find(EntityAdministrators.class,"qqq@qqq.qq") == null){
+			EntityAdministrators emad = new EntityAdministrators();
+			emad.setPassportNumber("12345");
+			emad.setUserMail("qqq@qqq.qq");
+			emad.setUserPassword("12345");
+			emad.setUserName("test");
+			emad.setUserAddress("californy");
+			em.persist(emad);
+		}
 		String[] outResult;
 		List<EntityCompany> result = em.createQuery(
 				"SELECT c FROM EntityCompany c WHERE c.C_Name LIKE :custName").setParameter("custName","%"+strQuery+"%").getResultList();// return to client result of operation
@@ -96,23 +109,11 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 	//------------- 	Use case Ordering Test 3.1.3 -------------/// BEGIN ////
 	@Override
 	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
-	public long  createIdTest(List<Long> list, int personId, String pass, String category, String levelOfDifficulty) {
+	public long createIdTest(List<Long> questionsID, int personId, String pass, String category, String levelOfDifficulty) {
 		EntityPerson temp = em.find(EntityPerson.class, personId);	
-		//
-		EntityPerson pers = new EntityPerson();
-		pers.setPersonId(personId);		
-		//
-		StringBuffer idQuestion = new StringBuffer();
-		for(Long s : list){			
-			idQuestion.append(s);
-			idQuestion.append(",");
-		}
-		//
+
 		EntityTest test = new EntityTest();
-		test.setTestCategory(category);		
-		test.setIdQuestionsForCreationTest(idQuestion.toString());	
 		test.setPassword(pass); 		
-		test.setLevelOfDifficulty(levelOfDifficulty);
 		test.setStartTestDate(0L);// setting parameter for wotchig method in FES
 		test.setEndTestDate(0L);// setting parameter for wotchig method in FES
 		//
@@ -121,17 +122,23 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 		//
 		em.persist(test);
 		long testId = test.getTestId();
-		long company_id = entityCompany.getId();
-		////  creating folder treee for test
-		IFileManagerService fm = new FileManagerService();
-		fm.initializeTestFileStructure(company_id, testId);
-		////
-		String nameOfTheTest = personId + "_" + testId;// this name is concat for this parameters 
-		test.setTestName(nameOfTheTest);
-		em.persist(test);
+		if( questionsID.size() > 0 ){
+			long companyId = test.getEntityCompany().getId();
+			////  creating folder treee for test
+			fm.initializeTestFileStructure(companyId, testId);
+			////
+			
+			IPersonTestHandler testResultsJsonHandler = new PersonTestHandler(null);
+			testResultsJsonHandler.addQuestions(questionsID);
+			fm.saveJson(companyId, testId, testResultsJsonHandler.getJsonTestResults());
+			
+			test.setAmountOfQuestions(testResultsJsonHandler.length());
+			test.setPassed(false);
+			em.persist(test);
+		}
 		return testId;
 	}
-
+	
 	@Override
 	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
 	public int createPerson(int personId,String personName,String personSurname,String personEmail) {
@@ -228,5 +235,5 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 		String token = tokenProcessor.encodeIntoToken(companyId);
 		return token;
 	}	
-	//------------- Viewing test results  3.1.4.----------- // END ////
+	//------------- Viewing test results  3.1.4.----------- // END ////	
 }

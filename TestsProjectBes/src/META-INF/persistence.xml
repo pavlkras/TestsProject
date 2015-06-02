@@ -10,7 +10,7 @@
  <property name="hibernate.connection.driver_class" 
  value="com.mysql.jdbc.Driver"/>
  <property name="hibernate.connection.username" value="root"/>
- <property name="hibernate.connection.password" value="12345.com"/>
+ <property name="hibernate.connection.password" value="toor"/>
  </properties>
   </persistence-unit>
 </persistence>
