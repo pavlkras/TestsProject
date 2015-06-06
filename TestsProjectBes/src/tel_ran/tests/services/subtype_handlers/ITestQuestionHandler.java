@@ -12,6 +12,6 @@ public interface ITestQuestionHandler {
 	public String getStatus();
 	public void analyze();
 	public boolean setPersonAnswer(JSONObject answerJsonObj);
-	public String getQuestionJson();
+	public String getQuestionJson(int index);
 	public String getQuestionViewResultJson();
 }

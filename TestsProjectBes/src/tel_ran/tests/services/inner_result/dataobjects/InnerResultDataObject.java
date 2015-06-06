@@ -21,7 +21,7 @@ public class InnerResultDataObject {
 	String metacategory; 	// KEY_METACATEGORY have to have the same name
 	
 	String rightAnswer;
-	String[] personAnswer;
+	String personAnswer;
 
 	public String toJson(){
 		return new Gson().toJson(this);
@@ -43,11 +43,11 @@ public class InnerResultDataObject {
 		this.rightAnswer = rightAnswer;
 	}
 
-	public String[] getPersonAnswer() {
+	public String getPersonAnswer() {
 		return personAnswer;
 	}
 
-	public void setPersonAnswer(String[] personAnswer) {
+	public void setPersonAnswer(String personAnswer) {
 		this.personAnswer = personAnswer;
 	}
 

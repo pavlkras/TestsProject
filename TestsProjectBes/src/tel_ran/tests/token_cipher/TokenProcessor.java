@@ -13,13 +13,13 @@ public class TokenProcessor {
 	@Autowired
 	AESCipher cipher;
 	
-	public String encodeIntoToken(long companyId) {
+	public String encodeIntoToken(long id, int validTimeInSec) {
 		long currTimeStamp = new Date().getTime();
-		long validUntilTimeStamp = currTimeStamp + ICommonData.TOKEN_VALID_IN_SECONDS * 1000;
+		long validUntilTimeStamp = currTimeStamp + validTimeInSec * 1000;
 		StringBuffer strbuf = new StringBuffer();
 		strbuf.append(Long.toString(validUntilTimeStamp)); // array index #0
 		strbuf.append(ICommonData.delimiter);
-		strbuf.append(companyId); // array index #1
+		strbuf.append(id); // array index #1
 		String token = "";
 		try {
 			token = cipher.encrypt(strbuf.toString());

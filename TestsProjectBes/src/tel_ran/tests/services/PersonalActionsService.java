@@ -16,16 +16,16 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 	
 	
 	////------- Control mode Test for Person case ----------------// BEGIN //
-	@Override
-	public String[] GetTestForPerson(String testId) {	// creation test for person
-
-		return null;
-	}
+//	@Override
+//	public String[] GetTestForPerson(String testId) {	// creation test for person
+//
+//		return null;
+//	}
 	//// ------------------- save starting test	parameters
-	@Override
-	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
-	public boolean SaveStartPersonTestParam(String testId, String correctAnswers, long timeStartTest) {
-		boolean resAction = false;
+//	@Override
+//	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+//	public boolean SaveStartPersonTestParam(String testId, String correctAnswers, long timeStartTest) {
+//		boolean resAction = false;
 //		try{
 //			long testID = (long)Integer.parseInt(testId);		
 //			EntityTest personTest = getEntityTestById(testID);		
@@ -39,13 +39,13 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 //			//e.printStackTrace();
 //			System.out.println("catch save start test");//-------------------------------------------------------------------------------------sysout
 //		}
-		return resAction;
-	}
+//		return resAction;
+//	}
 	//// ------------------- save ending test parameters
-	@Override
-	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
-	public boolean SaveEndPersonTestResult(String testId, String personAnswers,	String personAnswersCode, String imagesOfPerson, String screenShoots, long timeEndTest) {		
-		boolean resAction = false;
+//	@Override
+//	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+//	public boolean SaveEndPersonTestResult(String testId, String personAnswers,	String personAnswersCode, String imagesOfPerson, String screenShoots, long timeEndTest) {		
+//		boolean resAction = false;
 //		long testID = (long)Integer.parseInt(testId);
 //		String links[] = {};
 //
@@ -81,10 +81,10 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 //			System.out.println("BES catch save end test");//---------------------------------------------------------------------------sysout
 //		}
 
-		return resAction;
-	}
+//		return resAction;
+//	}
 	////-------  save images  ---------------// Begin //
-	private String[] getLinkForImages(String imagesOfPerson, String screenShoots, String companyId, String testId) {
+//	private String[] getLinkForImages(String imagesOfPerson, String screenShoots, String companyId, String testId) {
 //		String[] res_pic = imagesOfPerson.split(IMAGE_DELIMITER);
 //		String[] res_screen = screenShoots.split(IMAGE_DELIMITER);
 //		String tempResScreen = "";
@@ -116,8 +116,8 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 //		} catch (IOException e) {
 //			e.printStackTrace();  
 //		}		
-		return outLinkText;		
-	}
+//		return outLinkText;		
+//	}
 	////-------  save images ----------------// END //	
 	//       auxiliary internal method
 //	private int AmountOfAnswers(EntityTest personTest) {               // ------------------------- TO DO sampfing for true amount for answers
@@ -197,11 +197,8 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 	////-------  Test Code From Users and Persons Case  ----------------// END //
 	
 	////-------  Processing  ----------------// START //
-	public EntityQuestionAttributes getQuestionAttribubesById(long id) {
-		EntityQuestionAttributes entityQuestionAttributes = em.find(EntityQuestionAttributes.class, id);
-		return entityQuestionAttributes;
-	}
-	
+
+	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
 	public String getNextQuestion(long testId){
 		String question = null; 
@@ -223,6 +220,7 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 		return question;
 	}
 	
+	@Override
 	public void setAnswer(long testId, String jsonAnswer){
 		EntityTest test = em.find(EntityTest.class, testId);
 		long companyId = test.getEntityCompany().getId();

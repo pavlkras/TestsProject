@@ -86,6 +86,7 @@ public class TestsResultsRestController {
 		return res;
 	}
 	
+	
 	@RequestMapping(value=ICommonData.TEST_RESULT_DETAILS + "/{testId}", method=RequestMethod.GET)
 	@ResponseBody @JsonRawValue
 	String testDetails(@PathVariable long testId, @RequestHeader(value="Authorization") String token){

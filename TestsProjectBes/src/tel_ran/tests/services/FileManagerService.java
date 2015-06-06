@@ -198,7 +198,15 @@ public class FileManagerService implements IFileManagerService{
 		}
 		folder.delete();
 	}
-	////
-	//public List<String> getCode(long compId, long testId, long questionID){return null;}
-	//public void saveCode(long compId, long testId, long questionID, String code){}
+
+	@Override
+	public String getPathToCode(long compId, long testId, long questionID) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public void saveCode(long compId, long testId, long questionID, String code) {
+		// TODO Auto-generated method stub
+		
+	}
 }	

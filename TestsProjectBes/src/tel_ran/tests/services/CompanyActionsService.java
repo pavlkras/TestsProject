@@ -11,6 +11,7 @@ import tel_ran.tests.entitys.EntityAdministrators;
 import tel_ran.tests.entitys.EntityCompany;
 import tel_ran.tests.entitys.EntityPerson;
 import tel_ran.tests.entitys.EntityTest;
+import tel_ran.tests.services.common.ICommonData;
 import tel_ran.tests.services.interfaces.ICompanyActionsService;
 import tel_ran.tests.services.interfaces.IFileManagerService;
 import tel_ran.tests.services.testhandler.IPersonTestHandler;
@@ -232,7 +233,7 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 	@Override
 	public String encodeIntoToken(long companyId) {
 		//encodes current timestamp and companyId into token
-		String token = tokenProcessor.encodeIntoToken(companyId);
+		String token = tokenProcessor.encodeIntoToken(companyId, ICommonData.TOKEN_VALID_IN_SECONDS);
 		return token;
 	}	
 	//------------- Viewing test results  3.1.4.----------- // END ////	

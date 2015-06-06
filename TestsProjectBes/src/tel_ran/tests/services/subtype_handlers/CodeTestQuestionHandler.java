@@ -7,6 +7,10 @@ import tel_ran.tests.services.inner_result.dataobjects.InnerResultDataObject;
 
 public class CodeTestQuestionHandler extends AbstractTestQuestionHandler implements ITestQuestionHandler{
 
+	public CodeTestQuestionHandler() {
+		super();
+	}
+
 	@Override
 	public void createFromQuestion(EntityQuestionAttributes question) {
 		dataObj = new InnerResultDataObject();
@@ -20,19 +24,19 @@ public class CodeTestQuestionHandler extends AbstractTestQuestionHandler impleme
 	public void analyze() {
 		// TODO 
 		// Gradle call
-		
+		EntityQuestionAttributes question = getQuestionAttribubes();
 	}
 
 	@Override
 	public boolean setPersonAnswer(JSONObject answerJsonObj) {
 		// TODO Auto-generated method stub
-		// Saving fields to files, adding filenames to here
+		// Saving fields to files
 		
 		return false;
 	}
 
 	@Override
-	public String getQuestionJson() {
+	public String getQuestionJson(int index) {
 		// TODO Auto-generated method stub
 		return null;
 	}

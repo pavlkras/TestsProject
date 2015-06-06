@@ -39,15 +39,13 @@ public class AmericanTestQuestionHandler extends AbstractTestQuestionHandler imp
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		String [] answerArr = new String [1];
-		answerArr[0] = personAnswer;
-		dataObj.setPersonAnswer(answerArr);
+		dataObj.setPersonAnswer(personAnswer);
 		analyze();
 		return false;
 	}
 
 	@Override
-	public String getQuestionJson() {
+	public String getQuestionJson(int index) {
 		// TODO Auto-generated method stub
 		return null;
 	}

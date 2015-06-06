@@ -5,5 +5,5 @@ import javax.persistence.PersistenceContextType;
 public class TestsPersistence {
 @PersistenceContext(unitName="springHibernate",
 type=PersistenceContextType.TRANSACTION)
-EntityManager em;
+public EntityManager em;
 }
