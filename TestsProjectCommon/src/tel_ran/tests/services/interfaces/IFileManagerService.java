@@ -17,8 +17,10 @@ public interface IFileManagerService extends ApplicationFinalFields{
 	public void saveJson(long compId, long testId, String json);
 
 	public String getPathToCode(long compId, long testId, long questionID);
-	public void saveCode(long compId, long testId, long questionID, String code);
+	public void saveCode(long compId, long testId, long questionID, String[] code);
 
+	public String getFileFromPath(String path);
+	
 	public boolean deleteTest(long compId, long testId);
 	public boolean deleteCompany(long compId);
 
