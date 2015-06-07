@@ -13,12 +13,29 @@ public abstract class AbstractTestQuestionHandler extends TestsPersistence{
 	@Autowired
 	IFileManagerService fileManager;
 	
-	InnerResultDataObject dataObj;
-
-	final public void fromJsonString(String json) {
+	public static final String KEY_INDEX = "index";
+	public static final String KEY_QUESTION_TEXT = "question_text";
+	public static final String KEY_NUMBER_OF_ANSWERS = "n_answers";
+	public static final String KEY_QUESTION_IMAGE = "question_image";
+	
+	private EntityQuestionAttributes entityQuestionAttributes;
+	protected InnerResultDataObject dataObj;
+	protected long companyId;
+	protected long testId;
+	
+	final public void fromJsonString(String json, long companyId, long testId) {
 		dataObj = new Gson().fromJson(json, InnerResultDataObject.class);
+		this.companyId = companyId;
+		this.testId = testId;
 	}
 
+	final public void createFromQuestion(long questionId, String metacategory) {
+		dataObj = new InnerResultDataObject();
+		dataObj.setQuestionID(questionId);
+		dataObj.setMetacategory(metacategory);
+		dataObj.setStatus(InnerResultDataObject.STATUS_NOT_ASKED);		
+	}
+	
 	final public String toJsonString() {
 		return new Gson().toJson(dataObj);
 	}
@@ -32,7 +49,9 @@ public abstract class AbstractTestQuestionHandler extends TestsPersistence{
 	}
 	
 	public EntityQuestionAttributes getQuestionAttribubes() {
-		EntityQuestionAttributes entityQuestionAttributes = em.find(EntityQuestionAttributes.class, getQuestionID());
+		if(entityQuestionAttributes == null){
+			entityQuestionAttributes = em.find(EntityQuestionAttributes.class, getQuestionID());
+		}
 		return entityQuestionAttributes;
 	}
 }

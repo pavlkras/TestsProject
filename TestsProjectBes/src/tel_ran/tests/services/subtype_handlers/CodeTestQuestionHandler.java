@@ -2,9 +2,6 @@ package tel_ran.tests.services.subtype_handlers;
 
 import org.json.JSONObject;
 
-import tel_ran.tests.entitys.EntityQuestionAttributes;
-import tel_ran.tests.services.inner_result.dataobjects.InnerResultDataObject;
-
 public class CodeTestQuestionHandler extends AbstractTestQuestionHandler implements ITestQuestionHandler{
 
 	public CodeTestQuestionHandler() {
@@ -12,19 +9,10 @@ public class CodeTestQuestionHandler extends AbstractTestQuestionHandler impleme
 	}
 
 	@Override
-	public void createFromQuestion(EntityQuestionAttributes question) {
-		dataObj = new InnerResultDataObject();
-		dataObj.setQuestionID(question.getId());
-		dataObj.setRightAnswer(null);
-		dataObj.setMetacategory(question.getMetaCategory());
-		dataObj.setStatus(InnerResultDataObject.STATUS_NOT_ASKED);		
-	}
-
-	@Override
 	public void analyze() {
-		// TODO 
-		// Gradle call
-		EntityQuestionAttributes question = getQuestionAttribubes();
+		// TODO Gradle call
+		getQuestionAttribubes().getFileLocationLink(); //Path to zip
+		fileManager.getPathToCode(companyId, testId, getQuestionID()); //Path to person code
 	}
 
 	@Override
@@ -37,6 +25,11 @@ public class CodeTestQuestionHandler extends AbstractTestQuestionHandler impleme
 
 	@Override
 	public String getQuestionJson(int index) {
+		
+		
+		getQuestionAttribubes().getLineCod(); //stub
+		getQuestionAttribubes().getQuestionId().getQuestionText(); //question text
+		getQuestionAttribubes().getQuestionId().getDescription(); //description
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -46,5 +39,4 @@ public class CodeTestQuestionHandler extends AbstractTestQuestionHandler impleme
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 }

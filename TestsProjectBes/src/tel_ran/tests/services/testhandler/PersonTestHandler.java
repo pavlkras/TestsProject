@@ -8,22 +8,27 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import tel_ran.tests.entitys.EntityQuestionAttributes;
-import tel_ran.tests.services.PersonalActionsService;
+import tel_ran.tests.services.TestsPersistence;
 import tel_ran.tests.services.inner_result.dataobjects.InnerResultDataObject;
+import tel_ran.tests.services.interfaces.IFileManagerService;
 import tel_ran.tests.services.subtype_handlers.ITestQuestionHandler;
 import tel_ran.tests.services.subtype_handlers.SingleTestQuestionHandlerFactory;
 
-public class PersonTestHandler implements IPersonTestHandler {
+public class PersonTestHandler extends TestsPersistence implements IPersonTestHandler {
 	private JSONArray jsonTestResults;
 	public static final String KEY_INDEX = "index";
 	
-	
 	@Autowired
-	PersonalActionsService personalActionsService;
-	// TODO Change to interface
-	// IPersonalActionsService personalActionsService;
-	
-	public PersonTestHandler(String json){
+	IFileManagerService fileManager;
+
+	private long companyId;
+	private long testId;
+		
+	public PersonTestHandler(long companyId, long testId){
+		this.companyId = companyId;
+		this.testId = testId;
+		String json = fileManager.getJson(companyId, testId);
+		
 		if( json==null || json=="" ){
 			jsonTestResults = new JSONArray();
 		}else{
@@ -33,6 +38,7 @@ public class PersonTestHandler implements IPersonTestHandler {
 				e.printStackTrace();
 			}
 		}
+		
 	}
 	
 	@Override
@@ -40,19 +46,25 @@ public class PersonTestHandler implements IPersonTestHandler {
 		boolean res = true;
 		try {
 			for(Long questionID : questionsID){
-				EntityQuestionAttributes questionAttr = personalActionsService.getQuestionAttribubesById(questionID);
+				EntityQuestionAttributes questionAttr = em.find(EntityQuestionAttributes.class, questionID);
 				ITestQuestionHandler questionResult = SingleTestQuestionHandlerFactory.getInstance(questionAttr);
+				//questionResult.
+				
 				jsonTestResults.put(new JSONObject(questionResult.toJsonString()));
 			}
 		} catch (Exception e) {
 				e.printStackTrace();
 				res = false;
+		} finally {
+			if(res){
+				save();	
+			}
 		}
 		return res;
 	}
 
 	private ITestQuestionHandler getInstanceFromJson(JSONObject json){
-		ITestQuestionHandler questionResult = SingleTestQuestionHandlerFactory.getInstance(json);
+		ITestQuestionHandler questionResult = SingleTestQuestionHandlerFactory.getInstance(json, companyId, testId);
 		return questionResult;
 	}
 
@@ -70,13 +82,14 @@ public class PersonTestHandler implements IPersonTestHandler {
 			JSONObject answerJsonObj = new JSONObject(answer); 
 			int index = answerJsonObj.getInt(KEY_INDEX);
 			JSONObject jsonObj = jsonTestResults.getJSONObject(index);
-			ITestQuestionHandler innerResult = getInstanceFromJson(jsonObj);
-			innerResult.setPersonAnswer(answerJsonObj);
-			jsonTestResults.put(index, new JSONObject(innerResult.toJsonString()));
+			ITestQuestionHandler testQuestionHandler = getInstanceFromJson(jsonObj);
+			testQuestionHandler.setPersonAnswer(answerJsonObj);
+			jsonTestResults.put(index, new JSONObject(testQuestionHandler.toJsonString()));
 		} catch (JSONException e) {
 			e.printStackTrace();
 			res = false;
 		}
+		save();
 		return res;
 	}
 
@@ -97,6 +110,7 @@ public class PersonTestHandler implements IPersonTestHandler {
 				e.printStackTrace();
 			}
 		}
+		save();
 		return res;
 	}
 
@@ -118,14 +132,23 @@ public class PersonTestHandler implements IPersonTestHandler {
 	}
 
 	@Override
-	public String getJsonTestResults() {
-		return jsonTestResults.toString();
+	public String next() {
+		String res = null;
+		for(int i=0, length = jsonTestResults.length(); i < length; i++){
+			try {
+				JSONObject jsonObj = jsonTestResults.getJSONObject(i);
+				if(jsonObj.get(InnerResultDataObject.KEY_STATUS).equals(InnerResultDataObject.STATUS_NOT_ASKED)){
+					ITestQuestionHandler testQuestionResult = getInstanceFromJson(jsonObj);
+					res = testQuestionResult.getQuestionJson(i);
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+		return res;
 	}
 
-	@Override
-	public String next() {
-		// TODO Auto-generated method stub
-		
-		return null;
+	private void save() {
+		fileManager.saveJson(companyId, testId, jsonTestResults.toString());
 	}
 }

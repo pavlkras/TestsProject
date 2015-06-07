@@ -125,13 +125,12 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 		long testId = test.getTestId();
 		if( questionsID.size() > 0 ){
 			long companyId = test.getEntityCompany().getId();
-			////  creating folder treee for test
+			////  creating folder tree for test
 			fm.initializeTestFileStructure(companyId, testId);
 			////
 			
-			IPersonTestHandler testResultsJsonHandler = new PersonTestHandler(null);
+			IPersonTestHandler testResultsJsonHandler = new PersonTestHandler(companyId, testId);
 			testResultsJsonHandler.addQuestions(questionsID);
-			fm.saveJson(companyId, testId, testResultsJsonHandler.getJsonTestResults());
 			
 			test.setAmountOfQuestions(testResultsJsonHandler.length());
 			test.setPassed(false);

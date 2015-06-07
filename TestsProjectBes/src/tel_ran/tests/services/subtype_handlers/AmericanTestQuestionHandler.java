@@ -3,7 +3,6 @@ package tel_ran.tests.services.subtype_handlers;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import tel_ran.tests.entitys.EntityQuestionAttributes;
 import tel_ran.tests.services.inner_result.dataobjects.InnerResultDataObject;
 
 public class AmericanTestQuestionHandler extends AbstractTestQuestionHandler implements ITestQuestionHandler{
@@ -13,17 +12,8 @@ public class AmericanTestQuestionHandler extends AbstractTestQuestionHandler imp
 	}
 
 	@Override
-	public void createFromQuestion(EntityQuestionAttributes question) {
-		dataObj = new InnerResultDataObject();
-		dataObj.setQuestionID(question.getId());
-		dataObj.setRightAnswer(question.getCorrectAnswer());
-		dataObj.setMetacategory(question.getMetaCategory());
-		dataObj.setStatus(InnerResultDataObject.STATUS_NOT_ASKED);
-	}
-
-	@Override
 	public void analyze() {
-		if(dataObj.getRightAnswer().equals(dataObj.getPersonAnswer())){
+		if(getQuestionAttribubes().getCorrectAnswer().equals(dataObj.getPersonAnswer())){
 			dataObj.setStatus(InnerResultDataObject.STATUS_TRUE);
 		} else {
 			dataObj.setStatus(InnerResultDataObject.STATUS_FALSE);
@@ -46,12 +36,21 @@ public class AmericanTestQuestionHandler extends AbstractTestQuestionHandler imp
 
 	@Override
 	public String getQuestionJson(int index) {
-		// TODO Auto-generated method stub
-		return null;
+		JSONObject json = new JSONObject();
+		try {
+			json.put(KEY_INDEX, index);
+			json.put(KEY_QUESTION_TEXT, getQuestionAttribubes().getQuestionId().getQuestionText());
+			json.put(KEY_QUESTION_IMAGE, fileManager.getFileFromPath(getQuestionAttribubes().getFileLocationLink()));
+			json.put(KEY_NUMBER_OF_ANSWERS, getQuestionAttribubes().getNumberOfResponsesInThePicture());
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return json.toString();
 	}
 
 	@Override
 	public String getQuestionViewResultJson() {
+		
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -205,8 +205,14 @@ public class FileManagerService implements IFileManagerService{
 		return null;
 	}
 	@Override
-	public void saveCode(long compId, long testId, long questionID, String code) {
+	public void saveCode(long compId, long testId, long questionID, String[] code) {
 		// TODO Auto-generated method stub
 		
+	}
+	@Override
+	public String getFileFromPath(String path) {
+		// TODO Auto-generated method stub
+		// Returns single file from exact filepath within String
+		return null;
 	}
 }	

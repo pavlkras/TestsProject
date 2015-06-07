@@ -20,7 +20,6 @@ public class InnerResultDataObject {
 	@SerializedName(KEY_METACATEGORY)
 	String metacategory; 	// KEY_METACATEGORY have to have the same name
 	
-	String rightAnswer;
 	String personAnswer;
 
 	public String toJson(){
@@ -33,14 +32,6 @@ public class InnerResultDataObject {
 
 	public void setQuestionID(long questionID) {
 		this.questionID = questionID;
-	}
-	
-	public String getRightAnswer() {
-		return rightAnswer;
-	}
-
-	public void setRightAnswer(String rightAnswer) {
-		this.rightAnswer = rightAnswer;
 	}
 
 	public String getPersonAnswer() {

@@ -20,7 +20,4 @@ public interface IPersonTestHandler {
 	
 	//Returns number of right answers
 	public int getRightAnswersQuantity();  
-	
-	//Returns test details json
-	public String getJsonTestResults();
 }

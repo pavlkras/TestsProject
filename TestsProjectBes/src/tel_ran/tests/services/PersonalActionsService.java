@@ -203,16 +203,16 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 	public String getNextQuestion(long testId){
 		String question = null; 
 		EntityTest test = em.find(EntityTest.class, testId);
-		long companyId = test.getEntityCompany().getId();
 		
 		if(!test.isPassed()){
-			IPersonTestHandler testResultsJsonHandler = getTestResultsHandler(companyId, testId);
+			IPersonTestHandler testResultsJsonHandler = getTestResultsHandler(test.getEntityCompany().getId(), testId);
 			
 			question = testResultsJsonHandler.next();
 			if ( question == null ){
+				//TODO new Thread needed
 				testResultsJsonHandler.analyzeAll();
+				
 				test.setAmountOfCorrectAnswers(testResultsJsonHandler.getRightAnswersQuantity());
-				fileManager.saveJson(companyId, testId, testResultsJsonHandler.getJsonTestResults());
 				test.setPassed(true);
 				em.persist(test);
 			}
@@ -223,19 +223,14 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 	@Override
 	public void setAnswer(long testId, String jsonAnswer){
 		EntityTest test = em.find(EntityTest.class, testId);
-		long companyId = test.getEntityCompany().getId();
 		
 		if(!test.isPassed()){
-			IPersonTestHandler testResultsJsonHandler = getTestResultsHandler(companyId, testId);
-			testResultsJsonHandler.setAnswer(jsonAnswer);
-			fileManager.saveJson(companyId, testId, testResultsJsonHandler.getJsonTestResults());
+			getTestResultsHandler(test.getEntityCompany().getId(), testId).setAnswer(jsonAnswer);
 		}
 	}
 	
 	IPersonTestHandler getTestResultsHandler(long companyId, long testId){
-		String json = fileManager.getJson(companyId, testId);
-		IPersonTestHandler testResultsJsonHandler = new PersonTestHandler(json);
-		return testResultsJsonHandler;
+		return new PersonTestHandler(companyId, testId);
 	}
 	////-------  Processing  ----------------// END //
 }

@@ -26,10 +26,10 @@ public class EntityQuestion implements Serializable {
 	private long id;
 	////
 	@Column(name = "questionText", unique = true, nullable = false, length = 500)
-	private String questionText;
+	private String questionText; //Text of the question
 	////
 	@Column(name = "description", length = 1500)
-	private String description;
+	private String description; //Description of the question
 	////
 	@OneToMany(mappedBy = "questionId")
 	List<EntityQuestionAttributes> questionAttributes;

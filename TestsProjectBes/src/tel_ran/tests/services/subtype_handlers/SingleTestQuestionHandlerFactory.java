@@ -6,8 +6,6 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.google.gson.Gson;
-
 import tel_ran.tests.entitys.EntityQuestionAttributes;
 import tel_ran.tests.services.inner_result.dataobjects.InnerResultDataObject;
 
@@ -22,15 +20,15 @@ public class SingleTestQuestionHandlerFactory {
 		put("Text", "tel_ran.tests.services.subtype_handlers.TextTestQuestionHandler");
 	}};
 	
-	
 	public static ITestQuestionHandler getInstance(EntityQuestionAttributes question){
 		String metaCategory = question.getMetaCategory();
 		ITestQuestionHandler testQuestionResult = getTestQuestionHandler(metaCategory);
-		testQuestionResult.createFromQuestion(question);
+		testQuestionResult.createFromQuestion(question.getId(), metaCategory);
 		return testQuestionResult;
 	}
-	
-	public static ITestQuestionHandler getInstance(JSONObject singleQuestion){
+
+	//Restoring ITestQuestionHandler from single question json
+	public static ITestQuestionHandler getInstance(JSONObject singleQuestion, long companyId, long testId){
 		String metaCategory = null;
 		try {
 			metaCategory = singleQuestion.getString(InnerResultDataObject.KEY_METACATEGORY);
@@ -40,12 +38,9 @@ public class SingleTestQuestionHandlerFactory {
 		ITestQuestionHandler testQuestionHandler = null;
 		if(metaCategory != null){
 			testQuestionHandler = getTestQuestionHandler(metaCategory);
+			testQuestionHandler.fromJsonString(singleQuestion.toString(), companyId, testId);
 		}
-		// Creation of new instance with filling it
-		Gson gson = new Gson();
-		ITestQuestionHandler res = gson.fromJson(singleQuestion.toString(), testQuestionHandler.getClass());
-		
-		return res;
+		return testQuestionHandler;
 	}
 
 	private static ITestQuestionHandler getTestQuestionHandler(String metaCategory) {
