@@ -26,9 +26,6 @@ import org.springframework.web.client.RestTemplate;
 import tel_ran.tests.services.interfaces.ICompanyActionsService;
 import tel_ran.tests.services.interfaces.IMaintenanceService;
 
-
-
-
 @Controller
 @Scope("session") /*session timer default = 20min*/
 @RequestMapping({"/","/CompanyActions"})
@@ -206,7 +203,7 @@ User Registered Flow:
 	public String addProcessing(String C_Name,String C_Site, String C_Specialization,String C_AmountEmployes,String C_Password,Model model) {
 		boolean flag = false;		
 		try{
-			flag = companyService.createCompany(C_Name, C_Site, C_Specialization, C_AmountEmployes, C_Password);
+			flag = companyService.CreateCompany(C_Name, C_Site, C_Specialization, C_AmountEmployes, C_Password);
 		}catch(Throwable th){
 			th.printStackTrace();
 			System.out.println("catch creation company FES");
@@ -244,13 +241,13 @@ Normal Flow:
 		System.out.println("level_num--"+level_num);//-------------------------------sysout
 		System.out.println("category--"+category);//-------------------------------sysout
 		List<Long> listIdQuestions = maintenanceService.getUniqueSetQuestionsForTest(category, level_num, (long) counterOfQuestions);
-		int personID = companyService.createPerson(Integer.parseInt(personId), personName, personSurname,personEmail);
+		int personID = companyService.CreatePerson(Integer.parseInt(personId), personName, personSurname,personEmail);
 		String password = getRandomPassword();
-		long idTest = companyService.createIdTest(listIdQuestions, personID, password, category, level_num);	//------------ TO DO levels change !!	add company name for
+		boolean isCreated = companyService.CreateTest(listIdQuestions, personID, password, category, level_num);	//------------ TO DO levels change !!	add company name for
 		////
-		String link = PATH_ADDRESS_TO_SERVICE + "?" + idTest;// -------------------------------------------------------------------------------------TO DO real address NOT text in string !!!
+		String link = PATH_ADDRESS_TO_SERVICE + "?" + password;// -------------------------------------------------------------------------------------TO DO real address NOT text in string !!!
 		boolean flagMail = true;
-		sendEmail(link,personEmail,password);
+		sendEmail(link,personEmail);
 		if(flagMail){
 			model.addAttribute("myResult", link +"<br>" + "<H1>message was sent successfully</H1>");    	
 		}else{
@@ -264,12 +261,12 @@ Normal Flow:
 		return uuid	;
 	}	 
 	//------------END  Use case Ordering Test 3.1.3-------------
-	private boolean sendEmail(String link, String personEmail, String pass) {
+	private boolean sendEmail(String link, String personEmail) {
 		boolean result = false;
 		final String username = "senderurltest@gmail.com";
 		final String password = "sender54321.com";
 		String subject = "Email from HR";
-		String text = "Press for this link :  "+ link + "\n\n Your password: "+pass;
+		String text = "\nPress for this link :  "+ link + "\n";
 
 		try {
 
