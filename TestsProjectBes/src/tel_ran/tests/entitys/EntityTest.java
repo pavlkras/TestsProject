@@ -27,7 +27,7 @@ public class EntityTest {
 	////
 	@Id
 	@GeneratedValue
-	private long testId; 
+	private long testId; 	
 	private String password;
 	private boolean isPassed;
 	@Column(name = "cam_prntscr")

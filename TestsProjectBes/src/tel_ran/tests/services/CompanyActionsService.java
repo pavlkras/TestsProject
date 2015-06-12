@@ -86,7 +86,7 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 
 	@Override
 	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
-	public boolean createCompany(String C_Name, String C_Site, String C_Specialization, String C_AmountEmployes, String C_Password) {
+	public boolean CreateCompany(String C_Name, String C_Site, String C_Specialization, String C_AmountEmployes, String C_Password) {
 		boolean result=false;		
 		try {
 			EntityCompany comp = new EntityCompany();
@@ -110,7 +110,8 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 	//------------- 	Use case Ordering Test 3.1.3 -------------/// BEGIN ////
 	@Override
 	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
-	public long createIdTest(List<Long> questionsID, int personId, String pass, String category, String levelOfDifficulty) {
+	public boolean CreateTest(List<Long> questionsID, int personId, String pass, String category, String levelOfDifficulty) {
+		boolean actionFlag = false;
 		EntityPerson temp = em.find(EntityPerson.class, personId);	
 
 		EntityTest test = new EntityTest();
@@ -135,13 +136,14 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 			test.setAmountOfQuestions(testResultsJsonHandler.length());
 			test.setPassed(false);
 			em.persist(test);
+			actionFlag = true;
 		}
-		return testId;
+		return actionFlag;
 	}
 	
 	@Override
 	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
-	public int createPerson(int personId,String personName,String personSurname,String personEmail) {
+	public int CreatePerson(int personId,String personName,String personSurname,String personEmail) {
 		int result = personId;		
 		if(em.find(EntityPerson.class, personId)==null){			
 			EntityPerson person = new EntityPerson();
