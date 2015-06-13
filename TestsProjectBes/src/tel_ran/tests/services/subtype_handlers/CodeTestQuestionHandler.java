@@ -1,7 +1,9 @@
 package tel_ran.tests.services.subtype_handlers;
 
 import org.json.JSONObject;
+
 import tel_ran.tests.gradle_tester.CodeTester;
+import tel_ran.tests.services.inner_result.dataobjects.InnerResultDataObject;
 
 import java.io.IOException;
 
@@ -13,7 +15,6 @@ public class CodeTestQuestionHandler extends AbstractTestQuestionHandler impleme
 
 	@Override
 	public void analyze() {
-		// TODO Gradle call
 //		Source code is here:
 //		https://github.com/IgorTymoshchuk/GradleTestsSubProj.git
 		String pathToAnswersZip;
@@ -24,13 +25,16 @@ public class CodeTestQuestionHandler extends AbstractTestQuestionHandler impleme
 		pathToAnswersZip=getQuestionAttribubes().getFileLocationLink(); //Path to zip
 		codeFromPersonPath=fileManager.getPathToCode(companyId, testId, getQuestionID()); //Path to person code
 		try {
-
+			//TODO Check case of time limit of execution of analyze process
 			gradleModule = new CodeTester();
-//----------NEED TO PROCEED SOMEWHERE WITH GRADLE ANSWER
 			gradleAnswer=gradleModule.testIt(codeFromPersonPath,pathToAnswersZip);
-//--------------------------------
-
+			if(gradleAnswer){
+				dataObj.setStatus(InnerResultDataObject.STATUS_TRUE);
+			} else {
+				dataObj.setStatus(InnerResultDataObject.STATUS_FALSE);
+			}
 		} catch (IOException e) {
+			//TODO Check case of exception inside of gradle module
 			e.printStackTrace();
 		}
 	}
@@ -46,8 +50,6 @@ public class CodeTestQuestionHandler extends AbstractTestQuestionHandler impleme
 
 	@Override
 	public String getQuestionJson(int index) {
-
-
 		getQuestionAttribubes().getLineCod(); //stub
 		getQuestionAttribubes().getQuestionId().getQuestionText(); //question text
 		getQuestionAttribubes().getQuestionId().getDescription(); //description

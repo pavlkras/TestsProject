@@ -26,7 +26,7 @@ import tel_ran.tests.services.interfaces.IMaintenanceService;
 
 public class MaintenanceService extends TestsPersistence implements IMaintenanceService {	
 	//
-	private static int NUMBERofRESPONSESinThePICTURE = 4;// number of responses in the picture, for text questions default = 4
+	private static int NUMBERofRESPONSESinThePICTURE = 4;// number of responses in the picture, for text question`s default = 4
 	private static int MIN_NUMBER_OF_CATEGORIES = 1;
 	private static boolean FLAG_AUTHORIZATION = false;	
 	//

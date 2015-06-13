@@ -53,8 +53,9 @@
 		</aop:aspect>
 	</aop:config>
 	 -->
-	<bean id="company" class="tel_ran.tests.services.CompanyActionsService"/>
-	
+<!--	<bean id="company_actions" class="tel_ran.tests.services.CompanyActionsService"/> -->
+	<bean id="personal_actions" class="tel_ran.tests.services.PersonalActionsService"/>
+	<bean id="file_actions" class="tel_ran.tests.services.FileManagerService"/>
 	<!-- Token processing -->
  	<bean id="cipher" class="tel_ran.tests.token_cipher.AESCipher" scope="singleton"/>
  	<bean id="tokenProc" class="tel_ran.tests.token_cipher.TokenProcessor" scope="singleton"/>

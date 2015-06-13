@@ -209,10 +209,4 @@ public class FileManagerService implements IFileManagerService{
 		// TODO Auto-generated method stub
 		
 	}
-	@Override
-	public String getFileFromPath(String path) {
-		// TODO Auto-generated method stub
-		// Returns single file from exact filepath within String
-		return null;
-	}
 }	

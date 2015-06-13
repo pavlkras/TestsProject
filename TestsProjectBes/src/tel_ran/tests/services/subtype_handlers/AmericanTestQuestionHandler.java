@@ -1,5 +1,11 @@
 package tel_ran.tests.services.subtype_handlers;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Base64;
+import java.util.Collection;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -40,12 +46,30 @@ public class AmericanTestQuestionHandler extends AbstractTestQuestionHandler imp
 		try {
 			json.put(KEY_INDEX, index);
 			json.put(KEY_QUESTION_TEXT, getQuestionAttribubes().getQuestionId().getQuestionText());
-			json.put(KEY_QUESTION_IMAGE, fileManager.getFileFromPath(getQuestionAttribubes().getFileLocationLink()));
+			json.put(KEY_QUESTION_IMAGE, getImageBase64(getQuestionAttribubes().getFileLocationLink()));
 			json.put(KEY_NUMBER_OF_ANSWERS, getQuestionAttribubes().getNumberOfResponsesInThePicture());
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 		return json.toString();
+	}
+
+	private String getImageBase64(String fileLocationLink) {
+		String res = null;
+		byte[] bytes = null;
+		FileInputStream file;
+		try {
+			file = new FileInputStream(fileLocationLink);
+			bytes = new byte[file.available()];
+			file.read(bytes);
+			file.close();
+			res = Base64.getEncoder().encodeToString(bytes);
+		} catch (FileNotFoundException e) {	} 
+		catch (IOException e) {
+		} 
+		catch (NullPointerException e) {
+		}
+		return res;
 	}
 
 	@Override
@@ -54,5 +78,4 @@ public class AmericanTestQuestionHandler extends AbstractTestQuestionHandler imp
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 }
