@@ -17,16 +17,18 @@ public class PersonalActions {
 	@Autowired
 	IPersonalActionsService personalService; 	
 	////
-	@RequestMapping({"/PersonalActions"})
-	public String startPageToPerson(){ 		return "user/UserSignIn";     } 
+	/*@RequestMapping({"/PersonalActions"})
+	public String startPageToPerson(){ 		return "user/UserSignIn";     } */
 	/*  3.2.4. Performing Test – Control Mode  */
-	///------- this action is click on the link provided in the mail		
-	@RequestMapping({"/jobSeeker_test_preparing_click_event"})
+	///------- this action is click on the link provided in the mail	
+	
+	//@RequestMapping({"/jobSeeker_test_preparing_click_event"})
+	@RequestMapping({"/PersonalActions"})
 	public String jobSeeker_test_preparing_click_event(HttpServletRequest request, Model model){	
 		String outPage = "user/UserSignIn";
 		String passwordForCreatedTest = request.getQueryString();
 		boolean isReady = personalService.GetTestForPerson(passwordForCreatedTest);
-		if(isReady)
+		if(!isReady)// stub for create test page
 			outPage = "person/PersonTestPage";
 
 		return outPage;
