@@ -1,0 +1,290 @@
+@CHARSET "ISO-8859-1";
+
+body {
+	background: #e3e3e3;
+	font-family: helvetica;
+	font-size: 14px;
+	text-align: center;
+	padding: 0;
+	margin: 0;
+}
+
+ul, ol, dl {
+	padding: 0;
+	margin: 0;
+}
+
+hr {
+  border:0;
+  background-color: #0054a6;
+  height: 2px;
+}
+
+
+p {
+	float: left;
+	font-size: 12px;
+	margin-top: 10px;
+	text-align: left;
+	font-size: 12px;
+	text-decoration: none;
+}
+
+*{
+	margin: 0px;
+	padding: 0px;
+
+}
+a:link {
+	color: gray;
+}
+a:active {
+	color: black;
+}
+a:visited {
+	color: #171814;
+}
+#conatiner {
+	background: white;
+	width: 1000px;
+	height: auto;
+	margin: 0 auto;
+	padding: 10px;
+	border: 1px solid #f2f2f2;
+	overflow: hidden;
+}
+#header {
+	background: #0054a6;
+	width: 1000px;
+	height: 100px;
+	margin: 0px;
+	padding: 0px;
+}
+
+#logo {
+	height: 60px;
+	width: 350px;
+	float: left;
+	padding:5px;
+	margin-bottom:: 20px;
+	background: url(../images/logo.png);
+	background-repeat: no-repeat;	
+}
+
+
+#search_area {
+	margin-top: 30px;
+	margin-right: 10px;
+	height: 90px;
+	width: 280px;
+	padding: 5px;
+	float: right;
+}
+#text_Area {
+	border: none;
+	border-radius: 2px;
+	height: 30px;
+	width: 200px;
+}
+#button {
+	color: white;
+	height: 30px;
+	width: 60px;
+	background: black;
+	border-radius: 2px;
+	border: none;
+	font-size: 14px;
+	float: right;
+}
+#button:hover {
+	background: gray;
+}
+
+/*-----------------start nav_area-----------------*/
+
+#nav_area {
+	width: 1000px;
+	height: 35px;
+	border: 1px solid white;
+	background-image:url(../images/navbg.jpg);
+	padding-top: 12px;
+}
+
+#nav_area ul {
+	float: left;
+
+}
+
+#nav_area ul li {
+	list-style: none;
+	float: left;	
+}
+
+#nav_area ul li a {
+	text-decoration: none;
+	font-size: 16px;
+	font-weight:bold;
+	color: #0054a6;
+	padding: 15px 20px;
+	font-family: helvetica;
+}
+#nav_area ul li a:hover {
+	background: #0054a6;
+	color: #FFF;
+}
+
+#left_side {
+	margin-bottom: 10px;
+	margin-top: 10px;
+	float: left;
+	width: 180px;
+	height: auto;
+
+}
+
+#testexamples {
+	border-width: 1px;
+	border-radius: 10px;
+	border-style: solid;
+    border-color: #0054a6;
+	width: 180px;
+	height: auto;
+	overflow: hidden;
+	clear: both;
+	background: #FFF;
+}
+
+#testexamples h2 {
+	padding: 5px;
+	text-align: center;
+	margin-bottom: 10px;
+	color: #FFF;
+	font-family: helvetica;
+	background-color: #0054a6;
+}
+
+#testexamples ul {
+	list-style: none;
+	text-align: center;
+	margin-bottom: 5px;
+}
+
+#testexamples ul li {
+	
+	line-height: 30px;
+	width: auto;
+}
+
+#testexamples ul li a {
+	line-height: 10px;
+	font-size: 16px;
+	color: #0054a6;
+	font-family: helvetica;
+	text-decoration: none;
+	font-weight: bold;
+}
+
+#testexamples ul li a:hover {
+	background: #0054a6;
+	color: #FFF;
+}
+
+
+/*----------------start right area----------------*/
+
+
+#right_side {
+	float: right;
+	width: 804px;
+	margin-left: 10px;
+	margin-bottom: 10px;
+	margin-top: 10px;
+
+}
+
+
+/*---------------------------start  description area---------------------------*/
+
+
+#description {
+
+	float: left;
+	width: 804px;
+
+	position: absolute;
+	margin-bottom: 10px;
+	position: relative;
+}
+
+#description h2 {
+	color: #FFF;
+	width: auto;
+	border-width: 1px;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+	border-style: solid;
+    border-color: #0054a6;
+	position: relative;
+	font-family: helvetica;
+	background-color: #0054a6;
+	padding: 5px;
+}
+
+#description img {
+	margin-right: 10px;
+}
+
+#images {
+
+	width: 196px;
+	height: 200px;
+	overflow: hidden;
+
+}
+
+#images img {
+	background-position: center;
+	background-repeat: no-repeat;
+}
+
+/*-------- start footer area-----------*/
+
+#footer_area {
+	width: 1000px;
+	height: 50px;
+	background: #0054a6;
+	clear: both;
+
+}
+
+#footer_area ul {
+	float: left;
+}
+
+#footer_area ul li {
+	list-style: none;
+	float: left;
+	padding: 15px;
+
+}
+
+#footer_area ul li a {
+	text-decoration: none;
+	font-size: 14px;
+	font-family: helvetica;
+	color: black;
+}
+
+#footer_area ul li a:hover {
+	color: white;
+
+}
+
+#footer_area p {
+	float: left;
+	margin-top: 5px;
+	padding: 10px;
+	text-align: left;
+	font-size: 12px;
+	color: white;
+}
