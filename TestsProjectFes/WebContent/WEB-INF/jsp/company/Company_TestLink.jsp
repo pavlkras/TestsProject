@@ -17,66 +17,47 @@
 	rel="stylesheet">
 </head>
 <body>
-	<div id="conatiner">
-		<div id="header">
-			<div id="logo"></div>
-			<div id="search_area">
-				<input id="text_Area" type="text" placeholder="Search.." /> <input
-					id="button" type="button" value="search" />
-			</div>
+		<div id="conatiner">
+	 	<div id ="header">
+	 		<div id="logo">
+	 			
+	 		</div>
+	 		<div id="search_area">
+	 			<input id="text_Area" type="text" placeholder="Search.."/>
+	 			<input id="button" type="button" value="search"/>
+	 		</div>
+	 		
+	 	</div>
+	 	<div id="nav_area">
+	 			<ul>
+	 				<li><a href=".">Home</li></a>
+	 				<li><a href="login">User Login</li></a>
+	 				<li><a href="CompanyActions">Company Login</li></a>
+	 				<li><a href=".">FAQ</li></a>
+	 				<li><a href=".">Contact Us</li></a>
+	 			</ul>
+	 	</div><!--end nav area-->
 
-		</div>
-		<div id="nav_area">
-			<ul>
-				<li><a href="index.html">Home</li>
-				</a>
-				<li><a href="UserSignIn.html">User Login</li>
-				</a>
-				<li><a href="CompanyActions">Company Login</li>
-				</a>
-				<li><a href="index.html">FAQ</li>
-				</a>
-				<li><a href="index.html">Contact Us</li>
-				</a>
-			</ul>
-		</div>
-		<!--end nav area-->
+	 	<div id="left_side">
+        
+        
+	 		<div id="testexamples">
+               <div>
+	 			<h2>Test Examples</h2>
+              </div>
+	 			<ul>
+                
+	 				<li><a href=".">JAVA</li></a><hr>
+	 				<li><a href=".">C++</li></a><hr>
+	 				<li><a href=".">C#</li></a><hr>
+	 				<li><a href=".">Android</li></a><hr>
+	 				<li><a href=".">Javascript</li></a><hr>
+                    <li><a href=".">HTML&CSS</li></a><hr>
+                    <li><a href=".">Other Tests</li></a>
+	 			</ul>
+ 		  </div><!--end tesst examles-->
 
-		<div id="left_side">
-
-
-			<div id="testexamples">
-				<div>
-					<h2>Test Examples</h2>
-				</div>
-				<ul>
-
-					<li><a href="index.html">JAVA</li>
-					</a>
-					<hr>
-					<li><a href="index.html">C++</li>
-					</a>
-					<hr>
-					<li><a href="index.html">C#</li>
-					</a>
-					<hr>
-					<li><a href="index.html">Android</li>
-					</a>
-					<hr>
-					<li><a href="index.html">Javascript</li>
-					</a>
-					<hr>
-					<li><a href="index.html">HTML&CSS</li>
-					</a>
-					<hr>
-					<li><a href="index.html">Other Tests</li>
-					</a>
-				</ul>
-			</div>
-			<!--end catagories-->
-
-		</div>
-		<!--end left_side area-->
+ 	  </div><!--end left_side area-->
 
 		<div id="right_side">
 
