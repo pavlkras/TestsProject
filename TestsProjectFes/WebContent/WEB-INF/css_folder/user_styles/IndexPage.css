@@ -1,103 +1,79 @@
 @CHARSET "ISO-8859-1";
 
 /*@media screen and (max-width: 1024px) , screen and(max-device-width: 1996px) {*/
-ul{
-	margin: 0;
-	padding: 0;
+
+
+#formDiv {
+
+	clear: both;
+	float: left;
+	margin-left: 100px;
+	text-align: left;
+	
 }
 
-body {
-	position:fixed;
-	/* width: 1200px; */
+#formDiv h2 {
+	color:#0054a6;
+	margin-bottom: 10px;
 	text-align: center;
 }
-
-h2 {
-	text-align: center;
+#longdiv {
+	
+	width: 600px;
+	
 }
 
-.h2 {
-	font-family: erdana, helvetica, arial, sans-serif;
-	font-size: 25px;
-	color: #610B38;
-	font-weight: 400;
+form {
+    /* Just to center the form on the page */
+    margin: 0 auto;
+    width: 420px;
+    /* To see the outline of the form */
+    padding: 1em;
 }
 
-.homecontent {
-	background-color: #fff;
-	border: 1px solid #ffc0cb;
-	margin: 5px;
-	padding: 10px;
-	width: 150px;
-	border-radius: 10px;
+form div + div {
+    margin-top: 1em;
 }
 
-.homespan {
-	font: 21px times new roman;
-	padding: 5px;
-	float: right;
-}
-
-a {
-	color: green;
+label {
+    /* To make sure that all labels have the same size and are properly aligned */
+    display: inline-block;
+    width: 200px;
+    text-align: left;
+	color:#0054a6;
+	font-weight:bold;
 	text-decoration: none;
 }
 
-a:hover {
-	text-decoration: underline;
-	color: red;
+input, textarea {
+    /* To make sure that all text fields have the same font settings
+       By default, textareas have a monospace font */
+    font: 1em sans-serif;
+	vertical-align:top;
+    /* To give the same size to all text field */
+    width: 200px;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+
+    /* To harmonize the look & feel of text field border */
+    border: 1px solid #999;
 }
 
-img {
-	max-width: 100%;
-	height: auto;
+input:focus, textarea:focus {
+    /* To give a little highlight on active elements */
+    border-color: #000;
 }
 
-.firsthomecontent a {
-	float: left;
+textarea {
+    /* To properly align multiline text fields with their labels */
+    vertical-align: top;
+
+    /* To give enough room to type some text */
+    height: 5em;
+
+    /* To allow users to resize any textarea vertically
+       It does not work on every browsers */
+    resize: vertical;
 }
 
-.ipsForm_required {
-	color: red;
-}
-
-.miscStyle, #popularLincs, .javaTech {
-	display: none;
-}
-
-.formDiv {
-	position:absolute;
-	clear: both;
-	float: right;
-	top: 100px;
-	left:820px;	
-}
-
-li {
-	float: left;
-    margin-right: 2em; 
-	border: 0.1em solid black;
-	padding: 0.4em;
-}
-.linksContent{
-	position: absolute;
-	top:100px;
-	width: 70%;
-}
-
-.outTextInfo{
-	border:0.1em solid red;
-	padding: 2px;
-	color: blue;
-	font-size: 19px;
-	font-style: italic;
-}
-
-.outTextInfoAdded{
-	border:0.1em solid red;
-	padding: 2px;
-	color: green;
-	font-size: 19px;
-	font-style: italic;
-}
 /*}*/

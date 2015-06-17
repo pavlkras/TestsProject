@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
+	<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <!DOCTYPE html">
 <html>
 <head>
@@ -8,10 +10,65 @@
 	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="/TestsProjectFes/static_js/js/CompanyJS/add_company.js"></script>
 <link href="static/css_folder/company_styles/add_company.css" rel="stylesheet">
+
+<link
+	href='<c:url value="/static/css_folder/user_styles/IndexPage.css"></c:url>'
+	rel="stylesheet">
+<link
+	href='<c:url value="/static/css_folder/style.css"></c:url>'
+	rel="stylesheet">
 <title>Company Adding</title>
+
+
 </head>
 <body>
-	<form name="registration" action="add_processing">
+	<div id="conatiner">
+	 	<div id ="header">
+	 		<div id="logo">
+	 			
+	 		</div>
+	 		<div id="search_area">
+	 			<input id="text_Area" type="text" placeholder="Search.."/>
+	 			<input id="button" type="button" value="search"/>
+	 		</div>
+	 		
+	 	</div>
+	 	<div id="nav_area">
+	 			<ul>
+	 				<li><a href="index.html">Home</li></a>
+	 				<li><a href="UserSignIn.html">User Login</li></a>
+	 				<li><a href="CompanyActions">Company Login</li></a>
+	 				<li><a href="index.html">FAQ</li></a>
+	 				<li><a href="index.html">Contact Us</li></a>
+	 			</ul>
+	 	</div><!--end nav area-->
+
+	 	<div id="left_side">
+        
+        
+	 		<div id="testexamples">
+               <div>
+	 			<h2>Test Examples</h2>
+              </div>
+	 			<ul>
+                
+	 				<li><a href="index.html">JAVA</li></a><hr>
+	 				<li><a href="index.html">C++</li></a><hr>
+	 				<li><a href="index.html">C#</li></a><hr>
+	 				<li><a href="index.html">Android</li></a><hr>
+	 				<li><a href="index.html">Javascript</li></a><hr>
+                    <li><a href="index.html">HTML&CSS</li></a><hr>
+                    <li><a href="index.html">Other Tests</li></a>
+	 			</ul>
+ 		  </div><!--end catagories-->
+
+ 	  </div><!--end left_side area-->
+
+ 	  <div id="right_side">
+
+	 		<div id="formDiv">
+               <h2>Company Registration</h2>
+               <form name="registration" action="add_processing">
 		<table >
 			<tr>
 				<td class="td_left">Company Name</td>
@@ -90,7 +147,18 @@
 		type="hidden" name="check_repass" id="check_repass" value="0" />
 			<input type="hidden" name="check_all" id="check_all" value="0" />
 	</form>
-	<br>
-	<a href=".">Home</a>
+             
+            </div>
+			<div id="additional_area"> </div>
+				 		
+ 	  </div><!--end of right area-->
+ 	
+
+
+ 	<div id="footer_area">
+	
+ 	<p> Copyright &copy; 2014 HrTrueTest</p>
+	</div>
+</div>
 </body>
 </html>

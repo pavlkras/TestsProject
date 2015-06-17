@@ -1,43 +1,5 @@
-@CHARSET "ISO-8859-1";
-
-a {
-	font-size: 1.35em;
-	color: blue;
-}
-
-a:HOVER {
-	color: orange;
-}
-
-input:HOVER {
-	background-color: silver;
-}
-
-p {
-	color: blue;
-	border-bottom: 0.01em solid black;
-}
-
-table {
-	color: white;
-	background-color: grey;
-}
-
-textarea:HOVER {
-	background-color: silver;
-}
-
-.thFloatText {
-	float: left;
-}
-
-.tdFloatContent {
-	float: right;
-}
-
-body form input {
-	text-align: center;
-}
+@charset "utf-8";
+/* CSS Document */
 
 .buttons {
 	float: left;
@@ -98,10 +60,18 @@ body form input {
 	color: #fff;
 }
 
-.responseArea {
-	float: right;
-}
-
 .preTextPatternCode{
 	color: red;
+}
+#homepage {
+	position: absolute;
+	margin-left: 100px;
+}
+
+#homepage h2 {
+	color: #0054a6;
+}
+
+#homepage a {
+	text-decoration:none;
 }

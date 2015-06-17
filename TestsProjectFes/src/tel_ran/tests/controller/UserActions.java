@@ -25,7 +25,7 @@ public class UserActions{
 	@Autowired
 	IMaintenanceService maintenanceService;	
 	@RequestMapping({"/"})
-	public String Index(){     return "user/UserSignIn";       }// this mapping to index page !!!!!! for all users and all company !!!!
+	public String Index(){     return "index";       }// this mapping to index page !!!!!! for all users and all company !!!!
 	//--------------------- fields of this class ---------------------------
 	private List<String> testResultList;
 	private List<String> questionList = null;
@@ -38,6 +38,13 @@ public class UserActions{
 	 3.2. User Actions 
 	3.2.1. Login	
 	 */
+	//// ------  login case --------- // BEGIN //
+	@RequestMapping(value = "/login", method = {RequestMethod.POST, RequestMethod.GET})
+	public String userlogin(String userEmail, String password, HttpServletRequest request, Model pageModel) {
+		String outPage = "user/UserSignIn";
+		return outPage;		
+	}
+	
 	//// ------  login case --------- // BEGIN //
 	@RequestMapping(value = "/login_action", method = {RequestMethod.POST, RequestMethod.GET})
 	public String login_action(String userEmail, String password, HttpServletRequest request, Model pageModel) {

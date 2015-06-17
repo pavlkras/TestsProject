@@ -5,14 +5,21 @@
 <!DOCTYPE html>
 <html>
 <head>
+ <link
+	href='<c:url value="/static/css_folder/user_styles/IndexPage.css"></c:url>'
+	rel="stylesheet">
+<link
+	href='<c:url value="/static/css_folder/style.css"></c:url>'
+	rel="stylesheet">
 <style type="text/css">
 .isRequaredfn,.isRequaredln,.isRequaredmail,.isRequaredpp,.isRequaredcp{
 /* this is requared span witch star  */
 	color: red;
 }
-.submitButton,.confirmpasspan,.mailWrongSpan{
+.confirmpasspan,.mailWrongSpan{
 visibility: hidden;
 }
+
 .confirmpasspan,.passpan{
 font-size: 0.80em;
 }
@@ -63,7 +70,7 @@ font-size: 0.80em;
 			}
 			    var pass2 = document.user_create_form.confirm_password.value;
 			    if(pass2.length > 1){
-			    	$(".submitButton").css("visibility","hidden");
+			    	$(".submitButton").attr("disabled", false);	
 			    }
 		});
 		////
@@ -74,12 +81,12 @@ font-size: 0.80em;
 				$(this).css("color","red");
 				$(".confirmpasspan").css("color","red");
 				$(".confirmpasspan").css("visibility","visible");	
-				$(".submitButton").css("visibility","hidden");
+				$(".submitButton").attr("disabled", true);
 			}else{
 				$(this).css("color","green");
 				$(".confirmpasspan").css("color","green");
 				$(".confirmpasspan").css("visibility","visible");
-				$(".submitButton").css("visibility","visible");		
+				$(".submitButton").attr("disabled", false);
 				$("#confirmpasspan").text("Ok");				
 			}
 		});
@@ -121,45 +128,103 @@ font-size: 0.80em;
 <title>Sign up page</title>
 </head>
 <body>
-	<div id="signUpForm">
-		<form action="signup_action" method="post" name="user_create_form">
-			<table>
-				<tr>
-					<td colspan="3" align="center"><h2>Registration form</h2></td>
-				</tr>
-				<tr>
-					<td>First Name <span class="isRequaredfn">*</span></td>
-					<td><input type="text" name="firstname" id="firstname" placeholder="Josh"/></td>
-				</tr>
-				<tr>
-					<td>Last Name <span class="isRequaredln">*</span></td>
-					<td><input type="text" name="lastname" id="lastname" placeholder="Jonson" /></td>
-				</tr>
-				<tr>
-					<td>E-mail Address <span class="isRequaredmail">*</span></td>
-					<td><input type="email" name="email" id="email" placeholder="Josh-Jonson@mail.com"/>&nbsp;<span
-						id="mailWrongSpan" class="mailWrongSpan">&nbsp;</span></td>
-				</tr>
-				<tr>
-					<td>Password <span class="isRequaredpp">*</span></td>
-					<td><input type="password" name="password" id="first_password" />&nbsp;<span id="passpan"
-						class="passpan">&nbsp;</span></td>
-				</tr>
-				<tr>
-					<td>Confirm Password <span class="isRequaredcp">*</span></td>
-					<td><input type="password" name="confirm_password"
-						id="confirm_password" /> &nbsp;<span id="confirmpasspan"
-						class="confirmpasspan">&nbsp;Not identical</span></td>
-				</tr>
-				<tr>
-					<td colspan="2" align="center"><input id="submitButton" class="submitButton" type="submit"
-						value="Create Account" /></td>
-				</tr>
-			</table>
-		</form>
-	</div>
+	<div id="conatiner">
+	 	<div id ="header">
+	 		<div id="logo">
+	 			
+	 		</div>
+	 		<div id="search_area">
+	 			<input id="text_Area" type="text" placeholder="Search.."/>
+	 			<input id="button" type="button" value="search"/>
+	 		</div>
+	 		
+	 	</div>
+	 	<div id="nav_area">
+	 			<ul>
+	 				<li><a href=".">Home</li></a>
+	 				<li><a href="login">User Login</li></a>
+	 				<li><a href="CompanyActions">Company Login</li></a>
+	 				<li><a href=".">FAQ</li></a>
+	 				<li><a href=".">Contact Us</li></a>
+	 			</ul>
+	 	</div><!--end nav area-->
 
-	<br>
-	<a href=".">Home</a>
+	 	<div id="left_side">
+        
+        
+	 		<div id="testexamples">
+               <div>
+	 			<h2>Test Examples</h2>
+              </div>
+	 			<ul>
+                
+	 				<li><a href=".">JAVA</li></a><hr>
+	 				<li><a href=".">C++</li></a><hr>
+	 				<li><a href=".">C#</li></a><hr>
+	 				<li><a href=".">Android</li></a><hr>
+	 				<li><a href=".">Javascript</li></a><hr>
+                    <li><a href=".">HTML&CSS</li></a><hr>
+                    <li><a href=".">Other Tests</li></a>
+	 			</ul>
+ 		  </div><!--end tesst examles-->
+
+ 	  </div><!--end left_side area-->
+
+ 	  <div id="right_side">
+
+	 		<div id="formDiv">
+                <h2>User Registration</h2>
+                
+                <form action="signup_action" method="post" name="user_create_form">
+        
+         
+        
+                <div>
+                <label>First Name</label>
+              <span class="ipsForm_required">*</span>
+                <input type="text" name="firstname" id="firstname" placeholder="Josh"/>
+                </div>
+                <div>
+                <label>Last Name</label>
+              <span class="ipsForm_required">*</span>
+                <input type="text" name="lastname" id="lastname" placeholder="Jonson" />
+                </div>
+                <div id="longdiv">
+                <label>E-mail</label>
+              <span class="ipsForm_required">*</span>
+               <input type="email" name="email" id="email" placeholder="Josh-Jonson@mail.com"/><span
+                                id="mailWrongSpan" class="mailWrongSpan"></span>
+                </div>
+                <div>
+                <label>Password   </label> <span class="ipsForm_required">*</span> 
+                <input type="password" name="password" id="first_password" />
+               
+                </div>
+                
+                <div  id="longdiv">
+                <label>Confirm Password   </label> <span class="ipsForm_required">*</span> 
+               <input type="password" name="confirm_password"
+                                id="confirm_password" />
+               &nbsp;<span id="confirmpasspan"
+						class="confirmpasspan">&nbsp;Not identical</span>
+                </div>
+                <div><input id="submitButton" class="submitButton" type="submit"
+                                value="Create Account" disabled />
+                </div>
+                    
+                    
+                </form>
+            </div>
+			<div id="additional_area"> </div>
+				 		
+ 	  </div><!--end of right area-->
+ 	
+
+
+ 	<div id="footer_area">
+	
+ 	<p> Copyright &copy; 2014 HrTrueTest</p>
+	</div>
+</div>
 </body>
 </html>
