@@ -13,12 +13,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import tel_ran.tests.services.interfaces.IFileManagerService;
 @SuppressWarnings("resource")
+@Repository
 public class FileManagerService implements IFileManagerService{
-	private String workingDir;
+	private String workingDir = "D:\\Programming\\IDE\\EclipseKepler\\TESTS_FILES_DATABASE";
 	public FileManagerService(){
-		workingDir = System.getProperty("user.dir") + File.separator + NAME_FOLDER_FOR_SAVENG_TESTS_FILES; //  this global directory for saving files
+//		workingDir = System.getProperty("user.dir") + File.separator + NAME_FOLDER_FOR_SAVENG_TESTS_FILES; //  this global directory for saving files
 	}
 	////
 	static final String[] BILD_ATTRIBUTES_ARRAY = {"PersonPictures","ScreenPictures","PersonCodeText","JsonFiles"};
@@ -86,19 +89,41 @@ public class FileManagerService implements IFileManagerService{
 	@Override
 	public void saveJson(long compId, long testId, String json) {
 		try {
-			Date d = new Date(System.currentTimeMillis());
-			SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd_hhmmss");
+//			Date d = new Date(System.currentTimeMillis());
+//			SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd_hhmmss");
 			BufferedWriter writer = new BufferedWriter(new FileWriter(
 					workingDir + File.separator 
 					+ compId + File.separator 
 					+  testId + File.separator
 					+ BILD_ATTRIBUTES_ARRAY[JSON_FILES] + File.separator
-					+ sf.format(d) + ".json"));
+//					+ sf.format(d)
+					+ "test.json"));
 			writer.write(json);			 
 			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	////
+	@Override
+	public String getJson(long compId, long testId) {
+		String outResult = "";
+		String TEMP_PATH = workingDir + File.separator 
+				+ compId + File.separator 
+				+ testId + File.separator  
+				+ BILD_ATTRIBUTES_ARRAY[JSON_FILES]
+				+ "test.json";		 
+		File[] res = new File(TEMP_PATH).listFiles();
+		////
+		try {
+			for(int i =0;i<res.length;i++){						
+				BufferedReader reader = new BufferedReader(new FileReader(res[0]));
+				outResult += reader.readLine() + ",";			
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return outResult;
 	}
 	////
 	@Override
@@ -134,26 +159,6 @@ public class FileManagerService implements IFileManagerService{
 			for(int i =0;i<res.length;i++){						
 				BufferedReader reader = new BufferedReader(new FileReader(res[0]));
 				outResult.add(reader.readLine());			
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return outResult;
-	}
-	////
-	@Override
-	public String getJson(long compId, long testId) {
-		String outResult = "";
-		String TEMP_PATH = workingDir + File.separator 
-				+ compId + File.separator 
-				+ testId + File.separator  
-				+ BILD_ATTRIBUTES_ARRAY[JSON_FILES];		 
-		File[] res = new File(TEMP_PATH).listFiles();
-		////
-		try {
-			for(int i =0;i<res.length;i++){						
-				BufferedReader reader = new BufferedReader(new FileReader(res[0]));
-				outResult += reader.readLine() + ",";			
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

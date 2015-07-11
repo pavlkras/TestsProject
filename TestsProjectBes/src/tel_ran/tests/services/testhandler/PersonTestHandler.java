@@ -2,29 +2,31 @@ package tel_ran.tests.services.testhandler;
 
 import java.util.List;
 
+import javax.persistence.EntityManager;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import tel_ran.tests.entitys.EntityQuestionAttributes;
-import tel_ran.tests.services.TestsPersistence;
 import tel_ran.tests.services.inner_result.dataobjects.InnerResultDataObject;
 import tel_ran.tests.services.interfaces.IFileManagerService;
 import tel_ran.tests.services.subtype_handlers.ITestQuestionHandler;
 import tel_ran.tests.services.subtype_handlers.SingleTestQuestionHandlerFactory;
-
-public class PersonTestHandler extends TestsPersistence implements IPersonTestHandler {
+@Component
+public class PersonTestHandler implements IPersonTestHandler {
 	private JSONArray jsonTestResults;
 	public static final String KEY_INDEX = "index";
 	
-	@Autowired
 	IFileManagerService fileManager;
-
+	private EntityManager em;
 	private long companyId;
 	private long testId;
-		
-	public PersonTestHandler(long companyId, long testId){
+	
+	public PersonTestHandler(long companyId, long testId, IFileManagerService fileManager, EntityManager em){
+		this.em = em;
+		this.fileManager = fileManager;
 		this.companyId = companyId;
 		this.testId = testId;
 		String json = fileManager.getJson(companyId, testId);

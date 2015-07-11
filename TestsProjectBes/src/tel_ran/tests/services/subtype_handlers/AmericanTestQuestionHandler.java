@@ -4,13 +4,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Base64;
-import java.util.Collection;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.stereotype.Component;
 
 import tel_ran.tests.services.inner_result.dataobjects.InnerResultDataObject;
-
+@Component
 public class AmericanTestQuestionHandler extends AbstractTestQuestionHandler implements ITestQuestionHandler{
 
 	public AmericanTestQuestionHandler(){
@@ -33,7 +33,7 @@ public class AmericanTestQuestionHandler extends AbstractTestQuestionHandler imp
 		try {
 			personAnswer = answerJsonObj.getString("answer");
 		} catch (JSONException e) {
-			e.printStackTrace();
+			System.out.println("answer was not found inside of request");
 		}
 		dataObj.setPersonAnswer(personAnswer);
 		analyze();

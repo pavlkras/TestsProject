@@ -9,7 +9,7 @@ import tel_ran.tests.services.TestsPersistence;
 import tel_ran.tests.services.inner_result.dataobjects.InnerResultDataObject;
 import tel_ran.tests.services.interfaces.IFileManagerService;
 
-public abstract class AbstractTestQuestionHandler extends TestsPersistence{
+public abstract class AbstractTestQuestionHandler extends TestsPersistence {
 	@Autowired
 	IFileManagerService fileManager;
 	

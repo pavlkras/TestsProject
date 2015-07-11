@@ -22,8 +22,8 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 	private EntityCompany entityCompany;
 	@Autowired
 	private TokenProcessor tokenProcessor;
-
-	IFileManagerService fm = new FileManagerService();
+	@Autowired
+	IFileManagerService fileManager;
 	//-------------Use Case Company Login 3.1.1----------- //   BEGIN    ///
 	@Override
 	public boolean CompanyAuthorization(String companyName, String password) {
@@ -127,10 +127,10 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 		if( questionsID.size() > 0 ){
 			long companyId = test.getEntityCompany().getId();
 			////  creating folder tree for test
-			fm.initializeTestFileStructure(companyId, testId);
+			fileManager.initializeTestFileStructure(companyId, testId);
 			////
 			
-			IPersonTestHandler testResultsJsonHandler = new PersonTestHandler(companyId, testId);
+			IPersonTestHandler testResultsJsonHandler = new PersonTestHandler(companyId, testId, fileManager, em);
 			testResultsJsonHandler.addQuestions(questionsID);
 			
 			test.setAmountOfQuestions(testResultsJsonHandler.length());

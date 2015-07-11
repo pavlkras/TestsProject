@@ -22,7 +22,7 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 		if(tempRes != null){
 			testID = tempRes.getTestId();
 			companyID = 0;//tempRes.getCompanyId();      //------ to do ?????
-			getTestResultsHandler(companyID,testID);
+			getTestResultsHandler(companyID, testID, fileManager);
 			actionResult = true;
 		}
 
@@ -36,7 +36,7 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 		EntityTest test = em.find(EntityTest.class, testId);
 
 		if(!test.isPassed()){
-			IPersonTestHandler testResultsJsonHandler = getTestResultsHandler(test.getEntityCompany().getId(), testId);
+			IPersonTestHandler testResultsJsonHandler = getTestResultsHandler(test.getEntityCompany().getId(), testId, fileManager);
 
 			question = testResultsJsonHandler.next();
 			if ( question == null ){
@@ -56,12 +56,12 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 		EntityTest test = em.find(EntityTest.class, testId);
 
 		if(!test.isPassed()){
-			getTestResultsHandler(test.getEntityCompany().getId(), testId).setAnswer(jsonAnswer);
+			getTestResultsHandler(test.getEntityCompany().getId(), testId, fileManager).setAnswer(jsonAnswer);
 		}
 	}
 
-	IPersonTestHandler getTestResultsHandler(long companyId, long testId){
-		return new PersonTestHandler(companyId, testId);
+	IPersonTestHandler getTestResultsHandler(long companyId, long testId, IFileManagerService fileManager){
+		return new PersonTestHandler(companyId, testId, fileManager, em);
 	}
 	////-------  Processing  ----------------// END //
 }
