@@ -7,4 +7,5 @@ public interface IPersonalActionsService extends ApplicationFinalFields{
 	public boolean GetTestForPerson(String pssswordForCreatedTest);	
 	public String getNextQuestion(long testId);
 	public void setAnswer(long testId, String jsonAnswer);
-	}
+	public String getToken(String password);
+}
