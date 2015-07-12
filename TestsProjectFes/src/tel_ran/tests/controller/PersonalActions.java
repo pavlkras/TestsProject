@@ -15,22 +15,25 @@ import tel_ran.tests.services.interfaces.IPersonalActionsService;
 @RequestMapping({"/","/PersonalActions"})
 public class PersonalActions {
 	@Autowired
-	IPersonalActionsService personalService; 	
+	IPersonalActionsService personalService;
 	////
 	/*@RequestMapping({"/PersonalActions"})
 	public String startPageToPerson(){ 		return "user/UserSignIn";     } */
 	/*  3.2.4. Performing Test – Control Mode  */
 	///------- this action is click on the link provided in the mail	
 	
-	//@RequestMapping({"/jobSeeker_test_preparing_click_event"})
-	@RequestMapping({"/PersonalActions"})
+	@RequestMapping({"/jobSeeker_test_preparing_click_event"})
+	//@RequestMapping({"/PersonalActions"})
 	public String jobSeeker_test_preparing_click_event(HttpServletRequest request, Model model){	
 		String outPage = "user/UserSignIn";
 		String passwordForCreatedTest = request.getQueryString();
-		boolean isReady = personalService.GetTestForPerson(passwordForCreatedTest);
-		if(!isReady)// stub for create test page
+		String token = personalService.getToken(passwordForCreatedTest);
+		if(token != null){
+			model.addAttribute("token", token);
 			outPage = "person/PersonTestPage";
-
+		}
+//		boolean isReady = personalService.GetTestForPerson(passwordForCreatedTest);
+//		if(!isReady)// stub for create test page
 		return outPage;
 	}	
 }
