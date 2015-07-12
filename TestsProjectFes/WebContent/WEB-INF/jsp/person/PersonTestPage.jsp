@@ -12,7 +12,7 @@
 	href='<c:url value="/static/css_folder/person_styles/WebCamStyle.css"></c:url>'
 	rel="stylesheet">
 <script src="static/js_folder/person_scripts/test_control_mode.js"></script>
-<script src="static/js_folder/person_scripts/testController.js"></script>
+<script src="/TestsProjectFes/static/js_folder/person_scripts/testController.js"></script>
 </head>
 <body ng-app="testPage" ng-controller="QuestionTestController">
 	<div class="item">
