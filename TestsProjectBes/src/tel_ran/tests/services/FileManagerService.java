@@ -24,11 +24,11 @@ public class FileManagerService implements IFileManagerService{
 //		workingDir = System.getProperty("user.dir") + File.separator + NAME_FOLDER_FOR_SAVENG_TESTS_FILES; //  this global directory for saving files
 	}
 	////
-	static final String[] BILD_ATTRIBUTES_ARRAY = {"PersonPictures","ScreenPictures","PersonCodeText","JsonFiles"};
+	static final String[] BILD_ATTRIBUTES_ARRAY = {"PersonPictures","ScreenPictures","PersonCodeText"};
 	static final int PERSON_PICTURES = 0;
 	static final int SCREEN_PICTURES = 1;
 	static final int PERSON_CODE_TEXT = 2;
-	static final int JSON_FILES = 3;
+//	static final int JSON_FILE = 3;
 	////
 	@Override
 	public boolean initializeTestFileStructure(long compId, long testId) {
@@ -89,14 +89,10 @@ public class FileManagerService implements IFileManagerService{
 	@Override
 	public void saveJson(long compId, long testId, String json) {
 		try {
-//			Date d = new Date(System.currentTimeMillis());
-//			SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd_hhmmss");
 			BufferedWriter writer = new BufferedWriter(new FileWriter(
 					workingDir + File.separator 
 					+ compId + File.separator 
 					+  testId + File.separator
-					+ BILD_ATTRIBUTES_ARRAY[JSON_FILES] + File.separator
-//					+ sf.format(d)
 					+ "test.json"));
 			writer.write(json);			 
 			writer.close();
@@ -111,15 +107,11 @@ public class FileManagerService implements IFileManagerService{
 		String TEMP_PATH = workingDir + File.separator 
 				+ compId + File.separator 
 				+ testId + File.separator  
-				+ BILD_ATTRIBUTES_ARRAY[JSON_FILES]
 				+ "test.json";		 
-		File[] res = new File(TEMP_PATH).listFiles();
-		////
+		File res = new File(TEMP_PATH);
 		try {
-			for(int i =0;i<res.length;i++){						
-				BufferedReader reader = new BufferedReader(new FileReader(res[0]));
+				BufferedReader reader = new BufferedReader(new FileReader(res));
 				outResult += reader.readLine() + ",";			
-			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

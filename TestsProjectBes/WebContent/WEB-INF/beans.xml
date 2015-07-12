@@ -53,7 +53,7 @@
 		</aop:aspect>
 	</aop:config>
 	 -->
-<!--	<bean id="company_actions" class="tel_ran.tests.services.CompanyActionsService"/> -->
+<!--  <bean id="company_actions" class="tel_ran.tests.services.CompanyActionsService"/> -->
 <!--  or add <context:annotation-config/> -->
 <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor" />
 
