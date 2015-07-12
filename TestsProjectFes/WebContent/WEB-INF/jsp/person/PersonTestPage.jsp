@@ -13,7 +13,7 @@
 <script src="/TestsProjectFes/static/js_folder/person_scripts/test_control_mode.js"></script> 
 <script src="/TestsProjectFes/static/js_folder/person_scripts/testController.js"></script>
 </head>
-<body ng-app="testPage" ng-controller="QuestionTestController">
+<body ng-app="testPage" ng-controller="QuestionTestController" ng-init="token='${token}'">
 	<div class="item">
 		<video id="video" width="320" height="240" autoplay="autoplay"></video>
 	</div>
