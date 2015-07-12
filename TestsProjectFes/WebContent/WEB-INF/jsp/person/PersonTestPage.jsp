@@ -8,10 +8,9 @@
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<link
-	href='<c:url value="/static/css_folder/person_styles/WebCamStyle.css"></c:url>'
-	rel="stylesheet">
-<script src="static/js_folder/person_scripts/test_control_mode.js"></script>
+<link rel="stylesheet"
+	href="/TestsProjectFes/static/css_folder/person_styles/WebCamStyle.css">
+<script src="/TestsProjectFes/static/js_folder/person_scripts/test_control_mode.js"></script> 
 <script src="/TestsProjectFes/static/js_folder/person_scripts/testController.js"></script>
 </head>
 <body ng-app="testPage" ng-controller="QuestionTestController">
