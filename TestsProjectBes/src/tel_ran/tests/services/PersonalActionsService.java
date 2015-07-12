@@ -4,14 +4,19 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import tel_ran.tests.entitys.EntityTest;
+import tel_ran.tests.services.common.ICommonData;
 import tel_ran.tests.services.interfaces.IFileManagerService;
 import tel_ran.tests.services.interfaces.IPersonalActionsService;
 import tel_ran.tests.services.testhandler.IPersonTestHandler;
 import tel_ran.tests.services.testhandler.PersonTestHandler;
+import tel_ran.tests.token_cipher.TokenProcessor;
 
 public class PersonalActionsService extends TestsPersistence implements	IPersonalActionsService {	
 	@Autowired
 	IFileManagerService fileManager;
+	@Autowired
+	TokenProcessor tokenProcessor;
+	
 	private long testID;
 	private long companyID;
 	////
@@ -64,4 +69,16 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 		return new PersonTestHandler(companyId, testId, fileManager, em);
 	}
 	////-------  Processing  ----------------// END //
+	@Override
+	public String getToken(String password) {
+		// TODO password is potentially dangerous because it is directly the same inside of the request.
+		// Check how to write this code without SQL-injection problem !!!
+		String token = null;
+		EntityTest test = (EntityTest) em.createQuery("Select t from EntityTest t where t.password='" + password +"'" ).getSingleResult();
+		if(test != null){
+			token = tokenProcessor.encodeIntoToken(test.getTestId(), ICommonData.TOKEN_VALID_IN_SECONDS);
+		}
+		return token;
+	}
+	
 }

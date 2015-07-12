@@ -24,7 +24,7 @@ import com.fasterxml.jackson.annotation.JsonRawValue;
 @RequestMapping({"/view_results_rest"})
 public class TestsResultsRestController {
 	@Autowired
-	ICompanyActionsService companyActionsService;
+	ICompanyActionsService company;
 	@Autowired
 	TokenProcessor tokenProcessor;
 	
@@ -34,7 +34,7 @@ public class TestsResultsRestController {
 		long companyId = tokenProcessor.decodeAndCheckToken(token);
 		String res = "";
 		if(companyId != -1){
-			res = companyActionsService.getTestsResultsAll(companyId, timeZone);
+			res = company.getTestsResultsAll(companyId, timeZone);
 		} else {
 			res = getJsonErrorMessage();
 		}
@@ -47,7 +47,7 @@ public class TestsResultsRestController {
 		long companyId = tokenProcessor.decodeAndCheckToken(token);
 		String res = "";
 		if(companyId != -1){
-			res = companyActionsService.getTestsResultsForPersonID(companyId, personId, timeZone);
+			res = company.getTestsResultsForPersonID(companyId, personId, timeZone);
 		} else {
 			res = getJsonErrorMessage();
 		}
@@ -78,7 +78,7 @@ public class TestsResultsRestController {
 				calend_until.set(Calendar.SECOND, 0);
 				calend_until.set(Calendar.MILLISECOND, 0);
 								
-				res = companyActionsService.getTestsResultsForTimeInterval(companyId, calend_from.getTimeInMillis(), calend_until.getTimeInMillis(), timeZone);
+				res = company.getTestsResultsForTimeInterval(companyId, calend_from.getTimeInMillis(), calend_until.getTimeInMillis(), timeZone);
 			} catch (ParseException e) {}
 		} else {
 			res = getJsonErrorMessage();
@@ -93,7 +93,7 @@ public class TestsResultsRestController {
 		long companyId = tokenProcessor.decodeAndCheckToken(token);
 		String res = "";
 		if(companyId != -1){
-			res = companyActionsService.getTestResultDetails(companyId, testId);
+			res = company.getTestResultDetails(companyId, testId);
 		} else {
 			res = getJsonErrorMessage();
 		}

@@ -15,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonRawValue;
 @RequestMapping({"/persontest"})
 public class PersonTestRESTController {
 	@Autowired
-	IPersonalActionsService personalActionsService;
+	IPersonalActionsService personal;
 	@Autowired
 	TokenProcessor tokenProcessor;
 	
@@ -24,15 +24,15 @@ public class PersonTestRESTController {
 	String getNextAndSavePrevious(@RequestHeader(value="Authorization") String token, @RequestBody String answer){
 		long testId = tokenProcessor.decodeAndCheckToken(token);
 		String res = "";
-		////FOR TESTING PURPOSE/////
-		testId = Long.parseLong(token);
-		////////////////////////////
+//		////FOR TESTING PURPOSE/////
+//		testId = Long.parseLong(token);
+//		////////////////////////////
 		
 		if(testId != -1){
 			if(answer != null && !answer.equalsIgnoreCase("")){
-				personalActionsService.setAnswer(testId, answer);
+				personal.setAnswer(testId, answer);
 			}
-			res = personalActionsService.getNextQuestion(testId);
+			res = personal.getNextQuestion(testId);
 		}
 		return res;
 	}

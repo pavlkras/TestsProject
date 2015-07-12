@@ -54,12 +54,18 @@
 	</aop:config>
 	 -->
 <!--	<bean id="company_actions" class="tel_ran.tests.services.CompanyActionsService"/> -->
-	<bean id="personal_actions" class="tel_ran.tests.services.PersonalActionsService"/>
+<!--  or add <context:annotation-config/> -->
+<bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor" />
+
+
+<bean id="personal_actions" class="tel_ran.tests.services.PersonalActionsService"/> 
 
 <bean id="fileManager" class="tel_ran.tests.services.FileManagerService"></bean>
+
 <!-- Utils -->
 	<bean id="springApplicationContext" class="tel_ran.tests.services.utils.SpringApplicationContext"/>
 <!-- EOF Utils -->
+
 <!-- TestHandlers -->
 	<bean id="Abstract_Reasoning" class="tel_ran.tests.services.subtype_handlers.AmericanTestQuestionHandler"></bean>
 	<bean id="Attention_Test" class="tel_ran.tests.services.subtype_handlers.AmericanTestQuestionHandler"></bean>
@@ -67,8 +73,10 @@
 	<bean id="Programming_Task" class="tel_ran.tests.services.subtype_handlers.CodeTestQuestionHandler"></bean>
 <!-- <bean id="Text" class="tel_ran.tests.services.subtype_handlers.TextTestQuestionHandler"></bean>  -->
 <!-- EOF TestHandlers -->
+
 <!-- Token processing -->
 	<bean id="cipher" class="tel_ran.tests.token_cipher.AESCipher" scope="singleton"/>
 	<bean id="tokenProc" class="tel_ran.tests.token_cipher.TokenProcessor" scope="singleton"/>
 <!-- EOF Token processing -->
+
 </beans>
