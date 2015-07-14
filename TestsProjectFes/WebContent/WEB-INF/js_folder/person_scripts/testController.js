@@ -104,7 +104,7 @@ app.directive('testPage', function() {
         replace: false,
         scope: false,
 
-        templateUrl: "testQuestionPage.html",
+        templateUrl: /TestsProjectFes/static/js_folder/person_scripts/testQuestionPage.html,
 
         link: function foo(scope, element, attrs){
             console.log("in directive " + scope.nAnswers);
