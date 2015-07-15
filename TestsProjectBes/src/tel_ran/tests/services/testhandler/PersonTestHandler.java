@@ -142,6 +142,7 @@ public class PersonTestHandler implements IPersonTestHandler {
 				if(jsonObj.get(InnerResultDataObject.KEY_STATUS).equals(InnerResultDataObject.STATUS_NOT_ASKED)){
 					ITestQuestionHandler testQuestionResult = getInstanceFromJson(jsonObj);
 					res = testQuestionResult.getQuestionJson(i);
+					break;
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();

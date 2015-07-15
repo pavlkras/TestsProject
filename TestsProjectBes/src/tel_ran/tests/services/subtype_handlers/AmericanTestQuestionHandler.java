@@ -1,5 +1,6 @@
 package tel_ran.tests.services.subtype_handlers;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -55,15 +56,19 @@ public class AmericanTestQuestionHandler extends AbstractTestQuestionHandler imp
 	}
 
 	private String getImageBase64(String fileLocationLink) {
+//		imageBase64Text = encodeImage(NAME_FOLDER_FOR_SAVENG_QUESTIONS_FILES  + fileLocation);
+	//	outArray[1] = "data:image/png;base64," + imageBase64Text; 
+		
 		String res = null;
 		byte[] bytes = null;
 		FileInputStream file;
 		try {
-			file = new FileInputStream(fileLocationLink);
+			String workingDir = System.getProperty("user.dir") + File.separator + tel_ran.tests.services.fields.ApplicationFinalFields.NAME_FOLDER_FOR_SAVENG_QUESTIONS_FILES;
+			file = new FileInputStream(workingDir+fileLocationLink);
 			bytes = new byte[file.available()];
 			file.read(bytes);
 			file.close();
-			res = Base64.getEncoder().encodeToString(bytes);
+			res = "data:image/png;base64,"+Base64.getEncoder().encodeToString(bytes);
 		} catch (FileNotFoundException e) {	} 
 		catch (IOException e) {
 		} 

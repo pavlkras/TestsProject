@@ -218,7 +218,7 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 					.setParameter("testId", testId)
 					.setParameter("company", company)
 					.getSingleResult();
-			res = test.getJsonDetails();// TO DO Throws actions NullPointerException !!!!!!!!!!!!!
+//			res = test.getJsonDetails();// TO DO Throws actions NullPointerException !!!!!!!!!!!!!
 		}
 		return res;
 	}
@@ -226,7 +226,7 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 	private String generateJsonResponse(List<EntityTest> testresults, String timeZone) {
 		JSONArray result = new JSONArray();
 		for (EntityTest test: testresults){
-			result.put(test.getJsonObjectCommonData(timeZone));
+//			result.put(test.getJsonObjectCommonData(timeZone));
 		}
 		return result.toString();
 	}

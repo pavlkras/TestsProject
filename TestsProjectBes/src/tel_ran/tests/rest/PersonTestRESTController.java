@@ -23,7 +23,7 @@ public class PersonTestRESTController {
 	@ResponseBody @JsonRawValue
 	String getNextAndSavePrevious(@RequestHeader(value="Authorization") String token, @RequestBody String answer){
 		long testId = tokenProcessor.decodeAndCheckToken(token);
-		String res = "";
+		String res = "error - wrong token";
 //		////FOR TESTING PURPOSE/////
 //		testId = Long.parseLong(token);
 //		////////////////////////////
