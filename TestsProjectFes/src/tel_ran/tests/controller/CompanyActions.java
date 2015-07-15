@@ -249,7 +249,7 @@ Normal Flow:
 		boolean flagMail = true;
 		sendEmail(link,personEmail);
 		if(flagMail){
-			model.addAttribute("myResult", link +"<br>" + "<H1>message was sent successfully</H1>");    	
+			model.addAttribute("myResult", "<a href='"+link+"'><h2><b>Test link</b></h2></a><br>" + "<H1>message was sent successfully</H1>");    	
 		}else{
 			model.addAttribute("myResult", "<H1>Error while sending message</H1>");
 		}
