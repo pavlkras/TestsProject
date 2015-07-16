@@ -105,7 +105,7 @@ function showE(id) {
 }
 function hideE(id) {
 	var select_id = document.getElementById(id);
-	select_id.style.display = 'none';
+	//select_id.style.display = 'none';
 }
 ///////////////////////////////////////////
 
