@@ -13,17 +13,18 @@
 <script src="/TestsProjectFes/static/js_folder/person_scripts/test_control_mode.js"></script> 
 <script src="/TestsProjectFes/static/js_folder/person_scripts/testController.js"></script>
 </head>
-<body ng-app="testPage" ng-controller="QuestionTestController" ng-init="token='${token}'">
-	<div class="item">
+<body ng-app="testPage" ng-controller="QuestionTestController" ng-init="token='${token}'"> 
+
+	<div class="item" ng-show="false">
 		<video id="video" width="320" height="240" autoplay="autoplay"></video>
 	</div>
-	<div class="item">
+	<div class="item" ng-show="false">
 		<canvas id="canvas" width="320" height="240"></canvas>
 	</div>
-	
+	<br><br>
 	<div  ng-show="mySwitchStartTest">
+		<h1 id="message"></h1>
     	<h1>This is your personal test list, don't close this page!!!</h1>
-    	<h1 id="message"></h1>
     	<input type="button" id="start_test" ng-click="toggleShowDetails()" value="Start your test" />
 	</div>
 	<br>
