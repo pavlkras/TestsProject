@@ -3,8 +3,8 @@
         <tr>
             <td>
                 <table>
-                    <tr><th colspan="2"><label>Question №&nbsp;</label>{{numberQuestion}}</th></tr>
-                    <tr><td colspan="2"><img src="telaviv.jpg" height="170" width="250" alt="Image is not supported"></td></tr>
+                    <tr><th colspan="2"><label>Question&nbsp;</label>{{numberQuestion}}</th></tr>
+                    <tr ng-show="mySwitchImage"><td colspan="2"><img src="data:image/jpeg;base64,{{image}}" height="170" width="250" alt="Image is not supported"></td></tr>
                     <br><br>
                     <tr>
                         <td ng-repeat="n in nAnswers"><p ng-show="mySwitchAmericanSystemTestQuestion">{{n}}<input type="radio" value={{n}} ng-model="answer.name">&nbsp;&nbsp;</p></td>
