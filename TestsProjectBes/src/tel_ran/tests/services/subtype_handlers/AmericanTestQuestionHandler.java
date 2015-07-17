@@ -48,7 +48,8 @@ public class AmericanTestQuestionHandler extends AbstractTestQuestionHandler imp
 		JSONObject json = new JSONObject();
 		try {
 			json.put(KEY_QUESTION_TEXT, getQuestionAttribubes().getQuestionId().getQuestionText());
-			json.put(KEY_QUESTION_IMAGE, getImageBase64(getQuestionAttribubes().getFileLocationLink()));
+			String fileLink = getQuestionAttribubes().getFileLocationLink();
+			json.put(KEY_QUESTION_IMAGE, getImageBase64(fileLink));
 			JSONArray answers = new JSONArray();
 			for(int max = getQuestionAttribubes().getNumberOfResponsesInThePicture(), i = 0; i < max; i++){
 				answers.put(Character.toString ((char) (i+65)));
