@@ -23,16 +23,22 @@ public class PersonTestRESTController {
 	@ResponseBody @JsonRawValue
 	String getNextAndSavePrevious(@RequestHeader(value="Authorization") String token, @RequestBody String answer){
 		long testId = tokenProcessor.decodeAndCheckToken(token);
-		String res = "error - wrong token";
+		String res = null;
 //		////FOR TESTING PURPOSE/////
 //		testId = Long.parseLong(token);
 //		////////////////////////////
 		
 		if(testId != -1){
-			if(answer != null && !answer.equalsIgnoreCase("")){
-				personal.setAnswer(testId, answer);
+			if(!personal.testIsPassed(testId)){
+				if(answer != null && !answer.equalsIgnoreCase("")){
+					personal.setAnswer(testId, answer);
+				}
+				res = personal.getNextQuestion(testId);
+			} else {
+				res = "{\"error\":\"test is already passed\",\"isPassed\":true}";
 			}
-			res = personal.getNextQuestion(testId);
+		} else {
+			res = "error - wrong token";
 		}
 		return res;
 	}

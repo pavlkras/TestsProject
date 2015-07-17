@@ -81,4 +81,19 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 		return token;
 	}
 	
+	public boolean testIsPassed(long testId){
+		boolean res = false;
+		EntityTest test = null;
+		try{
+			test = em.find(EntityTest.class, testId);
+			if(test.isPassed()){
+				res = true;
+			}
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+
+		return res;
+	}
+	
 }
