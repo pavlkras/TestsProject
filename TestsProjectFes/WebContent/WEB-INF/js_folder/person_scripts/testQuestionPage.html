@@ -5,7 +5,7 @@
                 <table>
                     <tr><th colspan="2"><label>Question&nbsp;</label>{{numberQuestion}}</th></tr>
                     <tr ng-show="mySwitchImage"><td colspan="2">{{text}}</td></tr>
-                    <tr ng-show="mySwitchImage"><td colspan="2"><img src="{{image}}" height="170" width="250" alt="Image is not supported"></td></tr>
+                    <tr ng-show="mySwitchImage"><td colspan="2"><img ng-src="{{image}}" height="170" width="250" alt="Image is not supported"></td></tr>
                     <br><br>
                     <tr>
                         <td ng-repeat="n in answers"><p ng-show="mySwitchAmericanSystemTestQuestion">{{n}}<input type="radio" value={{n}} ng-model="answer.name">&nbsp;&nbsp;</p></td>

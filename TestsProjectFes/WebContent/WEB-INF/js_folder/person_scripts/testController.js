@@ -25,15 +25,15 @@ app.controller("QuestionTestController", function($scope, $http) {
 			}
 		};
 		var dataObj = {
-			answer : userAnswer
-		//index: nQuestion  //?
+			answer : userAnswer,
+			index: $scope.numberQuestion
 		};
 
 		$http.post(link, dataObj, $scope.httpConfig).success(
 				function(data, status, headers, config) {
 					console.log("Success - request result to Rest");
 					$scope.question = data;
-					
+
 					if ($scope.question == null) {
 						console.log("data from rest (question) is null");
 						$scope.mySwitchEndTest = !$scope.mySwitchEndTest;
@@ -76,7 +76,7 @@ app.controller("QuestionTestController", function($scope, $http) {
 								break;
 							}
 						}
-
+						
 						data = null;
 						userAnswer = null;
 						$scope.answer = {
