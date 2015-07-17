@@ -8,4 +8,5 @@ public interface IPersonalActionsService extends ApplicationFinalFields{
 	public String getNextQuestion(long testId);
 	public void setAnswer(long testId, String jsonAnswer);
 	public String getToken(String password);
+	public boolean testIsPassed(long testId);
 }
