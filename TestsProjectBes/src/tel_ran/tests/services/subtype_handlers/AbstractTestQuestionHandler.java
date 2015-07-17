@@ -13,10 +13,11 @@ public abstract class AbstractTestQuestionHandler extends TestsPersistence {
 	@Autowired
 	IFileManagerService fileManager;
 	
-	public static final String KEY_INDEX = "index";
-	public static final String KEY_QUESTION_TEXT = "question_text";
-	public static final String KEY_NUMBER_OF_ANSWERS = "n_answers";
-	public static final String KEY_QUESTION_IMAGE = "question_image";
+	public static final String KEY_QUESTION_INDEX = "index";
+	public static final String KEY_QUESTION_TEXT = "text";
+	public static final String KEY_QUESTION_ANSWERS = "answers";
+	public static final String KEY_QUESTION_IMAGE = "image";
+	public static final String KEY_QUESTION_TYPE = "type";
 	
 	private EntityQuestionAttributes entityQuestionAttributes;
 	protected InnerResultDataObject dataObj;

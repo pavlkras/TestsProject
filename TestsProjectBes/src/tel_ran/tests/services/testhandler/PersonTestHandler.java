@@ -88,7 +88,7 @@ public class PersonTestHandler implements IPersonTestHandler {
 			testQuestionHandler.setPersonAnswer(answerJsonObj);
 			jsonTestResults.put(index, new JSONObject(testQuestionHandler.toJsonString()));
 		} catch (JSONException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			res = false;
 		}
 		save();

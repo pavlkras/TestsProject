@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Base64;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
@@ -35,20 +36,26 @@ public class AmericanTestQuestionHandler extends AbstractTestQuestionHandler imp
 			personAnswer = answerJsonObj.getString("answer");
 		} catch (JSONException e) {
 			System.out.println("answer was not found inside of request");
+			return false;
 		}
 		dataObj.setPersonAnswer(personAnswer);
 		analyze();
-		return false;
+		return true;
 	}
 
 	@Override
 	public String getQuestionJson(int index) {
 		JSONObject json = new JSONObject();
 		try {
-			json.put(KEY_INDEX, index);
 			json.put(KEY_QUESTION_TEXT, getQuestionAttribubes().getQuestionId().getQuestionText());
 			json.put(KEY_QUESTION_IMAGE, getImageBase64(getQuestionAttribubes().getFileLocationLink()));
-			json.put(KEY_NUMBER_OF_ANSWERS, getQuestionAttribubes().getNumberOfResponsesInThePicture());
+			JSONArray answers = new JSONArray();
+			for(int max = getQuestionAttribubes().getNumberOfResponsesInThePicture(), i = 0; i < max; i++){
+				answers.put(Character.toString ((char) (i+65)));
+			}
+			json.put(KEY_QUESTION_ANSWERS, answers);
+			json.put(KEY_QUESTION_INDEX, index);
+			json.put(KEY_QUESTION_TYPE, 1);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
