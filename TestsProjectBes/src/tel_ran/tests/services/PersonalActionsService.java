@@ -1,4 +1,6 @@
 package tel_ran.tests.services;
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +43,10 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 		EntityTest test = em.find(EntityTest.class, testId);
 
 		if(!test.isPassed()){
+			if(test.getStartTestDate()==0){
+				test.setStartTestDate(new Date().getTime());
+				em.persist(test);
+			}
 			IPersonTestHandler testResultsJsonHandler = getTestResultsHandler(test.getEntityCompany().getId(), testId, fileManager);
 
 			question = testResultsJsonHandler.next();
@@ -49,6 +55,7 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 				testResultsJsonHandler.analyzeAll();
 
 				test.setAmountOfCorrectAnswers(testResultsJsonHandler.getRightAnswersQuantity());
+				test.setEndTestDate(new Date().getTime());
 				test.setPassed(true);
 				em.persist(test);
 			}
@@ -94,6 +101,14 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 		}
 
 		return res;
+	}
+	@Override
+	public void saveImage(long testId, String image) {
+		EntityTest test = em.find(EntityTest.class, testId);
+
+		if(!test.isPassed()){
+			fileManager.saveImage(test.getEntityCompany().getId(), testId, image);
+		}
 	}
 	
 }

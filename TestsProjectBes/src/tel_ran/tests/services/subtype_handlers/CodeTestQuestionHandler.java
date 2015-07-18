@@ -9,7 +9,9 @@ import tel_ran.tests.services.inner_result.dataobjects.InnerResultDataObject;
 import java.io.IOException;
 @Component
 public class CodeTestQuestionHandler extends AbstractTestQuestionHandler implements ITestQuestionHandler{
-
+	
+	public static final int QUESTION_TYPE = 2;
+	
 	public CodeTestQuestionHandler() {
 		super();
 	}

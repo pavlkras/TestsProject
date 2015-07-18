@@ -32,39 +32,8 @@ public class EntityTest {
 	@ManyToOne
 	private EntityPerson entityPerson;
 	
-	
-	//
 	public EntityTest() {}
-	//
-//	public JSONObject getJsonObjectCommonData(String timeZone) {
-//		JSONObject jsonObj = new JSONObject();
-//		try {
-//			jsonObj.put("personName",entityPerson.getPersonName());
-//			jsonObj.put("personSurname",entityPerson.getPersonSurname());
-//			jsonObj.put("testid",testId);
-//			jsonObj.put("testCategory",testCategory);
-//			jsonObj.put("testName", testName);
-//			SimpleDateFormat sdf = new SimpleDateFormat(ICommonData.DATE_FORMAT);
-//			sdf.setTimeZone(TimeZone.getTimeZone(timeZone));
-//			jsonObj.put("testDate", sdf.format(new Date(startTestDate)));
-//		} catch (JSONException e) {}
-//		return jsonObj;
-//	}
 
-//	public String getJsonDetails() {
-//		JSONObject jsonObj = new JSONObject();
-//		try {
-//			jsonObj.put("duration",duration);
-//			jsonObj.put("amountOfQuestions",amountOfQuestions);
-//			jsonObj.put("complexityLevel",levelOfDifficulty);
-//			jsonObj.put("amountOfCorrectAnswers",amountOfCorrectAnswers);
-//			jsonObj.put("persentOfRightAnswers",Math.round((float)amountOfCorrectAnswers/(float)amountOfQuestions*100)); // Add calculations from the resultTestCodeFromPerson field  
-//			jsonObj.put("pictures", getJsonArrayImage(pictures));
-//			jsonObj.put("codesFromPerson", getJsonArrayCode(testCodeFromPerson, resultTestCodeFromPerson, "java,csharp,cpp,css,"));
-//		} catch (JSONException e) {}
-//		return jsonObj.toString();
-//	}
-	
 	public void setAmountOfCorrectAnswers(int amountOfCorrectAnswers) {
 		this.amountOfCorrectAnswers = amountOfCorrectAnswers;
 	}

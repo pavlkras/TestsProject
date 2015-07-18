@@ -24,16 +24,16 @@ public class PersonTestRESTController {
 	String getNextAndSavePrevious(@RequestHeader(value="Authorization") String token, @RequestBody String answer){
 		long testId = tokenProcessor.decodeAndCheckToken(token);
 		String res = null;
-//		////FOR TESTING PURPOSE/////
-//		testId = Long.parseLong(token);
-//		////////////////////////////
-		
+
 		if(testId != -1){
 			if(!personal.testIsPassed(testId)){
 				if(answer != null && !answer.equalsIgnoreCase("")){
 					personal.setAnswer(testId, answer);
 				}
 				res = personal.getNextQuestion(testId);
+				if(res == null){
+					res = "{\"error\":\"test is already passed\",\"isPassed\":true}";
+				}
 			} else {
 				res = "{\"error\":\"test is already passed\",\"isPassed\":true}";
 			}
@@ -41,5 +41,15 @@ public class PersonTestRESTController {
 			res = "error - wrong token";
 		}
 		return res;
+	}
+	
+	@RequestMapping(value="/save_image", method=RequestMethod.POST)
+	@ResponseBody @JsonRawValue
+	String saveImage(@RequestHeader(value="Authorization") String token, @RequestBody String image){
+		long testId = tokenProcessor.decodeAndCheckToken(token);
+		if(testId != -1){
+			personal.saveImage(testId, image);
+		}
+		return "";
 	}
 }

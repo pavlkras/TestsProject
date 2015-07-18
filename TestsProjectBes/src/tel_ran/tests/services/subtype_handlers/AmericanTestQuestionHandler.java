@@ -15,6 +15,8 @@ import tel_ran.tests.services.inner_result.dataobjects.InnerResultDataObject;
 @Component
 public class AmericanTestQuestionHandler extends AbstractTestQuestionHandler implements ITestQuestionHandler{
 
+	public static final int QUESTION_TYPE = 1;
+	
 	public AmericanTestQuestionHandler(){
 		super();
 	}
@@ -56,7 +58,7 @@ public class AmericanTestQuestionHandler extends AbstractTestQuestionHandler imp
 			}
 			json.put(KEY_QUESTION_ANSWERS, answers);
 			json.put(KEY_QUESTION_INDEX, index);
-			json.put(KEY_QUESTION_TYPE, 1);
+			json.put(KEY_QUESTION_TYPE, QUESTION_TYPE);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

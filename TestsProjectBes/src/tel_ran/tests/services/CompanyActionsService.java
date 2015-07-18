@@ -1,8 +1,13 @@
 package tel_ran.tests.services;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -166,10 +171,10 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 		if(company!=null){
 			@SuppressWarnings("unchecked")
 			List<EntityTest> tests = (List<EntityTest>) em.createQuery
-			("SELECT t FROM EntityTest t WHERE t.endTestDate!=0 AND t.entityCompany = :company ORDER BY t.entityPerson")
-			.setParameter("company", company)
-			.getResultList();
-			res = generateJsonResponse(tests, timeZone);
+				("SELECT t FROM EntityTest t WHERE t.endTestDate!=0 AND t.entityCompany = :company ORDER BY t.entityPerson")
+				.setParameter("company", company)
+				.getResultList();
+			res = generateJsonResponseCommon(tests, timeZone);
 		}
 		return res;
 	}
@@ -182,11 +187,11 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 		if(company!=null && person != null){
 			@SuppressWarnings("unchecked")
 			List<EntityTest> tests = (List<EntityTest>) em.createQuery
-			("SELECT t FROM EntityTest t WHERE t.endTestDate!=0 AND t.entityPerson = :person AND t.entityCompany = :company")
-			.setParameter("person", person)
-			.setParameter("company", company)
-			.getResultList();
-			res = generateJsonResponse(tests, timeZone);
+				("SELECT t FROM EntityTest t WHERE t.isPassed=true AND t.entityPerson = :person AND t.entityCompany = :company")
+				.setParameter("person", person)
+				.setParameter("company", company)
+				.getResultList();
+			res = generateJsonResponseCommon(tests, timeZone);
 		}
 		return res;
 	}
@@ -198,12 +203,12 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 		if(company!=null){
 			@SuppressWarnings("unchecked")
 			List<EntityTest> tests = (List<EntityTest>) em.createQuery
-			("SELECT t FROM EntityTest t WHERE t.endTestDate!=0 AND t.startTestDate >= :date_from AND t.startTestDate <= :date_until AND t.entityCompany = :company ORDER BY t.entityPerson")
-			.setParameter("date_from", date_from)
-			.setParameter("date_until", date_until)
-			.setParameter("company", company)
-			.getResultList();
-			res = generateJsonResponse(tests, timeZone);
+				("SELECT t FROM EntityTest t WHERE t.isPassed=true AND t.startTestDate >= :date_from AND t.startTestDate <= :date_until AND t.entityCompany = :company ORDER BY t.entityPerson")
+				.setParameter("date_from", date_from)
+				.setParameter("date_until", date_until)
+				.setParameter("company", company)
+				.getResultList();
+			res = generateJsonResponseCommon(tests, timeZone);
 		}
 		return res;
 	}
@@ -214,22 +219,49 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 		EntityCompany company = em.find(EntityCompany.class, companyId);
 		if(company!=null){
 			EntityTest test = (EntityTest) em.createQuery
-					("SELECT t FROM EntityTest t WHERE t.endTestDate!=0 AND t.testId = :testId AND t.entityCompany = :company")
-					.setParameter("testId", testId)
-					.setParameter("company", company)
-					.getSingleResult();
+				("SELECT t FROM EntityTest t WHERE t.isPassed=true AND t.testId = :testId AND t.entityCompany = :company")
+				.setParameter("testId", testId)
+				.setParameter("company", company)
+				.getSingleResult();
+//			JSONObject jsonObj = new JSONObject();
+//			try {
+//				jsonObj.put("duration",duration);
+//				jsonObj.put("amountOfQuestions",amountOfQuestions);
+//				jsonObj.put("complexityLevel",levelOfDifficulty);
+//				jsonObj.put("amountOfCorrectAnswers",amountOfCorrectAnswers);
+//				jsonObj.put("persentOfRightAnswers",Math.round((float)amountOfCorrectAnswers/(float)amountOfQuestions*100)); // Add calculations from the resultTestCodeFromPerson field  
+//				jsonObj.put("pictures", getJsonArrayImage(pictures));
+//				jsonObj.put("codesFromPerson", getJsonArrayCode(testCodeFromPerson, resultTestCodeFromPerson, "java,csharp,cpp,css,"));
+//			} catch (JSONException e) {}
+//			return jsonObj.toString();
+			
 //			res = test.getJsonDetails();// TO DO Throws actions NullPointerException !!!!!!!!!!!!!
 		}
 		return res;
 	}
 
-	private String generateJsonResponse(List<EntityTest> testresults, String timeZone) {
+	private String generateJsonResponseCommon(List<EntityTest> testresults, String timeZone) {
 		JSONArray result = new JSONArray();
 		for (EntityTest test: testresults){
-//			result.put(test.getJsonObjectCommonData(timeZone));
+			
+			JSONObject jsonObj = new JSONObject();
+			try {
+				jsonObj.put("personName",test.getEntityPerson().getPersonName());
+				jsonObj.put("personSurname",test.getEntityPerson().getPersonSurname());
+				jsonObj.put("testid",test.getTestId());
+				SimpleDateFormat sdf = new SimpleDateFormat(ICommonData.DATE_FORMAT);
+				sdf.setTimeZone(TimeZone.getTimeZone(timeZone));
+				jsonObj.put("testDate", sdf.format(new Date(test.getStartTestDate())));
+				jsonObj.put("persentOfRightAnswers",Math.round((float)test.getAmountOfCorrectAnswers()/(float)test.getAmountOfQuestions()*100));
+				result.put(jsonObj);
+			} catch (JSONException e) {}
 		}
 		return result.toString();
 	}
+	
+//	public String getJsonDetails() {
+
+//}
 
 	@Override
 	public String encodeIntoToken(long companyId) {
