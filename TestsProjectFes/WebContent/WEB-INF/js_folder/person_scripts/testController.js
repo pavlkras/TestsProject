@@ -35,12 +35,12 @@ app.controller("QuestionTestController", function($scope, $http) {
 					$scope.question = data;
 
 					
-					if ($scope.question == null) {
-						console.log("data from rest (question) is null");
-						$scope.mySwitchEndTest = !$scope.mySwitchEndTest;
-						$scope.mySwitchShowTest = !$scope.mySwitchShowTest;
-					
-					} else {
+//					if ($scope.question == null) {
+//						console.log("data from rest (question) is null");
+//						$scope.mySwitchEndTest = !$scope.mySwitchEndTest;
+//						$scope.mySwitchShowTest = !$scope.mySwitchShowTest;
+//					
+//					} else {
 						//End of Test
 						if($scope.question.isPassed){
 							console.log($scope.question.error);
@@ -83,7 +83,7 @@ app.controller("QuestionTestController", function($scope, $http) {
 								name : null
 							};
 						}
-					}
+				//	}
 
 				}).error(function(data, status, headers, config) {
 			console.log("Error - request result to Rest");
