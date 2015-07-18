@@ -9,4 +9,5 @@ public interface IPersonalActionsService extends ApplicationFinalFields{
 	public void setAnswer(long testId, String jsonAnswer);
 	public String getToken(String password);
 	public boolean testIsPassed(long testId);
+	void saveImage(long testId, String image);
 }
