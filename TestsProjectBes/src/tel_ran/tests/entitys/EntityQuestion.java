@@ -27,9 +27,12 @@ public class EntityQuestion implements Serializable {
 	////
 	@Column(name = "questionText", unique = true, nullable = false, length = 500)
 	private String questionText; //Text of the question
-	////
-	@Column(name = "description", length = 1500)
-	private String description; //Description of the question
+	
+	//// --------- !!!!!!!!!!!!! - EXPIRED  !!!! - TO DELETE!!!!
+	//// --------- FIELD MOVED TO EntityQuestionAttributes ------------- ////
+	@Column(name = "description", length = 10)
+	private String description; 
+	
 	////
 	@OneToMany(mappedBy = "questionId")
 	List<EntityQuestionAttributes> questionAttributes;
@@ -47,16 +50,23 @@ public class EntityQuestion implements Serializable {
 			List<EntityQuestionAttributes> questionAttributes) {
 		this.questionAttributes = questionAttributes;
 	}	
+	
+	//// --------- !!!!!!!!!!!!! - EXPIRED  !!!! - TO DELETE!!!!
+	//// --------- FIELD MOVED TO EntityQuestionAttributes ------------- ////
 	public String getDescription() {
 		return description;
 	}
+	//// --------- !!!!!!!!!!!!! - EXPIRED  !!!! - TO DELETE!!!!
+	//// --------- FIELD MOVED TO EntityQuestionAttributes ------------- ////
 	public void setDescription(String description) {
 		this.description = description;
 	}
 	public long getId() {
 		return id;
 	}
-	////
+	
+	//// --------- !!!!!!!!!!!!! - EXPIRED  !!!! - TO CHANGE!!!!
+	//// --------- FIELD description MOVED TO EntityQuestionAttributes ------------- ////
 	@Override
 	public String toString() {
 		return id + IMaintenanceService.DELIMITER + questionText + IMaintenanceService.DELIMITER + description;
