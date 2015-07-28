@@ -22,6 +22,7 @@ public class EntityAnswersText implements Serializable {
 	@Column(name = "id")
 	private long id;
 	////
+	@Column(name="answerText", length = 1000)
 	private String answerText;
 	////
 	@ManyToOne
