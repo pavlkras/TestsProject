@@ -12,15 +12,18 @@ public class EntityCompany {
 	@GeneratedValue
 	@Column(name = "id")
 	private long id;
+	/// 
 	@OneToMany (mappedBy = "entityCompany")
 	private List<EntityTest> personsTests; 
+	///
+	@OneToMany(mappedBy = "companyId")
+	List<EntityQuestionAttributes> questionAttributes;
+	///
+	
 	private String C_Name;
 	private String C_Site;
-
 	private String C_Specialization;
-
 	private String C_AmountEmployes;
-
 	private String C_Password;
 
 	public void setPassword(String password) {
@@ -62,6 +65,13 @@ public class EntityCompany {
 	}
 	public void setPersonsTests(List<EntityTest> personsTests) {
 		this.personsTests = personsTests;
+	}	
+	public List<EntityQuestionAttributes> getQuestionAttributes() {
+		return questionAttributes;
+	}
+	public void setQuestionAttributes(
+			List<EntityQuestionAttributes> questionAttributes) {
+		this.questionAttributes = questionAttributes;
 	}
 	@Override
 	public String toString() {
