@@ -4,12 +4,12 @@ import java.util.List;
 
 import tel_ran.tests.services.fields.ApplicationFinalFields;
 
-public interface IUserActionService extends ApplicationFinalFields{	
+public interface IUserActionService extends ICommonService {
+	
 		boolean AddingNewUser(String[] args);
 		public String[] GetUserByMail(String userMail);
-		boolean IsUserExist(String userMail,String userPassword);
+		public boolean IsUserExist(String userMail, String userPassword);
 		////
-		public List<String> getCategoriesList();
 		public String getMaxCategoryQuestions(String catName, String level);		
 		public List<String> getTraineeQuestions(String category, int level, int qAmount);
 		public List<String> getComplexityLevelList();

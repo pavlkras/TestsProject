@@ -1,5 +1,7 @@
 package tel_ran.tests.services.fields;
 
+import java.util.List;
+
 public interface ApplicationFinalFields {
 	static final int FIRSTNAME = 0;
 	static final int LASTTNAME = 1;
@@ -13,4 +15,6 @@ public interface ApplicationFinalFields {
 	static final String NAME_FOLDER_FOR_SAVENG_QUESTIONS_FILES = "QUESTION_FILES_DATABASE";
 	static final String DELIMITER = "----";// delimiter for entity's and filling from file
 	static final char[] ANSWER_CHAR_ARRAY =  {'A','B','C','D','E','F','J','H'};
+	
+
 }
