@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import tel_ran.tests.services.fields.ApplicationFinalFields;
 import tel_ran.tests.services.interfaces.IMaintenanceService;
 
 @Entity
@@ -20,49 +21,92 @@ public class EntityQuestionAttributes implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	////
-	public EntityQuestionAttributes() {	}
+	
 	////
-	@Id
-	@GeneratedValue
-	@Column(name = "id")
+	@Id @GeneratedValue
 	private long id;
+	
 	////codeQuestionTable
 	@ManyToOne
 	private EntityQuestion questionId;
-	////
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "questionAttributeId")
-	List<EntityAnswersText> questionAnswersList;
-	////
-	@Column(name = "fileLocationLink", unique = false, nullable = true, length = 500)
-	private String fileLocationLink;
-	////
+	
+	////link to the company that has created this question (EntityCompany)
+	@ManyToOne	
+	private EntityCompany companyId;
+	
+	////name of MetaCategory (Attention, Programming Task, etc)
 	@Column(name = "metaCategory")
 	private String metaCategory;
-	////
-	@Column(name = "category")
-	private String category;
-	////
+	
+	////name of the programming language for Programming Tasks and categories for company-user's questions
+	@Column(name = "category1")
+	private String category1;
+	
+	////name of the sub-category (sorts of tasks, like Calculator for Programming Tasks)
+	@Column(name = "category2")
+	private String category2;
+	
+	////level of difficulty
 	@Column(name = "levelOfDifficulty")
 	private int levelOfDifficulty;
-	////
+	
+	////text field for the task description that is used in Programming Tasks and company-user's tasks
+	@Column(name = "description", length = 2500)
+	private String description; 
+	
+	////url of the images for generated tests and of the archive with response for programming tasks	
+	@Column(name = "fileLocationLink", unique = false, nullable = true, length = 500)
+	private String fileLocationLink;
+	
+	////links to some text fields that can be used for American Tests and Programming Tasks (EntityAnswersText) 
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "questionAttributeId")
+	List<EntityAnswersText> questionAnswersList;
+		
+	////letter of the correct answer (for American Tests)
 	@Column(name = "correctAnswer")
 	private String correctAnswer;
-	////
+	
+	////total number of responses for American tests
 	@Column(name = "numresponses")
 	private int numberOfResponsesInThePicture;
-	////
-	@Column(name = "codeLine", length = 1500)
-	private String codeLine;	
-	////
-	@Column(name = "languageName")
-	private String languageName;
-	////
-	public String getLineCod() {
-		return codeLine;
+	
+	////text field for the code stub (Programming Tasks)
+	// expired. to use EntityAnswersTest for ProgrammingTasks
+	//@Column(name = "codeLine", length = 1500)
+	//private String codeLine;
+	
+
+	
+	////	
+	
+	
+	public EntityQuestionAttributes() {	}
+	
+	public String getDescription() {
+		return description;		
 	}
-	public void setLineCod(String lineCod) {
-		this.codeLine = lineCod;
+	public void setDescription(String description) {
+		this.description = description;
 	}	
+	public EntityCompany getCompanyId() {
+		return companyId;
+	}
+	public void setCompanyId(EntityCompany companyId) {
+		this.companyId = companyId;
+	}
+//	public String getCodeLine() {
+//		return codeLine;
+//	}
+//	public void setCodeLine(String codeLine) {
+//		this.codeLine = codeLine;
+//	}
+
+//	public String getLineCod() {
+//		return codeLine;
+//	}
+//	public void setLineCod(String lineCod) {
+//		this.codeLine = lineCod;
+//	}	
 	public EntityQuestion getQuestionId() {
 		return questionId;
 	}
@@ -75,12 +119,23 @@ public class EntityQuestionAttributes implements Serializable {
 	public void setFileLocationLink(String fileLocationLink) {
 		this.fileLocationLink = fileLocationLink;
 	}
-	public String getCategory() {
-		return category;
+
+	public String getCategory1() {
+		return category1;
 	}
-	public void setCategory(String category) {
-		this.category = category;
+
+	public void setCategory1(String category1) {
+		this.category1 = category1;
 	}
+
+	public String getCategory2() {
+		return category2;
+	}
+
+	public void setCategory2(String category2) {
+		this.category2 = category2;
+	}
+
 	public int getLevelOfDifficulty() {
 		return levelOfDifficulty;
 	}
@@ -114,22 +169,21 @@ public class EntityQuestionAttributes implements Serializable {
 	public void setMetaCategory(String metaCategory) {
 		this.metaCategory = metaCategory;
 	}
-	public String getLanguageName() {
-		return languageName;
-	}
-	public void setLanguageName(String languageName) {
-		this.languageName = languageName;
-	}
+
 	////
 	@Override
 	public String toString() {
 		return questionId.getId()
-				+ IMaintenanceService.DELIMITER + fileLocationLink
-				+ IMaintenanceService.DELIMITER + category
-				+ IMaintenanceService.DELIMITER + levelOfDifficulty
-				+ IMaintenanceService.DELIMITER + correctAnswer
-				+ IMaintenanceService.DELIMITER + numberOfResponsesInThePicture
-				+ IMaintenanceService.DELIMITER + languageName
-				+ IMaintenanceService.DELIMITER + metaCategory;
+				+ ApplicationFinalFields.DELIMITER + metaCategory
+				+ ApplicationFinalFields.DELIMITER + category1
+				+ ApplicationFinalFields.DELIMITER + category2			
+				+ ApplicationFinalFields.DELIMITER + levelOfDifficulty
+				+ ApplicationFinalFields.DELIMITER + description
+				+ ApplicationFinalFields.DELIMITER + fileLocationLink	
+				+ ApplicationFinalFields.DELIMITER + correctAnswer
+				+ ApplicationFinalFields.DELIMITER + numberOfResponsesInThePicture
+				+ ApplicationFinalFields.DELIMITER + companyId;
 	}
+	
+
 }
