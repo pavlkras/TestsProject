@@ -7,6 +7,7 @@ import tel_ran.tests.gradle_tester.CodeTester;
 import tel_ran.tests.services.inner_result.dataobjects.InnerResultDataObject;
 
 import java.io.IOException;
+
 @Component
 public class CodeTestQuestionHandler extends AbstractTestQuestionHandler implements ITestQuestionHandler{
 	
@@ -53,9 +54,9 @@ public class CodeTestQuestionHandler extends AbstractTestQuestionHandler impleme
 
 	@Override
 	public String getQuestionJson(int index) {
-		getQuestionAttribubes().getLineCod(); //stub
+		String stub = getQuestionAttribubes().getAnswers().get(0);
 		getQuestionAttribubes().getQuestionId().getQuestionText(); //question text
-		getQuestionAttribubes().getQuestionId().getDescription(); //description
+		getQuestionAttribubes().getDescription(); //description
 		// TODO Auto-generated method stub
 		return null;
 	}
