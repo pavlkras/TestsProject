@@ -9,12 +9,13 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import tel_ran.tests.entitys.EntityAnswersText;
+import tel_ran.tests.entitys.EntityCompany;
 import tel_ran.tests.entitys.EntityQuestion;
 import tel_ran.tests.entitys.EntityQuestionAttributes;
 import tel_ran.tests.entitys.EntityUser;
 import tel_ran.tests.services.interfaces.IUserActionService;
 @SuppressWarnings("unchecked")
-public class UserActionService extends TestsPersistence implements IUserActionService {
+public class UserActionService extends CommonServices implements IUserActionService {
 	////------ User Authorization and Registration case -----------// BEGIN //
 	@Override
 	public boolean IsUserExist(String userMail, String userPassword) {
@@ -62,17 +63,19 @@ public class UserActionService extends TestsPersistence implements IUserActionSe
 	////------- User Authorization and Registration case -------------------// END //	
 
 	////------- Test mode Test for User case ----------------// BEGIN //
+	
+
 	@Override
-	public List<String> getCategoriesList() {
-		String query = "Select DISTINCT q.category FROM EntityQuestionAttributes q ORDER BY q.category";
-		Query q = em.createQuery(query);		
-		List<String> allCategories = q.getResultList();
-		return allCategories;
+	protected String getLimitsForQuery() {		
+		return " q.companyId='null'";
 	}
+	
+	
+	
 	////
 	@Override
 	public List<String> getComplexityLevelList() {
-		String query = "Select DISTINCT q.levelOfDifficulty FROM EntityQuestionAttributes q ORDER BY q.levelOfDifficulty";
+		String query = "Select DISTINCT q.levelOfDifficulty FROM EntityQuestionAttributes q" + getLimitsForQuery() +" ORDER BY q.levelOfDifficulty";
 		Query q = em.createQuery(query);
 		List<String> allLevels = q.getResultList();
 		return allLevels;
@@ -81,7 +84,7 @@ public class UserActionService extends TestsPersistence implements IUserActionSe
 	@Override
 	public String getMaxCategoryLevelQuestions(String catName,
 			String complexityLevel) {
-		String query = "SELECT q FROM EntityQuestionAttributes q WHERE q.category=?1 AND q.levelOfDifficulty=?2";
+		String query = "SELECT q FROM EntityQuestionAttributes q WHERE q.category=?1 AND q.levelOfDifficulty=?2 AND" + getLimitsForQuery();
 		Query q = em.createQuery(query);
 		q.setParameter(1, catName);
 		q.setParameter(2, Integer.parseInt(complexityLevel));
@@ -92,7 +95,7 @@ public class UserActionService extends TestsPersistence implements IUserActionSe
 	////
 	@Override
 	public String getMaxCategoryQuestions(String catName, String level) {
-		String query = "SELECT q FROM EntityQuestionAttributes q WHERE q.category=?1 AND q.levelOfDifficulty=?2";
+		String query = "SELECT q FROM EntityQuestionAttributes q WHERE q.category=?1 AND q.levelOfDifficulty=?2 AND" + getLimitsForQuery();
 		Query q = em.createQuery(query);
 		q.setParameter(1, catName);
 		q.setParameter(2, Integer.parseInt(level));
@@ -100,6 +103,7 @@ public class UserActionService extends TestsPersistence implements IUserActionSe
 		String res = String.valueOf(qlist.size());
 		return res;
 	}
+	
 	////	//  --------------------------------------------   TO DO factory method for this case !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	@Override
 	public List<String> getTraineeQuestions(String category, int levelOfDifficulty, int qAmount) {
@@ -107,20 +111,12 @@ public class UserActionService extends TestsPersistence implements IUserActionSe
 
 		if(qAmount > 0 && category != null){
 			for(int i=0; i < qAmount ; i++){// -- cycle works on the number of questions -nQuestion							
-				List<EntityQuestionAttributes> questionAttrList = em.createQuery("SELECT c FROM EntityQuestionAttributes c WHERE (c.levelOfDifficulty="+levelOfDifficulty+") AND (c.category='"+category+"')").getResultList();		
+				List<EntityQuestionAttributes> questionAttrList = em.createQuery("SELECT c FROM EntityQuestionAttributes c WHERE (c.levelOfDifficulty="+levelOfDifficulty+") "
+						+ "AND (c.category='"+category+"') AND (" + getLimitsForQuery() + ")").getResultList();		
 
 				if(questionAttrList != null && questionAttrList.size() > 0){
 					EntityQuestionAttributes tmpRes = questionAttrList.get(i);
-					outTextResult.add(tmpRes.getId() + DELIMITER                   // - 0 = id
-							+ tmpRes.getQuestionId().getQuestionText() + DELIMITER // - 1 = question
-							+ tmpRes.getQuestionId().getDescription() + DELIMITER  // - 2 = description
-							+ tmpRes.getLineCod() + DELIMITER                      // - 3 = code text
-							+ tmpRes.getLanguageName() + DELIMITER				   // - 4 = lang cod			
-							+ tmpRes.getCorrectAnswer() + DELIMITER                // - 5 = corr answer
-							+ tmpRes.getNumberOfResponsesInThePicture() + DELIMITER// - 6 = num ansers on picture
-							+ tmpRes.getMetaCategory() + DELIMITER                 // - 7 = meta category 
-							// when question not include meta cetgory ! meta cat = language code
-							+ GetAnswers(tmpRes));                   // optionaly 8-12
+					outTextResult.add(getQuestionWithDelimeters(tmpRes)); 					
 				}else{					
 					System.out.println("BES User test else condition i-" + i);//---------------------------sysout	
 				}
@@ -128,17 +124,7 @@ public class UserActionService extends TestsPersistence implements IUserActionSe
 		}		
 		return outTextResult;	
 	}
-	private String GetAnswers(EntityQuestionAttributes tmpRes) {
-		List<EntityAnswersText> anRes;
-		String outRes = "";
-		if(tmpRes.getQuestionAnswersList() != null){					
-			anRes = tmpRes.getQuestionAnswersList();
-			for(EntityAnswersText rRes :anRes){
-				outRes += rRes.getAnswerText() + DELIMITER;
-			}
-		}
-		return outRes;
-	}
+
 	////------- Test mode Test for User case ----------------// END //
 
 	////-------  Test Code From Users and Persons Case  ----------------// BEGIN //		
@@ -150,4 +136,10 @@ public class UserActionService extends TestsPersistence implements IUserActionSe
 		return result;
 	}
 	////-------  Test Code From Users and Persons Case  ----------------// END //	
+	@Override
+	protected boolean ifAllowed(EntityQuestionAttributes question) {
+		if(question.getCompanyId() == null)
+			return true;
+		return false;
+	}
 }
