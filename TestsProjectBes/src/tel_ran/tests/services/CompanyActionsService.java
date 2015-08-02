@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tel_ran.tests.entitys.EntityAdministrators;
 import tel_ran.tests.entitys.EntityCompany;
 import tel_ran.tests.entitys.EntityPerson;
+import tel_ran.tests.entitys.EntityQuestionAttributes;
 import tel_ran.tests.entitys.EntityTest;
 import tel_ran.tests.services.common.ICommonData;
 import tel_ran.tests.services.interfaces.ICompanyActionsService;
@@ -23,17 +24,20 @@ import tel_ran.tests.services.testhandler.IPersonTestHandler;
 import tel_ran.tests.services.testhandler.PersonTestHandler;
 import tel_ran.tests.token_cipher.TokenProcessor;
 
-public class CompanyActionsService extends TestsPersistence implements ICompanyActionsService {
+public class CompanyActionsService extends MaintenanceService implements ICompanyActionsService {
+	
 	private EntityCompany entityCompany;
 	@Autowired
 	private TokenProcessor tokenProcessor;
 	@Autowired
 	IFileManagerService fileManager;
+	
 	//-------------Use Case Company Login 3.1.1----------- //   BEGIN    ///
 	@Override
-	public boolean CompanyAuthorization(String companyName, String password) {
+	public boolean setAutorization(String username, String password) { 
 		boolean result = false;
-		entityCompany = (EntityCompany) em.createQuery("Select c from EntityCompany c where c.C_Name='" + companyName+"'" ).getSingleResult();
+		entityCompany = (EntityCompany) em.createQuery("Select c from EntityCompany c where c.C_Name='" + username + "'").getSingleResult();
+		
 		if(entityCompany != null){
 			if( entityCompany.getPassword().equals(password)){
 				result = true;
@@ -43,23 +47,31 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 		}
 		return result;
 	}
-	////
-	@Override
-	public long getCompanyByName(String companyName) {   
-		long result = -1;			
-		EntityCompany tempCompanyEntity = null;
-
-		try {
-			tempCompanyEntity = (EntityCompany) em.createQuery("Select c from EntityCompany c where c.C_Name='" + companyName+"'" ).getSingleResult();			
-		} catch (Exception e) {
-			//e.printStackTrace();
-		}		
-		if(tempCompanyEntity != null && tempCompanyEntity.getC_Name().equalsIgnoreCase(companyName)){
-			result = tempCompanyEntity.getId();
-		}
-		return result;
-	}
 	//-------------Use Case Company Login 3.1.1----------- //   END    ///
+	
+	//-------------Override super class methods ----------- // BEGIN ////
+	
+	@Override
+	protected boolean ifAllowed(EntityQuestionAttributes eqa) {
+		
+		if(eqa.getCompanyId().equals(entityCompany))
+			return true;
+		
+		return false;
+	}
+	
+	@Override
+	protected EntityCompany getCompany() {
+		return this.entityCompany;
+	}
+	
+	
+	@Override
+	protected String getLimitsForQuery() {	
+		EntityCompany ec = getCompany();
+		return " q.companyId='" + ec.getId() + "'";
+	}
+	
 
 	//-------------Use Case Company Sign up 3.1.2----------- //   BEGIN    ///
 	@SuppressWarnings("unchecked")
@@ -89,27 +101,7 @@ public class CompanyActionsService extends TestsPersistence implements ICompanyA
 		return outResult;// return to client 
 	}
 
-	@Override
-	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
-	public boolean CreateCompany(String C_Name, String C_Site, String C_Specialization, String C_AmountEmployes, String C_Password) {
-		boolean result=false;		
-		try {
-			EntityCompany comp = new EntityCompany();
-			comp.setC_Name(C_Name);
-			comp.setC_Site(C_Site);
-			comp.setC_Specialization(C_Specialization);
-			comp.setC_AmountEmployes(C_AmountEmployes);
-			comp.setPassword(C_Password);
-			em.persist(comp);
-			result=true;
-		} catch (Throwable e) {
-			result=false;
-			System.out.println("catch from CREATE COMPANY BES");
-			e.printStackTrace();
-		}
 
-		return result;
-	}
 	//-------------Use Case Company Sign up 3.1.2-----------  /// END  ///
 
 	//------------- 	Use case Ordering Test 3.1.3 -------------/// BEGIN ////
