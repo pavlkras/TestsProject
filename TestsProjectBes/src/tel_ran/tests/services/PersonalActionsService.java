@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import tel_ran.tests.entitys.EntityQuestionAttributes;
 import tel_ran.tests.entitys.EntityTest;
 import tel_ran.tests.services.common.ICommonData;
 import tel_ran.tests.services.interfaces.IFileManagerService;
@@ -13,7 +14,7 @@ import tel_ran.tests.services.testhandler.IPersonTestHandler;
 import tel_ran.tests.services.testhandler.PersonTestHandler;
 import tel_ran.tests.token_cipher.TokenProcessor;
 
-public class PersonalActionsService extends TestsPersistence implements	IPersonalActionsService {	
+public class PersonalActionsService extends CommonServices implements IPersonalActionsService {	
 	@Autowired
 	IFileManagerService fileManager;
 	@Autowired
@@ -109,6 +110,16 @@ public class PersonalActionsService extends TestsPersistence implements	IPersona
 		if(!test.isPassed()){
 			fileManager.saveImage(test.getEntityCompany().getId(), testId, image);
 		}
+	}
+	@Override
+	protected boolean ifAllowed(EntityQuestionAttributes question) {
+		
+		return false;
+	}
+
+	@Override
+	protected String getLimitsForQuery() {
+		return null;
 	}
 	
 }
