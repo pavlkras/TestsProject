@@ -37,8 +37,8 @@ public class CompanyActions {
 	RestTemplate restTemplate =  new RestTemplate();
 	@Autowired
 	private ICompanyActionsService companyService;
-	@Autowired
-	private	IMaintenanceService maintenanceService;	
+//	@Autowired
+//	private	IMaintenanceService maintenanceService;	
 	// --- private fields 
 	// -- getters and setters
 	public String getCompanyName() {
@@ -88,22 +88,20 @@ Wrong Password Flow:
 		String result;		
 		////if(IfExistCompany){
 		if(companyId>0){
-			boolean ress = companyService.CompanyAuthorization(companyName, password);
+			boolean ress = companyService.setAutorization(companyName, password);
 			if(ress){ 				
 				StringBuffer categoryHtmlText = new StringBuffer();
-				List<String> resultCategory = maintenanceService.getAllCategoriesFromDataBase();
+				List<String> resultCategory = companyService.getAllMetaCategoriesFromDataBase();
 				categoryHtmlText.append("<table class='table_ind'><tr><th>Category of Question:</th><th  colspan='2'>Level of difficulty</th></tr>");
 				for(String catBox:resultCategory){					
-					categoryHtmlText.append("<tr class='tr_ind'>"
-							+ "<td>"+catBox + ":</td>"
-							+ "<td><input class='category' type='checkbox' name='category' value='" + catBox + "' /></td>"
-							+ "<td><select name='level_num' disabled>"
-							+ "<option value='1'>1</option>"
-							+ "<option value='2'>2</option>"
-							+ "<option value='3'>3</option>"
-							+ "<option value='4'>4</option>"
-							+ "<option value='5'>5</option>"
-							+ "</select></td></tr>");
+					categoryHtmlText.append("<tr class='tr_ind'>");
+					categoryHtmlText.append("<td>").append(catBox).append(":</td>");
+					categoryHtmlText.append("<td><input class='category' type='checkbox' name='category' value='").
+						append(catBox).append("' /></td>");
+					categoryHtmlText.append("<td><select name='level_num' disabled>").
+						append("<option value='1'>1</option>").append("<option value='2'>2</option>").
+						append("<option value='3'>3</option>").append("<option value='4'>4</option>").
+						append("<option value='5'>5</option>").append("</select></td></tr>");						
 				}
 				categoryHtmlText.append("</table>");
 				model.addAttribute("categoryFill", categoryHtmlText.toString());
@@ -240,7 +238,7 @@ Normal Flow:
 		long counterOfQuestions = Integer.parseInt(selectCountQuestions);
 		System.out.println("level_num--"+level_num);//-------------------------------sysout
 		System.out.println("category--"+category);//-------------------------------sysout
-		List<Long> listIdQuestions = maintenanceService.getUniqueSetQuestionsForTest(category, level_num, (long) counterOfQuestions);
+		List<Long> listIdQuestions = companyService.getUniqueSetQuestionsForTest(category, level_num, (long) counterOfQuestions);
 		int personID = companyService.CreatePerson(Integer.parseInt(personId), personName, personSurname,personEmail);
 		String password = getRandomPassword();
 		boolean isCreated = companyService.CreateTest(listIdQuestions, personID, password, category, level_num);	//------------ TO DO levels change !!	add company name for

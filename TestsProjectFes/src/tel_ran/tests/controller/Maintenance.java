@@ -92,7 +92,7 @@ public class Maintenance {
 	 */
 	@RequestMapping(value = "/add_actions" , method = RequestMethod.POST)
 	public String AddProcessingPage(String questionIndex, String questionText, String descriptionText, String codeText,
-			String  languageName, String metaCategory, String category, String levelOfDifficulty, 
+			String  category1, String metaCategory, String category2, String levelOfDifficulty, 
 			String fileLocationLink, String correctAnswer, String numberAnswersOnPicture, 
 			String at1, String at2, String at3, String at4,  Model model)
 	{	
@@ -104,13 +104,40 @@ public class Maintenance {
 		}
 		//
 		try {			
-			int questioNumber = Integer.parseInt(questionIndex);// question ID number if question already exist in DB
-			int numberOfResponsesInThePicture = Integer.parseInt(numberAnswersOnPicture);// number of responses in the picture by default = 4
-			String repCategory = category.replaceAll(",", "").replaceAll("none", ""); 
-			String repMetaCategory = metaCategory.replaceAll(",", "").replaceAll("none", ""); 
+			int questioNumber;
+			
+			try {
+				questioNumber = Integer.parseInt(questionIndex);// question ID number if question already exist in DB
+			} catch (Exception e) {
+				questioNumber = 0;
+			}
+			
+			int numberOfResponsesInThePicture;
+			
+			try {
+				numberOfResponsesInThePicture = Integer.parseInt(numberAnswersOnPicture);
+			} catch (Exception e) {
+				numberOfResponsesInThePicture = 0;
+			}
+			
+			
+			
+			String repCategory = null;
+			if(category2!=null) {
+				repCategory = category2.replaceAll(",", "").replaceAll("none", "");
+			}
+			
+			String repMetaCategory = null;
+			if(metaCategory!=null)
+				repMetaCategory = metaCategory.replaceAll(",", "").replaceAll("none", ""); 
 			////
-			actionRes = maintenanceService.CreateNewQuestion(questionText, fileLocationLink, repMetaCategory, repCategory, Integer.parseInt(levelOfDifficulty), answers, correctAnswer, 
-					questioNumber, numberOfResponsesInThePicture, descriptionText, codeText, languageName);
+			System.out.println("I'm FES! I'm ready to start BES!");
+			
+			System.out.println(levelOfDifficulty);
+			int lvl = Integer.parseInt(levelOfDifficulty);
+			
+			actionRes = maintenanceService.CreateNewQuestion(questionText, fileLocationLink, repMetaCategory, category1, lvl, answers, correctAnswer, 
+					questioNumber, numberOfResponsesInThePicture, descriptionText, codeText, repCategory);
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("maintenance addProcessingPage :method: Exception");//----------------------------------------------------sysout
@@ -162,14 +189,14 @@ public class Maintenance {
 	}
 	////--------------------- Search in to data base by category witch levelOfDifficulty or free ( returned all questions from DB) -----//
 	@RequestMapping(value = "/search_actions" , method = RequestMethod.POST )
-	public String SearchProcessingPage(String category,	String levelOfDifficulty, Model model) {
+	public String SearchProcessingPage(String metaCategory,	String levelOfDifficulty, Model model) {
 		AutoInformationTextHTML(BuildingCategoryCheckBoxTextHTML());
 		////
 		clearStringBuffer();
 		StringBuffer outResultText;
-		if(category != null && !category.equalsIgnoreCase("")){
+		if(metaCategory != null && !metaCategory.equalsIgnoreCase("")){
 			outResultText = new StringBuffer();
-			List<String> resultDB = maintenanceService.SearchAllQuestionInDataBase(category, Integer.parseInt(levelOfDifficulty));			
+			List<String> resultDB = maintenanceService.SearchAllQuestionInDataBase(metaCategory, null, null, Integer.parseInt(levelOfDifficulty));			
 			////
 			if(resultDB.size() > 0){				
 				outResultText.append("<table><tr><th>N</th><th>Question</th><th>Category</th></tr>");//<th>Level of difficulty</th>
@@ -291,35 +318,35 @@ public class Maintenance {
 	// -------- method delete from DB Tables Question and Answer By ID -----// END //
 	////-------- USE CASE 3.3.3 Bulk entering test data
 	// --------- adding questions from txt file on user computer -----//  Begin  //	
-	@RequestMapping({ "/add_from_file_actions" })
-	public String addFromFileProcessingPage(String textfromfile, Model model) {
-		//sample for text in file question(one line!!! open text file on project - TestsProjectBes root directory )
-		//questionText----imageLink----category----levelOfDifficulti----answer1----answer2----answer3----answer4----correctAnswerChar----questionIndexNumber@end_line@ // as delimiter .00.0
-
-		if(textfromfile != null && textfromfile.length() > 12){	
-			List<String> listTmp = new ArrayList<String>();
-			String[] splitedLinkArray = textfromfile.split(IMaintenanceService.IMAGE_DELIMITER);	
-			//// --- converting from array to list<string>
-			for(int i = 0;i < splitedLinkArray.length;i++){				
-				listTmp.add(splitedLinkArray[i]);// converting from array to list<string>
-			}
-			boolean actionRes = false;
-			//// -- sending converted list<string> to Data Base
-			try{		
-				actionRes = maintenanceService.FillDataBaseFromTextResource(listTmp);	// adding case on BES			
-			} catch (Exception e) {
-				//e.printStackTrace();
-				System.out.println("catch of creating from file questions in FES");//----------------------------------------------------sysout
-			}
-			////
-			if(actionRes){
-				AutoInformationTextHTML("<br><p class='informationTextP'>Adding Questions is - " + actionRes + "</p>");		
-			}else{
-				AutoInformationTextHTML("<br><p class='informationTextP'>Adding Questions is - " + actionRes + "</p>");	// out text to Page
-			}
-		}
-		return "maintenance/MaintenanceOtherResurses";// return too page after action
-	}
+//	@RequestMapping({ "/add_from_file_actions" })
+//	public String addFromFileProcessingPage(String textfromfile, Model model) {
+//		//sample for text in file question(one line!!! open text file on project - TestsProjectBes root directory )
+//		//questionText----imageLink----category----levelOfDifficulti----answer1----answer2----answer3----answer4----correctAnswerChar----questionIndexNumber@end_line@ // as delimiter .00.0
+//
+//		if(textfromfile != null && textfromfile.length() > 12){	
+//			List<String> listTmp = new ArrayList<String>();
+//			String[] splitedLinkArray = textfromfile.split(IMaintenanceService.IMAGE_DELIMITER);	
+//			//// --- converting from array to list<string>
+//			for(int i = 0;i < splitedLinkArray.length;i++){				
+//				listTmp.add(splitedLinkArray[i]);// converting from array to list<string>
+//			}
+//			boolean actionRes = false;
+//			//// -- sending converted list<string> to Data Base
+//			try{		
+//				actionRes = maintenanceService.FillDataBaseFromTextResource(listTmp);	// adding case on BES			
+//			} catch (Exception e) {
+//				//e.printStackTrace();
+//				System.out.println("catch of creating from file questions in FES");//----------------------------------------------------sysout
+//			}
+//			////
+//			if(actionRes){
+//				AutoInformationTextHTML("<br><p class='informationTextP'>Adding Questions is - " + actionRes + "</p>");		
+//			}else{
+//				AutoInformationTextHTML("<br><p class='informationTextP'>Adding Questions is - " + actionRes + "</p>");	// out text to Page
+//			}
+//		}
+//		return "maintenance/MaintenanceOtherResurses";// return too page after action
+//	}
 	// --------- adding questions from any.txt file on user computer -----//  END  //
 	// -------------- Module For Building Questions in to DB ----------------////
 	@RequestMapping({ "/moduleForBuildingQuestions" })
@@ -346,7 +373,7 @@ public class Maintenance {
 	private String BuildingCategoryCheckBoxTextHTML() {		
 		StringBuffer checkedFlyButtons = new StringBuffer();
 		try {
-			List<String> categoryList = maintenanceService.getAllCategoriesFromDataBase();
+			List<String> categoryList = maintenanceService.getAllCategories2FromDataBase();
 			if (categoryList != null) {			
 				for (String tresR : categoryList) {					
 					checkedFlyButtons.append("<option value='" + tresR + "'> "+ tresR + "</option>");					

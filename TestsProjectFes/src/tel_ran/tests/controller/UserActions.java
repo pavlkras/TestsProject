@@ -22,8 +22,7 @@ import tel_ran.tests.services.interfaces.IUserActionService;
 public class UserActions{ 	
 	@Autowired
 	IUserActionService userService; 
-	@Autowired
-	IMaintenanceService maintenanceService;	
+
 	@RequestMapping({"/"})
 	public String Index(){     return "index";       }// this mapping to index page !!!!!! for all users and all company !!!!
 	//--------------------- fields of this class ---------------------------
@@ -94,7 +93,7 @@ public class UserActions{
 	////------------------ Filling test parameters  ------------------// BEGIN //
 	@RequestMapping(value = "/createTestForUser")
 	public String allCategoriesAndLevelsSelection(Model model){
-		List<String> allCategories = userService.getCategoriesList();
+		List<String> allCategories = userService.getAllMetaCategoriesFromDataBase();
 		List<String> allLevels = userService.getComplexityLevelList();
 		model.addAttribute("categoryNames", allCategories);
 		model.addAttribute("cLevels", allLevels);
@@ -198,7 +197,7 @@ public class UserActions{
 				nextQuestionInTest.append("Code text<br><textarea id='codeText' rows='20' cols='25'>" + questionAttributes[3] + "</textarea>");
 			}
 			////  ------------------------- 
-			String[] res = maintenanceService.getQuestionById(questionAttributes[0], IUserActionService.ACTION_GET_ARRAY);
+			String[] res = userService.getQuestionById(questionAttributes[0], IUserActionService.ACTION_GET_ARRAY);
 			if(res[1] != null && res[1].length() > 15){
 				String[] tempres = res[0].split(IMaintenanceService.DELIMITER);  		
 
