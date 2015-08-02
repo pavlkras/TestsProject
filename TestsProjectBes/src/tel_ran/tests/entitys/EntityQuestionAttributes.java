@@ -1,6 +1,7 @@
 package tel_ran.tests.entitys;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -170,6 +171,16 @@ public class EntityQuestionAttributes implements Serializable {
 		this.metaCategory = metaCategory;
 	}
 
+	public List<String> getAnswers() {
+		List<String> result = new ArrayList<String>();
+		
+		for(EntityAnswersText eat : questionAnswersList) {
+			result.add(eat.getAnswerText());
+		}
+		
+		return result;
+	}
+	
 	////
 	@Override
 	public String toString() {
