@@ -1,4 +1,6 @@
 package tel_ran.tests.entitys;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -7,7 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 @Entity
-public class EntityCompany {
+public class EntityCompany implements Serializable {
 	@Id
 	@GeneratedValue
 	@Column(name = "id")
@@ -79,6 +81,16 @@ public class EntityCompany {
 				+ ", Specialization : " + C_Specialization
 				+ ", Amount Employes : " + C_AmountEmployes 
 				;
+	}
+	public void addQuestionAttributes(
+			EntityQuestionAttributes questionAttributes) {
+		if(this.questionAttributes==null)
+			this.questionAttributes = new ArrayList<EntityQuestionAttributes>();
+		this.questionAttributes.add(questionAttributes);		
+	}
+	
+	public void deleteQuestionAttributes(EntityQuestionAttributes eqa) {
+		this.questionAttributes.remove(eqa);
 	}
 }
 
