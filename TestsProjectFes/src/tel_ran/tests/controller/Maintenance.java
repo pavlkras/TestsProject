@@ -121,7 +121,6 @@ public class Maintenance {
 			}
 			
 			
-			
 			String repCategory = null;
 			if(category2!=null) {
 				repCategory = category2.replaceAll(",", "").replaceAll("none", "");
@@ -131,9 +130,7 @@ public class Maintenance {
 			if(metaCategory!=null)
 				repMetaCategory = metaCategory.replaceAll(",", "").replaceAll("none", ""); 
 			////
-			System.out.println("I'm FES! I'm ready to start BES!");
-			
-			System.out.println(levelOfDifficulty);
+
 			int lvl = Integer.parseInt(levelOfDifficulty);
 			
 			actionRes = maintenanceService.CreateNewQuestion(questionText, fileLocationLink, repMetaCategory, category1, lvl, answers, correctAnswer, 

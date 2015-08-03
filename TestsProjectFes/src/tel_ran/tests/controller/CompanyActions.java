@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
 import tel_ran.tests.services.interfaces.ICompanyActionsService;
-import tel_ran.tests.services.interfaces.IMaintenanceService;
+
 
 @Controller
 @Scope("session") /*session timer default = 20min*/
