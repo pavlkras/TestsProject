@@ -1,7 +1,5 @@
 package tel_ran.tests.services.fields;
 
-import java.util.List;
-
 public interface ApplicationFinalFields {
 	static final int FIRSTNAME = 0;
 	static final int LASTTNAME = 1;

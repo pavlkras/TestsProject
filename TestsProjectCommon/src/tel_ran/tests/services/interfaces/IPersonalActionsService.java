@@ -1,8 +1,5 @@
 package tel_ran.tests.services.interfaces;
 
-import tel_ran.tests.services.fields.ApplicationFinalFields;
-
-
 public interface IPersonalActionsService extends ICommonService{
 	public boolean GetTestForPerson(String pssswordForCreatedTest);	
 	public String getNextQuestion(long testId);

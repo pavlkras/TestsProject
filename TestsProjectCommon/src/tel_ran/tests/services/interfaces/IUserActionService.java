@@ -2,8 +2,6 @@ package tel_ran.tests.services.interfaces;
 
 import java.util.List;
 
-import tel_ran.tests.services.fields.ApplicationFinalFields;
-
 public interface IUserActionService extends ICommonService {
 	
 		boolean AddingNewUser(String[] args);
