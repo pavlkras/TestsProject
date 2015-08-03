@@ -13,7 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import tel_ran.tests.services.fields.ApplicationFinalFields;
-import tel_ran.tests.services.interfaces.IMaintenanceService;
+
 
 @Entity
 public class EntityQuestionAttributes implements Serializable {

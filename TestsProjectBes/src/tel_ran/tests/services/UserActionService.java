@@ -8,12 +8,11 @@ import javax.persistence.Query;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import tel_ran.tests.entitys.EntityAnswersText;
-import tel_ran.tests.entitys.EntityCompany;
 import tel_ran.tests.entitys.EntityQuestion;
 import tel_ran.tests.entitys.EntityQuestionAttributes;
 import tel_ran.tests.entitys.EntityUser;
 import tel_ran.tests.services.interfaces.IUserActionService;
+
 @SuppressWarnings("unchecked")
 public class UserActionService extends CommonServices implements IUserActionService {
 	////------ User Authorization and Registration case -----------// BEGIN //
