@@ -2,7 +2,6 @@ package tel_ran.tests.services.interfaces;
 
 import java.util.List;
 
-import tel_ran.tests.services.fields.ApplicationFinalFields;
 
 
 /**
@@ -22,6 +21,16 @@ public interface ICompanyActionsService extends ICommonAdminService {
 	//Use case Ordering Test 3.1.3
 	boolean CreateTest(List<Long> list, int personId, String pass, String category, String complexityLevel);
 	int CreatePerson(int personId,String personName,String personSurname,String personEmail);
+	
+	/**
+	 * New version of the function 
+	 * @param personId
+	 * @param category
+	 * @param level_num
+	 * @param nQuestion
+	 * @return
+	 */
+	boolean CreateTest(int personId, String category, String level_num, Long nQuestion);
 
 	//Company actions for 3.1.4. Viewing test results
 	public String getTestsResultsAll(long companyId, String timeZone);
