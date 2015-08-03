@@ -1,13 +1,12 @@
 package tel_ran.tests.services;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Base64;
+
 import java.util.List;
 import java.util.Random;
 
@@ -172,17 +171,15 @@ public class MaintenanceService extends CommonServices implements IMaintenanceSe
 	
 		EntityQuestion objectQuestion = em.find(EntityQuestion.class, createQuestion(questionText));
 		
-		System.out.println("EntityQuestion is created");
-		if(objectQuestion==null)
-			System.out.println("But = null!");
+
 		
 		EntityCompany objectCompany = getCompany();
-		System.out.println("Company is created!");
+
 		EntityQuestionAttributes questionAttributes = createAttributes(fileLocationLink, metaCategory, category1, 
 				category2, levelOfDifficulty, answers, correctAnswerChar, answerOptionsNumber, description, objectQuestion, 
 				objectCompany);
 		
-		System.out.println("EQA is created");
+
 		objectQuestion.addQuestionAttributes(questionAttributes);
 		em.merge(questionAttributes);
 		em.merge(objectQuestion);	
@@ -191,8 +188,7 @@ public class MaintenanceService extends CommonServices implements IMaintenanceSe
 			objectCompany.addQuestionAttributes(questionAttributes);
 			em.merge(objectCompany);
 		}
-			
-		System.out.println("I've created new!");
+
 
 		return true;
 	}
@@ -214,7 +210,7 @@ public class MaintenanceService extends CommonServices implements IMaintenanceSe
 			int questionNumber, int numberOfResponsesInThePicture, String description, 
 			String codeText, String category2){
 		////
-		System.out.println("I'm in BES");
+
 		if(codeText!=null) {
 			if(answers==null) {
 				answers = new ArrayList<String>();				
@@ -229,12 +225,12 @@ public class MaintenanceService extends CommonServices implements IMaintenanceSe
 		}
 			
 		boolean flagAction = false;	
-		System.out.println("I'm ready for new qreation");
+
 		
 		fullCreateNewQuestion(questionText, metaCategory, category1, category2, 
 				levelOfDifficulty, description, fileLocationLink, answers, correctAnswerChar, numberOfResponsesInThePicture);	
 		flagAction = true;
-		System.out.println("I'm quitting BES");
+
 		em.clear();
 		return flagAction;
 	}
@@ -290,6 +286,14 @@ public class MaintenanceService extends CommonServices implements IMaintenanceSe
 	@Override	
 	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW) 
 	public boolean ModuleForBuildingQuestions(String byCategory, int diffLevel, int nQuestions) {
+
+		return ModuleForBuildingQuestions(byCategory, null, diffLevel, nQuestions);
+	}
+	
+	
+	@Override
+	public boolean ModuleForBuildingQuestions(String byCategory, String byCategory1,
+			int diffLevel, int nQuestions) {
 		boolean flagAction = false;	
 		List<String> answers;	
 		List<String[]> listQuestions = null;		
@@ -297,8 +301,12 @@ public class MaintenanceService extends CommonServices implements IMaintenanceSe
 		////
 		try {
 			String workingDir = System.getProperty("user.dir") + File.separator + NAME_FOLDER_FOR_SAVENG_QUESTIONS_FILES;			
-			Files.createDirectories(Paths.get(workingDir));			
-			listQuestions = proc.processStart(byCategory, nQuestions, workingDir + File.separator, diffLevel);
+			Files.createDirectories(Paths.get(workingDir));	
+			if(byCategory1==null) {
+				listQuestions = proc.processStart(byCategory, nQuestions, workingDir + File.separator, diffLevel);
+			} else {
+				listQuestions = proc.processStart(byCategory, byCategory1, nQuestions, workingDir + File.separator, diffLevel);
+			}
 		} catch (Exception e1) {
 			System.err.println("catch of TestProcessor.testProcessStart(String category, int, String, int);");
 			e1.printStackTrace();
@@ -363,7 +371,10 @@ public class MaintenanceService extends CommonServices implements IMaintenanceSe
 		}
 		
 		return flagAction;
+
 	}
+	
+	
 	////-------------- Creation and Adding MANY Questions into DB from Generated Question Case ----------// END  //
 	
 	
@@ -788,6 +799,9 @@ public class MaintenanceService extends CommonServices implements IMaintenanceSe
 		return "";
 	}
 
+
+
+	
 
 			
 }

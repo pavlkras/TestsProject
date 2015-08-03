@@ -132,7 +132,7 @@ public class CompanyActionsService extends MaintenanceService implements ICompan
 			
 			test.setAmountOfQuestions(testResultsJsonHandler.length());
 			test.setPassed(false);
-			em.persist(test);
+			em.merge(test);
 			actionFlag = true;
 		}
 		return actionFlag;
@@ -262,4 +262,10 @@ public class CompanyActionsService extends MaintenanceService implements ICompan
 		return token;
 	}	
 	//------------- Viewing test results  3.1.4.----------- // END ////	
+
+	@Override
+	public boolean CreateTest(int arg0, String arg1, String arg2, Long arg3) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

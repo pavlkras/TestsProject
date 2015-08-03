@@ -11,7 +11,6 @@ import javax.persistence.Query;
 import tel_ran.tests.entitys.EntityAnswersText;
 import tel_ran.tests.entitys.EntityQuestionAttributes;
 import tel_ran.tests.processor.TestProcessor;
-import tel_ran.tests.services.fields.ApplicationFinalFields;
 import tel_ran.tests.services.interfaces.ICommonService;
 
 public abstract class CommonServices extends TestsPersistence implements ICommonService {
@@ -88,7 +87,7 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 				
 				////
 				if((fileLocation = question.getFileLocationLink()) != null && question.getFileLocationLink().length() > 25 
-						&& !question.getMetaCategory().equals(TestProcessor.PROGRAMMING)){
+						&& !question.getMetaCategory().equals(TestProcessor.MC_PROGRAMMING)){
 					imageBase64Text = encodeImage(NAME_FOLDER_FOR_SAVENG_QUESTIONS_FILES  + fileLocation);
 					outArray[1] = "data:image/png;base64," + imageBase64Text; // TO DO delete!!! hard code -- data:image/png;base64,
 				}else{
@@ -156,4 +155,10 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 		}
 		return res;
 	}
+	
+	@Override
+	public List<String> getCategories1ByMetaCategory(String metaCategory) {		
+		return TestProcessor.getCategoriesList(metaCategory);
+	}
+
 }
