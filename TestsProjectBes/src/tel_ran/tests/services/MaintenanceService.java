@@ -698,7 +698,7 @@ public class MaintenanceService extends CommonServices implements IMaintenanceSe
 				}
 			}
 			StringBuilder fullQuery = new StringBuilder("SELECT c.id FROM EntityQuestionAttributes c");
-			fullQuery.append(" WHERE ((c.levelOfDifficulty=?1) AND (c.metaCategory?2)");
+			fullQuery.append(" WHERE ((c.levelOfDifficulty=?1) AND (c.metaCategory=?2)");
 			if(ec!=null)
 				fullQuery.append(" AND (c.companyId=?").append(ec.getId()).append(")");
 			fullQuery.append(")").append(condition);
