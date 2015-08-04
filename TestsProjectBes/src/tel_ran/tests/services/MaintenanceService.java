@@ -291,6 +291,7 @@ public class MaintenanceService extends CommonServices implements IMaintenanceSe
 	
 	
 	@Override
+	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW) 
 	public boolean ModuleForBuildingQuestions(String byCategory, String byCategory1,
 			int diffLevel, int nQuestions) {
 		boolean flagAction = false;	
