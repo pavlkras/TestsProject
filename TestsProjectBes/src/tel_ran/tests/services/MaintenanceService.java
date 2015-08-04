@@ -686,34 +686,72 @@ public class MaintenanceService extends CommonServices implements IMaintenanceSe
 		if(nQuestion > 0 && metaCategory != null){		
 			String[] categoryArray = metaCategory.split(",");	
 			String[] levelsArray = levelsOfDifficulty.split(",");
-			StringBuffer condition = new StringBuffer();
+			StringBuilder condition;
+			Query query;
 			EntityCompany ec = getCompany();
-			if(categoryArray.length > MIN_NUMBER_OF_CATEGORIES){      
-				for(int i=0, j=1; j<categoryArray.length; i=i+2, j++){
-					condition = condition.append(" OR ((c.levelOfDifficulty=?").append(i+3).append(") AND (c.metaCategory=?").
-							append(i+4).append(")");
-					if(ec!=null)
-						condition.append(" AND (c.companyId=?").append(ec.getId()).append(")");					
-					condition.append(")");
-				}
-			}
-			StringBuilder fullQuery = new StringBuilder("SELECT c.id FROM EntityQuestionAttributes c");
-			fullQuery.append(" WHERE ((c.levelOfDifficulty=?1) AND (c.metaCategory=?2)");
-			if(ec!=null)
-				fullQuery.append(" AND (c.companyId=?").append(ec.getId()).append(")");
-			fullQuery.append(")").append(condition);
+			List<Long> allAttributeQuestionsId;
+						
+			int typeNumbers = categoryArray.length;			
+			long step = nQuestion/typeNumbers;
+			long r = nQuestion % typeNumbers;
+			long nGeneratedQuestion = 0L;
+			int count = typeNumbers;
 			
-			Query query = em.createQuery(fullQuery.toString());
-			query.setParameter(1, Integer.parseInt(levelsArray[0]));
-			query.setParameter(2, categoryArray[0]);
-			if(categoryArray.length > MIN_NUMBER_OF_CATEGORIES){ 
-				for(int i=0, j=1; j<categoryArray.length; i=i+2, j++){				
-					query.setParameter((i+3), Integer.parseInt(levelsArray[j]));
-					query.setParameter((i+4), categoryArray[j]);
+			for (int i = 0; i < typeNumbers; i++ ) {
+				
+				condition = new StringBuilder("SELECT c.id FROM EntityQuestionAttributes c WHERE ");
+				condition.append("c.metaCategory=?1 AND c.levelOfDifficulty=?2");
+												
+				if(ec==null) {
+					condition.append(" AND c.companyId IS NULL");
+				} else {
+					condition.append(" AND c.companyId=?3");
+					
 				}
-			}
-			List<Long> allAttributeQuestionsId = query.getResultList();	
-			result = randomAttributeQuestionsId(allAttributeQuestionsId, nQuestion);
+				
+				query = em.createQuery(condition.toString());
+				
+				query.setParameter(1, categoryArray[i]);
+				
+				
+				query.setParameter(2, Integer.parseInt(levelsArray[i]));	
+				
+				if(ec!=null) {					
+					query.setParameter(3, ec);
+				}
+
+				
+				if(i == typeNumbers-1) 
+					step = step +r;
+				
+				allAttributeQuestionsId = query.getResultList();
+				count = count--;
+				
+				if(allAttributeQuestionsId == null) {
+					
+					if(count-i-1>0) {
+						step = (nQuestion - nGeneratedQuestion) / (count-i-1);
+						r = (nQuestion - nGeneratedQuestion) % (count-i-1);
+					} 
+					
+				} else if (allAttributeQuestionsId.size() < step) {
+					long resultSize = (long) allAttributeQuestionsId.size();
+					result.addAll(randomAttributeQuestionsId(allAttributeQuestionsId, resultSize));
+					nGeneratedQuestion += resultSize;
+					
+					if(count-i-1>0) {
+						step = (nQuestion - nGeneratedQuestion) / (count-i-1);
+						r = (nQuestion - nGeneratedQuestion) % (count-i-1);
+					}
+					
+				} else {
+				
+					nGeneratedQuestion += allAttributeQuestionsId.size();
+					result.addAll(randomAttributeQuestionsId(allAttributeQuestionsId, step));
+				}			
+				
+			}			
+
 		}
 		return result;
 	}

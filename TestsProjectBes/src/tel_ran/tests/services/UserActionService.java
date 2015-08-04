@@ -66,7 +66,7 @@ public class UserActionService extends CommonServices implements IUserActionServ
 
 	@Override
 	protected String getLimitsForQuery() {		
-		return " q.companyId='null'";
+		return " q.companyId IS NULL";
 	}
 	
 	
