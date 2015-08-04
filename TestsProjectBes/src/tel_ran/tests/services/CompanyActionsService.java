@@ -386,6 +386,7 @@ public class CompanyActionsService extends MaintenanceService implements ICompan
 		int result = -1;
 		int numberQuestions = Integer.parseInt(nQuestions);
 		int listSize;
+		
 		if(questionIdList==null) {
 			listSize =0;
 			questionIdList = new ArrayList<Long>();
@@ -402,8 +403,8 @@ public class CompanyActionsService extends MaintenanceService implements ICompan
 			questionIdList.addAll(autoQuestions);
 		} 
 		
-		if(!this.createTest(questionIdList, ePerson, pass))
-			result = 4;
+		if(!this.createTest(questionIdList, ePerson, pass) && result!=1)
+			result = 1;
 		
 		return result;
 		
