@@ -164,6 +164,7 @@ User Registered Flow:
 	public String addCompany() {
 		return "company/Company_add_form";
 	}
+	
 	//// method response JSON, Ajax on company add page 
 	@RequestMapping(value="/add_processing_ajax",method=RequestMethod.POST)
 	public @ResponseBody JsonResponse ajaxRequestStream(HttpServletRequest request) {   
