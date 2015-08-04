@@ -121,7 +121,6 @@ public class Maintenance {
 			}
 			
 			
-			
 			String repCategory = null;
 			if(category2!=null) {
 				repCategory = category2.replaceAll(",", "").replaceAll("none", "");
@@ -131,9 +130,7 @@ public class Maintenance {
 			if(metaCategory!=null)
 				repMetaCategory = metaCategory.replaceAll(",", "").replaceAll("none", ""); 
 			////
-			System.out.println("I'm FES! I'm ready to start BES!");
-			
-			System.out.println(levelOfDifficulty);
+
 			int lvl = Integer.parseInt(levelOfDifficulty);
 			
 			actionRes = maintenanceService.CreateNewQuestion(questionText, fileLocationLink, repMetaCategory, category1, lvl, answers, correctAnswer, 
@@ -432,7 +429,7 @@ public class Maintenance {
 	public @ResponseBody JsonResponse HandlerCode(HttpServletRequest request) {	
 		JsonResponse res = new JsonResponse(); 
 		String concatRes = " ";
-		List<String> result = maintenanceService.GetGeneratedExistCategory();
+		List<String> result = maintenanceService.GetPossibleMetaCaterories();
 		for(String re:result){		
 			concatRes += "<option value='" + re + "'>"+ re +"</option>";
 		}
