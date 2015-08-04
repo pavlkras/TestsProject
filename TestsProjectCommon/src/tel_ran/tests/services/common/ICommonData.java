@@ -9,6 +9,7 @@ public interface ICommonData {
 	static final String delimiter = ",";
 	static final int TOKEN_VALID_IN_SECONDS = 300;
 		
+	static final String NO_CATEGORY1 = "null";
 	
 
 	static final String NO_QUESTION = "  ";
