@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
+import tel_ran.tests.services.common.IPublicStrings;
 import tel_ran.tests.services.interfaces.ICompanyActionsService;
 
 
@@ -230,27 +231,70 @@ Normal Flow:
 5.	The System generates a test and a link for that test
 6.	The System presents the link for performing the test in the control mode  */
 	//
+	/**
+	 * CREATE NEW TEST for person
+	 * 
+	 * @param metaCategory 
+	 * @param category1 - for programming language
+	 * @param level_num
+	 * @param personId
+	 * @param personName
+	 * @param personSurname
+	 * @param personEmail 
+	 * @param selectCountQuestions
+	 * @param model
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping({"/add_test"})
-	public String createTest(String category, String level_num, String personId, String personName, String personSurname,String personEmail, String selectCountQuestions, Model model, HttpServletRequest request) {	
+	public String createTest(String metaCategory, String category1, String level_num, String personId, 
+			String personName, String personSurname,String personEmail, String selectCountQuestions, 
+			Model model, HttpServletRequest request) {	
+		
 		String url = request.getRequestURL().toString();
 		PATH_ADDRESS_TO_SERVICE = url.replace("add_test", "jobSeeker_test_preparing_click_event");
-		////
-		long counterOfQuestions = Integer.parseInt(selectCountQuestions);
+		////		
+		int counterOfQuestions = Integer.parseInt(selectCountQuestions);
 		System.out.println("level_num--"+level_num);//-------------------------------sysout
-		System.out.println("category--"+category);//-------------------------------sysout
-		List<Long> listIdQuestions = companyService.getUniqueSetQuestionsForTest(category, level_num, (long) counterOfQuestions);
-		int personID = companyService.CreatePerson(Integer.parseInt(personId), personName, personSurname,personEmail);
+		System.out.println("category--"+metaCategory);//-------------------------------sysout
+		if(category1!=null)
+			System.out.println("language -- " + category1);		
+				
 		String password = getRandomPassword();
-		boolean isCreated = companyService.CreateTest(listIdQuestions, personID, password, category, level_num);	//------------ TO DO levels change !!	add company name for
-		////
-		String link = PATH_ADDRESS_TO_SERVICE + "?" + password;// -------------------------------------------------------------------------------------TO DO real address NOT text in string !!!
-		boolean flagMail = true;
-		sendEmail(link,personEmail);
-		if(flagMail){
-			model.addAttribute("myResult", "<a href='"+link+"'><h2><b>Test link</b></h2></a><br>" + "<H1>message was sent successfully</H1>");    	
-		}else{
-			model.addAttribute("myResult", "<H1>Error while sending message</H1>");
+		int result = companyService.createTestForPersonFull(metaCategory, category1, level_num, selectCountQuestions, 
+				Integer.parseInt(personId), personName, personSurname, personEmail, password);
+		
+		String link = null;
+		
+		if(result==0) {
+			link = PATH_ADDRESS_TO_SERVICE + "?" + password; // -------------------------------------------------------------------------------------TO DO real address NOT text in string !!!
+			if(!sendEmail(link,personEmail))
+				result = 5;
 		}
+		
+//		List<Long> listIdQuestions = companyService.createSetQuestions(metaCategory, category1, level_num, counterOfQuestions);
+//		int personID = companyService.createPerson(Integer.parseInt(personId), personName, personSurname,personEmail);
+//		boolean isCreated = companyService.CreateTest(listIdQuestions, personID, password, metaCategory, level_num);	//------------ TO DO levels change !!	add company name for
+		////
+				
+			String messageText;
+			switch(result) {			
+				case 0 : 
+					messageText = "<a href='" + link + "'><h2><b>Test link</b></h2></a><br>" + "<H1>" + 
+							IPublicStrings.CREATE_TEST_ERROR[0] + "</H1>";
+					break;
+				case 1 :
+				case 2 :
+				case 3 :
+				case 5 :
+					messageText = "<H1>" + IPublicStrings.CREATE_TEST_ERROR[result] + "</H1>";
+					break;
+				default :
+					messageText = "<H1>" + IPublicStrings.CREATE_TEST_ERROR[4] + "</H1>";			
+			}
+			
+		model.addAttribute("myResult", messageText);	
+			
 		return "company/Company_TestLink";
 	}
 
