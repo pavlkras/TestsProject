@@ -429,7 +429,7 @@ public class Maintenance {
 	public @ResponseBody JsonResponse HandlerCode(HttpServletRequest request) {	
 		JsonResponse res = new JsonResponse(); 
 		String concatRes = " ";
-		List<String> result = maintenanceService.GetGeneratedExistCategory();
+		List<String> result = maintenanceService.GetPossibleMetaCaterories();
 		for(String re:result){		
 			concatRes += "<option value='" + re + "'>"+ re +"</option>";
 		}
