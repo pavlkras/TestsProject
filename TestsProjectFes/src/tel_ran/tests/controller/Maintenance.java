@@ -352,7 +352,7 @@ public class Maintenance {
 		boolean actionRes = false;
 		try {
 			int differentLevel = Integer.parseInt(levelOfDifficulty);
-			actionRes = maintenanceService.ModuleForBuildingQuestions(category, differentLevel , nQuest);
+			actionRes = maintenanceService.ModuleForBuildingQuestions(category, null, differentLevel , nQuest);
 		} catch (Exception e) {
 			System.out.println("catch call maintenanceaction from FES moduleForBuildingQuestions");//----------------------------------------------------sysout
 			//e.printStackTrace();
