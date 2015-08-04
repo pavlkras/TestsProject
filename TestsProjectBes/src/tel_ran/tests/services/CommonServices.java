@@ -22,7 +22,17 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 	}
 	
 	protected String getLimitsForQueryWithWhere() {
-		return " WHERE" + getLimitsForQuery();
+		if(getLimitsForQuery()==null)
+			return null;
+		else
+			return " WHERE" + getLimitsForQuery();
+	}
+	
+	protected String getLimitsForQueryWithAND() {
+		if(getLimitsForQuery()==null)
+			return null;
+		else
+			return " AND" + getLimitsForQuery();
 	}
 	
 	abstract protected String getLimitsForQuery();
@@ -158,7 +168,10 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 	
 	@Override
 	public List<String> getCategories1ByMetaCategory(String metaCategory) {		
-		return TestProcessor.getCategoriesList(metaCategory);
+		String query = "Select DISTINCT q.category1 FROM EntityQuestionAttributes q WHERE c.metaCategory='"
+				+ metaCategory + "'" + getLimitsForQueryWithAND() + " ORDER BY q.category1";
+		return getQuery(query);
+		
 	}
 
 }

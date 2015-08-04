@@ -1,12 +1,10 @@
 package tel_ran.tests.services;
 
 import java.io.File;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-
 import java.util.List;
 import java.util.Random;
 
@@ -22,6 +20,7 @@ import tel_ran.tests.entitys.EntityQuestion;
 import tel_ran.tests.entitys.EntityQuestionAttributes;
 import tel_ran.tests.processor.TestProcessor;
 import tel_ran.tests.services.common.ICommonData;
+import tel_ran.tests.services.common.IPublicStrings;
 import tel_ran.tests.services.interfaces.IMaintenanceService;
 
 /**
@@ -163,10 +162,10 @@ public class MaintenanceService extends CommonServices implements IMaintenanceSe
 		////		
 		
 		if(questionText == null) {
-			if (metaCategory.equals(ICommonData.COMPANY_AMERICAN_TEST))
-				questionText = ICommonData.COMPANY_AMERICAN_TEST_QUESTION;
-			else if (metaCategory.equals(ICommonData.COMPANY_QUESTION))
-				questionText = ICommonData.COMPANY_QUESTION_QUESTION;			
+			if (metaCategory.equals(IPublicStrings.COMPANY_AMERICAN_TEST))
+				questionText = IPublicStrings.COMPANY_AMERICAN_TEST_QUESTION;
+			else if (metaCategory.equals(IPublicStrings.COMPANY_QUESTION))
+				questionText = IPublicStrings.COMPANY_QUESTION_QUESTION;			
 		}
 	
 		EntityQuestion objectQuestion = em.find(EntityQuestion.class, createQuestion(questionText));
@@ -195,7 +194,7 @@ public class MaintenanceService extends CommonServices implements IMaintenanceSe
 		
 	@Override
 	protected String getLimitsForQueryWithWhere() {
-		return "";
+		return null;
 	}
 	
 	/// ----------- PUBLIC METHODS ---------------------------------------------------- ///
@@ -240,8 +239,8 @@ public class MaintenanceService extends CommonServices implements IMaintenanceSe
 	public boolean CreateNewQuestion(String category1, int levelOfDifficulty,
 			String description) {
 		
-		String questionText = ICommonData.COMPANY_QUESTION_QUESTION;
-		String metaCategory = ICommonData.COMPANY_QUESTION;
+		String questionText = IPublicStrings.COMPANY_QUESTION_QUESTION;
+		String metaCategory = IPublicStrings.COMPANY_QUESTION;
 		
 		fullCreateNewQuestion(questionText, metaCategory, category1, null,
 				levelOfDifficulty, description, null, null, null, 0);		
@@ -257,8 +256,8 @@ public class MaintenanceService extends CommonServices implements IMaintenanceSe
 			List<String> answerOptions, String correctAnswer,
 			String description, String fileLocationLink) {
 		
-		String questionText = ICommonData.COMPANY_AMERICAN_TEST_QUESTION;
-		String metaCategory = ICommonData.COMPANY_AMERICAN_TEST;
+		String questionText = IPublicStrings.COMPANY_AMERICAN_TEST_QUESTION;
+		String metaCategory = IPublicStrings.COMPANY_AMERICAN_TEST;
 		int answerOptionsNumber = answerOptions.size();
 		
 		fullCreateNewQuestion(questionText, metaCategory, category, null, levelOfDifficulty,
@@ -677,122 +676,9 @@ public class MaintenanceService extends CommonServices implements IMaintenanceSe
 	////-------------- Update  ONE Question into DB Case ----------// END  //
 	
 	
-	////
-	////-------------- Method for test case group AlexFoox Company return id of unique set questions ----------// BEGIN  //
-	@SuppressWarnings("unchecked")	
-	@Override  
-	public List<Long> getUniqueSetQuestionsForTest(String metaCategory, String levelsOfDifficulty,  Long nQuestion){
-		List<Long> result = new ArrayList<Long>();
-		if(nQuestion > 0 && metaCategory != null){		
-			String[] categoryArray = metaCategory.split(",");	
-			String[] levelsArray = levelsOfDifficulty.split(",");
-			StringBuilder condition;
-			Query query;
-			EntityCompany ec = getCompany();
-			List<Long> allAttributeQuestionsId;
-						
-			int typeNumbers = categoryArray.length;			
-			long step = nQuestion/typeNumbers;
-			long r = nQuestion % typeNumbers;
-			long nGeneratedQuestion = 0L;
-			int count = typeNumbers;
-			
-			for (int i = 0; i < typeNumbers; i++ ) {
-				
-				condition = new StringBuilder("SELECT c.id FROM EntityQuestionAttributes c WHERE ");
-				condition.append("c.metaCategory=?1 AND c.levelOfDifficulty=?2");
-												
-				if(ec==null) {
-					condition.append(" AND c.companyId IS NULL");
-				} else {
-					condition.append(" AND c.companyId=?3");
-					
-				}
-				
-				query = em.createQuery(condition.toString());
-				
-				query.setParameter(1, categoryArray[i]);
-				
-				
-				query.setParameter(2, Integer.parseInt(levelsArray[i]));	
-				
-				if(ec!=null) {					
-					query.setParameter(3, ec);
-				}
-
-				
-				if(i == typeNumbers-1) 
-					step = step +r;
-				
-				allAttributeQuestionsId = query.getResultList();
-				count = count--;
-				
-				if(allAttributeQuestionsId == null) {
-					
-					if(count-i-1>0) {
-						step = (nQuestion - nGeneratedQuestion) / (count-i-1);
-						r = (nQuestion - nGeneratedQuestion) % (count-i-1);
-					} 
-					
-				} else if (allAttributeQuestionsId.size() < step) {
-					long resultSize = (long) allAttributeQuestionsId.size();
-					result.addAll(randomAttributeQuestionsId(allAttributeQuestionsId, resultSize));
-					nGeneratedQuestion += resultSize;
-					
-					if(count-i-1>0) {
-						step = (nQuestion - nGeneratedQuestion) / (count-i-1);
-						r = (nQuestion - nGeneratedQuestion) % (count-i-1);
-					}
-					
-				} else {
-				
-					nGeneratedQuestion += allAttributeQuestionsId.size();
-					result.addAll(randomAttributeQuestionsId(allAttributeQuestionsId, step));
-				}			
-				
-			}			
-
-		}
-		return result;
-	}
 	
-	////
-	private static List<Long> randomAttributeQuestionsId(List<Long> allAttributeQuestionsId, Long nQuestion){
-		List<Long> result = new ArrayList<Long>();
-		if(allAttributeQuestionsId.size() > 0){
-			if(nQuestion >= allAttributeQuestionsId.size()){
-				result = allAttributeQuestionsId;
-			}else{
-				for(int i=0; i<nQuestion;){	
-					Random rnd = new Random();
-					int rand =  rnd.nextInt(allAttributeQuestionsId.size());							
-					long questionAttributeId = allAttributeQuestionsId.get(rand);
-					if(result.size() > 1){
-						int flag = 0;          
-						for(Long num: result){
-							if(num == questionAttributeId){
-								flag = 1;
-							}
-						}	
-						if(flag == 0){
-							result.add(questionAttributeId);
-							i++;	
-						}						
-					}else{
-						result.add(questionAttributeId);
-						i++;
-					}
-				}				
-			}
-		}
-		return result;
-	}////-------------- Method for test case group AlexFoox Company return id of unique set questions ----------// END  //
+	
 
-	@Override
-	public List<String> GetGeneratedExistCategory(){
-		// Новый метод (статический) - TestProcessor.getMetaCategory() - возвращает лист стрингов с названием мета-категорий
-		return  TestProcessor.getMetaCategory();
-	}
 	
 	@Override
 	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
@@ -837,9 +723,18 @@ public class MaintenanceService extends CommonServices implements IMaintenanceSe
 		return "";
 	}
 
+	@Override
+	public List<String> GetPossibleCategories1(String metaCategory) {
+		return TestProcessor.getCategoriesList(metaCategory);
+	}
+
+	@Override
+	public List<String> GetPossibleMetaCaterories(){
+		// Новый метод (статический) - TestProcessor.getMetaCategory() - возвращает лист стрингов с названием мета-категорий
+		return  TestProcessor.getMetaCategory();
+	}
 
 
-	
 
 			
 }
