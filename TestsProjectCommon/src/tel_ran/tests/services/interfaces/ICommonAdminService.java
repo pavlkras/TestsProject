@@ -127,14 +127,19 @@ public interface ICommonAdminService extends ICommonService {
 			String fileLocationPath, String numAnswersOnPictures);	
 	
 	/**
-	 * Returns list of all possible Meta Categories for auto generated question. 
-	 * Warning: these are only potentially possible Meta Categories. The DB can not contain questions of these categories 
-	 * @return list of the Meta Category name
+	 * Return list of all possible Meta Categories for auto generated question. 
+	 * Warning: these are only potentially possible Meta Categories. The DB can not contain questions of these categories	  
 	 */
-	public List<String> GetGeneratedExistCategory();
+	public List<String> GetPossibleMetaCaterories();	
 	
-	// method for group generate test. AlexFoox returned Long ID of question 
-	public List<Long> getUniqueSetQuestionsForTest(String category,String level_num, Long nQuestion);
+	/**
+	 * Return list of all possible Categories1 (like Prog.Language etc) by Meta Category
+	 * Warning: these are only potentially possible Categories. The DB can not contain questions of these categories
+	 * @param metaCategory = name of Meta Category 
+	 */
+	public List<String> GetPossibleCategories1(String metaCategory);
+	
+	
 	
 
 }
