@@ -13,8 +13,9 @@
 <link
 	href='<c:url value="/static/css_folder/user_styles/IndexPage.css"></c:url>'
 	rel="stylesheet">
-<script src="static/js_folder/header&&rightmenu.js">
-</script>
+
+
+
 	
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
@@ -25,7 +26,47 @@
 
 <body>
 	<div id="container">
+	 <div id="container">
+	 	<div id ="header">
+	 		<div id="logo">
+	 			
+	 		</div>
+	 		<div id="search_area">
+	 			<input id="text_Area" type="text" placeholder="Search.."/>
+	 			<input id="button" type="button" value="search"/>
+	 		</div>
+	 		
+	 	</div>
+	 	<div id="nav_area">
+	 			<ul>
+	 				<li><a href=".">Home</a></li>
+	 				<li><a href="login">User Login</a></li>
+	 				<li><a href="CompanyActions">Company Login</a></li>
+	 				<li><a href=".">FAQ</a></li>
+	 				<li><a href=".">Contact Us</a></li>
+	 			</ul>
+	 	</div><!--end nav area-->
 
+	 	<div id="left_side">
+        
+        
+	 		<div id="testexamples">
+               <div>
+	 			<h2>Test Examples</h2>
+              </div>
+	 			<ul>
+                
+	 				<li><a href=".">JAVA</a></li><hr>
+	 				<li><a href=".">C++</a></li><hr>
+	 				<li><a href=".">C#</a></li><hr>
+	 				<li><a href=".">Android</a></li><hr>
+	 				<li><a href=".">Javascript</a></li><hr>
+                    <li><a href=".">HTML&CSS</a></li><hr>
+                    <li><a href=".">Other Tests</a></li>
+	 			</ul>
+ 		  </div><!--end tesst examles-->
+
+ 	  </div><!--end left_side area-->	
 
  	  <div id="right_side">
 

@@ -15,7 +15,7 @@
 	rel="stylesheet">
 <script
 	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>	
-	<script src="static/js_folder/header&&rightmenu.js">
+	<script src="static/js_folder/header&&rightmenu_company.js">
 </script>	
 
 </head>

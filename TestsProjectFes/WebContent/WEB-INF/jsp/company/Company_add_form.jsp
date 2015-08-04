@@ -25,7 +25,7 @@
 </head>
 <body>
 	<div id="container">
-		<div id="right_side_company">
+		<div id="right_side">
 
 				<div id="formDiv">
 					<h2>Company Registration</h2>
