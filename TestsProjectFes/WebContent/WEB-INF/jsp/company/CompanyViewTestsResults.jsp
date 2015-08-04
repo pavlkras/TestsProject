@@ -56,16 +56,14 @@
 	href="http://cdn.jsdelivr.net/bootstrap/3.3.4/css/bootstrap.min.css"
 	rel="stylesheet">
 
-<link
-	href='<c:url value="/static/css_folder/user_styles/IndexPage.css"></c:url>'
-	rel="stylesheet">
+
 <link href='<c:url value="/static/css_folder/style.css"></c:url>'
 	rel="stylesheet">
 <title>View tests results</title>
 </head>
 
 <body>
-			<div id="conatiner">
+			<div id="container">
 	 	<div id ="header">
 	 		<div id="logo">
 	 			

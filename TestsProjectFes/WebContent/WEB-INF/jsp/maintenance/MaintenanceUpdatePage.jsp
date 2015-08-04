@@ -13,13 +13,17 @@
 <link
 	href='<c:url value="/static/css_folder/maintenance_styles/MaintenanceUpdatePage.css"></c:url>'
 	rel="stylesheet">
+	
+<link
+	href='<c:url value="/static/css_folder/style.css"></c:url>'
+	rel="stylesheet">
 <script
 	src="static/js_folder/maintenance_scripts/update_question_page.js"></script>
 <title>ADDING</title>
 <title>UPDATE</title>
 </head>
 <body onload="actionTypeChange()">
-	<div id="conatiner">
+	<div id="container">
 		<div id="header">
 			<div id="logo"></div>
 			<div id="search_area">

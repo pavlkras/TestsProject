@@ -61,6 +61,12 @@ public class CompanyActions {
 	public String createRequest(){
 		return "company/CompanyTestsResultsStartPage";
 	}
+	
+	// IGOR Action Re-mapping
+	@RequestMapping({"/company_main"})
+	public String loginSucceessCompany(){
+		return "company/Company_main";
+	}
 
 	/* ----------Use case Company Login--------------
 Login Normal Flow: 
@@ -82,7 +88,7 @@ Wrong Password Flow:
 	//
 
 	@RequestMapping("/loginProcessing")
-	public String loginProcessing(String companyName, String password,Model model){
+	public String loginProcessing(String companyName, String password, Model model){
 		////// Method getCompanyByName(companyName) - return companyId;
 		///	boolean IfExistCompany
 		companyId = companyService.getCompanyByName(companyName);
@@ -91,22 +97,7 @@ Wrong Password Flow:
 		if(companyId>0){
 			boolean ress = companyService.setAutorization(companyName, password);
 			if(ress){ 				
-				StringBuffer categoryHtmlText = new StringBuffer();
-				List<String> resultCategory = companyService.getAllMetaCategoriesFromDataBase();
-				categoryHtmlText.append("<table class='table_ind'><tr><th>Category of Question:</th><th  colspan='2'>Level of difficulty</th></tr>");
-				for(String catBox:resultCategory){					
-					categoryHtmlText.append("<tr class='tr_ind'>");
-					categoryHtmlText.append("<td>").append(catBox).append(":</td>");
-					categoryHtmlText.append("<td><input class='category' type='checkbox' name='category' value='").
-						append(catBox).append("' /></td>");
-					categoryHtmlText.append("<td><select name='level_num' disabled>").
-						append("<option value='1'>1</option>").append("<option value='2'>2</option>").
-						append("<option value='3'>3</option>").append("<option value='4'>4</option>").
-						append("<option value='5'>5</option>").append("</select></td></tr>");						
-				}
-				categoryHtmlText.append("</table>");
-				model.addAttribute("categoryFill", categoryHtmlText.toString());
-				result = "company/CompanyGenerateTest";
+				result = "company/Company_main";
 				this.setCompanyName(companyName); 
 			}else{
 				result = "company/CompanySignIn";
@@ -164,6 +155,29 @@ User Registered Flow:
 	@RequestMapping({"/companyadd"})
 	public String addCompany() {
 		return "company/Company_add_form";
+	}
+	
+	
+	@RequestMapping({"/testGeneration"})
+	public String testGeneration(Model model) {
+		StringBuffer categoryHtmlText = new StringBuffer();
+		List<String> resultCategory = companyService.getAllMetaCategoriesFromDataBase();
+		categoryHtmlText.append("<table class='table_ind'><tr><th>Category of Question:</th><th  colspan='2'>Level of difficulty</th></tr>");
+		for(String catBox:resultCategory){					
+			categoryHtmlText.append("<tr class='tr_ind'>");
+			categoryHtmlText.append("<td>").append(catBox).append(":</td>");
+			categoryHtmlText.append("<td><input class='category' type='checkbox' name='category' value='").
+				append(catBox).append("' /></td>");
+			categoryHtmlText.append("<td><select name='level_num' disabled>").
+				append("<option value='1'>1</option>").append("<option value='2'>2</option>").
+				append("<option value='3'>3</option>").append("<option value='4'>4</option>").
+				append("<option value='5'>5</option>").append("</select></td></tr>");						
+		}
+		categoryHtmlText.append("</table>");
+		model.addAttribute("categoryFill", categoryHtmlText.toString());
+//		result = "company/CompanyGenerateTest";
+		this.setCompanyName(companyName); 
+		return "company/CompanyGenerateTest";
 	}
 	
 	//// method response JSON, Ajax on company add page 
@@ -248,7 +262,7 @@ Normal Flow:
 	 * @return
 	 */
 	@RequestMapping({"/add_test"})
-	public String createTest(String metaCategory, String category1, String level_num, String personId, 
+	public String createTest(String category, String category1, String level_num, String personId, 
 			String personName, String personSurname,String personEmail, String selectCountQuestions, 
 			Model model, HttpServletRequest request) {	
 		
@@ -257,12 +271,12 @@ Normal Flow:
 		////		
 		int counterOfQuestions = Integer.parseInt(selectCountQuestions);
 		System.out.println("level_num--"+level_num);//-------------------------------sysout
-		System.out.println("category--"+metaCategory);//-------------------------------sysout
+		System.out.println("category--"+category);//-------------------------------sysout
 		if(category1!=null)
 			System.out.println("language -- " + category1);		
 				
 		String password = getRandomPassword();
-		int result = companyService.createTestForPersonFull(metaCategory, category1, level_num, selectCountQuestions, 
+		int result = companyService.createTestForPersonFull(category, category1, level_num, selectCountQuestions, 
 				Integer.parseInt(personId), personName, personSurname, personEmail, password);
 		
 		String link = null;

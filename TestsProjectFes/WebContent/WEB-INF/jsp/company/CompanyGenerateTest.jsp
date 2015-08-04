@@ -16,7 +16,7 @@
 	rel="stylesheet">
 <link href='<c:url value="/static/css_folder/style.css"></c:url>'
 	rel="stylesheet">
-<title>Insert title here</title>
+<title>Test generation</title>
 <script type="text/javascript">
 	$(document)
 			.ready(
@@ -70,7 +70,7 @@
 
 
 <body>
-			<div id="conatiner">
+			<div id="container">
 	 	<div id ="header">
 	 		<div id="logo">
 	 			
@@ -82,14 +82,23 @@
 	 		
 	 	</div>
 	 	<div id="nav_area">
-	 			<ul>
-	 				<li><a href=".">Home</li></a>
-	 				<li><a href="login">User Login</li></a>
-	 				<li><a href="CompanyActions">Company Login</li></a>
-	 				<li><a href=".">FAQ</li></a>
-	 				<li><a href=".">Contact Us</li></a>
-	 			</ul>
-	 	</div><!--end nav area-->
+                    <ul class="clearfix">
+                        <li><a href=".">Home</a></li>
+                        <li>
+                            <a href="#">Question Maintance <span class="arrow">&#9660;</span></a>
+             
+                            <ul class="sub-menu">
+                                <li><a href="maintenanceadd">Creating questions</a></li>
+                                <li><a href="update">Update/delete questions</a></li>
+                                <li><a href="otherResursCreationMethod">Adding question from other resources</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="testGeneration">Test generation</a></li>
+                        <li><a href="view_results">View test results</a></li>
+                        <li><a href=".">FAQ</a></li>
+                        <li><a href=".">Contacn us</a></li>
+                    </ul>
+         </div>
 
 	 	<div id="left_side">
         
@@ -108,7 +117,7 @@
                     <li><a href=".">HTML&CSS</li></a><hr>
                     <li><a href=".">Other Tests</li></a>
 	 			</ul>
- 		  </div><!--end tesst examles-->
+ 		  </div><!--end test examles-->
 
  	  </div><!--end left_side area-->
 

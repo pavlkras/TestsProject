@@ -44,9 +44,9 @@ a:active {
 a:visited {
 	color: #171814;
 }
-#conatiner {
+#container {
 	background: white;
-	width: 1000px;
+	width: 1200px;
 	height: auto;
 	margin: 0 auto;
 	padding: 10px;
@@ -55,7 +55,7 @@ a:visited {
 }
 #header {
 	background: #0054a6;
-	width: 1000px;
+	width: 1200px;
 	height: 100px;
 	margin: 0px;
 	padding: 0px;
@@ -103,33 +103,99 @@ a:visited {
 /*-----------------start nav_area-----------------*/
 
 #nav_area {
-	width: 1000px;
+   	width: 1200px;
 	height: 35px;
 	border: 1px solid white;
 	background-image:url(../images/navbg.jpg);
 	padding-top: 12px;
 }
 
+#nav_area .clearfix:after {
+    display:block;
+    clear:both;
+}
+
 #nav_area ul {
-	float: left;
-
+   float: left;
 }
-
-#nav_area ul li {
-	list-style: none;
-	float: left;	
+ 
+#nav_area li {
+    margin:0px;
+    list-style:none;
+    font-family:'Ek Mukta';
 }
+ 
+#nav_area a {
+    transition:all linear 0.15s;
+    color:#919191;
+}
+ 
+#nav_area li:hover > a {
+    text-decoration:none;
+    color:#be5b70;
+}
+ 
+#nav_area .arrow {
+    font-size:11px;
+    line-height:0%;
+}
+ 
+#nav_area > ul > li {
+    float:left;
+    display:inline-block;
+    position:relative;
+    font-size:14px;
+}
+ 
+#nav_area > ul > li > a {
 
-#nav_area ul li a {
 	text-decoration: none;
-	font-size: 16px;
+	font-size: 15px;
 	font-weight:bold;
 	color: #0054a6;
-	padding: 15px 20px;
+	padding: 20px 10px;
 	font-family: helvetica;
+	vertical-align: center;
 }
-#nav_area ul li a:hover {
-	background: #0054a6;
+ 
+#nav_area > ul > li:hover > a {
+    background: #0054a6;
+	color: #FFF;
+}
+ 
+#nav_area li:hover .sub-menu {
+    z-index:1;
+    opacity:1;
+}
+ 
+#nav_area .sub-menu {
+    width:200%;
+    padding:5px 0px;
+    position:absolute;
+    top:100%;
+    left:0px;
+    z-index:-1;
+    opacity:0;
+	color: #0054a6;
+    transition:opacity linear 0.15s;
+    box-shadow:0px 2px 3px rgba(0,0,0,0.2);
+    background: linear-gradient(#91C8FF, #F0F8FF, white, #F0F8FF, #91C8FF);
+}
+ 
+#nav_area .sub-menu li {
+    display:block;
+	
+    font-size:16px;
+}
+ 
+#nav_area .sub-menu li a {
+    padding:10px 30px;
+	color: #0054a6;
+    display:block;
+}
+ 
+#nav_area .sub-menu li a:hover {
+    background: #0054a6;
 	color: #FFF;
 }
 
@@ -194,7 +260,18 @@ a:visited {
 
 
 #right_side {
+	position: relative;
 	float: right;
+	width: 804px;
+	margin-left: 10px;
+	margin-bottom: 10px;
+	margin-top: 10px;
+
+}
+
+#right_side_company {
+	position: relative;
+	float: left;
 	width: 804px;
 	margin-left: 10px;
 	margin-bottom: 10px;
@@ -208,10 +285,10 @@ a:visited {
 
 #description {
 
-	float: left;
-	width: 804px;
+	float: right;
+	width: 1004px;
 
-	position: absolute;
+	position: relative;
 	margin-bottom: 10px;
 	position: relative;
 }
@@ -250,7 +327,7 @@ a:visited {
 /*-------- start footer area-----------*/
 
 #footer_area {
-	width: 1000px;
+	width: 1200px;
 	height: 50px;
 	background: #0054a6;
 	clear: both;

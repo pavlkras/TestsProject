@@ -128,7 +128,7 @@ font-size: 0.80em;
 <title>Sign up page</title>
 </head>
 <body>
-	<div id="conatiner">
+	<div id="container">
 	 	<div id ="header">
 	 		<div id="logo">
 	 			

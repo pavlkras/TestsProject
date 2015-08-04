@@ -9,58 +9,22 @@
 <link
 	href='<c:url value="/static/css_folder/css/MaintenanceHomePage.css"></c:url>'
 	rel="stylesheet">
-
+<script
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <link
 	href='<c:url value="/static/css_folder/user_styles/IndexPage.css"></c:url>'
 	rel="stylesheet">
 <link href='<c:url value="/static/css_folder/style.css"></c:url>'
 	rel="stylesheet">
+<script src="static/js_folder/header&&rightmenu.js">
+	
+</script>
 <title>Company Home Page</title>
 </head>
 
 <body>
-			<div id="conatiner">
-	 	<div id ="header">
-	 		<div id="logo">
-	 			
-	 		</div>
-	 		<div id="search_area">
-	 			<input id="text_Area" type="text" placeholder="Search.."/>
-	 			<input id="button" type="button" value="search"/>
-	 		</div>
-	 		
-	 	</div>
-	 	<div id="nav_area">
-	 			<ul>
-	 				<li><a href=".">Home</li></a>
-	 				<li><a href="login">User Login</li></a>
-	 				<li><a href="CompanyActions">Company Login</li></a>
-	 				<li><a href=".">FAQ</li></a>
-	 				<li><a href=".">Contact Us</li></a>
-	 			</ul>
-	 	</div><!--end nav area-->
-
-	 	<div id="left_side">
-        
-        
-	 		<div id="testexamples">
-               <div>
-	 			<h2>Test Examples</h2>
-              </div>
-	 			<ul>
-                
-	 				<li><a href=".">JAVA</li></a><hr>
-	 				<li><a href=".">C++</li></a><hr>
-	 				<li><a href=".">C#</li></a><hr>
-	 				<li><a href=".">Android</li></a><hr>
-	 				<li><a href=".">Javascript</li></a><hr>
-                    <li><a href=".">HTML&CSS</li></a><hr>
-                    <li><a href=".">Other Tests</li></a>
-	 			</ul>
- 		  </div><!--end test examles-->
-
- 	  </div><!--end left_side area-->
-
+	<div id="container">
+		
 		<div id="right_side">
 			<div id="formDiv">
 				<br>
@@ -68,8 +32,9 @@
 				<br>
 				<form class='myButton' action="loginProcessing">
 					Login: <input type="text" name="companyName" size="24"><br>
-					<br> Password: <input type="password" name="password" size="20"><br>
-					<br> <input class='myButton' type="submit" value="LogIn">
+					<br> Password: <input type="password" name="password"
+						size="20"><br> <br> <input class='myButton'
+						type="submit" value="LogIn">
 				</form>
 				<br> <br> <a class='myButton' href="search_form">Search
 					Company</a> <br> <br> <a class='myButton' href="companyadd">Registration</a>
@@ -80,16 +45,17 @@
 					</script>
 				</p>
 			</div>
-		<div id="additional_area"></div>
+			<div id="additional_area"></div>
 
-	</div>
-	<!--end of right area-->
+		</div>
+		<!--end of right area-->
 
 
 
-	<div id="footer_area">
+		<div id="footer_area">
 
-		<p>Copyright &copy; 2014 HrTrueTest</p>
+			<p>Copyright &copy; 2014 HrTrueTest</p>
+		</div>
 	</div>
 </body>
 </html>
