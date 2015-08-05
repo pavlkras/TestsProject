@@ -19,7 +19,7 @@ $(document).ready(function(){
 		               '<li><a href="otherResursCreationMethod">Adding question from other resources</a></li>'+
 		           '</ul>'+
 		       '</li>'+
-		       '<li><a href="CompanyGenerateTest">Test generation</a></li>'+
+		       '<li><a href="testGeneration">Test generation</a></li>'+
 		       '<li><a href="view_results">View test results</a></li>'+
 		       '<li><a href=".">FAQ</a></li>'+
 		       '<li><a href=".">Contacn us</a></li>'+
