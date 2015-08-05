@@ -239,6 +239,7 @@ public class CompanyActionsService extends MaintenanceService implements ICompan
 
 
 	@Override
+	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
 	public int createTestForPersonFull(String metaCategories, String categories1, String difLevel, String nQuestion, int personPassport,
 			String personName, String personSurname, String personEmail, String pass) {		
 		return this.createTestForPersonFull(null, metaCategories, categories1, difLevel, nQuestion, 
@@ -247,6 +248,7 @@ public class CompanyActionsService extends MaintenanceService implements ICompan
 
 	
 	@Override
+	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
 	public int createTestForPersonFull(List<Long> questionIdList, String metaCategories, String categories1, String difLevel, String nQuestion, int personPassport,
 			String personName, String personSurname, String personEmail, String pass) {
 		
@@ -282,6 +284,11 @@ public class CompanyActionsService extends MaintenanceService implements ICompan
 	}
 
 	
+	
+
+	
+	// ------------------- PRIVATE METHODS FOR TEST CREATION ---------------------- // BEGIN -----------
+
 	////
 	////-------------- Method for test case group AlexFoox Company return id of unique set questions ----------// BEGIN  //
 	@SuppressWarnings("unchecked")	
@@ -337,7 +344,7 @@ public class CompanyActionsService extends MaintenanceService implements ICompan
 					if(ec!=null) {					
 						query.setParameter(3, ec);
 					}
-
+	
 					// if category is specified
 					if(!categories1Array[i].endsWith(ICommonData.NO_CATEGORY1)) {
 						query.setParameter(4, categories1Array[i]);
@@ -373,14 +380,12 @@ public class CompanyActionsService extends MaintenanceService implements ICompan
 					}			
 					
 				}			
-
+	
 			}
 			return result;
 		}
 
-	
-	// ------------------- PRIVATE METHODS FOR TEST CREATION ---------------------- // BEGIN -----------
-
+	@Transactional(readOnly=false, propagation=Propagation.REQUIRED)
 	private int testFromQuestionList(List<Long> questionIdList, EntityPerson ePerson, String pass, String metaCategories, String categories1, 
 			String complexityLevel, String nQuestions) {
 		int result = -1;
@@ -452,7 +457,7 @@ public class CompanyActionsService extends MaintenanceService implements ICompan
 		return result;
 	}
 
-	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
+	@Transactional(readOnly=false, propagation=Propagation.REQUIRED)
 	private boolean createTest(List<Long> questionIdList, EntityPerson ePerson, String pass) {		
 		boolean result = false;
 		
@@ -485,14 +490,15 @@ public class CompanyActionsService extends MaintenanceService implements ICompan
 		
 	}
 		
-	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
+	@Transactional(readOnly=false, propagation=Propagation.REQUIRED)
 	private EntityPerson createEntityPerson(int personId, String personName, String personSurname, String personEmail) {
 		
 		if(personEmail==null || personEmail.length()<5)
 			return null;
 		
-		EntityPerson person;
-		if(em.find(EntityPerson.class, personId)==null){			
+			
+		EntityPerson person = em.find(EntityPerson.class, personId);
+		if(person==null){			
 			person = new EntityPerson();
 			person.setPersonId(personId);
 			person.setPersonName(personName);
@@ -500,9 +506,8 @@ public class CompanyActionsService extends MaintenanceService implements ICompan
 			person.setPersonEmail(personEmail);
 			em.persist(person);      
 			
-		} else {
-			person = em.find(EntityPerson.class, personId);
-		}
+		} 
+		
 		return person;
 	}
 
