@@ -3,8 +3,8 @@ package tel_ran.tests.services.subtype_handlers;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
-import tel_ran.tests.gradle_tester.CodeTester;
 import tel_ran.tests.services.inner_result.dataobjects.InnerResultDataObject;
+import tel_ran.tests.services.subtype_handlers.gradle.CodeTester;
 
 import java.io.IOException;
 
