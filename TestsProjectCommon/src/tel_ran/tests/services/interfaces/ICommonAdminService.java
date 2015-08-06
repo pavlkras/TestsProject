@@ -85,7 +85,7 @@ public interface ICommonAdminService extends ICommonService {
 	 * @param description - text of the question or task (should be less than 2000 characters)
 	 * @return true if the question has been created successfully
 	 */
-	boolean  CreateNewQuestion(String category1, int levelOfDifficulty, String description);
+	boolean  CreateNewOpenQuestion(String category1, int levelOfDifficulty, String description);
 	
 	/**
 	 * Method for the manual creation of a new Question for American Test Form (UserTest)  	 * 
@@ -101,7 +101,7 @@ public interface ICommonAdminService extends ICommonService {
 	 * @param fileLocationLink - link to the picture that can be added to the Question	
 	 * @return true if the question has been created successfully
 	 */
-	boolean  CreateNewQuestion(String category, int levelOfDifficulty, List<String> answerOptions, 
+	boolean  CreateNewAmericanTest(String category, int levelOfDifficulty, List<String> answerOptions, 
 			String correctAnswer, String description, String fileLocationLink);
 
 	
