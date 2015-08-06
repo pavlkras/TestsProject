@@ -15,6 +15,7 @@ import javax.persistence.criteria.Root;
 import tel_ran.tests.entitys.EntityAnswersText;
 import tel_ran.tests.entitys.EntityQuestionAttributes;
 import tel_ran.tests.processor.TestProcessor;
+import tel_ran.tests.services.common.IPublicStrings;
 import tel_ran.tests.services.interfaces.ICommonService;
 
 public abstract class CommonServices extends TestsPersistence implements ICommonService {
@@ -197,13 +198,16 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 
 	@Override
 	public List<String> getUsersCategories1FromDataBase() {
-		String query = "Select DISTINCT q.category1 FROM EntityQuestionAttributes q WHERE (q.metaCategory=?1 OR q.metacategory=?2)";
+		StringBuilder query = new StringBuilder("Select DISTINCT q.category1 FROM EntityQuestionAttributes q WHERE (q.metaCategory='");
+		query.append(IPublicStrings.COMPANY_AMERICAN_TEST).append("' OR q.metacategory='").append(IPublicStrings.COMPANY_QUESTION).
+			append("'");
 		String str = getLimitsForQuery();
 		if(str!=null)
-			query = query.concat(" AND q.").concat(str);
-		query = query.concat(" ORDER BY q.category1");	
+			query.append(" AND q.").append(str);
+		query.append(" ORDER BY q.category1");	
 		
-		return getQuery(query);
+				
+		return getQuery(query.toString());
 	}
 
 }
