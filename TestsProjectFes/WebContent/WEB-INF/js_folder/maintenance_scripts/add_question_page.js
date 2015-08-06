@@ -3,6 +3,9 @@
  */
 $(document).ready(function(){
 	$("#inputCategoryField").css("display","none");
+	$("div#codepattern").hide(); 
+	$("div#americanquestion").hide(); 
+	$("div#compcategory").hide();
 	
 	$("#addingForm").keyup(function(){
 		var $catSelect = $("#catSel").val();
@@ -20,13 +23,13 @@ $(document).ready(function(){
 			if(answer.length == 1 || codeT.length != 0){							
 				 document.getElementsByName("button_send")[0].disabled = false;
 			}else{
-				document.getElementsByName("button_send")[0].disabled = true;
+				document.getElementsByName("button_send")[0].disabled = false;
 			}				
 			}else{
-				document.getElementsByName("button_send")[0].disabled = true;
+				document.getElementsByName("button_send")[0].disabled = false;
 			}
 		}else{
-			 document.getElementsByName("button_send")[0].disabled = true;
+			 document.getElementsByName("button_send")[0].disabled = false;
 		}
 	});
 	////
@@ -55,6 +58,7 @@ $(document).ready(function(){
 	
 	$("#newMetaCategoryCreating").click(function(){
 		var $catSelect = $("#mCatSel").val();
+		
 		if($catSelect == "none"){
 			$("#inputMetaCategoryField").css("display","block");			
 		}else{
@@ -71,5 +75,37 @@ $(document).ready(function(){
 			$("#inputCategoryField").css("display","none");
 			$("#inputCategoryField").val(" ");
 		}		
+	});
+	
+	$( "#mCatSel" ).change(function() {
+		var $catSelect = $("#mCatSel").val();
+		
+		if ($catSelect == "American Question") {
+			$("div#americanquestion").show(); 
+			$("div#codepattern").hide(); 
+	    }
+		else if($catSelect == "Open Question") {
+			$("div#codepattern").show(); 
+			$("div#americanquestion").hide(); 
+	    }
+		else if($catSelect == "none") {
+			$("div#codepattern").hide(); 
+			$("div#americanquestion").hide(); 
+	    }
+
+		   
+	});
+	
+	$( "#catSel" ).change(function() {
+		var $catSel  = $("#catSel").val();
+		
+		if ($catSel == "Create company category") {
+			$("div#compcategory").show();
+	    }
+		else {
+			$("div#compcategory").hide();
+		}
+
+		   
 	});
 });
