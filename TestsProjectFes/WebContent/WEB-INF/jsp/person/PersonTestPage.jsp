@@ -15,12 +15,12 @@
 </head>
 <body ng-app="testPage" ng-controller="QuestionTestController" ng-init="token='${token}'"> 
 
-	<div class="item" ng-show="false">
-		<video id="video" width="320" height="240" autoplay="autoplay"></video>
+	<camera></camera>
+	<div>
+    	<video id="video" width="320" height="240" autoplay="autoplay" ng-show="false"></video>
+    	<canvas id="canvas" width="320" height="240" class="myImage" ng-show="false"></canvas>
 	</div>
-	<div class="item" ng-show="false">
-		<canvas id="canvas" width="320" height="240"></canvas>
-	</div>
+	
 	<br><br>
 	<div  ng-show="mySwitchStartTest">
 		<h1 id="message"></h1>
