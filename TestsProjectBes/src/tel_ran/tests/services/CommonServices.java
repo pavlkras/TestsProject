@@ -183,5 +183,27 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 		return getQuery(query);
 		
 	}
+	
+	@Override
+	public List<String> GetPossibleCategories1(String metaCategory) {
+		return TestProcessor.getCategoriesList(metaCategory);
+	}
+
+	@Override
+	public List<String> GetPossibleMetaCaterories(){
+		// Новый метод (статический) - TestProcessor.getMetaCategory() - возвращает лист стрингов с названием мета-категорий
+		return  TestProcessor.getMetaCategory();
+	}
+
+	@Override
+	public List<String> getUsersCategories1FromDataBase() {
+		String query = "Select DISTINCT q.category1 FROM EntityQuestionAttributes q WHERE (q.metaCategory=?1 OR q.metacategory=?2)";
+		String str = getLimitsForQuery();
+		if(str!=null)
+			query = query.concat(" AND q.").concat(str);
+		query = query.concat(" ORDER BY q.category1");	
+		
+		return getQuery(query);
+	}
 
 }

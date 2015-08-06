@@ -33,6 +33,9 @@ public class MaintenanceService extends CommonServices implements IMaintenanceSe
 	private static int MIN_NUMBER_OF_CATEGORIES = 1;
 	private static boolean FLAG_AUTHORIZATION = false;	
 	
+	protected EntityCompany renewCompany() {
+		return null;
+	}
 	
 	//
 	////-------------- Authorization Case ----------// Begin  //		
@@ -109,8 +112,10 @@ public class MaintenanceService extends CommonServices implements IMaintenanceSe
 		EntityQuestionAttributes questionAttributesList = new EntityQuestionAttributes();// new question attributes creation		
 				
 		questionAttributesList.setDescription(description);		
-		if(company!=null)
+		if(company!=null) {
+			System.out.println(company.getId());
 			questionAttributesList.setCompanyId(company);
+		}
 		questionAttributesList.setQuestionId(objectQuestion);	
 		questionAttributesList.setFileLocationLink(fileLocationLink);// file location path (string) 		
 		questionAttributesList.setMetaCategory(metaCategory);
@@ -169,10 +174,10 @@ public class MaintenanceService extends CommonServices implements IMaintenanceSe
 		}
 	
 		EntityQuestion objectQuestion = em.find(EntityQuestion.class, createQuestion(questionText));
+				
+		EntityCompany objectCompany = renewCompany();
+		System.out.println("My class = " + this.getClass());
 		
-
-		
-		EntityCompany objectCompany = getCompany();
 
 		EntityQuestionAttributes questionAttributes = createAttributes(fileLocationLink, metaCategory, category1, 
 				category2, levelOfDifficulty, answers, correctAnswerChar, answerOptionsNumber, description, objectQuestion, 
@@ -467,22 +472,22 @@ public class MaintenanceService extends CommonServices implements IMaintenanceSe
 	
 	
 	////-------------- Builder of page witch categories check box ----------// BEGIN  //	
-	@Override	
-	public List<String> getAllCategories1FromDataBase() {
-		String query = "Select DISTINCT q.category1 FROM EntityQuestionAttributes q ORDER BY q.category1";
-		return getQuery(query);
-	}
-
-	@Override
-	public List<String> getAllCategories2FromDataBase() {
-		String query = "Select DISTINCT q.category2 FROM EntityQuestionAttributes q ORDER BY q.category2";
-		return getQuery(query);
-	}
-	@Override
-	public List<String> getAllMetaCategoriesFromDataBase() {
-		String query = "Select DISTINCT q.metaCategory FROM EntityQuestionAttributes q ORDER BY q.metaCategory";
-		return getQuery(query);
-	}	
+//	@Override	
+//	public List<String> getAllCategories1FromDataBase() {
+//		String query = "Select DISTINCT q.category1 FROM EntityQuestionAttributes q ORDER BY q.category1";
+//		return getQuery(query);
+//	}
+//
+//	@Override
+//	public List<String> getAllCategories2FromDataBase() {
+//		String query = "Select DISTINCT q.category2 FROM EntityQuestionAttributes q ORDER BY q.category2";
+//		return getQuery(query);
+//	}
+//	@Override
+//	public List<String> getAllMetaCategoriesFromDataBase() {
+//		String query = "Select DISTINCT q.metaCategory FROM EntityQuestionAttributes q ORDER BY q.metaCategory";
+//		return getQuery(query);
+//	}	
 	////-------------- Builder of page witch categories check box ----------// END  //
 	
 	
@@ -720,18 +725,35 @@ public class MaintenanceService extends CommonServices implements IMaintenanceSe
 		return null;
 	}
 
+
+
+
+	@SuppressWarnings("unchecked")
 	@Override
-	public List<String> GetPossibleCategories1(String metaCategory) {
-		return TestProcessor.getCategoriesList(metaCategory);
+	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
+	public String[] getAnySingleQuery(String strQuery) {
+		if(em.find(EntityAdministrators.class,"qqq@qqq.qq") == null){
+			EntityAdministrators emad = new EntityAdministrators();
+			emad.setPassportNumber("12345");
+			emad.setUserMail("qqq@qqq.qq");
+			emad.setUserPassword("12345");
+			emad.setUserName("test");
+			emad.setUserAddress("californy");
+			em.persist(emad);
+		}
+		String[] outResult;
+		List<EntityCompany> result = em.createQuery(
+				"SELECT c FROM EntityCompany c WHERE c.C_Name LIKE :custName").setParameter("custName","%"+strQuery+"%").getResultList();// return to client result of operation
+		int len_gth = result.size();
+		outResult = new String[len_gth];
+		int flCount = 0;
+		for(EntityCompany q: result){		
+			if(flCount != len_gth){
+				outResult[flCount++] = q.toString();
+			}
+		}
+		return outResult;// return to client 
 	}
-
-	@Override
-	public List<String> GetPossibleMetaCaterories(){
-		// Новый метод (статический) - TestProcessor.getMetaCategory() - возвращает лист стрингов с названием мета-категорий
-		return  TestProcessor.getMetaCategory();
-	}
-
-
 
 			
 }

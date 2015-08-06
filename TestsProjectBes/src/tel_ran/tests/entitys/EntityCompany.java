@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -18,7 +19,7 @@ public class EntityCompany implements Serializable {
 	@OneToMany (mappedBy = "entityCompany")
 	private List<EntityTest> personsTests; 
 	///
-	@OneToMany(mappedBy = "companyId")
+	@OneToMany(mappedBy = "companyId", fetch = FetchType.LAZY)
 	List<EntityQuestionAttributes> questionAttributes;
 	///
 	

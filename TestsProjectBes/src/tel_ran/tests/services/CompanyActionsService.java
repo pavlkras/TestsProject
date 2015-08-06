@@ -37,6 +37,8 @@ public class CompanyActionsService extends MaintenanceService implements ICompan
 	@Autowired
 	IFileManagerService fileManager;
 	
+	long id;
+	
 	//-------------Use Case Company Login 3.1.1----------- //   BEGIN    ///
 	@Override
 	public boolean setAutorization(String username, String password) { 
@@ -48,8 +50,9 @@ public class CompanyActionsService extends MaintenanceService implements ICompan
 				result = true;
 			}else{
 				result = false;
-			}
+			}			
 		}
+		this.id = entityCompany.getId();
 		return result;
 	}
 	//-------------Use Case Company Login 3.1.1----------- //   END    ///
@@ -66,8 +69,14 @@ public class CompanyActionsService extends MaintenanceService implements ICompan
 	}
 	
 	@Override
-	protected EntityCompany getCompany() {
+	protected EntityCompany getCompany() {		
 		return this.entityCompany;
+	}
+	
+	@Override
+	protected EntityCompany renewCompany() {
+		EntityCompany result = em.find(EntityCompany.class, id);
+		return result;
 	}
 	
 	
@@ -79,32 +88,7 @@ public class CompanyActionsService extends MaintenanceService implements ICompan
 	
 
 	//-------------Use Case Company Sign up 3.1.2----------- //   BEGIN    ///
-	@SuppressWarnings("unchecked")
-	@Override
-	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
-	public String[] getAnySingleQuery(String strQuery) {
-		if(em.find(EntityAdministrators.class,"qqq@qqq.qq") == null){
-			EntityAdministrators emad = new EntityAdministrators();
-			emad.setPassportNumber("12345");
-			emad.setUserMail("qqq@qqq.qq");
-			emad.setUserPassword("12345");
-			emad.setUserName("test");
-			emad.setUserAddress("californy");
-			em.persist(emad);
-		}
-		String[] outResult;
-		List<EntityCompany> result = em.createQuery(
-				"SELECT c FROM EntityCompany c WHERE c.C_Name LIKE :custName").setParameter("custName","%"+strQuery+"%").getResultList();// return to client result of operation
-		int len_gth = result.size();
-		outResult = new String[len_gth];
-		int flCount = 0;
-		for(EntityCompany q: result){		
-			if(flCount != len_gth){
-				outResult[flCount++] = q.toString();
-			}
-		}
-		return outResult;// return to client 
-	}
+
 
 
 	//-------------Use Case Company Sign up 3.1.2-----------  /// END  ///
