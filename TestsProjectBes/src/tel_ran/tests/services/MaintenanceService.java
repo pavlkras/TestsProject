@@ -88,7 +88,7 @@ public class MaintenanceService extends CommonServices implements IMaintenanceSe
 		//// query if question exist as text in Data Base
 		Query tempRes = em.createQuery("SELECT q FROM EntityQuestion q WHERE q.questionText='"+questionText+"'");
 		try{			
-			objectQuestion = (EntityQuestion) tempRes.getSingleResult();		
+			objectQuestion = (EntityQuestion) tempRes.getSingleResult();			
 			
 		}catch(javax.persistence.NoResultException e){				
 			objectQuestion = new EntityQuestion();	
@@ -96,14 +96,14 @@ public class MaintenanceService extends CommonServices implements IMaintenanceSe
 			
 			em.persist(objectQuestion);
 			
-		}
-				
+		}				
 				
 		return objectQuestion.getId();		
 		
 	}
 	
-	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW) 
+		
+	@Transactional(readOnly=false,propagation=Propagation.REQUIRED) 
 	protected EntityQuestionAttributes createAttributes(String fileLocationLink,
 			String metaCategory, String category1, String category2, int levelOfDifficulty,
 			List<String> answers, String correctAnswerChar, int answerOptionsNumber, String description,
@@ -173,7 +173,8 @@ public class MaintenanceService extends CommonServices implements IMaintenanceSe
 				questionText = IPublicStrings.COMPANY_QUESTION_QUESTION;			
 		}
 	
-		EntityQuestion objectQuestion = em.find(EntityQuestion.class, createQuestion(questionText));
+		long questionId = createQuestion(questionText);
+		EntityQuestion objectQuestion = em.find(EntityQuestion.class, questionId);
 				
 		EntityCompany objectCompany = renewCompany();
 		System.out.println("My class = " + this.getClass());
@@ -181,9 +182,9 @@ public class MaintenanceService extends CommonServices implements IMaintenanceSe
 
 		EntityQuestionAttributes questionAttributes = createAttributes(fileLocationLink, metaCategory, category1, 
 				category2, levelOfDifficulty, answers, correctAnswerChar, answerOptionsNumber, description, objectQuestion, 
-				objectCompany);
-		
+				objectCompany);		
 
+		objectQuestion = em.find(EntityQuestion.class, questionId);
 		objectQuestion.addQuestionAttributes(questionAttributes);
 		em.merge(questionAttributes);
 		em.merge(objectQuestion);	
@@ -237,7 +238,7 @@ public class MaintenanceService extends CommonServices implements IMaintenanceSe
 	
 	@Override	
 	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW) 
-	public boolean CreateNewQuestion(String category1, int levelOfDifficulty,
+	public boolean CreateNewOpenQuestion(String category1, int levelOfDifficulty,
 			String description) {
 		
 		String questionText = IPublicStrings.COMPANY_QUESTION_QUESTION;
@@ -253,7 +254,7 @@ public class MaintenanceService extends CommonServices implements IMaintenanceSe
 
 	@Override	
 	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW) 
-	public boolean CreateNewQuestion(String category, int levelOfDifficulty,
+	public boolean CreateNewAmericanTest(String category, int levelOfDifficulty,
 			List<String> answerOptions, String correctAnswer,
 			String description, String fileLocationLink) {
 		
@@ -754,6 +755,7 @@ public class MaintenanceService extends CommonServices implements IMaintenanceSe
 		}
 		return outResult;// return to client 
 	}
+
 
 			
 }
