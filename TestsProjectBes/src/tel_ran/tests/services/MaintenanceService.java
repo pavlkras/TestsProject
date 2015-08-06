@@ -113,7 +113,7 @@ public class MaintenanceService extends CommonServices implements IMaintenanceSe
 				
 		questionAttributesList.setDescription(description);		
 		if(company!=null) {
-			System.out.println(company.getId());
+	
 			questionAttributesList.setCompanyId(company);
 		}
 		questionAttributesList.setQuestionId(objectQuestion);	
@@ -177,8 +177,7 @@ public class MaintenanceService extends CommonServices implements IMaintenanceSe
 		EntityQuestion objectQuestion = em.find(EntityQuestion.class, questionId);
 				
 		EntityCompany objectCompany = renewCompany();
-		System.out.println("My class = " + this.getClass());
-		
+				
 
 		EntityQuestionAttributes questionAttributes = createAttributes(fileLocationLink, metaCategory, category1, 
 				category2, levelOfDifficulty, answers, correctAnswerChar, answerOptionsNumber, description, objectQuestion, 
