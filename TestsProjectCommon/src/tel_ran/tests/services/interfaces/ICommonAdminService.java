@@ -126,20 +126,11 @@ public interface ICommonAdminService extends ICommonService {
 			String metaCategory, String category, int levelOfDifficulty, List<String> answers, String correctAnswer, 
 			String fileLocationPath, String numAnswersOnPictures);	
 	
-	/**
-	 * Return list of all possible Meta Categories for auto generated question. 
-	 * Warning: these are only potentially possible Meta Categories. The DB can not contain questions of these categories	  
-	 */
-	public List<String> GetPossibleMetaCaterories();	
-	
-	/**
-	 * Return list of all possible Categories1 (like Prog.Language etc) by Meta Category
-	 * Warning: these are only potentially possible Categories. The DB can not contain questions of these categories
-	 * @param metaCategory = name of Meta Category 
-	 */
-	public List<String> GetPossibleCategories1(String metaCategory);
 	
 	
+
 	
+	
+	String[] getAnySingleQuery(String strQuery);
 
 }

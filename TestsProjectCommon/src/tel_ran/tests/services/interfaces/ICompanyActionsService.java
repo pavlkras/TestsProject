@@ -116,5 +116,5 @@ public interface ICompanyActionsService extends ICommonAdminService {
 	public String getTestsResultsForTimeInterval(long companyId, long date_from, long date_until, String timeZone);
 	public String getTestResultDetails(long companyId, long testId);
 	public String encodeIntoToken(long companyId);
-	String[] getAnySingleQuery(String strQuery);
+	
 }
