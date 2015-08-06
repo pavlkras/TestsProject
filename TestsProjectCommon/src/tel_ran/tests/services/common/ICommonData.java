@@ -18,6 +18,7 @@ public interface ICommonData {
 	 * number of responses in the picture, for American test question`s. Default = 4
 	 */
 	static final int NUMBERofRESPONSESinThePICTURE = 4;	
+	static final String[] USER_CATEGORY = {IPublicStrings.COMPANY_AMERICAN_TEST, IPublicStrings.COMPANY_QUESTION};
 
 	
 }
