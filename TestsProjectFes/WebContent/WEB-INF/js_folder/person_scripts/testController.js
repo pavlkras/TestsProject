@@ -5,7 +5,7 @@
 var app = angular.module("testPage", []);
 
 app.controller("QuestionTestController", function($scope, $http) {
-	$scope.mySwitchStartTest = true;
+	$scope.mySwitchStartTest = false;
 	$scope.mySwitchShowTest = false;
 	$scope.mySwitchEndTest = false;
 	$scope.mySwitchAmericanSystemTestQuestion = false;
@@ -108,3 +108,116 @@ app.directive('testPage', function() {
 			link : function foo(scope, element, attrs) {}
 	};
 });
+
+//-------------------------------------------------Camera
+app.factory('CameraService', function($window) {
+        var hasUserMedia = function() {
+            return !!getUserMedia();
+        }
+
+        var getUserMedia = function() {
+            navigator.getUserMedia = ($window.navigator.getUserMedia ||
+            $window.navigator.webkitGetUserMedia ||
+            $window.navigator.mozGetUserMedia ||
+            $window.navigator.msGetUserMedia);
+            return navigator.getUserMedia;
+        }
+
+        return {
+            hasUserMedia: hasUserMedia(),
+            getUserMedia: getUserMedia
+        }
+    })
+//------------------------------------------------------------------------------------------------
+
+app.directive('camera', function(CameraService) {
+        return {
+            restrict: 'EA',
+            replace: true,
+            transclude: true,
+          //  scope: {},
+            scope: false,
+        //    template: '<div class="camera"><video class="camera" autoplay="" /><div ng-transclude></div></div>',
+            template: '<input type="button" ng-click="take_photo()" value="Photo">',
+            link: function(scope, ele, attrs, QuestionTestController) {
+                var w = attrs.width || 320,
+                    h = attrs.height || 200;
+
+                if (CameraService.hasUserMedia) {
+                    var videoElement = document.querySelector('video');
+// If camera works
+                    var onSuccess = function (stream) {
+                        if (navigator.mozGetUserMedia) {                         //if Mozilla
+                            console.log("1");
+                            videoElement.mozSrcObject = stream;
+                        } else {
+                            console.log("2");
+                            var vendorURL = window.URL || window.webkitURL;
+                            videoElement.src = window.URL.createObjectURL(stream);
+                        }
+                        // Just to make sure it autoplays
+                        videoElement.play();
+                        
+                        scope.mySwitchStartTest = true;
+                    }
+// If camera doesn't work of if camera block
+                    var onFailure = function (err) {
+                        console.log("Error !");
+                        console.error(err);
+                    }
+// Make the request for the media
+                    navigator.getUserMedia({
+                        video: {
+                            mandatory: {
+                                maxHeight: h,
+                                maxWidth: w
+                            }
+                        },
+                        audio: false
+                    }, onSuccess, onFailure);
+
+                    scope.w = w;
+                    scope.h = h;
+                }
+                else {
+                    console.log("Problem with camera: browser doesn't support camera or camera was blocked");
+                    return;
+                }
+            },
+
+            controller: function($scope, $q, $timeout, $http) {
+                var canvas = document.querySelector('canvas');
+                var context = canvas.getContext('2d');
+                $scope.take_photo = function () {
+                    console.log("in function Take photo");
+                    var canvas = document.querySelector('canvas');
+                    var context = canvas.getContext('2d');
+                    var video = document.querySelector('video');
+                    context.fillRect(0, 0, $scope.w, $scope.h);
+                    context.drawImage(video, 0, 0, $scope.w, $scope.h);
+                    var base64dataUrl = canvas.toDataURL('image/png');
+                    console.log("base64dataUrl = " + base64dataUrl);
+                    //var picture = base64dataUrl + "@END_LINE@";
+                    
+                  //function save_image
+            		var link = "/TestsProjectBes/persontest/save_image";
+            		$scope.httpConfig = {
+            			headers : {
+            				'Authorization' : $scope.token
+            			}
+            		};
+            		var dataObj = {
+            			image : base64dataUrl
+            			//number question
+            		};
+
+            		$http.post(link, dataObj, $scope.httpConfig).success(
+            				function(data, status, headers, config) {
+            					console.log("IMAGE - Success - request result to Rest");
+            				}).error(function(data, status, headers, config) {
+            			console.log("IMAGE - Error - request result to Rest");
+            		});
+                }
+            }
+        }
+    });
