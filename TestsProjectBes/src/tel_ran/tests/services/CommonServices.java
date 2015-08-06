@@ -7,6 +7,10 @@ import java.util.Base64;
 import java.util.List;
 
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 import tel_ran.tests.entitys.EntityAnswersText;
 import tel_ran.tests.entitys.EntityQuestionAttributes;
@@ -15,42 +19,42 @@ import tel_ran.tests.services.interfaces.ICommonService;
 
 public abstract class CommonServices extends TestsPersistence implements ICommonService {
 
-	protected List<String> getQuery(String query) {
-		Query q = em.createQuery(query);
+	protected List<String> getQuery(String query) {		
+		TypedQuery<String> q = em.createQuery(query, String.class);
 		List<String> allCategories = q.getResultList();		
 		return allCategories;
-	}
-	
-	protected String getLimitsForQueryWithWhere() {
-		if(getLimitsForQuery()==null)
-			return null;
-		else
-			return " WHERE" + getLimitsForQuery();
-	}
-	
-	protected String getLimitsForQueryWithAND() {
-		if(getLimitsForQuery()==null)
-			return null;
-		else
-			return " AND" + getLimitsForQuery();
 	}
 	
 	abstract protected String getLimitsForQuery();
 			
 	public List<String> getAllCategories1FromDataBase() {
-		String query = "Select DISTINCT q.category1 FROM EntityQuestionAttributes q" + getLimitsForQueryWithWhere() + " ORDER BY q.category1";
-		return getQuery(query);
+		String qry = "Select DISTINCT q.category1 FROM EntityQuestionAttributes q";
+		String q = getLimitsForQuery();
+		if(q!=null)
+			qry = qry.concat(" WHERE q.").concat(q);
+		qry = qry.concat(" ORDER BY q.category1");
+
+		return getQuery(qry);
 	}
 
 	
 	public List<String> getAllCategories2FromDataBase() {
-		String query = "Select DISTINCT q.category2 FROM EntityQuestionAttributes q" + getLimitsForQueryWithWhere() + " ORDER BY q.category2";
+		String query = "Select DISTINCT q.category2 FROM EntityQuestionAttributes q";
+		String qry = getLimitsForQuery();
+		if(qry!=null)
+			query = query.concat(" WHERE q.").concat(qry);
+		query = query.concat(" ORDER BY q.category2");
 		return getQuery(query);
 	}
 	
 	public List<String> getAllMetaCategoriesFromDataBase() {
-		String query = "Select DISTINCT q.metaCategory FROM EntityQuestionAttributes q" + getLimitsForQueryWithWhere() + " ORDER BY q.metaCategory";
-		return getQuery(query);
+		
+		StringBuilder query = new StringBuilder("Select DISTINCT cat.metaCategory FROM EntityQuestionAttributes cat");	
+		String qry = getLimitsForQuery();
+		if(qry!=null)
+			query.append(" WHERE cat.").append(qry);
+		query.append(" ORDER BY cat.metaCategory");
+		return getQuery(query.toString());
 	}	
 	
 	protected String getQuestionWithDelimeters(EntityQuestionAttributes eqa) {
@@ -168,8 +172,14 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 	
 	@Override
 	public List<String> getCategories1ByMetaCategory(String metaCategory) {		
-		String query = "Select DISTINCT q.category1 FROM EntityQuestionAttributes q WHERE c.metaCategory='"
-				+ metaCategory + "'" + getLimitsForQueryWithAND() + " ORDER BY q.category1";
+		String query = "Select DISTINCT q.category1 FROM EntityQuestionAttributes q WHERE q.metaCategory='"		
+				+ metaCategory + "'";
+		String qry = getLimitsForQuery();
+		if(qry!=null)
+			query = query.concat(" AND q").concat(qry);
+		
+		query = query.concat(" ORDER BY q.category1");
+		
 		return getQuery(query);
 		
 	}

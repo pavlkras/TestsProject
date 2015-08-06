@@ -192,11 +192,7 @@ public class MaintenanceService extends CommonServices implements IMaintenanceSe
 		return true;
 	}
 		
-	@Override
-	protected String getLimitsForQueryWithWhere() {
-		return null;
-	}
-	
+		
 	/// ----------- PUBLIC METHODS ---------------------------------------------------- ///
 	
 	////-------------- Creation and Adding ONE Question into DB Case ----------// BEGIN  //
@@ -721,7 +717,7 @@ public class MaintenanceService extends CommonServices implements IMaintenanceSe
 
 	@Override
 	protected String getLimitsForQuery() {
-		return "";
+		return null;
 	}
 
 	@Override

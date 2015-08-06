@@ -74,7 +74,7 @@ public class CompanyActionsService extends MaintenanceService implements ICompan
 	@Override
 	protected String getLimitsForQuery() {	
 		EntityCompany ec = getCompany();
-		return " q.companyId='" + ec.getId() + "'";
+		return "companyId='" + ec + "'";
 	}
 	
 
@@ -337,8 +337,7 @@ public class CompanyActionsService extends MaintenanceService implements ICompan
 					query = em.createQuery(condition.toString());
 					
 					query.setParameter(1, categoryArray[i]);
-					
-					
+										
 					query.setParameter(2, Integer.parseInt(levelsArray[i]));	
 					
 					if(ec!=null) {					

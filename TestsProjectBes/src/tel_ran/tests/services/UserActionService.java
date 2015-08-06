@@ -66,27 +66,34 @@ public class UserActionService extends CommonServices implements IUserActionServ
 
 	@Override
 	protected String getLimitsForQuery() {		
-		return " q.companyId IS NULL";
+		return "companyId is null";
 	}
-	
-	
-	
+		
 	////
 	@Override
 	public List<String> getComplexityLevelList() {
-		String query = "Select DISTINCT q.levelOfDifficulty FROM EntityQuestionAttributes q" + getLimitsForQuery() +" ORDER BY q.levelOfDifficulty";
-		Query q = em.createQuery(query);
-		List<String> allLevels = q.getResultList();
+		String query = "Select DISTINCT q.levelOfDifficulty FROM EntityQuestionAttributes q";
+		String q = getLimitsForQuery();
+		if(q!=null)
+			query = query.concat(" WHERE ").concat(q);
+		query = query.concat(" ORDER BY q.levelOfDifficulty");
+		Query sqlQ = em.createQuery(query);
+		List<String> allLevels = sqlQ.getResultList();
 		return allLevels;
 	}
 	////
 	@Override
 	public String getMaxCategoryLevelQuestions(String catName,
 			String complexityLevel) {
-		String query = "SELECT q FROM EntityQuestionAttributes q WHERE q.category=?1 AND q.levelOfDifficulty=?2 AND" + getLimitsForQuery();
+		String query = "SELECT q FROM EntityQuestionAttributes q WHERE q.metaCategory=?1 AND q.levelOfDifficulty=?2";
+		String str = getLimitsForQuery();
+		if(str!=null)
+			query = query.concat(" AND q.").concat(str);
+
 		Query q = em.createQuery(query);
 		q.setParameter(1, catName);
 		q.setParameter(2, Integer.parseInt(complexityLevel));
+
 		List<EntityQuestion> qlist = q.getResultList();
 		String res = String.valueOf(qlist.size());
 		return res;
@@ -94,7 +101,11 @@ public class UserActionService extends CommonServices implements IUserActionServ
 	////
 	@Override
 	public String getMaxCategoryQuestions(String catName, String level) {
-		String query = "SELECT q FROM EntityQuestionAttributes q WHERE q.category=?1 AND q.levelOfDifficulty=?2 AND" + getLimitsForQuery();
+		String query = "SELECT q FROM EntityQuestionAttributes q WHERE q.category=?1 AND q.levelOfDifficulty=?2";
+		String temp = getLimitsForQuery();
+		if(temp!=null)
+			query = query.concat(" AND q.").concat(temp);
+		
 		Query q = em.createQuery(query);
 		q.setParameter(1, catName);
 		q.setParameter(2, Integer.parseInt(level));
@@ -107,11 +118,17 @@ public class UserActionService extends CommonServices implements IUserActionServ
 	@Override
 	public List<String> getTraineeQuestions(String category, int levelOfDifficulty, int qAmount) {
 		List<String> outTextResult = new ArrayList<String>();	
+		StringBuilder queryText;
 
 		if(qAmount > 0 && category != null){
-			for(int i=0; i < qAmount ; i++){// -- cycle works on the number of questions -nQuestion							
-				List<EntityQuestionAttributes> questionAttrList = em.createQuery("SELECT c FROM EntityQuestionAttributes c WHERE (c.levelOfDifficulty="+levelOfDifficulty+") "
-						+ "AND (c.category='"+category+"') AND (" + getLimitsForQuery() + ")").getResultList();		
+			for(int i=0; i < qAmount ; i++){// -- cycle works on the number of questions -nQuestion		
+				queryText = new StringBuilder("SELECT c FROM EntityQuestionAttributes c WHERE c.levelOfDifficulty='");
+				queryText.append(levelOfDifficulty).append("' AND c.metaCategory='").append(category).append("'");
+				String str = getLimitsForQuery();
+				if(str!=null)
+					queryText.append(" AND c.").append(str);				
+				
+				List<EntityQuestionAttributes> questionAttrList = em.createQuery(queryText.toString()).getResultList();		
 
 				if(questionAttrList != null && questionAttrList.size() > 0){
 					EntityQuestionAttributes tmpRes = questionAttrList.get(i);
