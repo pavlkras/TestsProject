@@ -22,6 +22,10 @@ import tel_ran.tests.services.interfaces.IUserActionService;
 public class UserActions{ 	
 	@Autowired
 	IUserActionService userService; 
+	
+	public UserActions() {
+		
+	}
 
 	@RequestMapping({"/"})
 	public String Index(){     return "index";       }// this mapping to index page !!!!!! for all users and all company !!!!
