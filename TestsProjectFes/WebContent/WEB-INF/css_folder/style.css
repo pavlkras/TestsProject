@@ -62,7 +62,7 @@ a:visited {
 }
 
 #logo {
-	height: 60px;
+	height: 100px;
 	width: 350px;
 	float: left;
 	padding:5px;
@@ -278,6 +278,18 @@ a:visited {
 	margin-top: 10px;
 
 }
+
+#right_side_viewresults {
+	position: relative;
+	float: left;
+	width: 804px;
+	margin-left: 10px;
+	margin-bottom: 10px;
+	margin-top: 50px;
+
+}
+
+
 
 
 /*---------------------------start  description area---------------------------*/

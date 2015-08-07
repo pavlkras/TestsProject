@@ -1,7 +1,7 @@
 <%@page import="tel_ran.tests.services.common.ICommonData"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
-		<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <!doctype html>
 <html lang="en" ng-app="app" ng-controller="InputController"
@@ -52,63 +52,27 @@
 <script src="/TestsProjectFes/static_js/js/viewresultsjs/prism.js"></script>
 <!-- EOF Code Highlighter  -->
 
+
 <link
 	href="http://cdn.jsdelivr.net/bootstrap/3.3.4/css/bootstrap.min.css"
 	rel="stylesheet">
-
 
 <link href='<c:url value="/static/css_folder/style.css"></c:url>'
 	rel="stylesheet">
 <title>View tests results</title>
 </head>
 
+<script
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="static/js_folder/header&&rightmenu_viewresults.js">
+</script>
+
+</head>
 <body>
-			<div id="container">
-	 	<div id ="header">
-	 		<div id="logo">
-	 			
-	 		</div>
-	 		<div id="search_area">
-	 			<input id="text_Area" type="text" placeholder="Search.."/>
-	 			<input id="button" type="button" value="search"/>
-	 		</div>
-	 		
-	 	</div>
-	 	<div id="nav_area">
-	 			<ul>
-	 				<li><a href=".">Home</li></a>
-	 				<li><a href="login">User Login</li></a>
-	 				<li><a href="CompanyActions">Company Login</li></a>
-	 				<li><a href=".">FAQ</li></a>
-	 				<li><a href=".">Contact Us</li></a>
-	 			</ul>
-	 	</div><!--end nav area-->
+	<div id="container">
 
-	 	<div id="left_side">
-        
-        
-	 		<div id="testexamples">
-               <div>
-	 			<h2>Test Examples</h2>
-              </div>
-	 			<ul>
-                
-	 				<li><a href=".">JAVA</li></a><hr>
-	 				<li><a href=".">C++</li></a><hr>
-	 				<li><a href=".">C#</li></a><hr>
-	 				<li><a href=".">Android</li></a><hr>
-	 				<li><a href=".">Javascript</li></a><hr>
-                    <li><a href=".">HTML&CSS</li></a><hr>
-                    <li><a href=".">Other Tests</li></a>
-	 			</ul>
- 		  </div><!--end tesst examles-->
+		<div id="right_side_company">
 
- 	  </div><!--end left_side area-->
-
-		</div>
-		<!--end left_side area-->
-
-		<div id="right_side">
 			<div class="container-fluid">
 				<div class="row">
 					<form ng-submit="submit()">
@@ -285,9 +249,8 @@
 </div>
 </div>
 </script>
-		</div>
-		<div id="additional_area"></div>
-
+		
+<div id="additional_area"></div>
 	</div>
 	<!--end of right area-->
 
@@ -297,5 +260,7 @@
 
 		<p>Copyright &copy; 2014 HrTrueTest</p>
 	</div>
+	</div>
 </body>
+
 </html>
