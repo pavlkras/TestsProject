@@ -71,7 +71,7 @@
 <body>
 	<div id="container">
 
-		<div id="right_side_company">
+		<div id="right_side_viewresults">
 
 			<div class="container-fluid">
 				<div class="row">
