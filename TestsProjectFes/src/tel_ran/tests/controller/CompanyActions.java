@@ -23,9 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
-import tel_ran.tests.controller.AbstractAdminActions.JsonResponse;
 import tel_ran.tests.services.common.IPublicStrings;
-import tel_ran.tests.services.interfaces.ICommonAdminService;
 import tel_ran.tests.services.interfaces.ICompanyActionsService;
 
 
@@ -38,8 +36,7 @@ public class CompanyActions extends AbstractAdminActions {
 	private long companyId = -1;
 	private static String PATH_ADDRESS_TO_SERVICE = "";
 	RestTemplate restTemplate =  new RestTemplate();
-	
-	@Autowired
+
 	private ICompanyActionsService companyService;
 //	@Autowired
 //	private	IMaintenanceService maintenanceService;	
@@ -48,7 +45,8 @@ public class CompanyActions extends AbstractAdminActions {
 	
 	public CompanyActions() {
 		super();
-		this.adminService = companyService;
+		super.setService("companyService");
+		companyService = (ICompanyActionsService) super.getAdminService();
 	}
 	
 	
