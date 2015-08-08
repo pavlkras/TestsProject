@@ -10,14 +10,14 @@ public interface ICommonService extends ApplicationFinalFields {
 	 * Return list of all possible Meta Categories for auto generated question. 
 	 * Warning: these are only potentially possible Meta Categories. The DB can not contain questions of these categories	  
 	 */
-	List<String> GetPossibleMetaCaterories();
+	List<String> getPossibleMetaCaterories();
 	
 	/**
 	 * Return list of all possible Categories1 (like Prog.Language etc) by Meta Category
 	 * Warning: these are only potentially possible Categories. The DB can not contain questions of these categories
 	 * @param metaCategory = name of Meta Category 
 	 */
-	List<String> GetPossibleCategories1(String metaCategory);
+	List<String> getPossibleCategories1(String metaCategory);
 		
 	/**
 	 * List of MetaCategories that exist in Data Base
