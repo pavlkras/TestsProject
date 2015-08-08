@@ -83,7 +83,7 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 	@Override
 	protected String getLimitsForQuery() {	
 		EntityCompany ec = getCompany();
-		return "companyId='" + ec + "'";
+		return "companyId='" + ec.getId() + "'";
 	}
 	
 
