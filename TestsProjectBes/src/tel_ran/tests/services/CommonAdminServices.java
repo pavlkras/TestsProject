@@ -216,7 +216,7 @@ public abstract class CommonAdminServices extends CommonServices implements
 				
 				if(fres[8]!=null && fres[8].length() > 3) {
 					
-					answers = new ArrayList<String>();
+					answers = new ArrayList<String>();					
 					answers.add(fres[8]);
 				}
 				//
@@ -525,9 +525,12 @@ public abstract class CommonAdminServices extends CommonServices implements
 		
 		if(answers != null)	{			
 			List<EntityAnswersText> answersList = new ArrayList<EntityAnswersText>();
-			for (String answerText : answers) {					
-				EntityAnswersText ans = writeNewAnswer(answerText, questionAttributesList); 
-				answersList.add(ans);  				
+			for (String answerText : answers) {	
+				
+				if(answerText!=null && answerText!="") {
+					EntityAnswersText ans = writeNewAnswer(answerText, questionAttributesList); 
+					answersList.add(ans);
+				}
 			}			
 			questionAttributesList.setQuestionAnswersList(answersList);// mapping to answers
 			em.merge(questionAttributesList);	
