@@ -29,10 +29,10 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 	abstract protected String getLimitsForQuery();
 			
 	public List<String> getAllCategories1FromDataBase() {
-		String qry = "Select DISTINCT q.category1 FROM EntityQuestionAttributes q";
+		String qry = "Select DISTINCT q.category1 FROM EntityQuestionAttributes q WHERE q.category1 is not null";
 		String q = getLimitsForQuery();
 		if(q!=null)
-			qry = qry.concat(" WHERE q.").concat(q);
+			qry = qry.concat(" AND q.").concat(q);
 		qry = qry.concat(" ORDER BY q.category1");
 
 		return getQuery(qry);
@@ -40,20 +40,20 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 
 	
 	public List<String> getAllCategories2FromDataBase() {
-		String query = "Select DISTINCT q.category2 FROM EntityQuestionAttributes q";
+		String query = "Select DISTINCT q.category2 FROM EntityQuestionAttributes q WHERE q.category2 is not null";
 		String qry = getLimitsForQuery();
 		if(qry!=null)
-			query = query.concat(" WHERE q.").concat(qry);
+			query = query.concat(" AND q.").concat(qry);
 		query = query.concat(" ORDER BY q.category2");
 		return getQuery(query);
 	}
 	
 	public List<String> getAllMetaCategoriesFromDataBase() {
 		
-		StringBuilder query = new StringBuilder("Select DISTINCT cat.metaCategory FROM EntityQuestionAttributes cat");	
+		StringBuilder query = new StringBuilder("Select DISTINCT cat.metaCategory FROM EntityQuestionAttributes cat WHERE cat.metaCategory is not null");	
 		String qry = getLimitsForQuery();
 		if(qry!=null)
-			query.append(" WHERE cat.").append(qry);
+			query.append(" AND cat.").append(qry);
 		query.append(" ORDER BY cat.metaCategory");
 		return getQuery(query.toString());
 	}	
@@ -200,7 +200,7 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 	public List<String> getUsersCategories1FromDataBase() {
 		StringBuilder query = new StringBuilder("Select DISTINCT q.category1 FROM EntityQuestionAttributes q WHERE (q.metaCategory='");
 		query.append(IPublicStrings.COMPANY_AMERICAN_TEST).append("' OR q.metacategory='").append(IPublicStrings.COMPANY_QUESTION).
-			append("'");
+			append("') AND q.category1 is not null");
 		String str = getLimitsForQuery();
 		if(str!=null)
 			query.append(" AND q.").append(str);
