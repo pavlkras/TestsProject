@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import tel_ran.tests.services.common.IPublicStrings;
 import tel_ran.tests.services.interfaces.IMaintenanceService;
 
 @Controller
@@ -92,27 +93,40 @@ public class Maintenance {
 	 * String languageName
 	 */
 	@RequestMapping(value = "/add_actions" , method = RequestMethod.POST)
-	public String AddProcessingPage(String questionIndex, String questionText, String descriptionText, String codeText,
+	public String AddProcessingPage(String questionText, String descriptionText, String codeText,
 			String  category1, String metaCategory, String category2, String  compcategory, String levelOfDifficulty, 
 			String fileLocationLink, String correctAnswer, String numberAnswersOnPicture, 
 			String at1, String at2, String at3, String at4,  Model model)
 	{	
 		boolean actionRes = false; // flag work action
-		List<String> answers = null;
-		if(at1.length() > 0 && at3.length() > 0){			
-			answers = new ArrayList<String>();		 
-			answers.add(at1);		answers.add(at2);		answers.add(at3);		answers.add(at4);
+		List<String> answers = new ArrayList<>();
+		int countAnswersOptions = 0;
+		String[] answerOptions = {at1, at2, at3, at4};
+		String message = "";
+		boolean isError = false;
+		
+		for(int i = 0; i < answerOptions.length; i++) {
+			if(answerOptions[i].length() > 0) {
+				countAnswersOptions++;
+				answers.add(answerOptions[i]);
+			}
 		}
-		//
-		try {			
-			int questioNumber;
-			
-			try {
-				questioNumber = Integer.parseInt(questionIndex);// question ID number if question already exist in DB
-			} catch (Exception e) {
-				questioNumber = 0;
+		
+		if(countAnswersOptions==0) {
+			answers = null;
+			if(metaCategory==IPublicStrings.COMPANY_AMERICAN_TEST) { 
+				message = "<p class='outTextInfo'> Error adding the question. You should fill in 2 or more answer options</p>";
+				isError = true;
 			}
 			
+		} else if (countAnswersOptions == 1) {
+			message = "<p class='outTextInfo'> Error adding the question. Should be more than 1 answer options</p>";
+			isError = true;
+		}
+		
+		
+		if(!isError) {
+					
 			int numberOfResponsesInThePicture;
 			
 			try {
@@ -135,23 +149,26 @@ public class Maintenance {
 				repMetaCategory = metaCategory.replaceAll(",", "").replaceAll("none", ""); 
 			////
 
+		try {
 			int lvl = Integer.parseInt(levelOfDifficulty);
 			actionRes = maintenanceService.createNewQuestion(questionText, fileLocationLink, repMetaCategory, category1, lvl, answers, correctAnswer, 
-					questioNumber, numberOfResponsesInThePicture, descriptionText, codeText, repCategory);
+					0, numberOfResponsesInThePicture, descriptionText, codeText, repCategory);
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("maintenance addProcessingPage :method: Exception");//----------------------------------------------------sysout
 		}
+		
 		// ==========================================
 		if (actionRes) {
-			// write alternative flow !!!
-			model.addAttribute("logedUser", "<p class='outTextInfoAdded'> Question successfully added</p>");// out
+			message = "<p class='outTextInfoAdded'> Question successfully added</p>";			
 			actionRes = false;
 		} else {
 			// write alternative flow !!!
-			model.addAttribute("logedUser",
-					"<p class='outTextInfo'> Error adding the question, the question already exists. Try again</p>");// out
+			message = "<p class='outTextInfo'> Error adding the question, the question already exists. Try again</p>";// out
 		}
+		}
+		model.addAttribute("logedUser",message);
+		
 		return "maintenance/MaintenanceAddingPage"; // return too page after action
 	}
 	//
