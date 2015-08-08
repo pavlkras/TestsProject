@@ -3,6 +3,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
 
+import javax.annotation.PostConstruct;
 import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -15,6 +16,7 @@ import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
 import tel_ran.tests.services.common.IPublicStrings;
+import tel_ran.tests.services.interfaces.ICommonAdminService;
 import tel_ran.tests.services.interfaces.ICompanyActionsService;
 
 
@@ -37,16 +40,20 @@ public class CompanyActions extends AbstractAdminActions {
 	private static String PATH_ADDRESS_TO_SERVICE = "";
 	RestTemplate restTemplate =  new RestTemplate();
 
-	private ICompanyActionsService companyService;
+
 //	@Autowired
 //	private	IMaintenanceService maintenanceService;	
 	// --- private fields 
 	// -- getters and setters
 	
 	public CompanyActions() {
-		super();
-		super.setService("companyService");
-		companyService = (ICompanyActionsService) super.getAdminService();
+		super();				
+	}
+	
+	@Autowired
+	@Qualifier("companyService")
+	public void setObject(ICommonAdminService companyService) {
+		adminService = companyService;
 	}
 	
 	
@@ -99,11 +106,11 @@ Wrong Password Flow:
 	public String loginProcessing(String companyName, String password, Model model){
 		////// Method getCompanyByName(companyName) - return companyId;
 		///	boolean IfExistCompany
-		companyId = companyService.getCompanyByName(companyName);
+		companyId = adminService.getCompanyByName(companyName);
 		String result;		
 		////if(IfExistCompany){
 		if(companyId>0){
-			boolean ress = companyService.setAutorization(companyName, password);
+			boolean ress = adminService.setAutorization(companyName, password);
 			if(ress){ 				
 				result = "company/Company_main";
 				this.setCompanyName(companyName); 
@@ -152,7 +159,7 @@ User Registered Flow:
 
 	@RequestMapping({"/query_processing"})
 	public String queryProcessing(String jpaStr, Model model) {
-		String[] result = companyService.getAnySingleQuery(jpaStr);
+		String[] result = adminService.getAnySingleQuery(jpaStr);
 		StringBuffer buf = new StringBuffer();
 		for (String str : result)
 			buf.append(str).append("<br>");
@@ -169,7 +176,7 @@ User Registered Flow:
 	@RequestMapping({"/testGeneration"})
 	public String testGeneration(Model model) {
 		StringBuffer categoryHtmlText = new StringBuffer();
-		List<String> resultCategory = companyService.getAllMetaCategoriesFromDataBase();
+		List<String> resultCategory = adminService.getAllMetaCategoriesFromDataBase();
 		categoryHtmlText.append("<table class='table_ind'><tr><th>Category of Question:</th><th  colspan='2'>Level of difficulty</th></tr>");
 		for(String catBox:resultCategory){					
 			categoryHtmlText.append("<tr class='tr_ind'>");
@@ -193,7 +200,7 @@ User Registered Flow:
 	public @ResponseBody JsonResponse ajaxRequestStream(HttpServletRequest request) {   
 		String name_company = request.getParameter("name");
 		JsonResponse res = new JsonResponse(); 
-		long tRes = companyService.getCompanyByName(name_company);
+		long tRes = adminService.getCompanyByName(name_company);
 		if(tRes == -1){    			
 			res.setStatus("SUCCESS");
 			res.setResult(name_company); 			
@@ -225,7 +232,7 @@ User Registered Flow:
 	public String addProcessing(String C_Name,String C_Site, String C_Specialization,String C_AmountEmployes,String C_Password,Model model) {
 		boolean flag = false;		
 		try{
-			flag = companyService.CreateCompany(C_Name, C_Site, C_Specialization, C_AmountEmployes, C_Password);
+			flag = adminService.createCompany(C_Name, C_Site, C_Specialization, C_AmountEmployes, C_Password);
 		}catch(Throwable th){
 			th.printStackTrace();
 			System.out.println("catch creation company FES");
@@ -284,7 +291,7 @@ Normal Flow:
 			System.out.println("language -- " + category1);		
 				
 		String password = getRandomPassword();
-		int result = companyService.createTestForPersonFull(category, category1, level_num, selectCountQuestions, 
+		int result = ((ICompanyActionsService)adminService).createTestForPersonFull(category, category1, level_num, selectCountQuestions, 
 				Integer.parseInt(personId), personName, personSurname, personEmail, password);
 		
 		String link = null;
@@ -397,7 +404,7 @@ f)	5 photos made during the test	------ IGOR ------*/
 		//		companyId = 8;
 		String page = "company/ErrorPage";
 		if(companyId != -1){
-			String token = companyService.encodeIntoToken(companyId);
+			String token = ((ICompanyActionsService)adminService).encodeIntoToken(companyId);
 			model.addAttribute("token", token);
 			page = "company/CompanyViewTestsResults";
 		}
@@ -410,8 +417,8 @@ f)	5 photos made during the test	------ IGOR ------*/
 	@RequestMapping({"/addQuestionsFromResourses"})
 	public String moduleForBuildingQuestions(String category, String nQuestions, String levelOfDifficulty, Model model) {		
 		String path = "company/CompanyOtherResourses";
-		
-		return super.moduleForBuildingQuestions(companyService, category, nQuestions, levelOfDifficulty, model, path);// return too page after action
+		System.out.println("I'm company! " + companyId);
+		return super.moduleForBuildingQuestions(category, nQuestions, levelOfDifficulty, model, path);// return too page after action
 	}
 
 	
@@ -419,7 +426,7 @@ f)	5 photos made during the test	------ IGOR ------*/
 	@RequestMapping({"/company_otherResursCreation"})
 	public String maintenanceOtherResurses() {
 		String path = "company/CompanyOtherResourses";
-		return super.maintenanceOtherResurses(companyService, path);
+		return super.maintenanceOtherResurses(path);
 	}	
 	
 	
@@ -430,6 +437,6 @@ f)	5 photos made during the test	------ IGOR ------*/
 	
 	@RequestMapping(value="/categoryList", method=RequestMethod.POST)  
 	public @ResponseBody AbstractAdminActions.JsonResponse HandlerCode(HttpServletRequest request) {	
-		return super.HandlerCode(companyService, request);
+		return super.HandlerCode(request);
 	}
 }
