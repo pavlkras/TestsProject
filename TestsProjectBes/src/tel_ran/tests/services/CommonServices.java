@@ -186,12 +186,12 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 	}
 	
 	@Override
-	public List<String> GetPossibleCategories1(String metaCategory) {
+	public List<String> getPossibleCategories1(String metaCategory) {
 		return TestProcessor.getCategoriesList(metaCategory);
 	}
 
 	@Override
-	public List<String> GetPossibleMetaCaterories(){
+	public List<String> getPossibleMetaCaterories(){
 		// Новый метод (статический) - TestProcessor.getMetaCategory() - возвращает лист стрингов с названием мета-категорий
 		return  TestProcessor.getMetaCategory();
 	}

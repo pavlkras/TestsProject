@@ -29,7 +29,7 @@ import tel_ran.tests.services.testhandler.IPersonTestHandler;
 import tel_ran.tests.services.testhandler.PersonTestHandler;
 import tel_ran.tests.token_cipher.TokenProcessor;
 
-public class CompanyActionsService extends MaintenanceService implements ICompanyActionsService {
+public class CompanyActionsService extends CommonAdminServices implements ICompanyActionsService {
 	
 	private EntityCompany entityCompany;
 	@Autowired
@@ -226,14 +226,14 @@ public class CompanyActionsService extends MaintenanceService implements ICompan
 	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
 	public int createTestForPersonFull(String metaCategories, String categories1, String difLevel, String nQuestion, int personPassport,
 			String personName, String personSurname, String personEmail, String pass) {		
-		return this.createTestForPersonFull(null, metaCategories, categories1, difLevel, nQuestion, 
+		return this.createTestForPersonFullWithQuestions(null, metaCategories, categories1, difLevel, nQuestion, 
 				personPassport, personName, personSurname, personEmail, pass);
 	}
 
 	
 	@Override
 	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
-	public int createTestForPersonFull(List<Long> questionIdList, String metaCategories, String categories1, String difLevel, String nQuestion, int personPassport,
+	public int createTestForPersonFullWithQuestions(List<Long> questionIdList, String metaCategories, String categories1, String difLevel, String nQuestion, int personPassport,
 			String personName, String personSurname, String personEmail, String pass) {
 		
 		EntityPerson ePerson = this.createEntityPerson(personPassport, personName, personSurname, personEmail);
@@ -493,6 +493,7 @@ public class CompanyActionsService extends MaintenanceService implements ICompan
 		
 		return person;
 	}
+
 
 	// ------------------- PRIVATE METHODS FOR TEST CREATION ---------------------- // END -----------
 
