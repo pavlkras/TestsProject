@@ -210,23 +210,7 @@ User Registered Flow:
 		}
 		return res;
 	}
-	//// static resurse class for JSON, Ajax on company add page 
-	class JsonResponse {
-		private String status = null;
-		private Object result = null;
-		public String getStatus() {
-			return status;
-		}
-		public void setStatus(String status) {
-			this.status = status;
-		}
-		public Object getResult() {
-			return result;
-		}
-		public void setResult(Object result) {
-			this.result = result;
-		}
-	}
+
 	////
 	@RequestMapping({"/add_processing"})
 	public String addProcessing(String C_Name,String C_Site, String C_Specialization,String C_AmountEmployes,String C_Password,Model model) {
@@ -414,15 +398,24 @@ f)	5 photos made during the test	------ IGOR ------*/
 	
 
 
+	/**
+	 * CREATE questions by auto generation
+	 * @param category = list of metaCategories
+	 * @param nQuestions = total number of questions to create
+	 * @param levelOfDifficulty = list of dif.Level 
+	 * @param model
+	 */
 	@RequestMapping({"/addQuestionsFromResourses"})
 	public String moduleForBuildingQuestions(String category, String nQuestions, String levelOfDifficulty, Model model) {		
 		String path = "company/CompanyOtherResourses";
-		System.out.println("I'm company! " + companyId);
 		return super.moduleForBuildingQuestions(category, nQuestions, levelOfDifficulty, model, path);// return too page after action
 	}
 
 	
-	
+	/**
+	 * List of auto-metaCategory for page with auto generation
+	 * 
+	 */
 	@RequestMapping({"/company_otherResursCreation"})
 	public String maintenanceOtherResurses() {
 		String path = "company/CompanyOtherResourses";
