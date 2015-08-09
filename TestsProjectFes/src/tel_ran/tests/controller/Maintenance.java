@@ -72,7 +72,7 @@ public class Maintenance extends AbstractAdminActions {
 		return "maintenance/MaintenanceSignInPage";// other resurs 
 	}
 	
-	// ----------------------- LISTS FOR PAGES -------------------------------------------------- //
+	// ----------------------- ADDING QUESTIONS -------------------------------------------------- //
 	
 	/**************************************/
 	@RequestMapping({ "/maintenanceadd" })
@@ -99,6 +99,21 @@ public class Maintenance extends AbstractAdminActions {
 		return super.maintenanceOtherResurses("maintenance/MaintenanceOtherResurses");
 	}	
 	
+	
+	// --------- adding questions from any.txt file on user computer -----//  END  //
+	// -------------- Module For Building Questions in to DB ----------------////
+	
+	/**
+	 * CREATE questions by auto generation
+	 * @param category = list of metaCategories
+	 * @param nQuestions = total number of questions to create
+	 * @param levelOfDifficulty = list of dif.Level 
+	 * @param model
+	 */
+	@RequestMapping({ "/moduleForBuildingQuestions" })
+	public String moduleForBuildingQuestions(String category, String nQuestions, String levelOfDifficulty, Model model) {	
+		return super.moduleForBuildingQuestions(category, nQuestions, levelOfDifficulty, model, "maintenance/MaintenanceOtherResurses");// return too page after action
+	}
 	
 	/*
 	 * 3.3.1. Adding test question Pre-Conditions: 
@@ -390,23 +405,7 @@ public class Maintenance extends AbstractAdminActions {
 //		return "maintenance/MaintenanceOtherResurses";// return too page after action
 //	}
 	
-	
-	// --------- adding questions from any.txt file on user computer -----//  END  //
-	// -------------- Module For Building Questions in to DB ----------------////
-	
-	/**
-	 * CREATE questions by auto generation
-	 * @param category = list of metaCategories
-	 * @param nQuestions = total number of questions to create
-	 * @param levelOfDifficulty = list of dif.Level 
-	 * @param model
-	 */
-	@RequestMapping({ "/moduleForBuildingQuestions" })
-	public String moduleForBuildingQuestions(String category, String nQuestions, String levelOfDifficulty, Model model) {		
-	
-		return super.moduleForBuildingQuestions(category, nQuestions, levelOfDifficulty, model, "maintenance/MaintenanceOtherResurses");// return too page after action
-	}
-	
+
 	
 	////////////////////////////////////////// PRIVATE METHODS FOR THIS CLASS /////////////////////////////////////////////////////
 	
