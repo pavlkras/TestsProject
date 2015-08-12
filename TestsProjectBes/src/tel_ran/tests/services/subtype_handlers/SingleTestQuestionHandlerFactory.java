@@ -30,8 +30,7 @@ public class SingleTestQuestionHandlerFactory {
 	public static ITestQuestionHandler getInstance(JSONObject singleQuestion, long companyId, long testId){
 		String metaCategory = null;
 		try {
-			metaCategory = singleQuestion.getString(InnerResultDataObject.KEY_METACATEGORY);
-			metaCategory = TestProcessor.getMetaCategoryKeyByPublicName(metaCategory);
+			metaCategory = singleQuestion.getString(InnerResultDataObject.KEY_METACATEGORY);			
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -44,7 +43,7 @@ public class SingleTestQuestionHandlerFactory {
 	}
 
 	private static ITestQuestionHandler getTestQuestionHandler(String metaCategory) {
-		
+		metaCategory = TestProcessor.getMetaCategoryKeyByPublicName(metaCategory);
 		return (ITestQuestionHandler) SpringApplicationContext.getBean(metaCategory);
 //		try {
 //			return (ITestQuestionHandler) Class.forName(map.get(metaCategory)).newInstance();

@@ -282,14 +282,17 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 			List<Long> result = new ArrayList<Long>();
 			if(nQuestion > 0 && metaCategory != null){		
 				String[] categoryArray = metaCategory.split(",");	
+//				System.out.println("Category: " + Arrays.toString(categoryArray));
 				String[] levelsArray = levelsOfDifficulty.split(",");
+//				System.out.println("Levels: " + Arrays.toString(levelsArray));
 				String[] categories1Array;
 				if(categories1!=null) {
 					categories1Array = categories1.split(",");
 				} else {
 					categories1Array = new String[categoryArray.length];
-					Arrays.fill(categories1Array, "");
+					Arrays.fill(categories1Array, ICommonData.NO_CATEGORY1);
 				}
+//				System.out.println("Categories1: " + Arrays.toString(categories1Array));
 				
 				StringBuilder condition;
 				Query query;
@@ -297,10 +300,14 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 				List<Long> allAttributeQuestionsId;
 							
 				int typeNumbers = categoryArray.length;			
+//				System.out.println("Number of categories " + typeNumbers);
 				long step = nQuestion/typeNumbers;
+//				System.out.println("Step " + step);
 				long r = nQuestion % typeNumbers;
+//				System.out.println("Rest " + r);
 				long nGeneratedQuestion = 0L;
 				int count = typeNumbers;
+				
 				
 				for (int i = 0; i < typeNumbers; i++ ) {
 					
@@ -314,7 +321,7 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 					}
 					
 					// if category is specified
-					if(!categories1Array[i].endsWith(ICommonData.NO_CATEGORY1)) {
+					if(!categories1Array[i].equals(ICommonData.NO_CATEGORY1)) {
 						condition.append(" AND c.category1=?4");
 					}
 					
@@ -333,6 +340,8 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 						query.setParameter(4, categories1Array[i]);
 					}
 					
+//					System.out.println("Query : " + query.toString());
+					
 					if(i == typeNumbers-1) 
 						step = step +r;
 					
@@ -340,28 +349,35 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 					count = count--;
 					
 					if(allAttributeQuestionsId == null) {
-						
+//						System.out.println("Query is empty");
 						if(count-i-1>0) {
 							step = (nQuestion - nGeneratedQuestion) / (count-i-1);
 							r = (nQuestion - nGeneratedQuestion) % (count-i-1);
+//							System.out.println("New step = " + step + "; New rest = " + r);
 						} 
 						
 					} else if (allAttributeQuestionsId.size() < step) {
+						
 						long resultSize = (long) allAttributeQuestionsId.size();
+//						System.out.println("Query is too small. There're only " + resultSize + "questions");
 						result.addAll(randomAttributeQuestionsId(allAttributeQuestionsId, resultSize));
 						nGeneratedQuestion += resultSize;
 						
 						if(count-i-1>0) {
 							step = (nQuestion - nGeneratedQuestion) / (count-i-1);
 							r = (nQuestion - nGeneratedQuestion) % (count-i-1);
+//							System.out.println("New step = " + step + "; New rest = " + r);
 						}
 						
-					} else {
-					
-						nGeneratedQuestion += allAttributeQuestionsId.size();
+					} else {					
+						
 						result.addAll(randomAttributeQuestionsId(allAttributeQuestionsId, step));
+						nGeneratedQuestion += step;
 					}			
 					
+//					System.out.println("Generated questions = " + nGeneratedQuestion);
+//					System.out.println("Count = " + count);
+//					System.out.println("Index i = " + i);
 				}			
 	
 			}
