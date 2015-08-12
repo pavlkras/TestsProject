@@ -20,6 +20,7 @@ import tel_ran.tests.services.interfaces.IFileManagerService;
 @Repository
 public class FileManagerService implements IFileManagerService{
 	private String workingDir = "D:\\Programming\\IDE\\EclipseKepler\\TESTS_FILES_DATABASE";
+	private static final String TEST_JSON_FILE = "test.json";
 	public FileManagerService(){
 //		workingDir = System.getProperty("user.dir") + File.separator + NAME_FOLDER_FOR_SAVENG_TESTS_FILES; //  this global directory for saving files
 	}
@@ -32,6 +33,9 @@ public class FileManagerService implements IFileManagerService{
 	////
 	@Override
 	public boolean initializeTestFileStructure(long compId, long testId) {
+		
+		workingDir = correctParh(workingDir); 
+		
 		boolean result = false;		
 		try {		
 			for(int i=0;i<BILD_ATTRIBUTES_ARRAY.length;i++){
@@ -93,7 +97,7 @@ public class FileManagerService implements IFileManagerService{
 					workingDir + File.separator 
 					+ compId + File.separator 
 					+  testId + File.separator
-					+ "test.json"));
+					+ TEST_JSON_FILE));
 			writer.write(json);			 
 			writer.close();
 		} catch (IOException e) {
@@ -107,14 +111,19 @@ public class FileManagerService implements IFileManagerService{
 		String TEMP_PATH = workingDir + File.separator 
 				+ compId + File.separator 
 				+ testId + File.separator  
-				+ "test.json";		 
-		File res = new File(TEMP_PATH);
-		try {
-				BufferedReader reader = new BufferedReader(new FileReader(res));
-				outResult += reader.readLine() + ",";			
-		} catch (Exception e) {
-			e.printStackTrace();
+				+ TEST_JSON_FILE;		 
+		File res = new File(TEMP_PATH);			
+		
+		if(res.exists()) {
+			try {		
+				BufferedReader reader = new BufferedReader(new FileReader(TEMP_PATH));
+				outResult += reader.readLine() + ",";		
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
+		
 		return outResult;
 	}
 	////
@@ -205,5 +214,11 @@ public class FileManagerService implements IFileManagerService{
 	public void saveCode(long compId, long testId, long questionID, String[] code) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	private String correctParh(String str) {
+		if(!File.separator.equals("\\"))
+			str = str.replace("\\", File.separator);
+		return str;
 	}
 }	
