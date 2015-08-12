@@ -4,6 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import tel_ran.tests.entitys.EntityQuestionAttributes;
+import tel_ran.tests.processor.TestProcessor;
 import tel_ran.tests.services.inner_result.dataobjects.InnerResultDataObject;
 import tel_ran.tests.services.utils.SpringApplicationContext;
 
@@ -30,6 +31,7 @@ public class SingleTestQuestionHandlerFactory {
 		String metaCategory = null;
 		try {
 			metaCategory = singleQuestion.getString(InnerResultDataObject.KEY_METACATEGORY);
+			metaCategory = TestProcessor.getMetaCategoryKeyByPublicName(metaCategory);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

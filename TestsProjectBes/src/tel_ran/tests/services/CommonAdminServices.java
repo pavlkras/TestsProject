@@ -527,7 +527,7 @@ public abstract class CommonAdminServices extends CommonServices implements
 			List<EntityAnswersText> answersList = new ArrayList<EntityAnswersText>();
 			for (String answerText : answers) {	
 				
-				if(answerText!=null && answerText!="") {
+				if(answerText!=null && answerText.length()>0) {
 					EntityAnswersText ans = writeNewAnswer(answerText, questionAttributesList); 
 					answersList.add(ans);
 				}
