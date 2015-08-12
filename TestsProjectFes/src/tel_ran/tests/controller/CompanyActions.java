@@ -267,8 +267,7 @@ Normal Flow:
 		
 		String url = request.getRequestURL().toString();
 		PATH_ADDRESS_TO_SERVICE = url.replace("add_test", "jobSeeker_test_preparing_click_event");
-		////		
-		int counterOfQuestions = Integer.parseInt(selectCountQuestions);
+		////			
 		System.out.println("level_num--"+level_num);//-------------------------------sysout
 		System.out.println("category--"+category);//-------------------------------sysout
 		if(category1!=null)
@@ -300,8 +299,11 @@ Normal Flow:
 				case 1 :
 				case 2 :
 				case 3 :
-				case 5 :
 					messageText = "<H1>" + IPublicStrings.CREATE_TEST_ERROR[result] + "</H1>";
+					break;
+				case 5 :					
+					messageText = "<a href='" + link + "'><h2><b>Test link</b></h2></a><br>" + "<H1>" + 
+							IPublicStrings.CREATE_TEST_ERROR[result] + "</H1>";
 					break;
 				default :
 					messageText = "<H1>" + IPublicStrings.CREATE_TEST_ERROR[4] + "</H1>";			
