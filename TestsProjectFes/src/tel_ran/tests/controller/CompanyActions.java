@@ -441,7 +441,7 @@ f)	5 photos made during the test	------ IGOR ------*/
 	/**************************************/
 	@RequestMapping({ "/company_add" })
 	public String addingPage() {		
-		return super.addingPage("company/..."); // - Page = MaintenanceAddingPage
+		return super.addingPage("company/CompanyCreateQuestion"); // - Page = MaintenanceAddingPage
 	}
 	
 	@RequestMapping(value = "/company_add_questions" , method = RequestMethod.POST)
@@ -453,7 +453,7 @@ f)	5 photos made during the test	------ IGOR ------*/
 
 		return super.AddProcessingPage(questionText, descriptionText, 
 				codeText, category1, metaCategory, category2, compcategory, levelOfDifficulty, 
-				fileLocationLink, correctAnswer, numberAnswersOnPicture, at1, at2, at3, at4, model, "company/..."); // - Page = MaintenanceAddingPage
+				fileLocationLink, correctAnswer, numberAnswersOnPicture, at1, at2, at3, at4, model, "company/CompanyCreateQuestion"); // - Page = MaintenanceAddingPage
 			
 	}
 	

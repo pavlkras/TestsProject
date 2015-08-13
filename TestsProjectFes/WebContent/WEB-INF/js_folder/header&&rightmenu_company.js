@@ -14,7 +14,7 @@ $(document).ready(function(){
 		       '<li>'+
 		           '<a href="#">Question Maintance <span class="arrow">&#9660;</span></a>'+
 		           '<ul class="sub-menu">'+
-		               '<li><a href="maintenanceadd">Creating questions</a></li>'+
+		               '<li><a href="company_add">Creating questions</a></li>'+
 		               '<li><a href="update">Update/delete questions</a></li>'+
 		               '<li><a href="company_otherResursCreation">Adding question from other resources</a></li>'+
 		           '</ul>'+
