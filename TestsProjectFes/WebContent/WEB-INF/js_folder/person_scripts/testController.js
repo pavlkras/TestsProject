@@ -11,6 +11,7 @@ app.controller("QuestionTestController", function($scope, $http) {
 	$scope.mySwitchAmericanSystemTestQuestion = false;
 	$scope.mySwitchCodeTestQuestion = false;
 	$scope.mySwitchImage = false;
+	$scope.switchTextCamera = true;
 
 	$scope.toggleShowDetails = function() {
 		$scope.mySwitchStartTest = !$scope.mySwitchStartTest;
@@ -18,6 +19,7 @@ app.controller("QuestionTestController", function($scope, $http) {
 	};
 
 	$scope.getQuestion = function(userAnswer) {
+		$scope.take_photo();
 		var link = "/TestsProjectBes/persontest/saveprev_getnext";
 		$scope.httpConfig = {
 			headers : {
@@ -138,7 +140,7 @@ app.directive('camera', function(CameraService) {
           //  scope: {},
             scope: false,
         //    template: '<div class="camera"><video class="camera" autoplay="" /><div ng-transclude></div></div>',
-            template: '<input type="button" ng-click="take_photo()" value="Photo">',
+            template: '<h1 ng-show="switchTextCamera">For testing need camera. Click "allow" in pop-up window for using your camera</h1>',
             link: function(scope, ele, attrs, QuestionTestController) {
                 var w = attrs.width || 320,
                     h = attrs.height || 200;
@@ -159,6 +161,8 @@ app.directive('camera', function(CameraService) {
                         videoElement.play();
                         
                         scope.mySwitchStartTest = true;
+                        scope.take_photo();
+                        scope.switchTextCamera = false;
                     }
 // If camera doesn't work of if camera block
                     var onFailure = function (err) {
