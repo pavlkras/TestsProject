@@ -206,7 +206,7 @@ public class Maintenance extends AbstractAdminActions {
 		}
 		}
 		model.addAttribute("logedUser",message);
-		
+		addingPage();
 		return "maintenance/MaintenanceAddingPage"; // return too page after action
 	}
 	//

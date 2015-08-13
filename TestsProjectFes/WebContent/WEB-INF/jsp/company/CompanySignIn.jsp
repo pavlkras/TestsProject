@@ -9,18 +9,21 @@
 <link
 	href='<c:url value="/static/css_folder/css/MaintenanceHomePage.css"></c:url>'
 	rel="stylesheet">
-<script
-	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
 <link
 	href='<c:url value="/static/css_folder/user_styles/IndexPage.css"></c:url>'
 	rel="stylesheet">
 <link href='<c:url value="/static/css_folder/style.css"></c:url>'
 	rel="stylesheet">
+
+<script
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>		
 <script src="static/js_folder/header&&rightmenu.js">
 	
 </script>
 <title>Company Home Page</title>
 </head>
+
 
 <body>
 	<div id="container">

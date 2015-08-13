@@ -85,7 +85,6 @@ $(document).ready(function(){
 			$("div#codepattern").hide(); 
 	    }
 		else if($catSelect == "Open Question") {
-			$("div#codepattern").show(); 
 			$("div#americanquestion").hide(); 
 	    }
 		else if($catSelect == "none") {
