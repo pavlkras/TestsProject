@@ -14,9 +14,11 @@
                 <br><br>
         <table>
                     <tr>
-                        <label ng-show="mySwitchCodeTestQuestion"> Answer:
-                            <input type="text" ng-model="answer.name">
-                        </label>
+                        <div ng-show="mySwitchCodeTestQuestion">                    
+                        <label>Answer:</label>
+                        <br>
+                        <textarea ng-model="answer.name" cols="50" rows="10"></textarea>
+                        </div>
                     </tr>
                 </table>
             </td>
