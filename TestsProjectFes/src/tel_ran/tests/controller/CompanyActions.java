@@ -434,4 +434,27 @@ f)	5 photos made during the test	------ IGOR ------*/
 	public @ResponseBody AbstractAdminActions.JsonResponse handlerCode(HttpServletRequest request) {	
 		return super.handlerCode(request);
 	}
+	
+	
+	// ------------------------- ADDING QUESTION. MANUAL --------- //
+	
+	/**************************************/
+	@RequestMapping({ "/company_add" })
+	public String addingPage() {		
+		return super.addingPage("company/..."); // - Page = MaintenanceAddingPage
+	}
+	
+	@RequestMapping(value = "/company_add_questions" , method = RequestMethod.POST)
+	public String AddProcessingPage(String questionText, String descriptionText, String codeText,
+			String  category1, String metaCategory, String category2, String  compcategory, String levelOfDifficulty, 
+			String fileLocationLink, String correctAnswer, String numberAnswersOnPicture, 
+			String at1, String at2, String at3, String at4,  Model model)
+	{	
+
+		return super.AddProcessingPage(questionText, descriptionText, 
+				codeText, category1, metaCategory, category2, compcategory, levelOfDifficulty, 
+				fileLocationLink, correctAnswer, numberAnswersOnPicture, at1, at2, at3, at4, model, "company/..."); // - Page = MaintenanceAddingPage
+			
+	}
+	
 }
