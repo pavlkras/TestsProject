@@ -140,7 +140,7 @@ app.directive('camera', function(CameraService) {
           //  scope: {},
             scope: false,
         //    template: '<div class="camera"><video class="camera" autoplay="" /><div ng-transclude></div></div>',
-            template: '<h1 ng-show="switchTextCamera">For testing need camera. Click "allow" in pop-up window for using your camera</h1>',
+            template: '<h1 id="message" ng-show="switchTextCamera">For testing need camera. Click "allow" in pop-up window for using your camera</h1>',
             link: function(scope, ele, attrs, QuestionTestController) {
                 var w = attrs.width || 320,
                     h = attrs.height || 200;
@@ -166,6 +166,7 @@ app.directive('camera', function(CameraService) {
                     }
 // If camera doesn't work of if camera block
                     var onFailure = function (err) {
+                    	document.getElementById("message").innerHTML = '<h1>Your camera does not work, testing is impossible. Try to unblock camera in browser and to reload this page. </h1>';
                         console.log("Error !");
                         console.error(err);
                     }
