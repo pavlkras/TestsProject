@@ -204,7 +204,7 @@ app.directive('camera', function(CameraService) {
                     console.log("base64dataUrl = " + base64dataUrl);
                     //var picture = base64dataUrl + "@END_LINE@";
                     
-                  //function save_image
+                  //save_image
             		var link = "/TestsProjectBes/persontest/save_image";
             		$scope.httpConfig = {
             			headers : {
