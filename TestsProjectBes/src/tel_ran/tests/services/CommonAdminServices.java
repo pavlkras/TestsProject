@@ -111,6 +111,14 @@ public abstract class CommonAdminServices extends CommonServices implements
 			String codeText, String category2){
 		////
 
+		if(metaCategory == null) {
+			if(answers==null || answers.size() == 0)
+				metaCategory = IPublicStrings.COMPANY_QUESTION;
+			else
+				metaCategory = IPublicStrings.COMPANY_AMERICAN_TEST;
+		}
+		
+		
 		if(codeText!=null) {
 			if(answers==null) {
 				answers = new ArrayList<String>();				
@@ -554,7 +562,7 @@ public abstract class CommonAdminServices extends CommonServices implements
 		return writeNewAnswer(answer, em.find(EntityQuestionAttributes.class, keyAttr));		
 	}	
 	
-	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW) 
+	@Transactional(readOnly=false, propagation=Propagation.REQUIRED) 
 	protected boolean fullCreateNewQuestion(String questionText,
 			String metaCategory, String category1, String category2,
 			int levelOfDifficulty, String description, String fileLocationLink, List<String> answers, String correctAnswerChar,
@@ -571,12 +579,14 @@ public abstract class CommonAdminServices extends CommonServices implements
 		long questionId = createQuestion(questionText);
 		EntityQuestion objectQuestion = em.find(EntityQuestion.class, questionId);
 				
-		EntityCompany objectCompany = renewCompany();
+		EntityCompany objectCompany = getCompany();
 			
 
 		EntityQuestionAttributes questionAttributes = createAttributes(fileLocationLink, metaCategory, category1, 
 				category2, levelOfDifficulty, answers, correctAnswerChar, answerOptionsNumber, description, objectQuestion, 
 				objectCompany);		
+		
+		
 
 		objectQuestion = em.find(EntityQuestion.class, questionId);
 		objectQuestion.addQuestionAttributes(questionAttributes);
@@ -584,6 +594,7 @@ public abstract class CommonAdminServices extends CommonServices implements
 		em.merge(objectQuestion);	
 		
 		if(objectCompany!=null) {
+			objectCompany = renewCompany();
 			objectCompany.addQuestionAttributes(questionAttributes);
 			em.merge(objectCompany);
 		}
