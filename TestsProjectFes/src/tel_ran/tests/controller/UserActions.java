@@ -1,5 +1,6 @@
 package tel_ran.tests.controller;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +20,9 @@ import tel_ran.tests.services.interfaces.IUserActionService;
 @Controller
 @Scope("session")
 @RequestMapping({"/","/UserActions"})
-public class UserActions{ 	
+public class UserActions implements Serializable{ 	
+	
+	
 	@Autowired
 	IUserActionService userService; 
 	

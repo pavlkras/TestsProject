@@ -1,4 +1,5 @@
 package tel_ran.tests.controller;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
@@ -33,7 +34,11 @@ import tel_ran.tests.services.interfaces.ICompanyActionsService;
 @Controller
 @Scope("session") /*session timer default = 20min*/
 @RequestMapping({"/","/CompanyActions"})
-public class CompanyActions extends AbstractAdminActions {
+public class CompanyActions extends AbstractAdminActions implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	// --- private fields 
 	private	String companyName;
 	private long companyId = -1;
