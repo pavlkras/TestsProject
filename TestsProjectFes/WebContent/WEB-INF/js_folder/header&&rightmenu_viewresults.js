@@ -25,5 +25,5 @@ $(document).ready(function(){
 		       '<li><a href=".">Contacn us</a></li>'+
 		   '</ul>'+
 		'</div>' +
-	   	'</div>').insertBefore("#right_side_company");
+	   	'</div>').insertBefore("#right_side_viewresults");
 });

@@ -10,14 +10,16 @@
 	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="/TestsProjectFes/static_js/js/CompanyJS/add_company.js"></script>
 
-<script src="static/js_folder/header&&rightmenu_maintenace.js"></script>
+<script src="static/js_folder/header&&rightmenu.js"></script>
 <link href="static/css_folder/company_styles/add_company.css"
 	rel="stylesheet">
 
 <link
 	href='<c:url value="/static/css_folder/user_styles/IndexPage.css"></c:url>'
 	rel="stylesheet">
-<link href='<c:url value="/static/css_folder/style.css"></c:header&&rightmenu_maintenaceurl>'
+	
+	<link
+	href='<c:url value="/static/css_folder/style.css"></c:url>'
 	rel="stylesheet">
 <title>Company Adding</title>
 

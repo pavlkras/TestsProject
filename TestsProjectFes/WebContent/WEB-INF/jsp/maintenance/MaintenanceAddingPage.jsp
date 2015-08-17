@@ -21,7 +21,7 @@ import="java.util.*, java.text.*, tel_ran.tests.controller.Maintenance"%>
 	rel="stylesheet"> 
 <script src="static/js_folder/maintenance_scripts/add_question_page.js">
 </script>
-<script src="static/js_folder/header&&rightmenu_maintenace.js">
+<script src="static/js_folder/header&&rightmenu_company.js">
 </script>	
 <title>ADDING QUESTION</title>
 </head>

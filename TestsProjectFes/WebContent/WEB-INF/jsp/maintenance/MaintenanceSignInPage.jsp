@@ -21,7 +21,7 @@
 	href='<c:url value="/static/css_folder/maintenance_styles/MaintenanceHomePage.css"></c:url>'
 	rel="stylesheet"> 
 
-<script src="static/js_folder/header&&rightmenu_maintenace.js">
+<script src="static/js_folder/header&&rightmenu_company.js">
 </script>	
 
 

@@ -20,7 +20,7 @@
 	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 
 <script src="static/js_folder/maintenance_scripts/other_resurses_page.js"></script>
-<script src="static/js_folder/header&&rightmenu_maintenace.js"></script>
+<script src="static/js_folder/header&&rightmenu_company.js"></script>
 
 <title>OTHER RESURSES</title>
 </head>
@@ -32,7 +32,7 @@
 	<div id="container">
 
 
- 	  <div id="right_side">
+ 	  <div id="right_side_company">
 
 
 	 	<div id="description">
