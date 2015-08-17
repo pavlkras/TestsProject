@@ -19,7 +19,8 @@ import tel_ran.tests.services.interfaces.IFileManagerService;
 @SuppressWarnings("resource")
 @Repository
 public class FileManagerService implements IFileManagerService{
-	private String workingDir = "D:\\Programming\\IDE\\EclipseKepler\\TESTS_FILES_DATABASE";
+//	private String workingDir = "D:\\Programming\\IDE\\EclipseKepler\\TESTS_FILES_DATABASE";
+	private String workingDir = System.getProperty("user.home") + "\\IDE\\EclipseKepler\\TESTS_FILES_DATABASE";
 	private static final String TEST_JSON_FILE = "test.json";
 	public FileManagerService(){
 //		workingDir = System.getProperty("user.dir") + File.separator + NAME_FOLDER_FOR_SAVENG_TESTS_FILES; //  this global directory for saving files
