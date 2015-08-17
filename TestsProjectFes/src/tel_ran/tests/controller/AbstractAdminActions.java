@@ -107,7 +107,7 @@ public abstract class AbstractAdminActions {
 	
 	public String addingPage(String path) {
 		clearStringBuffer();
-		AutoInformationTextHTML(buildingCategory1CheckBoxTextHTML());
+		AutoInformationTextHTML(buildingUsersCategoryBoxTestHTML());
 		return path;
 	}
 		
