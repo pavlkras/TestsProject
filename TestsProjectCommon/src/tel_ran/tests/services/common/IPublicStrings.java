@@ -15,7 +15,7 @@ public interface IPublicStrings {
 	static final String COMPANY_AMERICAN_TEST = "American Test";
 	
 	/**
-	 * DB Name of User's meta-category "Open Question" (1 quesion)
+	 * DB Name of User's meta-category "Open Question" (1 question)
 	 * It's used in DB
 	 * Warning: Don't change it if you aren't going to drop the Data Base  
 	 */
@@ -51,17 +51,11 @@ public interface IPublicStrings {
 		"The test was not created. There're some problem. Please contact your support", // - 4
 		"The message wasn't sended"}; // - 5
 
-	static final String NO_AUTO_CATEGORIES = "auto generation isn't available";
-	static final String NO_DATA_BASE = "No Data Base found";
-	static final String NO_CATEGORIES_IN_DB = "No Categories in Data Base";
-	static final String NO_QUESTIONS_NUMBER = "Number of Question is Empty. Input number of question";
 	
-	static final String WRONG_QUESTION_NUMBER = "Number of Question is Wrong. Input real number of question";
+	// ------------- USER'S INFORMATION FIELDS AND TEXTS ------------------------------------ //
 	
-	//-------------- CREATE AND RESULTS ------------------------------------------------------ //
-	static final String YOUR_REQUEST = "your request: to build";
-	static final String QUESTION_ITEMS = "questions";
-	static final String MADE = "made";
-	static final String FAILED = "failed";
+	static final String USR_MAINTENANCE = "Administrator";
+	
+
 	
 }
