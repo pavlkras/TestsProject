@@ -108,7 +108,13 @@ public interface ICompanyActionsService extends ICommonAdminService {
 	public int createTestForPersonFullWithQuestions(List<Long> questionIdList, String metaCategories, String categories1, String difLevel, String nQuestion, int personPassport,
 			String personName, String personSurname, String personEmail, String pass);
 	
+	/**
+	 * Return list of all tests created by the company
+	 * @return list of JSON-files
+	 */
+	public List<String> listOfCreatedTest();
 	
+
 
 	//Company actions for 3.1.4. Viewing test results
 	public String getTestsResultsAll(long companyId, String timeZone);

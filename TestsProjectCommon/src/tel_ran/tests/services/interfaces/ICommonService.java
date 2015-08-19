@@ -1,6 +1,7 @@
 package tel_ran.tests.services.interfaces;
 
 import java.util.List;
+import java.util.Map;
 
 import tel_ran.tests.services.fields.ApplicationFinalFields;
 
@@ -71,4 +72,18 @@ public interface ICommonService extends ApplicationFinalFields {
 	 * @return
 	 */
 	public String[] getQuestionById(String questionID, int actionKey);
+	
+	/**
+	 * Return the question in JSON-format
+	 * @param questionId
+	 * @return
+	 */
+	public String getJsonQuestionById(long questionId);
+	
+	/**
+	 * Return the user's information in JSON-format  
+	 * Type of user, name, number of questions in the base, number of created tests 
+	 * @return
+	 */
+	Map<String,Object> getUserInformation();
 }

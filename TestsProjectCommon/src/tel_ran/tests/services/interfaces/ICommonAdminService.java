@@ -115,8 +115,21 @@ public interface ICommonAdminService extends ICommonService {
 	
 	
 	
+	/**
+	 * Returns full questions list in JSON format.
+	 * 
+	 * @param typeOfQuestion - required field. Use constants ICommonData.TYPE_OF_QUESTION_USERS for user metaCategory 
+	 * (American test open question) and ICommonData.TYPE_OF_QUESTION_AUTO for auto cat.
+	 * @param metaCategory - can be specified to get list of question only from this metaCategory. Should match
+	 * with typeOfQuestion.
+	 * @param category1 - can be specified to get list of question only from given Category1. Should match
+	 * with typeOfQuestion and metaCategory if they are specified.
+	 * @return
+	 */
+	List<String> getAllQuestionsList(Boolean typeOfQuestion, String metaCategory, String category1);	
+		
 
-	
+		
 	
 	String[] getAnySingleQuery(String strQuery);
 
