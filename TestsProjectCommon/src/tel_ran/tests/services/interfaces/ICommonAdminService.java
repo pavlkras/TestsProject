@@ -126,7 +126,7 @@ public interface ICommonAdminService extends ICommonService {
 	 * with typeOfQuestion and metaCategory if they are specified.
 	 * @return
 	 */
-	List<String> getAllQuestionsList(Boolean typeOfQuestion, String metaCategory, String category1);	
+	String getAllQuestionsList(Boolean typeOfQuestion, String metaCategory, String category1);	
 		
 
 		
