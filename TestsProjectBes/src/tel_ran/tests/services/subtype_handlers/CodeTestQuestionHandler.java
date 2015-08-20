@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import tel_ran.tests.services.inner_result.dataobjects.InnerResultDataObject;
 import tel_ran.tests.services.subtype_handlers.gradle.CodeTester;
+import tel_ran.tests.services.utils.FileManagerService;
 
 import java.io.IOException;
 
@@ -27,7 +28,7 @@ public class CodeTestQuestionHandler extends AbstractTestQuestionHandler impleme
 		boolean gradleAnswer;
 
 		pathToAnswersZip=getQuestionAttribubes().getFileLocationLink(); //Path to zip
-		codeFromPersonPath=fileManager.getPathToCode(companyId, testId, getQuestionID()); //Path to person code
+		codeFromPersonPath=FileManagerService.getPathToCode(companyId, testId, getQuestionID()); //Path to person code
 		try {
 			//TODO Check case of time limit of execution of analyze process
 			gradleModule = new CodeTester();

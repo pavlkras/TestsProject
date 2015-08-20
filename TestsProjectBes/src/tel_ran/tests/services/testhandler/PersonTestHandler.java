@@ -11,25 +11,24 @@ import org.springframework.stereotype.Component;
 
 import tel_ran.tests.entitys.EntityQuestionAttributes;
 import tel_ran.tests.services.inner_result.dataobjects.InnerResultDataObject;
-import tel_ran.tests.services.interfaces.IFileManagerService;
 import tel_ran.tests.services.subtype_handlers.ITestQuestionHandler;
 import tel_ran.tests.services.subtype_handlers.SingleTestQuestionHandlerFactory;
+import tel_ran.tests.services.utils.FileManagerService;
 @Component
 public class PersonTestHandler implements IPersonTestHandler {
 	private JSONArray jsonTestResults;
 	public static final String KEY_INDEX = "index";
 	
-	IFileManagerService fileManager;
+	
 	private EntityManager em;
 	private long companyId;
 	private long testId;
 	
-	public PersonTestHandler(long companyId, long testId, IFileManagerService fileManager, EntityManager em){
-		this.em = em;
-		this.fileManager = fileManager;
+	public PersonTestHandler(long companyId, long testId, EntityManager em){
+		this.em = em;		
 		this.companyId = companyId;
 		this.testId = testId;
-		String json = fileManager.getJson(companyId, testId);
+		String json = FileManagerService.getJson(companyId, testId);
 		
 		if( json==null || json=="" ){
 			jsonTestResults = new JSONArray();
@@ -152,6 +151,6 @@ public class PersonTestHandler implements IPersonTestHandler {
 	}
 
 	private void save() {
-		fileManager.saveJson(companyId, testId, jsonTestResults.toString());
+		FileManagerService.saveJson(companyId, testId, jsonTestResults.toString());
 	}
 }

@@ -1,5 +1,6 @@
 package tel_ran.tests.services;
 import java.util.Date;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
@@ -8,15 +9,14 @@ import org.springframework.transaction.annotation.Transactional;
 import tel_ran.tests.entitys.EntityQuestionAttributes;
 import tel_ran.tests.entitys.EntityTest;
 import tel_ran.tests.services.common.ICommonData;
-import tel_ran.tests.services.interfaces.IFileManagerService;
 import tel_ran.tests.services.interfaces.IPersonalActionsService;
 import tel_ran.tests.services.testhandler.IPersonTestHandler;
 import tel_ran.tests.services.testhandler.PersonTestHandler;
+import tel_ran.tests.services.utils.FileManagerService;
 import tel_ran.tests.token_cipher.TokenProcessor;
 
 public class PersonalActionsService extends CommonServices implements IPersonalActionsService {	
-	@Autowired
-	IFileManagerService fileManager;
+	
 	@Autowired
 	TokenProcessor tokenProcessor;
 	
@@ -30,7 +30,7 @@ public class PersonalActionsService extends CommonServices implements IPersonalA
 		if(tempRes != null){
 			testID = tempRes.getTestId();
 			companyID = 0;//tempRes.getCompanyId();      //------ to do ?????
-			getTestResultsHandler(companyID, testID, fileManager);
+			getTestResultsHandler(companyID, testID);
 			actionResult = true;
 		}
 
@@ -48,7 +48,7 @@ public class PersonalActionsService extends CommonServices implements IPersonalA
 				test.setStartTestDate(new Date().getTime());
 				em.persist(test);
 			}
-			IPersonTestHandler testResultsJsonHandler = getTestResultsHandler(test.getEntityCompany().getId(), testId, fileManager);
+			IPersonTestHandler testResultsJsonHandler = getTestResultsHandler(test.getEntityCompany().getId(), testId);
 
 			question = testResultsJsonHandler.next();
 			if ( question == null ){
@@ -66,15 +66,16 @@ public class PersonalActionsService extends CommonServices implements IPersonalA
 
 	@Override
 	public void setAnswer(long testId, String jsonAnswer){
+		
 		EntityTest test = em.find(EntityTest.class, testId);
 
 		if(!test.isPassed()){
-			getTestResultsHandler(test.getEntityCompany().getId(), testId, fileManager).setAnswer(jsonAnswer);
+			getTestResultsHandler(test.getEntityCompany().getId(), testId).setAnswer(jsonAnswer);
 		}
 	}
 
-	IPersonTestHandler getTestResultsHandler(long companyId, long testId, IFileManagerService fileManager){
-		return new PersonTestHandler(companyId, testId, fileManager, em);
+	IPersonTestHandler getTestResultsHandler(long companyId, long testId){
+		return new PersonTestHandler(companyId, testId, em);
 	}
 	////-------  Processing  ----------------// END //
 	@Override
@@ -91,7 +92,7 @@ public class PersonalActionsService extends CommonServices implements IPersonalA
 	
 	public boolean testIsPassed(long testId){
 		boolean res = false;
-		EntityTest test = null;
+		EntityTest test = null;		
 		try{
 			test = em.find(EntityTest.class, testId);
 			if(test.isPassed()){
@@ -108,7 +109,7 @@ public class PersonalActionsService extends CommonServices implements IPersonalA
 		EntityTest test = em.find(EntityTest.class, testId);
 
 		if(!test.isPassed()){
-			fileManager.saveImage(test.getEntityCompany().getId(), testId, image);
+			FileManagerService.saveImage(test.getEntityCompany().getId(), testId, image);
 		}
 	}
 	@Override
@@ -119,6 +120,11 @@ public class PersonalActionsService extends CommonServices implements IPersonalA
 
 	@Override
 	protected String getLimitsForQuery() {
+		return null;
+	}
+	
+	@Override
+	public Map<String, Object> getUserInformation() {		
 		return null;
 	}
 	
