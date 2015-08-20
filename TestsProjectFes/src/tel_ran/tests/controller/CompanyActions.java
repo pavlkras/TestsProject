@@ -455,11 +455,34 @@ f)	5 photos made during the test	------ IGOR ------*/
 			String fileLocationLink, String correctAnswer, String numberAnswersOnPicture, 
 			String at1, String at2, String at3, String at4,  Model model)
 	{	
-		
+		System.out.println("I'm HERE!");
 		return super.AddProcessingPage(questionText, descriptionText, 
 				codeText, category1, metaCategory, category2, compcategory, levelOfDifficulty, 
 				fileLocationLink, correctAnswer, numberAnswersOnPicture, at1, at2, at3, at4, model, "company/CompanyCreateQuestion"); // - Page = MaintenanceAddingPage
 			
+	}
+	
+	// ----------------------------- UPDATE PAGE ------------------------- //
+	
+	@RequestMapping({ "/company_questions_update" })
+	public String UpdatePage(Model model) {
+		clearStringBuffer();				
+		AutoInformationTextHTML(buildingCategory1CheckBoxTextHTML());
+		String res = adminService.getAllQuestionsList(true, null, null);
+		
+		model.addAttribute(RESULT, res);		
+		
+		String path = "company/CompanyUpdatePage";
+		return path;
+//		return super.updatePage(path, model);
+	}
+	
+	@RequestMapping({"/question_see"})
+	public String seeQuestion(String type, Model model) {
+		String idQuestion = type.replace("/", "");
+		System.out.println(idQuestion);
+		
+		return null;
 	}
 	
 }

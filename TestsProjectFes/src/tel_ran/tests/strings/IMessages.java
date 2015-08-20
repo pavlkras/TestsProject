@@ -1,6 +1,6 @@
 package tel_ran.tests.strings;
 
-public interface messages {
+public interface IMessages {
 	
 	//------------------ ERROR MESSAGES ------------------------- //
 	static final String NO_AUTO_CATEGORIES = "auto generation isn't available";
