@@ -599,12 +599,17 @@ public abstract class CommonAdminServices extends CommonServices implements
 			compId = Long.toString(objectCompany.getId());
 		}
 		
-		if(fileLocationLink!=null && (metaCategory.equals(IPublicStrings.COMPANY_AMERICAN_TEST) || 
-				metaCategory.equals(IPublicStrings.COMPANY_QUESTION))) {
-			System.out.println(metaCategory + " " + fileLocationLink);
-			fileLocationLink = FileManagerService.saveImageForUserTests(metaCategory, compId, fileLocationLink);
+		if (metaCategory.equals(IPublicStrings.COMPANY_AMERICAN_TEST) || metaCategory.equals(IPublicStrings.COMPANY_QUESTION)) {
+			if(fileLocationLink!=null && fileLocationLink.length()>5) {
+				System.out.println(metaCategory + " " + fileLocationLink + " " + fileLocationLink.length());
+				fileLocationLink = FileManagerService.saveImageForUserTests(metaCategory, compId, fileLocationLink);
+			} else {
+				fileLocationLink = null;
+			}
+				
 		}
-
+		
+		
 		EntityQuestionAttributes questionAttributes = createAttributes(fileLocationLink, metaCategory, category1, 
 				category2, levelOfDifficulty, answers, correctAnswerChar, answerOptionsNumber, description, objectQuestion, 
 				objectCompany);		
