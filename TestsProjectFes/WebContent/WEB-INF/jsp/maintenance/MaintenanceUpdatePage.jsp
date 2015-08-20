@@ -22,7 +22,7 @@
 	
 <script
 	src="static/js_folder/maintenance_scripts/update_question_page.js"></script>
-<script src="static/js_folder/header&&rightmenu_company.js"></script>
+<script src="static/js_folder/header&&rightmenu_maintenace.js"></script>
 <title>ADDING&&UPDATE</title>
 </head>
 <body onload="actionTypeChange()">
