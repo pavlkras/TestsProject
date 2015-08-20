@@ -34,8 +34,8 @@ public class EntityQuestion implements Serializable {
 //	private String description; 
 	
 	////
-	@OneToMany(mappedBy = "questionId")
-	List<EntityQuestionAttributes> questionAttributes;
+//	@OneToMany(mappedBy = "questionId")
+//	List<EntityQuestionAttributes> questionAttributes;
 	////
 	
 	public EntityQuestion(){}
@@ -46,24 +46,24 @@ public class EntityQuestion implements Serializable {
 	public void setQuestionText(String questionText) {
 		this.questionText = questionText;
 	}
-	public List<EntityQuestionAttributes> getQuestionAttributes() {
-		return questionAttributes;
-	}
+//	public List<EntityQuestionAttributes> getQuestionAttributes() {
+//		return questionAttributes;
+//	}
 		
-	public void setQuestionAttributes(
-			List<EntityQuestionAttributes> questionAttributes) {
-		this.questionAttributes = questionAttributes;
-	}	
-	public void addQuestionAttributes(EntityQuestionAttributes eqa) {
-		if(this.questionAttributes==null)
-			this.questionAttributes = new ArrayList<EntityQuestionAttributes>();
-
-		this.questionAttributes.add(eqa);
-	}
-	
-	public void deleteQuestionAttributes(EntityQuestionAttributes eqa) {
-		this.questionAttributes.remove(eqa);
-	}
+//	public void setQuestionAttributes(
+//			List<EntityQuestionAttributes> questionAttributes) {
+//		this.questionAttributes = questionAttributes;
+//	}	
+//	public void addQuestionAttributes(EntityQuestionAttributes eqa) {
+//		if(this.questionAttributes==null)
+//			this.questionAttributes = new ArrayList<EntityQuestionAttributes>();
+//
+//		this.questionAttributes.add(eqa);
+//	}
+//	
+//	public void deleteQuestionAttributes(EntityQuestionAttributes eqa) {
+//		this.questionAttributes.remove(eqa);
+//	}
 	
 	//// --------- !!!!!!!!!!!!! - EXPIRED  !!!! - TO DELETE!!!!
 	//// --------- FIELD MOVED TO EntityQuestionAttributes ------------- ////

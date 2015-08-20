@@ -11,7 +11,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
+import tel_ran.tests.services.common.ICommonData;
 import tel_ran.tests.services.inner_result.dataobjects.InnerResultDataObject;
+import tel_ran.tests.services.utils.FileManagerService;
 @Component
 public class AmericanTestQuestionHandler extends AbstractTestQuestionHandler implements ITestQuestionHandler{
 
@@ -51,12 +53,12 @@ public class AmericanTestQuestionHandler extends AbstractTestQuestionHandler imp
 		try {
 			json.put(KEY_QUESTION_TEXT, getQuestionAttribubes().getQuestionId().getQuestionText());
 			String fileLink = getQuestionAttribubes().getFileLocationLink();
-			json.put(KEY_QUESTION_IMAGE, getImageBase64(fileLink));
+			json.put(ICommonData.JSN_IMAGE, getImageBase64(fileLink));
 			JSONArray answers = new JSONArray();
 			for(int max = getQuestionAttribubes().getNumberOfResponsesInThePicture(), i = 0; i < max; i++){
 				answers.put(Character.toString ((char) (i+65)));
 			}
-			json.put(KEY_QUESTION_ANSWERS, answers);
+			json.put(ICommonData.JSN_ANSWER_OPTIONS, answers);
 			json.put(KEY_QUESTION_INDEX, index);
 			json.put(KEY_QUESTION_TYPE, QUESTION_TYPE);
 		} catch (JSONException e) {
@@ -73,8 +75,9 @@ public class AmericanTestQuestionHandler extends AbstractTestQuestionHandler imp
 		byte[] bytes = null;
 		FileInputStream file;
 		try {
-			String workingDir = System.getProperty("user.dir") + File.separator + tel_ran.tests.services.fields.ApplicationFinalFields.NAME_FOLDER_FOR_SAVENG_QUESTIONS_FILES;
+			String workingDir = FileManagerService.BASE_DIR_IMAGES;
 			file = new FileInputStream(workingDir+fileLocationLink);
+			System.out.println(workingDir+fileLocationLink);
 			bytes = new byte[file.available()];
 			file.read(bytes);
 			file.close();

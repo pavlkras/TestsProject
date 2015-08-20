@@ -7,16 +7,12 @@ import com.google.gson.Gson;
 import tel_ran.tests.entitys.EntityQuestionAttributes;
 import tel_ran.tests.services.TestsPersistence;
 import tel_ran.tests.services.inner_result.dataobjects.InnerResultDataObject;
-import tel_ran.tests.services.interfaces.IFileManagerService;
 
 public abstract class AbstractTestQuestionHandler extends TestsPersistence {
-	@Autowired
-	IFileManagerService fileManager;
+
 	
 	public static final String KEY_QUESTION_INDEX = "index";
-	public static final String KEY_QUESTION_TEXT = "text";
-	public static final String KEY_QUESTION_ANSWERS = "answers";
-	public static final String KEY_QUESTION_IMAGE = "image";
+	public static final String KEY_QUESTION_TEXT = "text";	
 	public static final String KEY_QUESTION_TYPE = "type";
 	
 	private EntityQuestionAttributes entityQuestionAttributes;
