@@ -2,9 +2,14 @@ package tel_ran.tests.services;
 
 
 
-import tel_ran.tests.entitys.EntityCompany;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import tel_ran.tests.entitys.EntityCompany;
 import tel_ran.tests.entitys.EntityQuestionAttributes;
+import tel_ran.tests.services.common.ICommonData;
+import tel_ran.tests.services.common.IPublicStrings;
 import tel_ran.tests.services.interfaces.IMaintenanceService;
 
 /**
@@ -39,6 +44,16 @@ public class MaintenanceService extends CommonAdminServices implements IMaintena
 	protected String getLimitsForQuery() {
 		return null;
 	}
+
+
+	@Override
+	public Map<String, Object> getUserInformation() {		
+		Map<String, Object> result = new HashMap<String, Object>();			
+				result.put(ICommonData.MAP_ACCOUNT_NAME, IPublicStrings.USR_MAINTENANCE);				
+				result.put(ICommonData.MAP_ACCOUNT_QUESTION_NUMBER, getNumberQuestion());						
+		return result;
+	}
+
 
 	////-------------- Reading from file and Adding Questions into DB Case ----------// BEGIN  //
 	//  //  --------------------------------------------   TO DO factory method for this case !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

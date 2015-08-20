@@ -1,20 +1,28 @@
 package tel_ran.tests.services;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.Query;
 
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import tel_ran.tests.entitys.EntityCompany;
 import tel_ran.tests.entitys.EntityQuestion;
 import tel_ran.tests.entitys.EntityQuestionAttributes;
 import tel_ran.tests.entitys.EntityUser;
+import tel_ran.tests.interfaces.IConstants;
+import tel_ran.tests.services.common.ICommonData;
 import tel_ran.tests.services.interfaces.IUserActionService;
 
 @SuppressWarnings("unchecked")
 public class UserActionService extends CommonServices implements IUserActionService {
+	
+	private EntityUser entityUser;
+	
 	////------ User Authorization and Registration case -----------// BEGIN //
 	@Override
 	public boolean IsUserExist(String userMail, String userPassword) {
@@ -47,13 +55,13 @@ public class UserActionService extends CommonServices implements IUserActionServ
 	@Override
 	public String[] GetUserByMail(String userMail) {		
 		String[] result;
-		EntityUser resUser = em.find(EntityUser.class, userMail);		
-		if (resUser != null) {
+		entityUser = em.find(EntityUser.class, userMail);		
+		if (entityUser != null) {
 			result = new String[4];
-			result[FIRSTNAME] = resUser.getFirstName();
-			result[LASTTNAME] = resUser.getLastName();
-			result[PASSWORD] = resUser.getPassword();
-			result[EMAIL] = resUser.getEmail();
+			result[FIRSTNAME] = entityUser.getFirstName();
+			result[LASTTNAME] = entityUser.getLastName();
+			result[PASSWORD] = entityUser.getPassword();
+			result[EMAIL] = entityUser.getEmail();
 		} else{
 			result = null;
 		}		
@@ -158,4 +166,24 @@ public class UserActionService extends CommonServices implements IUserActionServ
 			return true;
 		return false;
 	}
+	
+	// ------------ USER INFORMATION ------------------------------------ //
+	
+	@Override
+	public Map<String, Object> getUserInformation() {		
+		Map<String, Object> result = null;
+		if(entityUser!=null) {
+			result = new HashMap<String, Object>();
+			
+				result.put(ICommonData.MAP_ACCOUNT_NAME, entityUser.getEmail());
+				result.put(ICommonData.MAP_ACCOUNT_EMAIL, entityUser.getEmail());
+				result.put(ICommonData.MAP_ACCOUNT_FIRST_NAME, entityUser.getFirstName());
+				result.put(ICommonData.MAP_ACCOUNT_LAST_NAME, entityUser.getLastName());				
+			
+		}		
+	
+		return result;
+	}
+	
+	
 }

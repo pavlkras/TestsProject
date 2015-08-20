@@ -4,7 +4,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.TimeZone;
 
@@ -17,16 +19,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import tel_ran.tests.entitys.EntityAdministrators;
 import tel_ran.tests.entitys.EntityCompany;
 import tel_ran.tests.entitys.EntityPerson;
 import tel_ran.tests.entitys.EntityQuestionAttributes;
 import tel_ran.tests.entitys.EntityTest;
 import tel_ran.tests.services.common.ICommonData;
 import tel_ran.tests.services.interfaces.ICompanyActionsService;
-import tel_ran.tests.services.interfaces.IFileManagerService;
 import tel_ran.tests.services.testhandler.IPersonTestHandler;
 import tel_ran.tests.services.testhandler.PersonTestHandler;
+import tel_ran.tests.services.utils.FileManagerService;
 import tel_ran.tests.token_cipher.TokenProcessor;
 
 public class CompanyActionsService extends CommonAdminServices implements ICompanyActionsService {
@@ -34,9 +35,7 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 	private EntityCompany entityCompany;
 	@Autowired
 	private TokenProcessor tokenProcessor;
-	@Autowired
-	IFileManagerService fileManager;
-	
+		
 	long id;
 	
 	//-------------Use Case Company Login 3.1.1----------- //   BEGIN    ///
@@ -475,9 +474,9 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 		if( questionIdList.size() > 0 ){
 			long companyId = entityCompany.getId();
 			////  creating folder tree for test
-			fileManager.initializeTestFileStructure(companyId, testId);
+			FileManagerService.initializeTestFileStructure(companyId, testId);
 			////			
-			IPersonTestHandler testResultsJsonHandler = new PersonTestHandler(companyId, testId, fileManager, em);			
+			IPersonTestHandler testResultsJsonHandler = new PersonTestHandler(companyId, testId, em);			
 			testResultsJsonHandler.addQuestions(questionIdList);			
 			test.setAmountOfQuestions(testResultsJsonHandler.length());
 			test.setPassed(false);
@@ -508,6 +507,70 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 		} 
 		
 		return person;
+	}
+
+	
+
+	@Override
+	public Map<String, Object> getUserInformation() {
+		Map<String, Object> result = null;
+		if(entityCompany!=null) {
+			result = new HashMap<String, Object>();			
+				result.put(ICommonData.MAP_ACCOUNT_NAME, entityCompany.getC_Name());
+				result.put(ICommonData.MAP_ACCOUNT_WEB, entityCompany.getC_Site());
+				result.put(ICommonData.MAP_ACCOUNT_QUESTION_NUMBER, getNumberQuestion());
+				result.put(ICommonData.MAP_ACCOUNT_TESTS_NUM, getNumberTests());
+			}
+		return result;
+	}
+
+	@Override
+	public List<String> listOfCreatedTest() {
+		Query qry = em.createQuery("SELECT et FROM EntityTest et WHERE et.entityCompany=?1");
+		qry.setParameter(1, entityCompany);
+		List<EntityTest> list = qry.getResultList();
+		List<String> resultList = null;
+		if(list!=null) {
+		
+		resultList = new ArrayList<String>();
+		
+		for(EntityTest et : list) {
+			try {
+				resultList.add(getTestJson(et));
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		}
+		return resultList;
+	}
+	
+	private int getNumberTests() {
+		String query = "SELECT COUNT(et) from EntityTest et ";
+		query = query.concat(" WHERE et.entityCompany=?1");
+		Query newQ = em.createQuery(query);		
+		Integer result = (Integer) newQ.getSingleResult();
+		System.out.println("Number of tests = " + result); // ---------------------------------SYSO - !!!!!!!!!!!!!!!!!!!!!!
+		return result;
+		
+	}
+	
+	private String getTestJson(EntityTest et) throws JSONException {
+		String result = null;
+		JSONObject jsn = new JSONObject();
+		if(et!=null) {
+			jsn.put("id", et.getTestId());
+			jsn.put("question_num", et.getAmountOfQuestions());
+			jsn.put("passed", et.isPassed());
+			jsn.put("pers_surname", et.getEntityPerson().getPersonSurname());
+			jsn.put("pers_name", et.getEntityPerson().getPersonName());
+			jsn.put("pers_id", et.getEntityPerson().getPersonId());		
+			result = jsn.toString();
+			System.out.println("JSON for TEST" + result); // ---------------------------------------------------- SYSO !!!!!!!!!!!!!!!!!!!!!!!
+		}
+		
+		return result;
 	}
 
 

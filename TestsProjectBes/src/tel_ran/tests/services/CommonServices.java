@@ -12,13 +12,21 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import tel_ran.tests.entitys.EntityAnswersText;
 import tel_ran.tests.entitys.EntityQuestionAttributes;
 import tel_ran.tests.processor.TestProcessor;
+import tel_ran.tests.services.common.ICommonData;
 import tel_ran.tests.services.common.IPublicStrings;
 import tel_ran.tests.services.interfaces.ICommonService;
+import tel_ran.tests.services.utils.FileManagerService;
 
 public abstract class CommonServices extends TestsPersistence implements ICommonService {
+	
 
 	protected List<String> getQuery(String query) {		
 		TypedQuery<String> q = em.createQuery(query, String.class);
@@ -103,7 +111,7 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 				////
 				if((fileLocation = question.getFileLocationLink()) != null && question.getFileLocationLink().length() > 25 
 						&& !question.getMetaCategory().equals(TestProcessor.MC_PROGRAMMING)){
-					imageBase64Text = encodeImage(NAME_FOLDER_FOR_SAVENG_QUESTIONS_FILES  + fileLocation);
+					imageBase64Text = encodeImage(FileManagerService.BASE_DIR_IMAGES  + fileLocation);
 					outArray[1] = "data:image/png;base64," + imageBase64Text; // TO DO delete!!! hard code -- data:image/png;base64,
 				}else{
 					outArray[1] = null;
@@ -140,7 +148,7 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 				outArray[3] = outAnsRes.toString();
 			}	
 			outArray[0] = outRes.toString();// question attributes in text			
-			outArray[2] = NAME_FOLDER_FOR_SAVENG_QUESTIONS_FILES + fileLocation;// that static parameter for one operation!. when question is update from admin panel !!!
+			outArray[2] = FileManagerService.BASE_DIR_IMAGES + fileLocation;// that static parameter for one operation!. when question is update from admin panel !!!
 		}else{
 			outArray[1] = " "; // TO DO delete!!! hard code -- data:image/png;base64,
 			outArray[0] = "wrong request q.Id-"+questionID;// out text stub for tests 
@@ -199,7 +207,7 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 	@Override
 	public List<String> getUsersCategories1FromDataBase() {
 		StringBuilder query = new StringBuilder("Select DISTINCT q.category1 FROM EntityQuestionAttributes q WHERE (q.metaCategory='");
-		query.append(IPublicStrings.COMPANY_AMERICAN_TEST).append("' OR q.metacategory='").append(IPublicStrings.COMPANY_QUESTION).
+		query.append(IPublicStrings.COMPANY_AMERICAN_TEST).append("' OR q.metaCategory='").append(IPublicStrings.COMPANY_QUESTION).
 			append("') AND q.category1 is not null");
 		String str = getLimitsForQuery();
 		if(str!=null)
@@ -208,6 +216,60 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 		
 				
 		return getQuery(query.toString());
+	}
+	
+	@Override
+	public String getJsonQuestionById(long id) {
+		EntityQuestionAttributes eqa = em.find(EntityQuestionAttributes.class, id);
+		String result = null;
+		if(eqa!=null) {
+			try {
+				JSONObject jsn = getPartOfJSON(eqa);
+				jsn.put(ICommonData.JSN_CORRECT_ANSWER_CHAR, eqa.getCorrectAnswer());
+				jsn.put(ICommonData.JSN_QUESTION_TEXT, eqa.getQuestionId().getQuestionText());
+				jsn.put(ICommonData.JSN_ANSWERS_NUMBER, eqa.getNumberOfResponsesInThePicture());
+				jsn.put(ICommonData.JSN_QUESTION_DESCRIPTION, eqa.getDescription());
+				
+				if(eqa.getMetaCategory().equals(TestProcessor.MC_PROGRAMMING)) {
+					jsn.put(ICommonData.JSN_CODE_SIMPLE, eqa.getAnswers().get(0));
+				} else {
+					JSONArray array = new JSONArray();
+					List<String> answers = eqa.getAnswers();
+					array.put(answers);
+					jsn.put(ICommonData.JSN_ANSWER_OPTIONS, array);					
+				}	
+				
+				String path = (eqa.getFileLocationLink());
+				if(path!=null)
+					jsn.put(ICommonData.JSN_IMAGE, FileManagerService.getImageForTests(path));
+				
+				result = jsn.toString();
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}		
+		
+		System.out.println(result); // ------------------------------------------------- SYSO ------ !!!!!!!!!!!!!!
+		return result;		
+	}
+	
+	protected JSONObject getPartOfJSON(EntityQuestionAttributes eqa) throws JSONException {
+		JSONObject jsn = null;
+		if(eqa!=null) {
+			jsn = new JSONObject();
+			jsn.put(ICommonData.JSN_QUESTION_ID, eqa.getId());
+			jsn.put(ICommonData.JSN_META_CATEGORY, eqa.getMetaCategory());
+			jsn.put(ICommonData.JSN_CATEGORY1, eqa.getCategory1());
+			jsn.put(ICommonData.JSN_CATEGORY2, eqa.getCategory2());			
+			if(eqa.getFileLocationLink()!=null) {
+				jsn.put(ICommonData.JSN_IS_IMAGE, true);				
+			} else {
+				jsn.put(ICommonData.JSN_IS_IMAGE, false);	
+			}
+		} 
+		return jsn;
 	}
 
 }

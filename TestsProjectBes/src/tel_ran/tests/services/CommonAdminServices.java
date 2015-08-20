@@ -5,10 +5,15 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
+import java.util.Base64.Decoder;
 
 import javax.persistence.Query;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,12 +26,15 @@ import tel_ran.tests.processor.TestProcessor;
 import tel_ran.tests.services.common.ICommonData;
 import tel_ran.tests.services.common.IPublicStrings;
 import tel_ran.tests.services.interfaces.ICommonAdminService;
+import tel_ran.tests.services.utils.FileManagerService;
 
 public abstract class CommonAdminServices extends CommonServices implements
 		ICommonAdminService {
 	
 	protected static int MIN_NUMBER_OF_CATEGORIES = 1;
 	protected static boolean FLAG_AUTHORIZATION = false;	
+	
+	
 
 	@Override
 	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
@@ -168,7 +176,7 @@ public abstract class CommonAdminServices extends CommonServices implements
 		TestProcessor proc = new TestProcessor();
 		////
 		try {
-			String workingDir = System.getProperty("user.dir") + File.separator + NAME_FOLDER_FOR_SAVENG_QUESTIONS_FILES;			
+			String workingDir = FileManagerService.BASE_DIR_IMAGES;			
 			Files.createDirectories(Paths.get(workingDir));	
 			if(byCategory1==null) {
 				listQuestions = proc.processStart(byCategory, nQuestions, workingDir + File.separator, diffLevel);
@@ -424,7 +432,7 @@ public abstract class CommonAdminServices extends CommonServices implements
 	
 	protected void DeleteImageFromFolder(String linkForDelete) {		
 		try {
-			Files.delete(Paths.get(System.getProperty("user.dir") + "\\" + NAME_FOLDER_FOR_SAVENG_QUESTIONS_FILES + linkForDelete));
+			Files.delete(Paths.get(System.getProperty("user.dir") + "\\" + FileManagerService.NAME_FOLDER_FOR_SAVENG_QUESTIONS_FILES + linkForDelete));
 		} catch (IOException e) {
 			System.out.println("BES delete image from folder catch IOException, image is not exist !!!");// ------------------------------------------------------- sysout
 			//e.printStackTrace();   
@@ -569,18 +577,33 @@ public abstract class CommonAdminServices extends CommonServices implements
 			int answerOptionsNumber) {
 		////		
 		
+		
+		
 		if(questionText == null) {
 			if (metaCategory.equals(IPublicStrings.COMPANY_AMERICAN_TEST))
 				questionText = IPublicStrings.COMPANY_AMERICAN_TEST_QUESTION;
 			else if (metaCategory.equals(IPublicStrings.COMPANY_QUESTION))
 				questionText = IPublicStrings.COMPANY_QUESTION_QUESTION;			
 		}
+		
+		
 	
 		long questionId = createQuestion(questionText);
 		EntityQuestion objectQuestion = em.find(EntityQuestion.class, questionId);
 				
 		EntityCompany objectCompany = getCompany();
-			
+		
+		String compId = null;
+		
+		if(objectCompany!=null) {
+			compId = Long.toString(objectCompany.getId());
+		}
+		
+		if(fileLocationLink!=null && (metaCategory.equals(IPublicStrings.COMPANY_AMERICAN_TEST) || 
+				metaCategory.equals(IPublicStrings.COMPANY_QUESTION))) {
+			System.out.println(metaCategory + " " + fileLocationLink);
+			fileLocationLink = FileManagerService.saveImageForUserTests(metaCategory, compId, fileLocationLink);
+		}
 
 		EntityQuestionAttributes questionAttributes = createAttributes(fileLocationLink, metaCategory, category1, 
 				category2, levelOfDifficulty, answers, correctAnswerChar, answerOptionsNumber, description, objectQuestion, 
@@ -589,7 +612,7 @@ public abstract class CommonAdminServices extends CommonServices implements
 		
 
 		objectQuestion = em.find(EntityQuestion.class, questionId);
-		objectQuestion.addQuestionAttributes(questionAttributes);
+//		objectQuestion.addQuestionAttributes(questionAttributes);
 		em.merge(questionAttributes);
 		em.merge(objectQuestion);	
 		
@@ -603,7 +626,6 @@ public abstract class CommonAdminServices extends CommonServices implements
 		return true;
 	}
 		
-	
 	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
@@ -632,5 +654,83 @@ public abstract class CommonAdminServices extends CommonServices implements
 	}
 	
 	
+	protected int getNumberQuestion() {
+		String query = "SELECT COUNT(eqa) from EntityQuestionAttributes eqa";
+		String limit = getLimitsForQuery();
+		if(limit!=null)
+			query = query.concat(" WHERE eqa").concat(limit);
+		Integer result = (Integer)em.createQuery(query).getSingleResult();
+		System.out.println("Number of questions = " + result); // ---------------------------------SYSO - !!!!!!!!!!!!!!!!!!!!!!
+		return result;
+	}
+	
+
+	@Override
+	public String getAllQuestionsList(Boolean typeOfQuestion, String metaCategory, String category1) {
+		StringBuilder query = new StringBuilder("SELECT c FROM EntityQuestionAttributes c WHERE ");
+		
+		String limit = getLimitsForQuery();
+		if(limit!=null)
+			query.append("c.").append(limit).append(" AND ");		
+		
+		if(metaCategory==null) {
+			if(typeOfQuestion) {
+				query.append("(c.metaCategory='").append(IPublicStrings.COMPANY_AMERICAN_TEST)
+						.append("' OR c.metaCategory='").append(IPublicStrings.COMPANY_QUESTION)
+						.append("')");
+			} else {
+				List<String> cat = TestProcessor.getMetaCategory();
+				int count = cat.size();
+				query.append("(");
+				for(String c : cat) {
+					query.append("c.metaCategory='").append(c).append("' OR ");					
+				}
+				int len = query.length();
+				query.substring(0, len-4);				
+				query.append(")");				
+			}						
+		} else {
+			query.append("c.metaCategory=").append(metaCategory);
+		}
+		
+		if(category1!=null) {
+			query.append(" AND c.category1=").append(category1);
+		}
+		
+		query.append(" ORDER BY c.id DESC");
+		System.out.println(query.toString()); // ---------------------------------------- SYSO ---- !!!!!!!!!!!!!!!!!!!!!
+		
+		List<EntityQuestionAttributes> listOfEqa = em.createQuery(query.toString()).getResultList();
+		
+		JSONObject resultJsn = new JSONObject();
+		JSONArray arrayResult = new JSONArray();		
+		
+		for(EntityQuestionAttributes eqa : listOfEqa) {
+			try {
+				arrayResult.put(getShortQuestionJson(eqa));
+				resultJsn.put(ICommonData.JSN_LIST_OF_RESULT, arrayResult);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+				
+		
+		return resultJsn.toString();
+	}
+	
+	private JSONObject getShortQuestionJson(EntityQuestionAttributes eqa) throws JSONException {
+		JSONObject jsn = null;
+		if(eqa!=null) {
+			jsn = getPartOfJSON(eqa);	
+			String shrt = eqa.getDescription();
+			int len = shrt.length();
+			if(len>ICommonData.SHORT_DESCR_LEN) 
+				shrt = shrt.substring(0, ICommonData.SHORT_DESCR_LEN);		
+			jsn.put(ICommonData.JSN_QUESTION_SHORT_DESCRIPTION, shrt);
+			System.out.println("JSON " + jsn.toString()); // ---------------------------------------- SYSO --- !!!!!!!!!!!!!!!!!!!!!!!!!!
+		} 
+		return jsn;
+	}
 	
 }
