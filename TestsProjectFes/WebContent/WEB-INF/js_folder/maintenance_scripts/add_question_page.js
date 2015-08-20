@@ -80,7 +80,7 @@ $(document).ready(function(){
 	$( "#mCatSel" ).change(function() {
 		var $catSelect = $("#mCatSel").val();
 		
-		if ($catSelect == "American Test") {
+		if ($catSelect == "American Question") {
 			$("div#americanquestion").show(); 
 			$("div#codepattern").hide(); 
 	    }
