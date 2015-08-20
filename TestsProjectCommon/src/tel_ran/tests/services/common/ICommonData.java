@@ -25,19 +25,33 @@ public interface ICommonData {
 
 	// --------------------- JSON - FIELDS ------------------------------------------ //
 	
-	static final String JSN_QUESTION_ID = "id"; // id in EntityQuestionAttributes
-	static final String JSN_QUESTION_TYPE = "question_type"; // user or auto
-	static final String JSN_META_CATEGORY = "metaCategory";
-	static final String JSN_CATEGORY1 = "category1"; // user's category or programming language
-	static final String JSN_CATEGORY2 = "category2"; // used for auto-question only
-	static final String JSN_QUESTION_TEXT = "questionText"; // common question = title of question
-	static final String JSN_QUESTION_DESCRIPTION = "description"; // long text with the question's body
-	static final String JSN_ANSWER_OPTIONS = "answers"; //JSONArray for answers in American Test
-	static final String JSN_ONE_OPTION = "option"; // one option in answers
-	static final String JSN_CODE_SIMPLE = "code"; // stub for programming tasks
-	static final String JSN_CORRECT_ANSWER_CHAR = "correctAnswer"; // char of the correct answer in American Test
-	static final String JSN_ANSWERS_NUMBER = "answerNumber"; // number of answer options for American test 
-	static final String JSN_IMAGE = "image";
+	static final String JSN_QUESTION_ID = "id"; // id in EntityQuestionAttributes = long
+	static final String JSN_QUESTION_INDEX = "index"; 
+	static final String JSN_QUESTION_TYPE = "question_type"; // user or auto 
+	static final String JSN_META_CATEGORY = "metaCategory"; // = String
+	static final String JSN_CATEGORY1 = "category1"; // user's category or programming language = String
+	static final String JSN_CATEGORY2 = "category2"; // used for auto-question only = String
+	static final String JSN_QUESTION_TEXT = "questionText"; // common question = title of question = String	
+	static final String JSN_QUESTION_DESCRIPTION = "description"; // long text with the question's body = String
+	static final String JSN_ANSWER_OPTIONS = "answers"; //JSONArray for answers in American Test = List	
+	static final String JSN_CODE_SIMPLE = "code"; // stub for programming tasks = String
+	static final String JSN_CORRECT_ANSWER_CHAR = "correctAnswer"; // char of the correct answer in American Test = String
+	static final String JSN_ANSWERS_NUMBER = "answerNumber"; // number of answer options for American test = int
+	static final String JSN_IMAGE = "image"; // = Base64
+	static final String JSN_IS_IMAGE = "is_image"; // = boolean
+	static final String JSN_LIST_OF_RESULT = "results"; // array
+	static final String JSN_QUESTION_SHORT_DESCRIPTION = "shortText"; // String
+	static final int SHORT_DESCR_LEN = 100;
+	
+	
+	static final String JSN_TEST_ID = "id"; // id of test = long
+	static final String JSN_TEST_QUESTION_NUMBER = "question_num"; // number of question in the test = int
+	static final String JSN_TEST_IS_PASSED = "passed"; // if the test is passed = boolean
+	static final String JSN_TEST_PERSON_SURNAME = "pers_surname"; // surname of the person = String
+	static final String JSN_TEST_PERSON_NAME = "pers_name"; // name of the person = String
+	static final String JSN_TEST_PERSON_ID = "pers_id"; // = int
+	
+	
 	
 	// -------------------- MAP - FIELDS ---------------------------------------------- //
 	
