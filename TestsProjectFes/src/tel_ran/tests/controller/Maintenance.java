@@ -111,8 +111,8 @@ public class Maintenance extends AbstractAdminActions {
 	 * @param model
 	 */
 	@RequestMapping({ "/moduleForBuildingQuestions" })
-	public String moduleForBuildingQuestions(String category, String nQuestions, String levelOfDifficulty, Model model) {	
-		return super.moduleForBuildingQuestions(category, nQuestions, levelOfDifficulty, model, "maintenance/MaintenanceOtherResurses");// return too page after action
+	public String moduleForBuildingQuestions(String category, String nQuestions, Model model) {	
+		return super.moduleForBuildingQuestions(category, nQuestions, model, "maintenance/MaintenanceOtherResurses");// return too page after action
 	}
 	
 	/*

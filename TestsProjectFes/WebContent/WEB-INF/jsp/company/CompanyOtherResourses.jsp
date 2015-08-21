@@ -54,11 +54,6 @@
 			<input type="number"
 				name='nQuestions' value='50' size="5"> 
 			</div>
-			<div>
-				<label>Level Of difficulty :</label>
-				<input type="number" name='levelOfDifficulty' value='3'
-				size="5"> 
-				</div>
 				<div>
 				<input type='submit' value="Generate Questions">
 				</div>

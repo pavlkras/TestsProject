@@ -43,12 +43,13 @@ public abstract class AbstractAdminActions {
 	 * @param model
 	 * @param path - path to result-page (may be different for sub-classes)	 * 
 	 */
-	public String moduleForBuildingQuestions(String category, String nQuestions, String levelOfDifficulty, Model model, String path) {		
+	public String moduleForBuildingQuestions(String category, String nQuestions, Model model, String path) {		
 		int nQuest = Integer.parseInt(nQuestions);
+
 		boolean actionRes = false;
 		try {
-			int differentLevel = Integer.parseInt(levelOfDifficulty);
-			actionRes = adminService.moduleForBuildingQuestions(category, null, differentLevel , nQuest);
+			int levelOfDifficulty = 5;
+			actionRes = adminService.moduleForBuildingQuestions(category, null, levelOfDifficulty , nQuest);
 		} catch (Exception e) {
 			System.out.println("catch call maintenanceaction from FES moduleForBuildingQuestions");//----------------------------------------------------sysout
 			//e.printStackTrace();

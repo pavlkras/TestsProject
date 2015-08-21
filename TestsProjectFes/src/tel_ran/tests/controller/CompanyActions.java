@@ -397,7 +397,7 @@ f)	5 photos made during the test	------ IGOR ------*/
 		if(companyId != -1){
 			String token = ((ICompanyActionsService)adminService).encodeIntoToken(companyId);
 			model.addAttribute("token", token);
-			page = "company/!!!CompanyViewTestsResults";
+			page = "company/CompanyViewTestsResults";
 		}
 		return page;
 	}	
@@ -413,9 +413,9 @@ f)	5 photos made during the test	------ IGOR ------*/
 	 * @param model
 	 */
 	@RequestMapping({"/addQuestionsFromResourses"})
-	public String moduleForBuildingQuestions(String category, String nQuestions, String levelOfDifficulty, Model model) {		
+	public String moduleForBuildingQuestions(String category, String nQuestions, Model model) {		
 		String path = "company/CompanyOtherResourses";
-		return super.moduleForBuildingQuestions(category, nQuestions, levelOfDifficulty, model, path);// return too page after action
+		return super.moduleForBuildingQuestions(category, nQuestions, model, path);// return too page after action
 	}
 
 	
