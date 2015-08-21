@@ -85,5 +85,5 @@ public interface ICommonService extends ApplicationFinalFields {
 	 * Type of user, name, number of questions in the base, number of created tests 
 	 * @return
 	 */
-	Map<String,Object> getUserInformation();
+	String getUserInformation();
 }

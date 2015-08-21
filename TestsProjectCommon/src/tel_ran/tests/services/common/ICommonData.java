@@ -41,6 +41,7 @@ public interface ICommonData {
 	static final String JSN_IS_IMAGE = "is_image"; // = boolean
 	static final String JSN_LIST_OF_RESULT = "results"; // array
 	static final String JSN_QUESTION_SHORT_DESCRIPTION = "shortText"; // String
+	static final String JSN_DIFFICULTY_LVL = "level"; //int
 	static final int SHORT_DESCR_LEN = 100;
 	
 	
