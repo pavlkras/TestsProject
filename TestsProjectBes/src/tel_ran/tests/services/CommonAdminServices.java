@@ -659,12 +659,13 @@ public abstract class CommonAdminServices extends CommonServices implements
 	}
 	
 	
-	protected int getNumberQuestion() {
+	protected long getNumberQuestion() {
 		String query = "SELECT COUNT(eqa) from EntityQuestionAttributes eqa";
 		String limit = getLimitsForQuery();
 		if(limit!=null)
-			query = query.concat(" WHERE eqa").concat(limit);
-		Integer result = (Integer)em.createQuery(query).getSingleResult();
+			query = query.concat(" WHERE eqa.").concat(limit);
+		System.out.println(query);
+		Long result = (Long)em.createQuery(query).getSingleResult();
 		System.out.println("Number of questions = " + result); // ---------------------------------SYSO - !!!!!!!!!!!!!!!!!!!!!!
 		return result;
 	}

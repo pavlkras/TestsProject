@@ -124,7 +124,7 @@ public class PersonalActionsService extends CommonServices implements IPersonalA
 	}
 	
 	@Override
-	public Map<String, Object> getUserInformation() {		
+	public String getUserInformation() {		
 		return null;
 	}
 	

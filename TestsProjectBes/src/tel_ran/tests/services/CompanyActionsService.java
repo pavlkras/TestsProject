@@ -512,14 +512,21 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 	
 
 	@Override
-	public Map<String, Object> getUserInformation() {
-		Map<String, Object> result = null;
+	public String getUserInformation() {
+		String result = null;	
+		
 		if(entityCompany!=null) {
-			result = new HashMap<String, Object>();			
-				result.put(ICommonData.MAP_ACCOUNT_NAME, entityCompany.getC_Name());
-				result.put(ICommonData.MAP_ACCOUNT_WEB, entityCompany.getC_Site());
-				result.put(ICommonData.MAP_ACCOUNT_QUESTION_NUMBER, getNumberQuestion());
-				result.put(ICommonData.MAP_ACCOUNT_TESTS_NUM, getNumberTests());
+			JSONObject jsn = new JSONObject();
+			try {
+				jsn.put(ICommonData.MAP_ACCOUNT_NAME, entityCompany.getC_Name());
+				jsn.put(ICommonData.MAP_ACCOUNT_WEB, entityCompany.getC_Site());
+				jsn.put(ICommonData.MAP_ACCOUNT_QUESTION_NUMBER, getNumberQuestion());
+				jsn.put(ICommonData.MAP_ACCOUNT_TESTS_NUM, getNumberTests());
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}			
+			result = jsn.toString();
 			}
 		return result;
 	}
@@ -546,11 +553,12 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 		return resultList;
 	}
 	
-	private int getNumberTests() {
+	private long getNumberTests() {
 		String query = "SELECT COUNT(et) from EntityTest et ";
 		query = query.concat(" WHERE et.entityCompany=?1");
-		Query newQ = em.createQuery(query);		
-		Integer result = (Integer) newQ.getSingleResult();
+		Query newQ = em.createQuery(query);
+		newQ.setParameter(1, entityCompany);
+		Long result = (Long) newQ.getSingleResult();
 		System.out.println("Number of tests = " + result); // ---------------------------------SYSO - !!!!!!!!!!!!!!!!!!!!!!
 		return result;
 		

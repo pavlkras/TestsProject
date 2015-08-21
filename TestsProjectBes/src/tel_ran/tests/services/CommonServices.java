@@ -262,7 +262,8 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 			jsn.put(ICommonData.JSN_QUESTION_ID, eqa.getId());
 			jsn.put(ICommonData.JSN_META_CATEGORY, eqa.getMetaCategory());
 			jsn.put(ICommonData.JSN_CATEGORY1, eqa.getCategory1());
-			jsn.put(ICommonData.JSN_CATEGORY2, eqa.getCategory2());			
+			jsn.put(ICommonData.JSN_CATEGORY2, eqa.getCategory2());	
+			jsn.put(ICommonData.JSN_DIFFICULTY_LVL, eqa.getLevelOfDifficulty());
 			if(eqa.getFileLocationLink()!=null) {
 				jsn.put(ICommonData.JSN_IS_IMAGE, true);				
 			} else {

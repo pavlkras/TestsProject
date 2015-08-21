@@ -6,6 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import tel_ran.tests.entitys.EntityCompany;
 import tel_ran.tests.entitys.EntityQuestionAttributes;
 import tel_ran.tests.services.common.ICommonData;
@@ -47,13 +50,20 @@ public class MaintenanceService extends CommonAdminServices implements IMaintena
 
 
 	@Override
-	public Map<String, Object> getUserInformation() {		
-		Map<String, Object> result = new HashMap<String, Object>();			
-				result.put(ICommonData.MAP_ACCOUNT_NAME, IPublicStrings.USR_MAINTENANCE);				
-				result.put(ICommonData.MAP_ACCOUNT_QUESTION_NUMBER, getNumberQuestion());						
-		return result;
+	public String getUserInformation() {
+		JSONObject jsn = new JSONObject();
+		try {
+			jsn.put(ICommonData.MAP_ACCOUNT_NAME, IPublicStrings.USR_MAINTENANCE);
+			jsn.put(ICommonData.MAP_ACCOUNT_QUESTION_NUMBER, getNumberQuestion());
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+								
+		return jsn.toString();
 	}
-
+	
+	
 
 	////-------------- Reading from file and Adding Questions into DB Case ----------// BEGIN  //
 	//  //  --------------------------------------------   TO DO factory method for this case !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

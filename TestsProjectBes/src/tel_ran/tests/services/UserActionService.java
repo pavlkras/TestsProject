@@ -7,6 +7,8 @@ import java.util.Map;
 
 import javax.persistence.Query;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -170,15 +172,21 @@ public class UserActionService extends CommonServices implements IUserActionServ
 	// ------------ USER INFORMATION ------------------------------------ //
 	
 	@Override
-	public Map<String, Object> getUserInformation() {		
-		Map<String, Object> result = null;
+	public String getUserInformation() {
+		String result = null;		
 		if(entityUser!=null) {
-			result = new HashMap<String, Object>();
+			JSONObject jsn = new JSONObject();
+			try {
+				jsn.put(ICommonData.MAP_ACCOUNT_NAME, entityUser.getEmail());
+				jsn.put(ICommonData.MAP_ACCOUNT_EMAIL, entityUser.getEmail());
+				jsn.put(ICommonData.MAP_ACCOUNT_FIRST_NAME, entityUser.getFirstName());
+				jsn.put(ICommonData.MAP_ACCOUNT_LAST_NAME, entityUser.getLastName());
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
-				result.put(ICommonData.MAP_ACCOUNT_NAME, entityUser.getEmail());
-				result.put(ICommonData.MAP_ACCOUNT_EMAIL, entityUser.getEmail());
-				result.put(ICommonData.MAP_ACCOUNT_FIRST_NAME, entityUser.getFirstName());
-				result.put(ICommonData.MAP_ACCOUNT_LAST_NAME, entityUser.getLastName());				
+			result = jsn.toString();				
 			
 		}		
 	
