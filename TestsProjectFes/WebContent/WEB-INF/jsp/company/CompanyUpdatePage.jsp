@@ -11,7 +11,7 @@
 	content="text/html; charset=windows-1251">
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <link
-	href='<c:url value="/static/css_folder/maintenance_styles/MaintenanceUpdatePage.css"></c:url>'
+	href='<c:url value="/static/css_folder/company_styles/company.css"></c:url>'
 	rel="stylesheet">
 	
 <link
@@ -81,11 +81,11 @@
 						
 											</tr>
 					<tr ng-repeat="q in results">					
-					 	<td>{{q.id}}</td>
-					 	<td>{{q.metaCategory}}</td>
-					 	<td>{{q.category1}}</td>
+					 	<td style = "width: 10%">{{q.id}}</td>
+					 	<td style = "width: 15%">{{q.metaCategory}}</td>
+					 	<td style = "width: 15%">{{q.category1}}</td>
 					 	<td>{{q.shortText}}</td>
-					 	<td><input type="radio" name="type" value={{q.id}}/> See <br></td>
+					 	<td style = "width:10%"><input type="radio" name="type" value={{q.id}}/> See <br></td>
 					</tr>
 				</table>	
 				

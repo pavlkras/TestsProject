@@ -272,6 +272,7 @@ a:visited {
 #right_side_company {
 	position: relative;
 	float: left;	
+	width: 804px;
 	margin-left: 10px;
 	margin-bottom: 10px;
 	margin-top: 10px;
