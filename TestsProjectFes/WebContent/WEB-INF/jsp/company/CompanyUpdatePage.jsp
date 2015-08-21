@@ -72,7 +72,7 @@
 			<div ng-app="test_app" ng-controller="test_contr">
 			
 				<table>
-					<tr>
+					<tr id="tableHead">
 						<th>id</th>
 						<th>Type</th>
 						<th>Category</th>
@@ -80,7 +80,7 @@
 						<th>See question</th>
 						
 											</tr>
-					<tr ng-repeat="q in results">					
+					<tr id="tableContent" ng-repeat="q in results">					
 					 	<td style = "width: 10%">{{q.id}}</td>
 					 	<td style = "width: 15%">{{q.metaCategory}}</td>
 					 	<td style = "width: 15%">{{q.category1}}</td>

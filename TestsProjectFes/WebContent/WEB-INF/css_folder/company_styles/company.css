@@ -17,12 +17,16 @@ td {
 tr:HOVER{
 background-color: silver;	
 }
+
+tr .tableHead {
+	border-bottom: 0.1em solid grey;
+}
 table {	
 	width: 100%;
 }
 
-tr {
-	border-bottom: 0.1em solid grey;
+tr .tableContent {
+	border-bottom: 1px solid grey;
 }
 
 th {
