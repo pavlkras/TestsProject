@@ -76,6 +76,7 @@
 						<th>id</th>
 						<th>Type</th>
 						<th>Category</th>
+						<th>Level</th>
 						<th>Text</th>
 						<th>See question</th>
 						
@@ -84,6 +85,7 @@
 					 	<td style = "width: 10%">{{q.id}}</td>
 					 	<td style = "width: 15%">{{q.metaCategory}}</td>
 					 	<td style = "width: 15%">{{q.category1}}</td>
+					 	<td style = "width: 10%">{{q.level}}</td>
 					 	<td>{{q.shortText}}</td>
 					 	<td style = "width:10%"><input type="radio" name="type" value={{q.id}}/> See <br></td>
 					</tr>

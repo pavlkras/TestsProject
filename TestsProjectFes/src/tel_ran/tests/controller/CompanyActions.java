@@ -16,6 +16,8 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 
+import jdk.nashorn.internal.parser.JSONParser;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
@@ -25,6 +27,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonObjectFormatVisitor;
+import com.fasterxml.jackson.databind.util.JSONPObject;
 
 import tel_ran.tests.services.common.IPublicStrings;
 import tel_ran.tests.services.interfaces.ICommonAdminService;
@@ -84,7 +89,9 @@ public class CompanyActions extends AbstractAdminActions implements Serializable
 	
 	// IGOR Action Re-mapping
 	@RequestMapping({"/company_main"})
-	public String loginSucceessCompany(){
+	public String loginSucceessCompany(Model model){
+		System.out.println("I send info");
+		model.addAttribute(AbstractAdminActions.RESULT, adminService.getUserInformation());
 		return "company/Company_main";
 	}
 
@@ -117,7 +124,10 @@ Wrong Password Flow:
 		if(companyId>0){
 			boolean ress = adminService.setAutorization(companyName, password);
 			if(ress){ 				
-				result = "company/Company_main";
+				result = "company/Company_main";		
+				
+				
+				model.addAttribute("info", adminService.getUserInformation());
 				this.setCompanyName(companyName); 
 			}else{
 				result = "company/CompanySignIn";

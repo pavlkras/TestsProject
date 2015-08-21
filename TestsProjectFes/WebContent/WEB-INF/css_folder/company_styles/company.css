@@ -34,10 +34,6 @@ th {
 	color: #333;
 }
 
-p{
-	color: blue;
-	border-bottom: 0.1em solid black;	
-}
 .displayAction{
 display: none;
 float: right;
@@ -91,3 +87,25 @@ visibility: hidden;
 	width: 400px;
 	height: 200px
 }
+
+div.inform{	
+	margin-top: 1em;
+	margin-right: 0.5em;
+}
+
+p div.inform,
+h4 div.inform {
+	text-align: right;
+}
+
+p div.site{
+	color: blue;
+	text-size: 1.1em;
+	margint-top: 1em;
+	margin-bottom: 1em;
+}
+
+p div.us_info {
+	text-size: 0.9em;
+}
+

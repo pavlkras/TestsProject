@@ -11,10 +11,14 @@
 <link
 	href='<c:url value="/static/css_folder/style.css"></c:url>'
 	rel="stylesheet">
+<link
+	href='<c:url value="/static/css_folder/company_styles/company.css"></c:url>'
+	rel="stylesheet">	
 <script
 	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>	
 	<script src="static/js_folder/header&&rightmenu_company.js">
 </script>	
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
 
 </head>
 <body>
@@ -23,6 +27,16 @@
 		<div id="right_side_company">
 
 			<h2>Success CompanyName Login</h2>
+			<div ng-app="lgn_app" ng-controller="lgn_contr" class="inform">
+				
+					<h4>{{name}}</h4>
+					<div class="site"><p>{{webs}}</p></div>
+					<div class="us_info"><p>Questions in DB: {{num_question}}</br></p>
+					<p>Sended tests: {{num_tests}}</p></div>
+				
+			
+				
+			</div>
 
 		</div>
 		<!--end of right area-->
@@ -34,6 +48,17 @@
 			<p>Copyright &copy; 2014 HrTrueTest</p>
 		</div>
 	</div>
+
+<script>	
+	var appl=angular.module('lgn_app',[]);
+	appl.controller('lgn_contr',function($scope){
+		var json=JSON.parse('${info}');
+		$scope.name = json.name;	
+		$scope.webs = json.website;
+		$scope.num_question = json.question_num;
+		$scope.num_tests = json.tests_num;
+	}); </script>
+	
 </body>
 
 
