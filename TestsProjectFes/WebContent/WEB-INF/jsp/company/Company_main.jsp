@@ -26,13 +26,13 @@
 
 		<div id="right_side_company">
 
-			<h2>Success CompanyName Login</h2>
+			<h2>Success Company Login</h2>
 			<div ng-app="lgn_app" ng-controller="lgn_contr" class="inform">
 				
-					<h4>{{name}}</h4>
-					<div class="site"><p>{{webs}}</p></div>
-					<div class="us_info"><p>Questions in DB: {{num_question}}</br></p>
-					<p>Sended tests: {{num_tests}}</p></div>
+					<h3>{{name}}</h3>
+					<div class="site">{{webs}}</div>
+					<div class="us_info">Questions in DB: {{num_question}}<br/>
+					Sended tests: {{num_tests}}</p></div>
 				
 			
 				

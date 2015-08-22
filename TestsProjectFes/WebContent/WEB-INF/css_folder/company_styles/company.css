@@ -1,8 +1,5 @@
 @CHARSET "ISO-8859-1";
 
- *{
-	text-align: center;
-}
 input:HOVER {
 	background-color: silver;
 	color:white;
@@ -91,21 +88,22 @@ visibility: hidden;
 div.inform{	
 	margin-top: 1em;
 	margin-right: 0.5em;
+	text-alighn: right;
 }
 
-p div.inform,
-h4 div.inform {
-	text-align: right;
+h3 div.inform,
+p div.inform{
+	text-alighn: right;
 }
 
-p div.site{
+div.site{
 	color: blue;
 	text-size: 1.1em;
 	margint-top: 1em;
 	margin-bottom: 1em;
 }
 
-p div.us_info {
+div.us_info {
 	text-size: 0.9em;
 }
 

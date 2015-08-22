@@ -238,12 +238,12 @@ User Registered Flow:
 		}
 
 		if(flag){
-			model.addAttribute("myResult", "<H1>Company Added Success</H1>");
-			return "company/Company_search_form";
+			model.addAttribute("myResult", "<H3>Company Added Success. Please log in</H3>");
+			return "company/CompanySignIn";
 		}
 		else{
-			model.addAttribute("myResult", "<H1>This Company - "+C_Name+".  Already Exist!</H1>");
-			return "company/Company_search_form";
+			model.addAttribute("meResult", "<H3>This Company - "+C_Name+".  Already Exist!</H3>");
+			return "company/CompanySignIn";
 		}
 	}
 	//-------------Use Case Company Sign up 3.1.2-----------

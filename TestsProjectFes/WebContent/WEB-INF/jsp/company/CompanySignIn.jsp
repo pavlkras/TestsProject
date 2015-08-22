@@ -32,6 +32,10 @@
 			<div id="formDiv">
 				<br>
 				<h2>Company LogIn</h2>
+				<br>	
+					<script type="text/javascript">
+						document.write("${myResult}");						
+					</script>		
 				<br>
 				<form class='myButton' action="loginProcessing">
 					Login: <input type="text" name="companyName" size="24"><br>
@@ -44,7 +48,7 @@
 				<br>
 				<p>
 					<script type="text/javascript">
-						document.write("${result}");
+						document.write("${result}");						
 					</script>
 				</p>
 			</div>
