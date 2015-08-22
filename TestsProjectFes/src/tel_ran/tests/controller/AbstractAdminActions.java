@@ -190,7 +190,7 @@ public abstract class AbstractAdminActions {
 			message = "<p class='outTextInfo'> Error adding the question, the question already exists. Try again</p>";// out
 		}
 		}
-		model.addAttribute("logedUser",message);
+		model.addAttribute("result",message);
 		addingPage(path);
 		return path; // return too page after action
 	}

@@ -465,7 +465,7 @@ f)	5 photos made during the test	------ IGOR ------*/
 			String fileLocationLink, String correctAnswer, String numberAnswersOnPicture, 
 			String at1, String at2, String at3, String at4,  Model model)
 	{	
-		System.out.println("I'm HERE!");
+		
 		return super.AddProcessingPage(questionText, descriptionText, 
 				codeText, category1, metaCategory, category2, compcategory, levelOfDifficulty, 
 				fileLocationLink, correctAnswer, numberAnswersOnPicture, at1, at2, at3, at4, model, "company/CompanyCreateQuestion"); // - Page = MaintenanceAddingPage

@@ -140,7 +140,7 @@ import="java.util.*, java.text.*, tel_ran.tests.controller.AbstractAdminActions"
 
         <div>
             <label>&nbsp;</label>
-            
+            <br>
             <input name="button_send" id="button_send"
 			type="submit" value="Add To DataBase">
  		</div>
