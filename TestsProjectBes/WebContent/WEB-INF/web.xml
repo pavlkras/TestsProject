@@ -46,14 +46,14 @@
     <url-pattern>*.service4</url-pattern>
   </servlet-mapping>  
   
-  <listener>
+  <!--   <listener>
     <listener-class>
         org.springframework.web.context.ContextLoaderListener
     </listener-class>
-  </listener>
+  </listener> 
   <context-param>
     <param-name>contextConfigLocation</param-name>
     <param-value>/WEB-INF/beans.xml</param-value>
-  </context-param>
+  </context-param> -->
   
 </web-app>
