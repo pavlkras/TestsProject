@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -453,7 +454,6 @@ f)	5 photos made during the test	------ IGOR ------*/
 	
 	// ------------------------- ADDING QUESTION. MANUAL --------- //
 	
-	/**************************************/
 	@RequestMapping({ "/company_add" })
 	public String addingPage() {		
 		return super.addingPage("company/CompanyCreateQuestion"); // - Page = MaintenanceAddingPage
@@ -475,10 +475,30 @@ f)	5 photos made during the test	------ IGOR ------*/
 	// ----------------------------- UPDATE PAGE ------------------------- //
 	
 	@RequestMapping({ "/company_questions_update" })
-	public String UpdatePage(Model model) {
+	public String updatePage(String view_mode, Model model) {
 		clearStringBuffer();				
 		AutoInformationTextHTML(buildingCategory1CheckBoxTextHTML());
-		String res = adminService.getAllQuestionsList(true, null, null);
+		String res;	
+		if(view_mode==null) {
+			res = adminService.getAllQuestionsList(true, null, null);
+		} else {
+		switch(view_mode) {
+		
+		case "all": 
+			res = adminService.getAllQuestionsList(null, null, null);
+			break;
+		case "user":
+			res = adminService.getAllQuestionsList(true, null, null);
+			break;
+		case "auto" :
+			res = adminService.getAllQuestionsList(false, null, null);
+			break;
+		default:
+			res = adminService.getAllQuestionsList(true, null, null);
+		
+		}
+		}
+		
 		
 		model.addAttribute(RESULT, res);		
 		
@@ -487,12 +507,18 @@ f)	5 photos made during the test	------ IGOR ------*/
 //		return super.updatePage(path, model);
 	}
 	
-	@RequestMapping({"/question_see"})
-	public String seeQuestion(String type, Model model) {
-		String idQuestion = type.replace("/", "");
-		System.out.println(idQuestion);
-		
-		return null;
+	
+	
+	
+	
+	@RequestMapping({"/question_see" + "/{questId}"})
+	public String seeQuestion(@PathVariable long questId) {
+		System.out.println(questId);
+						
+		return adminService.getJsonQuestionById(questId);
 	}
+	
+	// ----------------------------- SEE THE QUESTION -------------------------- //
+
 	
 }
