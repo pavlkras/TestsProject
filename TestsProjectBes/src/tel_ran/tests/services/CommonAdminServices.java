@@ -674,33 +674,46 @@ public abstract class CommonAdminServices extends CommonServices implements
 	@Override
 	public String getAllQuestionsList(Boolean typeOfQuestion, String metaCategory, String category1) {
 		StringBuilder query = new StringBuilder("SELECT c FROM EntityQuestionAttributes c WHERE ");
-		
+		int num = 0;
+		int numOfAnd = 0;
 		String limit = getLimitsForQuery();
-		if(limit!=null)
-			query.append("c.").append(limit).append(" AND ");		
+		if(limit!=null) {
+			query.append("c.").append(limit);
+			num++;			
+		}
 		
 		if(metaCategory==null) {
-			if(typeOfQuestion) {
+			if(typeOfQuestion!=null) {			
+				numOfAnd = checkIfAnd(num, numOfAnd, query);
+				num++;
+				
+				if(typeOfQuestion) {		
+				
 				query.append("(c.metaCategory='").append(IPublicStrings.COMPANY_AMERICAN_TEST)
 						.append("' OR c.metaCategory='").append(IPublicStrings.COMPANY_QUESTION)
 						.append("')");
-			} else {
-				List<String> cat = TestProcessor.getMetaCategory();
-				int count = cat.size();
-				query.append("(");
-				for(String c : cat) {
-					query.append("c.metaCategory='").append(c).append("' OR ");					
+				} else {
+					List<String> cat = TestProcessor.getMetaCategory();
+					int count = cat.size();
+					query.append("(");
+					for(String c : cat) {
+						query.append("c.metaCategory='").append(c).append("' OR ");					
+					}
+					int len = query.length();						
+					query.delete(len-4, len);
+					query.append(")");				
 				}
-				int len = query.length();
-				query.substring(0, len-4);				
-				query.append(")");				
-			}						
+			}
 		} else {
+			numOfAnd = checkIfAnd(num, numOfAnd, query);			
 			query.append("c.metaCategory=").append(metaCategory);
+			num++;
 		}
 		
 		if(category1!=null) {
-			query.append(" AND c.category1=").append(category1);
+			numOfAnd = checkIfAnd(num, numOfAnd, query);	
+			query.append("c.category1=").append(category1);
+			num++;
 		}
 		
 		query.append(" ORDER BY c.id DESC");
@@ -725,15 +738,27 @@ public abstract class CommonAdminServices extends CommonServices implements
 		return resultJsn.toString();
 	}
 	
+	private int checkIfAnd(int num, int andNum, StringBuilder str) {
+		if(andNum < num) {
+			andNum++;
+			str.append(" AND ");
+		}
+		return andNum;
+	}
+	
 	private JSONObject getShortQuestionJson(EntityQuestionAttributes eqa) throws JSONException {
 		JSONObject jsn = null;
 		if(eqa!=null) {
 			jsn = getPartOfJSON(eqa);	
 			String shrt = eqa.getDescription();
-			int len = shrt.length();
-			if(len>ICommonData.SHORT_DESCR_LEN) 
-				shrt = shrt.substring(0, ICommonData.SHORT_DESCR_LEN);		
-			jsn.put(ICommonData.JSN_QUESTION_SHORT_DESCRIPTION, shrt);
+			if(shrt==null) {
+				jsn.put(ICommonData.JSN_QUESTION_SHORT_DESCRIPTION, "See the image");
+			} else {
+				int len = shrt.length();
+				if(len>ICommonData.SHORT_DESCR_LEN) 
+					shrt = shrt.substring(0, ICommonData.SHORT_DESCR_LEN);		
+				jsn.put(ICommonData.JSN_QUESTION_SHORT_DESCRIPTION, shrt);
+			}
 			System.out.println("JSON " + jsn.toString()); // ---------------------------------------- SYSO --- !!!!!!!!!!!!!!!!!!!!!!!!!!
 		} 
 		return jsn;
