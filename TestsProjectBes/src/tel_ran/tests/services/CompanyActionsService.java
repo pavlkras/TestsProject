@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -276,113 +277,135 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 	////-------------- Method for test case group AlexFoox Company return id of unique set questions ----------// BEGIN  //
 	@SuppressWarnings("unchecked")	
 	@Override  
-	public List<Long> createSetQuestions(String metaCategory, String categories1, String levelsOfDifficulty, int nQuestion) {			
-		
-			List<Long> result = new ArrayList<Long>();
-			if(nQuestion > 0 && metaCategory != null){		
-				String[] categoryArray = metaCategory.split(",");	
-//				System.out.println("Category: " + Arrays.toString(categoryArray));
-				String[] levelsArray = levelsOfDifficulty.split(",");
-//				System.out.println("Levels: " + Arrays.toString(levelsArray));
-				String[] categories1Array;
-				if(categories1!=null) {
-					categories1Array = categories1.split(",");
-				} else {
-					categories1Array = new String[categoryArray.length];
-					Arrays.fill(categories1Array, ICommonData.NO_CATEGORY1);
-				}
-//				System.out.println("Categories1: " + Arrays.toString(categories1Array));
-				
-				StringBuilder condition;
-				Query query;
-				EntityCompany ec = getCompany();
-				List<Long> allAttributeQuestionsId;
-							
-				int typeNumbers = categoryArray.length;			
-//				System.out.println("Number of categories " + typeNumbers);
-				long step = nQuestion/typeNumbers;
-//				System.out.println("Step " + step);
-				long r = nQuestion % typeNumbers;
-//				System.out.println("Rest " + r);
-				long nGeneratedQuestion = 0L;
-				int count = typeNumbers;
-				
-				
-				for (int i = 0; i < typeNumbers; i++ ) {
-					
-					condition = new StringBuilder("SELECT c.id FROM EntityQuestionAttributes c WHERE ");
-					condition.append("c.metaCategory=?1 AND c.levelOfDifficulty=?2");
-													
-					if(ec==null) {
-						condition.append(" AND c.companyId IS NULL");
-					} else {
-						condition.append(" AND c.companyId=?3");						
-					}
-					
-					// if category is specified
-					if(!categories1Array[i].equals(ICommonData.NO_CATEGORY1)) {
-						condition.append(" AND c.category1=?4");
-					}
-					
-					query = em.createQuery(condition.toString());
-					
-					query.setParameter(1, categoryArray[i]);
-										
-					query.setParameter(2, Integer.parseInt(levelsArray[i]));	
-					
-					if(ec!=null) {					
-						query.setParameter(3, ec);
-					}
-	
-					// if category is specified
-					if(!categories1Array[i].endsWith(ICommonData.NO_CATEGORY1)) {
-						query.setParameter(4, categories1Array[i]);
-					}
-					
-//					System.out.println("Query : " + query.toString());
-					
-					if(i == typeNumbers-1) 
-						step = step +r;
-					
-					allAttributeQuestionsId = query.getResultList();
-					count = count--;
-					
-					if(allAttributeQuestionsId == null) {
-//						System.out.println("Query is empty");
-						if(count-i-1>0) {
-							step = (nQuestion - nGeneratedQuestion) / (count-i-1);
-							r = (nQuestion - nGeneratedQuestion) % (count-i-1);
-//							System.out.println("New step = " + step + "; New rest = " + r);
-						} 
-						
-					} else if (allAttributeQuestionsId.size() < step) {
-						
-						long resultSize = (long) allAttributeQuestionsId.size();
-//						System.out.println("Query is too small. There're only " + resultSize + "questions");
-						result.addAll(randomAttributeQuestionsId(allAttributeQuestionsId, resultSize));
-						nGeneratedQuestion += resultSize;
-						
-						if(count-i-1>0) {
-							step = (nQuestion - nGeneratedQuestion) / (count-i-1);
-							r = (nQuestion - nGeneratedQuestion) % (count-i-1);
-//							System.out.println("New step = " + step + "; New rest = " + r);
-						}
-						
-					} else {					
-						
-						result.addAll(randomAttributeQuestionsId(allAttributeQuestionsId, step));
-						nGeneratedQuestion += step;
-					}			
-					
-//					System.out.println("Generated questions = " + nGeneratedQuestion);
-//					System.out.println("Count = " + count);
-//					System.out.println("Index i = " + i);
-				}			
-	
-			}
-			return result;
+	public List<Long> createSetQuestions(String metaCategory, String categories1, String levelsOfDifficulty, int nQuestion) 
+		{				
+			List<Long> result = null; 			
+			return createSetQuestions(metaCategory, categories1, levelsOfDifficulty, nQuestion, result);
 		}
 
+	private List<Long> createSetQuestions(String metaCategory, String categories1, String levelsOfDifficulty, int nQuestion, 
+			List<Long> preparedList) {		
+		
+		if(nQuestion > 0 && metaCategory != null && levelsOfDifficulty!=null){
+			int size = 0;
+			int newSize = 0;
+			HashSet<Long> allQuestId = new HashSet<Long>();
+			if(preparedList!=null) {				 
+				size = preparedList.size(); 				
+				allQuestId.addAll(preparedList);
+				newSize = allQuestId.size();
+				if(size > newSize) 
+					nQuestion += newSize = size;
+			}
+			
+			String[] categoryArray = metaCategory.split(",");	
+//			System.out.println("Category: " + Arrays.toString(categoryArray));
+			
+			String[] levelsArray = levelsOfDifficulty.split(",");
+//			System.out.println("Levels: " + Arrays.toString(levelsArray));
+			String[] categories1Array;
+			if(categories1!=null) {
+				categories1Array = categories1.split(",");
+			} else {
+				categories1Array = new String[categoryArray.length];
+				Arrays.fill(categories1Array, ICommonData.NO_CATEGORY1);
+			}
+//			System.out.println("Categories1: " + Arrays.toString(categories1Array));
+			
+			StringBuilder condition;
+			Query query;
+			EntityCompany ec = getCompany();
+			List<Long> allAttributeQuestionsId;
+						
+			int typeNumbers = categoryArray.length;			
+//			System.out.println("Number of categories " + typeNumbers);
+			long step = nQuestion/typeNumbers;
+//			System.out.println("Step " + step);
+			long r = nQuestion % typeNumbers;
+//			System.out.println("Rest " + r);
+			long nGeneratedQuestion = 0L;
+			int count = typeNumbers;
+			
+			
+			for (int i = 0; i < typeNumbers; i++ ) {
+				
+				condition = new StringBuilder("SELECT c.id FROM EntityQuestionAttributes c WHERE ");
+				condition.append("c.metaCategory=?1 AND c.levelOfDifficulty=?2");
+												
+				if(ec==null) {
+					condition.append(" AND c.companyId IS NULL");
+				} else {
+					condition.append(" AND c.companyId=?3");						
+				}
+				
+				// if category is specified
+				if(!categories1Array[i].equals(ICommonData.NO_CATEGORY1)) {
+					condition.append(" AND c.category1=?4");
+				}
+				
+				query = em.createQuery(condition.toString());
+				
+				query.setParameter(1, categoryArray[i]);
+									
+				query.setParameter(2, Integer.parseInt(levelsArray[i]));	
+				
+				if(ec!=null) {					
+					query.setParameter(3, ec);
+				}
+
+				// if category is specified
+				if(!categories1Array[i].endsWith(ICommonData.NO_CATEGORY1)) {
+					query.setParameter(4, categories1Array[i]);
+				}
+				
+//				System.out.println("Query : " + query.toString());
+				
+				if(i == typeNumbers-1) 
+					step = step +r;
+				
+				allAttributeQuestionsId = query.getResultList();
+				count = count--;
+				
+				if(allAttributeQuestionsId == null) {
+//					System.out.println("Query is empty");
+					if(count-i-1>0) {
+						step = (nQuestion - nGeneratedQuestion) / (count-i-1);
+						r = (nQuestion - nGeneratedQuestion) % (count-i-1);
+//						System.out.println("New step = " + step + "; New rest = " + r);
+					} 
+					
+				} else if (allAttributeQuestionsId.size() < step) {
+					
+					long resultSize = (long) allAttributeQuestionsId.size();
+//					System.out.println("Query is too small. There're only " + resultSize + "questions");
+					int resPlus = randomAttributeQuestionsId(allAttributeQuestionsId, resultSize, allQuestId);
+					nGeneratedQuestion += resultSize;
+					
+					if(count-i-1>0) {
+						step = (nQuestion - nGeneratedQuestion) / (count-i-1);
+						r = (nQuestion - nGeneratedQuestion) % (count-i-1);
+//						System.out.println("New step = " + step + "; New rest = " + r);
+					}
+					
+				} else {					
+					
+					int resPlus = randomAttributeQuestionsId(allAttributeQuestionsId, step, allQuestId);
+					nGeneratedQuestion += step;
+				}			
+				
+//				System.out.println("Generated questions = " + nGeneratedQuestion);
+//				System.out.println("Count = " + count);
+//				System.out.println("Index i = " + i);
+			}	
+			List<Long> result = new ArrayList<Long>();
+			result.addAll(allQuestId);
+			return result;
+		}
+		
+		return null;
+		
+	}
+	
 	@Transactional(readOnly=false, propagation=Propagation.REQUIRED)
 	private int testFromQuestionList(List<Long> questionIdList, EntityPerson ePerson, String pass, String metaCategories, String categories1, 
 			String complexityLevel, String nQuestions) {
@@ -397,7 +420,7 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 			listSize = questionIdList.size();
 		
 		if (listSize < numberQuestions) {
-			List<Long> autoQuestions = this.createSetQuestions(metaCategories, categories1, complexityLevel, (numberQuestions - listSize));
+			List<Long> autoQuestions = this.createSetQuestions(metaCategories, categories1, complexityLevel, (numberQuestions - listSize), questionIdList);
 			if(autoQuestions == null) {				
 				return 1;
 				}
@@ -424,35 +447,32 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 	}
 	
 	//// TO DO ! CHECK UNIQUE !!!!!!!!!!!!!!!!!	
-	private static List<Long> randomAttributeQuestionsId(List<Long> allAttributeQuestionsId, Long nQuestion){
-		List<Long> result = new ArrayList<Long>();
-		if(allAttributeQuestionsId.size() > 0){
-			if(nQuestion >= allAttributeQuestionsId.size()){
-				result = allAttributeQuestionsId;
-			}else{
-				for(int i=0; i<nQuestion;){	
-					Random rnd = new Random();
-					int rand =  rnd.nextInt(allAttributeQuestionsId.size());							
-					long questionAttributeId = allAttributeQuestionsId.get(rand);
-					if(result.size() > 1){
-						int flag = 0;          
-						for(Long num: result){
-							if(num == questionAttributeId){
-								flag = 1;
-							}
-						}	
-						if(flag == 0){
-							result.add(questionAttributeId);
-							i++;	
-						}						
-					}else{
-						result.add(questionAttributeId);
-						i++;
+	private static int randomAttributeQuestionsId(List<Long> allAttributeQuestionsId, Long nQuestion, 
+			HashSet<Long> listOfId){
+		
+		int startSize = listOfId.size();
+		int listSize = allAttributeQuestionsId.size();
+				
+		if(allAttributeQuestionsId.size() > 0){			
+			for(int i=0; i<nQuestion;){	
+				Random rnd = new Random();
+				int rand =  rnd.nextInt(listSize);							
+				long questionAttributeId = allAttributeQuestionsId.get(rand);
+				if(listOfId.add(questionAttributeId)) {
+					i++;
+				} else {
+					listSize--;
+					if(listSize < nQuestion-i){
+						listOfId.addAll(allAttributeQuestionsId);
+						break;
 					}
-				}				
+				}					
+								
 			}
 		}
-		return result;
+		
+		return listOfId.size() - startSize;
+		
 	}
 
 	@Transactional(readOnly=false, propagation=Propagation.REQUIRED)

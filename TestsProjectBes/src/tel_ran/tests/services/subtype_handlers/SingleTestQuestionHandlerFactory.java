@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 import tel_ran.tests.entitys.EntityQuestionAttributes;
 import tel_ran.tests.processor.TestProcessor;
+import tel_ran.tests.services.common.IPublicStrings;
 import tel_ran.tests.services.inner_result.dataobjects.InnerResultDataObject;
 import tel_ran.tests.services.utils.SpringApplicationContext;
 
@@ -43,7 +44,8 @@ public class SingleTestQuestionHandlerFactory {
 	}
 
 	private static ITestQuestionHandler getTestQuestionHandler(String metaCategory) {
-		metaCategory = TestProcessor.getMetaCategoryKeyByPublicName(metaCategory);
+		if(!metaCategory.equals(IPublicStrings.COMPANY_AMERICAN_TEST) && !metaCategory.equals(IPublicStrings.COMPANY_QUESTION))
+			metaCategory = TestProcessor.getMetaCategoryKeyByPublicName(metaCategory);
 		return (ITestQuestionHandler) SpringApplicationContext.getBean(metaCategory);
 //		try {
 //			return (ITestQuestionHandler) Class.forName(map.get(metaCategory)).newInstance();
