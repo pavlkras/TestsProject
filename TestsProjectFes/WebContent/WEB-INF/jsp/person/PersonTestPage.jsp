@@ -10,7 +10,6 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <link rel="stylesheet"
 	href="/TestsProjectFes/static/css_folder/person_styles/WebCamStyle.css">
-<script src="/TestsProjectFes/static/js_folder/person_scripts/test_control_mode.js"></script> 
 <script src="/TestsProjectFes/static/js_folder/person_scripts/testController.js"></script>
 </head>
 <body ng-app="testPage" ng-controller="QuestionTestController" ng-init="token='${token}'"> 
