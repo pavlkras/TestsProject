@@ -144,22 +144,20 @@
 								class="table table-striped table-hover ">
 								<thead>
 									<tr>
-										<th st-ratio="20" st-sort="personName">First Name</th>
-										<th st-ratio="20" st-sort="personSurname">Second Name</th>
-										<th st-ratio="15" st-sort="testCategory">Test Category</th>
-										<th st-ratio="15" st-sort="testDate">Test Date</th>
-										<th st-ratio="15" st-sort="testName">Test Name</th>
-										<th st-ratio="15">Details</th>
+										<th class="text-left" st-ratio="20" st-sort="personName">First Name</th>
+										<th class="text-left" st-ratio="20" st-sort="personSurname">Second Name</th>
+										<th class="text-left" st-ratio="20" st-sort="testDate">Test Date</th>
+										<th class="text-left" st-ratio="20" st-sort="testCategory">% Of Right Answers</th>
+										<th class="text-left" st-ratio="20">Details</th>
 									</tr>
 								</thead>
 								<tbody>
 									<tr ng-repeat="x in rowCollection">
-										<td st-ratio="20">{{ x.personName }}</td>
-										<td st-ratio="20">{{ x.personSurname }}</td>
-										<td st-ratio="15">{{ x.testCategory }}</td>
-										<td st-ratio="15">{{ x.testDate }}</td>
-										<td st-ratio="15">{{ x.testName }}</td>
-										<td st-ratio="15" ng-click="showDetails(x.testid)"><a
+										<td class="text-left" st-ratio="20">{{ x.personName }}</td>
+										<td class="text-left" st-ratio="20">{{ x.personSurname }}</td>
+										<td class="text-left" st-ratio="20">{{ x.testDate }}</td>
+										<td class="text-left" st-ratio="20">{{ x.persentOfRightAnswers }}</td>
+										<td class="text-left" st-ratio="20" ng-click="showDetails(x.testid)"><a
 											href="#">Details</a></td>
 									</tr>
 								</tbody>
@@ -192,10 +190,6 @@
         			duration
 	      		</li>
     	  		<li class="list-group-item">
-        			<span class="badge">{{testDetails.complexityLevel}}</span>
-        			complexityLevel
-	      		</li>
-    	  		<li class="list-group-item">
         			<span class="badge">{{testDetails.amountOfCorrectAnswers}}</span>
         			amountOfCorrectAnswers
 	      		</li>
@@ -203,10 +197,7 @@
         			<span class="badge">{{testDetails.amountOfQuestions}}</span>
         			amountOfQuestions
 	      		</li>
-    	  		<li class="list-group-item">
-        			<span class="badge">{{testDetails.persentOfRightAnswers}}%</span>
-        			percentage of right answers
-	      		</li>
+    	  		
 			</ul>
 		</div>
 	</div>
