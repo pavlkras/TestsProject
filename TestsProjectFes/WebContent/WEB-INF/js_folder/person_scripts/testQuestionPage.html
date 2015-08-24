@@ -1,6 +1,4 @@
 <form name="questionForm" novalidate ng-submit="getQuestion(answer.name);">
-     <table>
-        <tr>
             <table>
                 <tr><th colspan="2"><label>Question&nbsp;</label>{{numberQuestion+1}}</th></tr><br>
                 <tr ng-show="mySwitchImage"><td colspan="2">{{text}}</td></tr>
@@ -21,6 +19,4 @@
                     <td>&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" value="Send Answer" ng-show="answer.name"></td>
                 </tr>
              </table>
-        </tr>
-   	 </table>
 </form>
