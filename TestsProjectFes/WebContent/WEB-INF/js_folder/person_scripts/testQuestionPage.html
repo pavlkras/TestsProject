@@ -5,25 +5,29 @@
                 <table>
                     <tr><th colspan="2"><label>Question&nbsp;</label>{{numberQuestion+1}}</th></tr>
                     <tr ng-show="mySwitchImage"><td colspan="2">{{text}}</td></tr>
-                    <tr ng-show="mySwitchImage"><td colspan="2"><img ng-src="{{image}}" height="170" width="250" alt="Image is not supported"></td></tr>
-                    <br><br>
+                    <tr ng-show="mySwitchImage"><td colspan="2"><img ng-src="{{image}}" height="400" width="600" alt="Image is not supported"></td></tr>
+                <table>
+                <table ng-show="mySwitchAmericanSystemTestQuestion">    
                     <tr>
-                        <td ng-repeat="n in answers"><p ng-show="mySwitchAmericanSystemTestQuestion">{{n}}<input type="radio" value={{n}} ng-model="answer.name">&nbsp;&nbsp;</p></td>
+                        <td ng-repeat="n in answers"><p>{{n}}<input type="radio" value={{n}} ng-model="answer.name">&nbsp;&nbsp;</p></td>
+                        <td>
+                        	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        	<input type="submit" value="Send Answer" ng-show="answer.name">
+                        </td>
                     </tr>
                 </table>
-                <br><br>
-        <table>
+                <table>
                     <tr>
                         <div ng-show="mySwitchCodeTestQuestion">                    
                         <label>Answer:</label>
                         <br>
-                        <textarea ng-model="answer.name" cols="50" rows="10"></textarea>
+                        <textarea ng-model="answer.name" cols="70" rows="10"></textarea>
+                        <br>
+                        <input type="submit" value="Send Answer" ng-show="answer.name">
                         </div>
                     </tr>
                 </table>
             </td>
         </tr>
     </table>
-    <br><br>
-    <input type="submit" value="Send Answer" ng-show="answer.name"> <br><br>
 </form>
