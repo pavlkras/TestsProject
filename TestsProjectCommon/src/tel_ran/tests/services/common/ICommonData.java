@@ -8,6 +8,8 @@ public interface ICommonData {
 	static final String DATE_FORMAT = "yyyy-MM-dd";
 	static final String delimiter = ",";
 	static final int TOKEN_VALID_IN_SECONDS = 300;
+	static final String URI_GET_TEST = "/TestsProjectBes/persontest/saveprev_getnext";
+	static final String HEADER_AUTORIZATION = "Authorization";
 		
 	static final String NO_CATEGORY1 = "null";
 	
@@ -34,6 +36,7 @@ public interface ICommonData {
 	static final String JSN_QUESTION_TEXT = "questionText"; // common question = title of question = String	
 	static final String JSN_QUESTION_DESCRIPTION = "description"; // long text with the question's body = String
 	static final String JSN_ANSWER_OPTIONS = "answers"; //JSONArray for answers in American Test = List	
+	static final String JSN_ONE_OPTION = "option"; 
 	static final String JSN_CODE_SIMPLE = "code"; // stub for programming tasks = String
 	static final String JSN_CORRECT_ANSWER_CHAR = "correctAnswer"; // char of the correct answer in American Test = String
 	static final String JSN_ANSWERS_NUMBER = "answerNumber"; // number of answer options for American test = int
@@ -44,6 +47,42 @@ public interface ICommonData {
 	static final String JSN_DIFFICULTY_LVL = "level"; //int
 	static final int SHORT_DESCR_LEN = 100;
 	
+	// ----------------------- TEST FOR PERSON -------------------------------------------------------- //
+	
+	// FIELDS IN SHORT VERSION OF QUESTIONS INCLUDES:	
+	static final String JSN_INTEST_QUESTION_ID = "testQuestId"; // long
+	static final String JSN_INTEST_INDEX = JSN_QUESTION_INDEX; //
+	static final String JSN_INTEST_QUESTION_TEXT = "text"; // String = short global question
+	static final String JSN_INTEST_IMAGE = JSN_IMAGE; // Base64 
+	static final String JSN_INTEST_TYPE = "type"; //int
+	static final String JSN_INTEST_ONE_ANSWER_OPTION = "answerOption"; // String 
+	static final String JSN_INTEST_ALL_ANSWER_OPTIONS = JSN_ANSWER_OPTIONS; // JSONArray
+	static final String JSN_INTEST_CODE = JSN_CODE_SIMPLE; // String
+	static final String JSN_INTEST_RESULTS_LIST = JSN_LIST_OF_RESULT; // JSONArray
+	static final String JSN_INTEST_DESCRIPTION = "description"; // String
+	static final String JSN_INTEST_OPTIONS_CHARS = "options"; //JSONArray
+	static final String JSN_INTEST_STATUS = "status";
+	
+	//FIELDS IN THE RESPONSE FROM CLIENT IN TEST
+	static final String JSN_INTEST_ANSWER = "answer"; // String
+	static final String JSN_INTEST_CHAR = "char"; //String
+	
+	//TYPES FOR SHOWING QUESTIONS
+	static final int QUESTION_TYPE_ALL_IN_IMAGE = 1; //no descriptions and answers options
+	static final int QUESTION_TYPE_CODE = 2; //no image; there're description and field with stub
+	static final int QUESTION_TYPE_AMERICAN_TEST = 3; //can be description, image and answers options
+	static final int QUESTION_TYPE_OPEN = 4; //only description and image and text field
+	
+		
+	// -------------------------- TEST RESULTS FOR COMPANY ------------------------------ //
+	
+	static final String JSN_TEST_IS_CHECKED = "checked"; // boolean = if the test was checked by the company
+	static final String JSN_TEST_CORRECT_ANSWERS = "correct"; // int - number of correct answers
+	static final String JSN_TEST_INCORRECT_ANSWERS = "incorrect"; //int - number of incorrec answers
+	static final String JSN_TEST_UNANSWERED_ANSWERS = "unanswered"; //int
+	static final String JSN_TEST_UNCHECKED_ANSWERS = "unchecked"; //int
+	static final String JSN_TEST_LIST_ANSWERS_TO_CHECK = "toCheck"; //array of long id
+	static final String JSN_TEST_QUESTION_ID = "questionId"; //long - id for EntityTestQuestion to check
 	
 	static final String JSN_TEST_ID = "id"; // id of test = long
 	static final String JSN_TEST_QUESTION_NUMBER = "question_num"; // number of question in the test = int
@@ -54,7 +93,7 @@ public interface ICommonData {
 	
 	
 	
-	// -------------------- MAP - FIELDS ---------------------------------------------- //
+	// -------------------- JSN - FIELDS ---------------------------------------------- //
 	
 	static final String MAP_ACCOUNT_NAME = "name";
 	static final String MAP_ACCOUNT_WEB = "website"; // only for compamy
@@ -64,5 +103,11 @@ public interface ICommonData {
 	static final String MAP_ACCOUNT_FIRST_NAME = "first_name"; // only for users
 	static final String MAP_ACCOUNT_LAST_NAME = "last_name"; // only for users
 	
+	// ------------------- STATUS FOR QUESTIONS IN THE TEST ---------------------------- //
+	
+	static final int STATUS_CORRECT = 3;
+	static final int STATUS_INCORRECT = 2;
+	static final int STATUS_UNCHECKED = 1;
+	static final int STATUS_NO_ANSWER = 0;
 	
 }
