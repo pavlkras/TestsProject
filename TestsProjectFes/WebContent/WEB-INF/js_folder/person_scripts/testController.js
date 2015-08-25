@@ -5,7 +5,7 @@
 var app = angular.module("testPage", []);
 
 app.controller("QuestionTestController", function($scope, $http) {
-	$scope.mySwitchStartTest = false;
+	$scope.mySwitchStartTest = true;
 	$scope.mySwitchShowTest = false;
 	$scope.mySwitchEndTest = false;
 	$scope.mySwitchAmericanSystemTestQuestion = false;
@@ -20,21 +20,27 @@ app.controller("QuestionTestController", function($scope, $http) {
 
 	$scope.getQuestion = function(userAnswer) {
 		$scope.take_photo();
-		var link = "/TestsProjectBes/persontest/saveprev_getnext";
-		$scope.httpConfig = {
-			headers : {
-				'Authorization' : $scope.token
-			}
-		};
+		//var link = "/TestsProjectBes/getNextpersontest/saveprev_getnext";
+		var link = 'http://localhost:8080/TestsProjectFes/PersonalActions/getNext';
+		
+//		$scope.httpConfig = {
+//			headers : {
+//				'Authorization' : $scope.token
+//			}
+//		};
+				
 		var dataObj = {
-			answer : userAnswer,
-			index: $scope.numberQuestion
+			"answer" : userAnswer,
+			"index": $scope.numberQuestion,			
 		};
-
-		$http.post(link, dataObj, $scope.httpConfig).success(
+		
+		
+		$http.post(link, dataObj).success(					
 				function(data, status, headers, config) {
+					
+					
 					console.log("Success - request result to Rest");
-					$scope.question = data;
+					$scope.question = data;					
 
 					
 //					if ($scope.question == null) {
@@ -44,6 +50,7 @@ app.controller("QuestionTestController", function($scope, $http) {
 //					
 //					} else {
 						//End of Test
+					
 						if($scope.question.isPassed){
 							console.log($scope.question.error);
 							$scope.mySwitchShowTest = false;
@@ -64,7 +71,7 @@ app.controller("QuestionTestController", function($scope, $http) {
 							//Type of question - AmericanSystemQuestion
 								case 1: {
 									console.log("case 1");
-									$scope.answers = $scope.question.answers;
+									$scope.answers = $scope.question.options;
 	//								$scope.nAnswers = $scope.getAnswers($scope.numberAnswers);
 									$scope.mySwitchAmericanSystemTestQuestion = true;
 									$scope.mySwitchCodeTestQuestion = false;
@@ -84,11 +91,12 @@ app.controller("QuestionTestController", function($scope, $http) {
 							$scope.answer = {
 								name : null
 							};
-						}
-				//	}
+//						}
+					}
 
 				}).error(function(data, status, headers, config) {
 			console.log("Error - request result to Rest");
+			alert("Error! " + status);
 		});
 	};
 

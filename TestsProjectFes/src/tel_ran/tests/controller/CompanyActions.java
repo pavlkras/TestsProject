@@ -514,11 +514,7 @@ f)	5 photos made during the test	------ IGOR ------*/
 		return path;
 //		return super.updatePage(path, model);
 	}
-	
-	
-	
-	
-	
+		
 	@RequestMapping({"/question_see" + "/{questId}"})
 	public String seeQuestion(@PathVariable long questId) {
 		System.out.println(questId);
