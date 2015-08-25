@@ -8,8 +8,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import tel_ran.tests.entitys.EntityQuestionAttributes;
+import tel_ran.tests.entitys.EntityTestQuestions;
+import tel_ran.tests.services.common.ICommonData;
 import tel_ran.tests.services.inner_result.dataobjects.InnerResultDataObject;
 import tel_ran.tests.services.subtype_handlers.ITestQuestionHandler;
 import tel_ran.tests.services.subtype_handlers.SingleTestQuestionHandlerFactory;
@@ -28,17 +32,18 @@ public class PersonTestHandler implements IPersonTestHandler {
 		this.em = em;		
 		this.companyId = companyId;
 		this.testId = testId;
-		String json = FileManagerService.getJson(companyId, testId);
 		
-		if( json==null || json=="" ){
-			jsonTestResults = new JSONArray();
-		}else{
-			try {
-				jsonTestResults = new JSONArray(json);
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-		}
+//		String json = FileManagerService.getJson(companyId, testId);
+//		
+//		if( json==null || json=="" ){
+//			jsonTestResults = new JSONArray();
+//		}else{
+//			try {
+//				jsonTestResults = new JSONArray(json);
+//			} catch (JSONException e) {
+//				e.printStackTrace();
+//			}
+//		}
 		
 	}
 	
@@ -73,24 +78,39 @@ public class PersonTestHandler implements IPersonTestHandler {
 	public int length() {
 		return jsonTestResults.length();
 	}
-
+	
 	@Override
+	@Transactional(readOnly=false, propagation = Propagation.REQUIRED)
 	public boolean setAnswer(String answer) {
-
-		//TODO Check
 		boolean res = true;
 		try {
-			JSONObject answerJsonObj = new JSONObject(answer); 
-			int index = answerJsonObj.getInt(KEY_INDEX);
-			JSONObject jsonObj = jsonTestResults.getJSONObject(index);
-			ITestQuestionHandler testQuestionHandler = getInstanceFromJson(jsonObj);
-			testQuestionHandler.setPersonAnswer(answerJsonObj);
-			jsonTestResults.put(index, new JSONObject(testQuestionHandler.toJsonString()));
-		} catch (JSONException e) {
-			//e.printStackTrace();
+			JSONObject jsn = new JSONObject(answer);
+			long etqId = jsn.getLong(ICommonData.JSN_INTEST_QUESTION_ID);
+			EntityTestQuestions etq = em.find(EntityTestQuestions.class, etqId);
+			ITestQuestionHandler testQuestionHandler = SingleTestQuestionHandlerFactory.getInstance(etq);
+			testQuestionHandler.setEntityQuestionAttributes(etq.getEntityQuestionAttributes());
+			testQuestionHandler.setCompanyId(companyId);
+			testQuestionHandler.setTestId(testId);
+			testQuestionHandler.setPersonAnswer(jsn, etqId);
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 			res = false;
 		}
-		save();
+		
+		//TODO Check		
+//		try {
+//			JSONObject answerJsonObj = new JSONObject(answer); 
+//			int index = answerJsonObj.getInt(KEY_INDEX);
+//			JSONObject jsonObj = jsonTestResults.getJSONObject(index);
+//			ITestQuestionHandler testQuestionHandler = getInstanceFromJson(jsonObj);
+//			testQuestionHandler.setPersonAnswer(answerJsonObj);
+//			jsonTestResults.put(index, new JSONObject(testQuestionHandler.toJsonString()));
+//		} catch (JSONException e) {
+//			e.printStackTrace();
+//			res = false;
+//		}
+//		save();
 		return res;
 	}
 

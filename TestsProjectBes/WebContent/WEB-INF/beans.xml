@@ -67,11 +67,12 @@
 <!-- EOF Utils -->
 
 <!-- TestHandlers -->
-	<bean id="Abstract_Reasoning" class="tel_ran.tests.services.subtype_handlers.AmericanTestQuestionHandler" scope="prototype"></bean>
-	<bean id="Attention_Test" class="tel_ran.tests.services.subtype_handlers.AmericanTestQuestionHandler" scope="prototype"></bean>
-	<bean id="Attention" class="tel_ran.tests.services.subtype_handlers.AmericanTestQuestionHandler" scope="prototype"></bean>
-	<bean id="Quantative_Reasoning" class="tel_ran.tests.services.subtype_handlers.AmericanTestQuestionHandler" scope="prototype"></bean>
+	<bean id="Abstract_Reasoning" class="tel_ran.tests.services.subtype_handlers.AutoTestQuestionHandler" scope="prototype"></bean>
+	<bean id="Attention_Test" class="tel_ran.tests.services.subtype_handlers.AutoTestQuestionHandler" scope="prototype"></bean>
+	<bean id="Attention" class="tel_ran.tests.services.subtype_handlers.AutoTestQuestionHandler" scope="prototype"></bean>
+	<bean id="Quantative_Reasoning" class="tel_ran.tests.services.subtype_handlers.AutoTestQuestionHandler" scope="prototype"></bean>
 	<bean id="Programming_Task" class="tel_ran.tests.services.subtype_handlers.CodeTestQuestionHandler" scope="prototype"></bean>
+	<bean id="American Test" class="tel_ran.tests.services.subtype_handlers.AmericanTestQuestionHandler" scope="prototype"></bean>
 <!-- <bean id="Text" class="tel_ran.tests.services.subtype_handlers.TextTestQuestionHandler" scope="prototype"></bean>  -->
 <!-- EOF TestHandlers -->
 

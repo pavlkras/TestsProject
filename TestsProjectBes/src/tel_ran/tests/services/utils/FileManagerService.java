@@ -15,8 +15,11 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 
 import org.springframework.stereotype.Repository;
+
+import com.fasterxml.jackson.databind.PropertyName;
 
 @SuppressWarnings("resource")
 @Repository
@@ -29,8 +32,7 @@ public class FileManagerService {
 			+ "IDE" + File.separator + "EclipseKepler" + File.separator;
 	public static final String testSaveWorkingDir = WORKING_DIR + NAME_TEST_INNER_FOLDERS;
 	public static final String NAME_FOLDER_FOR_SAVENG_QUESTIONS_FILES = "QUESTION_FILES_DATABASE";	
-	public static final String BASE_DIR_IMAGES = WORKING_DIR + File.separator + NAME_FOLDER_FOR_SAVENG_QUESTIONS_FILES 
-			+ File.separator;	
+	public static final String BASE_DIR_IMAGES = WORKING_DIR + File.separator + NAME_FOLDER_FOR_SAVENG_QUESTIONS_FILES;	
 		
 	public static final String TEST_JSON_FILE = "test.json";
 	public static final String NO_COMPANY = "admin";
@@ -267,9 +269,42 @@ public class FileManagerService {
 		return null;
 	}
 	
-	public static void saveCode(long compId, long testId, long questionID, String[] code) {
-		// TODO Auto-generated method stub
+	public static String saveCode(long compId, long testId, long questionID, String[] code) {
+				
+		boolean ready = false;
+		int index = 0;
+		String path = null;
 		
+		while(!ready) {
+			String fileName = "code" + System.currentTimeMillis() + index + ".txt";
+			path = testSaveWorkingDir + File.separator
+					+ compId + File.separator
+					+ testId + File.separator
+					+ BILD_ATTRIBUTES_ARRAY[PERSON_CODE_TEXT] + File.separator
+					+ fileName;
+			index++;
+			File fl = new File(path);
+			if(!fl.exists()) {
+				ready=true;
+			}
+			
+		}
+		
+		String lineSeparator = System.getProperty("line.separator");
+		
+		BufferedWriter writer;
+		try {
+			writer = new BufferedWriter(new FileWriter(path));
+			for(String str : code) {
+				writer.write(str + lineSeparator);
+			}				 
+			writer.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return path;
 	}
 	
 }	

@@ -4,6 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import tel_ran.tests.entitys.EntityQuestionAttributes;
+import tel_ran.tests.entitys.EntityTestQuestions;
 import tel_ran.tests.processor.TestProcessor;
 import tel_ran.tests.services.common.IPublicStrings;
 import tel_ran.tests.services.inner_result.dataobjects.InnerResultDataObject;
@@ -43,6 +44,15 @@ public class SingleTestQuestionHandlerFactory {
 		return testQuestionHandler;
 	}
 
+	public static ITestQuestionHandler getInstance(EntityTestQuestions etq) {
+		String metaCategory = etq.getEntityQuestionAttributes().getMetaCategory();
+		if(metaCategory!=null) {
+			return getTestQuestionHandler(metaCategory);
+		}				
+		return null;
+				
+	}
+	
 	private static ITestQuestionHandler getTestQuestionHandler(String metaCategory) {
 		if(!metaCategory.equals(IPublicStrings.COMPANY_AMERICAN_TEST) && !metaCategory.equals(IPublicStrings.COMPANY_QUESTION))
 			metaCategory = TestProcessor.getMetaCategoryKeyByPublicName(metaCategory);

@@ -1,99 +1,49 @@
 package tel_ran.tests.services.subtype_handlers;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Base64;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.springframework.stereotype.Component;
 
+import tel_ran.tests.entitys.EntityAnswersText;
 import tel_ran.tests.services.common.ICommonData;
-import tel_ran.tests.services.inner_result.dataobjects.InnerResultDataObject;
-import tel_ran.tests.services.utils.FileManagerService;
-@Component
-public class AmericanTestQuestionHandler extends AbstractTestQuestionHandler implements ITestQuestionHandler{
 
-	public static final int QUESTION_TYPE = 1;
+public class AmericanTestQuestionHandler extends AutoTestQuestionHandler {
 	
-	public AmericanTestQuestionHandler(){
+	
+	
+	public AmericanTestQuestionHandler() {
 		super();
+		type = ICommonData.QUESTION_TYPE_AMERICAN_TEST;
 	}
 
-	@Override
-	public void analyze() {
-		if(getQuestionAttribubes().getCorrectAnswer().equals(dataObj.getPersonAnswer())){
-			dataObj.setStatus(InnerResultDataObject.STATUS_TRUE);
-		} else {
-			dataObj.setStatus(InnerResultDataObject.STATUS_FALSE);
-		}
-	}
+
 
 	@Override
-	public boolean setPersonAnswer(JSONObject answerJsonObj) {
-		//TODO Export string to constant
-		String personAnswer = "";
-		try {
-			personAnswer = answerJsonObj.getString("answer");
-		} catch (JSONException e) {
-			System.out.println("answer was not found inside of request");
-			return false;
-		}
-		dataObj.setPersonAnswer(personAnswer);
-		analyze();
-		return true;
-	}
-
-	@Override
-	public String getQuestionJson(int index) {
-		JSONObject json = new JSONObject();
-		try {
-			json.put(KEY_QUESTION_TEXT, getQuestionAttribubes().getQuestionId().getQuestionText());
-			String fileLink = getQuestionAttribubes().getFileLocationLink();
-			json.put(ICommonData.JSN_IMAGE, getImageBase64(fileLink));
-			JSONArray answers = new JSONArray();
-			for(int max = getQuestionAttribubes().getNumberOfResponsesInThePicture(), i = 0; i < max; i++){
-				answers.put(Character.toString ((char) (i+65)));
+	public JSONObject getJsonForTest(long eqtId, int index) throws JSONException {
+		// from SUPER - text of question, id of EntityTestQuestion, index, type
+		// + image, chars for answer
+		JSONObject result = super.getJsonForTest(eqtId, index);
+		
+		// get description
+		String description = getQuestionAttribubes().getDescription();
+		result.put(ICommonData.JSN_INTEST_DESCRIPTION, description);
+		
+		// get answer options
+		List<String> list = getQuestionAttribubes().getAnswers();		
+		if(list!=null) {
+			JSONArray array = new JSONArray();			
+			for(String str : list) {
+				JSONObject jsn = new JSONObject();
+				jsn.put(ICommonData.JSN_INTEST_ONE_ANSWER_OPTION, str);
+				array.put(jsn);
 			}
-			json.put(ICommonData.JSN_ANSWER_OPTIONS, answers);
-			json.put(KEY_QUESTION_INDEX, index);
-			json.put(KEY_QUESTION_TYPE, QUESTION_TYPE);
-		} catch (JSONException e) {
-			e.printStackTrace();
+			result.put(ICommonData.JSN_INTEST_ALL_ANSWER_OPTIONS, array);			
 		}
-		return json.toString();
+						
+		return result;		
 	}
+	
 
-	private String getImageBase64(String fileLocationLink) {
-//		imageBase64Text = encodeImage(NAME_FOLDER_FOR_SAVENG_QUESTIONS_FILES  + fileLocation);
-	//	outArray[1] = "data:image/png;base64," + imageBase64Text; 
-		
-		String res = null;
-		byte[] bytes = null;
-		FileInputStream file;
-		try {
-			String workingDir = FileManagerService.BASE_DIR_IMAGES;
-			file = new FileInputStream(workingDir+fileLocationLink);
-			System.out.println(workingDir+fileLocationLink);
-			bytes = new byte[file.available()];
-			file.read(bytes);
-			file.close();
-			res = "data:image/png;base64,"+Base64.getEncoder().encodeToString(bytes);
-		} catch (FileNotFoundException e) {	} 
-		catch (IOException e) {
-		} 
-		catch (NullPointerException e) {
-		}
-		return res;
-	}
-
-	@Override
-	public String getQuestionViewResultJson() {
-		
-		// TODO Auto-generated method stub
-		return null;
-	}
 }
