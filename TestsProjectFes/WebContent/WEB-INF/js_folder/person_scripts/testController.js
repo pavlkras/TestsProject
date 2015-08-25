@@ -5,13 +5,14 @@
 var app = angular.module("testPage", []);
 
 app.controller("QuestionTestController", function($scope, $http) {
-	$scope.mySwitchStartTest = true;
+	$scope.mySwitchStartTest = false;
 	$scope.mySwitchShowTest = false;
 	$scope.mySwitchEndTest = false;
 	$scope.mySwitchAmericanSystemTestQuestion = false;
 	$scope.mySwitchCodeTestQuestion = false;
 	$scope.mySwitchImage = false;
 	$scope.switchTextCamera = true;
+	$scope.countPhoto = 0;
 
 	$scope.toggleShowDetails = function() {
 		$scope.mySwitchStartTest = !$scope.mySwitchStartTest;
@@ -19,7 +20,10 @@ app.controller("QuestionTestController", function($scope, $http) {
 	};
 
 	$scope.getQuestion = function(userAnswer) {
-		$scope.take_photo();
+		if(($scope.countPhoto == 2) || ($scope.countPhoto == 4) || ($scope.countPhoto == 7) || ($scope.countPhoto == 8)){
+			$scope.take_photo();
+    		}
+		$scope.countPhoto++;
 		//var link = "/TestsProjectBes/getNextpersontest/saveprev_getnext";
 		var link = 'http://localhost:8080/TestsProjectFes/PersonalActions/getNext';
 		
@@ -37,11 +41,8 @@ app.controller("QuestionTestController", function($scope, $http) {
 		
 		$http.post(link, dataObj).success(					
 				function(data, status, headers, config) {
-					
-					
 					console.log("Success - request result to Rest");
 					$scope.question = data;					
-
 					
 //					if ($scope.question == null) {
 //						console.log("data from rest (question) is null");
@@ -60,6 +61,17 @@ app.controller("QuestionTestController", function($scope, $http) {
 							
 							$scope.numberQuestion = $scope.question.index;
 							$scope.text = $scope.question.text;
+							if ($scope.text != null) {
+								$scope.mySwitchText = true;
+							} else {
+								$scope.mySwitchText = false;
+							}
+							$scope.description = $scope.question.description;
+							if ($scope.description != null) {
+								$scope.mySwitchDescription = true;
+							} else {
+								$scope.mySwitchDescription = false;
+							}
 							$scope.image = $scope.question.image;
 							if ($scope.image != null) {
 								$scope.mySwitchImage = true;
@@ -77,9 +89,16 @@ app.controller("QuestionTestController", function($scope, $http) {
 									$scope.mySwitchCodeTestQuestion = false;
 									break;
 								}
-									//Type of question - CodeQuestion
+							//Type of question - CodeQuestion
 								case 2: {
 									console.log("case 2");
+									$scope.mySwitchAmericanSystemTestQuestion = false;
+									$scope.mySwitchCodeTestQuestion = true;
+									break;
+								}
+							//Type of question - OpenQuestion
+								case 3: {
+									console.log("case 3");
 									$scope.mySwitchAmericanSystemTestQuestion = false;
 									$scope.mySwitchCodeTestQuestion = true;
 									break;
@@ -174,9 +193,9 @@ app.directive('camera', function(CameraService) {
                     }
 // If camera doesn't work of if camera block
                     var onFailure = function (err) {
-                    	document.getElementById("message").innerHTML = '<h1>Your camera does not work, testing is impossible. Try to unblock camera in browser and to reload this page. </h1>';
+                    	document.getElementById("message").innerHTML = '<h3>Your camera does not work, testing is impossible. Try to unblock camera in browser and to reload this page. </h3>';
                         console.log("Error !");
-                        console.error(err);
+                       //console.error(err);
                     }
 // Make the request for the media
                     navigator.getUserMedia({
@@ -221,7 +240,6 @@ app.directive('camera', function(CameraService) {
             		};
             		var dataObj = {
             			image : base64dataUrl
-            			//number question
             		};
 
             		$http.post(link, dataObj, $scope.httpConfig).success(
