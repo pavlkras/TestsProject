@@ -172,13 +172,16 @@ public class EntityQuestionAttributes implements Serializable {
 	}
 
 	public List<String> getAnswers() {
-		List<String> result = new ArrayList<String>();
+		if(questionAnswersList!=null) {
+			List<String> result = new ArrayList<String>();
 		
-		for(EntityAnswersText eat : questionAnswersList) {
-			result.add(eat.getAnswerText());
-		}
+			for(EntityAnswersText eat : questionAnswersList) {
+				result.add(eat.getAnswerText());
+			}
 		
-		return result;
+			return result;
+		} 
+		return null;
 	}
 	
 	////
