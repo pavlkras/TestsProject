@@ -20,12 +20,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.sun.org.apache.bcel.internal.generic.FMUL;
-
 import tel_ran.tests.entitys.EntityCompany;
 import tel_ran.tests.entitys.EntityPerson;
 import tel_ran.tests.entitys.EntityQuestionAttributes;
 import tel_ran.tests.entitys.EntityTest;
+import tel_ran.tests.entitys.EntityTestQuestions;
+import tel_ran.tests.rest.TestsResultsRestController;
 import tel_ran.tests.services.common.ICommonData;
 import tel_ran.tests.services.interfaces.ICompanyActionsService;
 import tel_ran.tests.services.testhandler.IPersonTestHandler;
@@ -38,7 +38,9 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 	private EntityCompany entityCompany;
 	@Autowired
 	private TokenProcessor tokenProcessor;
-		
+	
+	public static final String LOG = CompanyActionsService.class.getSimpleName();
+	
 	long id;
 	
 	//-------------Use Case Company Login 3.1.1----------- //   BEGIN    ///
@@ -116,14 +118,17 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 	//------------- Viewing test results  3.1.4.----------- //   BEGIN    ///
 	@Override
 	public String getTestsResultsAll(long companyId, String timeZone) {
+		System.out.println(LOG + " - 121");
 		String res = "";
-		EntityCompany company = em.find(EntityCompany.class, companyId);
+		EntityCompany company = getCompany();
 		if(company!=null){
+			
 			@SuppressWarnings("unchecked")
 			List<EntityTest> tests = (List<EntityTest>) em.createQuery
 				("SELECT t FROM EntityTest t WHERE t.endTestDate!=0 AND t.entityCompany = :company ORDER BY t.entityPerson")
 				.setParameter("company", company)
 				.getResultList();
+			System.out.println(LOG + " - 131 : LIST-SIZE = " + tests.size());
 			res = generateJsonResponseCommon(tests, timeZone);
 		}
 		return res;
@@ -169,18 +174,39 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 		EntityCompany company = em.find(EntityCompany.class, companyId);
 		if(company!=null){
 			EntityTest test = (EntityTest) em.createQuery
-				("SELECT t FROM EntityTest t WHERE t.isPassed=true AND t.testId = :testId AND t.entityCompany = :company")
+				("SELECT t FROM EntityTest t WHERE t.testId = :testId AND t.entityCompany = :company")
 				.setParameter("testId", testId)
 				.setParameter("company", company)
 				.getSingleResult();
+			
+			
+			
+			long start = test.getStartTestDate();
+			long end = test.getEndTestDate();
+			long duration = 0;
+			if(start!=0 && end!=0 && start!=end) 
+				duration = (end-start)/1000;
+			String durationStr = Long.toString(duration) + " sec";
+			
+						
 			JSONObject jsonObj = new JSONObject();
+			
+			int amCor = test.getAmountOfCorrectAnswers();
+			int amQuest = test.getAmountOfQuestions();
 			try {
-				jsonObj.put("duration",test.getDuration());
-				jsonObj.put("amountOfQuestions",test.getAmountOfQuestions());
-				jsonObj.put("amountOfCorrectAnswers",test.getAmountOfCorrectAnswers());
-				jsonObj.put("persentOfRightAnswers",Math.round((float)test.getAmountOfCorrectAnswers()/(float)test.getAmountOfQuestions()*100)); // Add calculations from the resultTestCodeFromPerson field  
+				
 				JSONArray images = new JSONArray(FileManagerService.getImage(companyId, testId));
 				jsonObj.put("pictures", images);
+				
+				jsonObj.put("duration", durationStr);
+				jsonObj.put("amountOfQuestions",amQuest);
+//				jsonObj.put("complexityLevel",levelOfDifficulty);
+				jsonObj.put("amountOfCorrectAnswers",amCor);
+				if(test.isChecked()) {
+					jsonObj.put("persentOfRightAnswers",Float.toString(Math.round((float)amCor/(float)amQuest*100))); // Add calculations from the resultTestCodeFromPerson field
+				}
+//				jsonObj.put("pictures", getJsonArrayImage(pictures));
+//				jsonObj.put("codesFromPerson", getJsonArrayCode(testCodeFromPerson, resultTestCodeFromPerson, "java,csharp,cpp,css,"));
 			} catch (JSONException e) {}
 			return jsonObj.toString();
 			
@@ -189,19 +215,29 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 		return res;
 	}
 
-	private String generateJsonResponseCommon(List<EntityTest> testresults, String timeZone) {
+	
+	
+	private String generateJsonResponseCommon(List<EntityTest> testresults, String timeZone) {		
 		JSONArray result = new JSONArray();
 		for (EntityTest test: testresults){
+			System.out.println(LOG + " -201!");
 			
 			JSONObject jsonObj = new JSONObject();
 			try {
+				jsonObj.put(ICommonData.JSN_TEST_IS_CHECKED, test.isChecked());
 				jsonObj.put("personName",test.getEntityPerson().getPersonName());
 				jsonObj.put("personSurname",test.getEntityPerson().getPersonSurname());
 				jsonObj.put("testid",test.getTestId());
 				SimpleDateFormat sdf = new SimpleDateFormat(ICommonData.DATE_FORMAT);
 				sdf.setTimeZone(TimeZone.getTimeZone(timeZone));
 				jsonObj.put("testDate", sdf.format(new Date(test.getStartTestDate())));
-				jsonObj.put("persentOfRightAnswers",Math.round((float)test.getAmountOfCorrectAnswers()/(float)test.getAmountOfQuestions()*100));
+				String prc = null;
+				if(test.isChecked()) {
+					prc = Float.toString(Math.round((float)test.getAmountOfCorrectAnswers()/(float)test.getAmountOfQuestions()*100));
+				} else {
+					prc = "unchecked";
+				}
+				jsonObj.put("persentOfRightAnswers", prc);				
 				result.put(jsonObj);
 			} catch (JSONException e) {}
 		}
@@ -496,11 +532,23 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 			long companyId = entityCompany.getId();
 			////  creating folder tree for test
 			FileManagerService.initializeTestFileStructure(companyId, testId);
-			////			
-			IPersonTestHandler testResultsJsonHandler = new PersonTestHandler(companyId, testId, em);			
-			testResultsJsonHandler.addQuestions(questionIdList);			
-			test.setAmountOfQuestions(testResultsJsonHandler.length());
+			////
+			
+			for(Long id : questionIdList) {
+				EntityQuestionAttributes eqa = em.find(EntityQuestionAttributes.class, id);
+				EntityTestQuestions etq = new EntityTestQuestions();
+				etq.setEntityQuestionAttributes(eqa);
+				etq.setEntityTest(test);
+				etq.setStatus(ICommonData.STATUS_NO_ANSWER);
+				em.persist(etq);
+				test.addEntityTestQuestions(etq);
+			}
+			
+//			IPersonTestHandler testResultsJsonHandler = new PersonTestHandler(companyId, testId, em);			
+//			testResultsJsonHandler.addQuestions(questionIdList);			
+			test.setAmountOfQuestions(questionIdList.size());
 			test.setPassed(false);
+			test.setChecked(false);
 			em.merge(test);
 			result = true;;
 		}
