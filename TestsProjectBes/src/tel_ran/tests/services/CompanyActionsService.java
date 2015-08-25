@@ -20,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.sun.org.apache.bcel.internal.generic.FMUL;
+
 import tel_ran.tests.entitys.EntityCompany;
 import tel_ran.tests.entitys.EntityPerson;
 import tel_ran.tests.entitys.EntityQuestionAttributes;
@@ -171,17 +173,16 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 				.setParameter("testId", testId)
 				.setParameter("company", company)
 				.getSingleResult();
-//			JSONObject jsonObj = new JSONObject();
-//			try {
-//				jsonObj.put("duration",duration);
-//				jsonObj.put("amountOfQuestions",amountOfQuestions);
-//				jsonObj.put("complexityLevel",levelOfDifficulty);
-//				jsonObj.put("amountOfCorrectAnswers",amountOfCorrectAnswers);
-//				jsonObj.put("persentOfRightAnswers",Math.round((float)amountOfCorrectAnswers/(float)amountOfQuestions*100)); // Add calculations from the resultTestCodeFromPerson field  
-//				jsonObj.put("pictures", getJsonArrayImage(pictures));
-//				jsonObj.put("codesFromPerson", getJsonArrayCode(testCodeFromPerson, resultTestCodeFromPerson, "java,csharp,cpp,css,"));
-//			} catch (JSONException e) {}
-//			return jsonObj.toString();
+			JSONObject jsonObj = new JSONObject();
+			try {
+				jsonObj.put("duration",test.getDuration());
+				jsonObj.put("amountOfQuestions",test.getAmountOfQuestions());
+				jsonObj.put("amountOfCorrectAnswers",test.getAmountOfCorrectAnswers());
+				jsonObj.put("persentOfRightAnswers",Math.round((float)test.getAmountOfCorrectAnswers()/(float)test.getAmountOfQuestions()*100)); // Add calculations from the resultTestCodeFromPerson field  
+				JSONArray images = new JSONArray(FileManagerService.getImage(companyId, testId));
+				jsonObj.put("pictures", images);
+			} catch (JSONException e) {}
+			return jsonObj.toString();
 			
 //			res = test.getJsonDetails();// TO DO Throws actions NullPointerException !!!!!!!!!!!!!
 		}

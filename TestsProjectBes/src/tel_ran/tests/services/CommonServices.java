@@ -6,16 +6,11 @@ import java.io.IOException;
 import java.util.Base64;
 import java.util.List;
 
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import tel_ran.tests.entitys.EntityAnswersText;
 import tel_ran.tests.entitys.EntityQuestionAttributes;
