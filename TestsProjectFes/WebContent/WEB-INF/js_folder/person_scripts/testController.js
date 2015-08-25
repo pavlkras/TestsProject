@@ -42,90 +42,76 @@ app.controller("QuestionTestController", function($scope, $http) {
 		$http.post(link, dataObj).success(					
 				function(data, status, headers, config) {
 					console.log("Success - request result to Rest");
-					$scope.question = data;					
-					
-//					if ($scope.question == null) {
-//						console.log("data from rest (question) is null");
-//						$scope.mySwitchEndTest = !$scope.mySwitchEndTest;
-//						$scope.mySwitchShowTest = !$scope.mySwitchShowTest;
-//					
-//					} else {
-						//End of Test
-					
-						if($scope.question.isPassed){
-							console.log($scope.question.error);
-							$scope.mySwitchShowTest = false;
-							$scope.mySwitchEndTest = true;
-						}else{
-							$scope.mySwitchShowTest = true;
-							
-							$scope.numberQuestion = $scope.question.index;
-							$scope.text = $scope.question.text;
-							if ($scope.text != null) {
-								$scope.mySwitchText = true;
-							} else {
-								$scope.mySwitchText = false;
-							}
-							$scope.description = $scope.question.description;
-							if ($scope.description != null) {
-								$scope.mySwitchDescription = true;
-							} else {
-								$scope.mySwitchDescription = false;
-							}
-							$scope.image = $scope.question.image;
-							if ($scope.image != null) {
-								$scope.mySwitchImage = true;
-							} else {
-								$scope.mySwitchImage = false;
-							}
-	
-							switch ($scope.question.type) {
-							//Type of question - AmericanSystemQuestion
-								case 1: {
-									console.log("case 1");
-									$scope.answers = $scope.question.options;
-	//								$scope.nAnswers = $scope.getAnswers($scope.numberAnswers);
-									$scope.mySwitchAmericanSystemTestQuestion = true;
-									$scope.mySwitchCodeTestQuestion = false;
-									break;
-								}
-							//Type of question - CodeQuestion
-								case 2: {
-									console.log("case 2");
-									$scope.mySwitchAmericanSystemTestQuestion = false;
-									$scope.mySwitchCodeTestQuestion = true;
-									break;
-								}
-							//Type of question - OpenQuestion
-								case 3: {
-									console.log("case 3");
-									$scope.mySwitchAmericanSystemTestQuestion = false;
-									$scope.mySwitchCodeTestQuestion = true;
-									break;
-								}
-							}
-							
-							data = null;
-							userAnswer = null;
-							$scope.answer = {
-								name : null
-							};
-//						}
-					}
-
+					$scope.question = data;
+					$scope.dataProcessor($scope.question);
+					data = null;
+					userAnswer = null;
+					$scope.answer = {
+						name : null
+					};
 				}).error(function(data, status, headers, config) {
 			console.log("Error - request result to Rest");
 			alert("Error! " + status);
 		});
 	};
 
-//	$scope.getAnswers = function(number) { //filling array of answers
-//		array = [];
-//		for (i = 0; i < number; i++) {
-//			array.push(i + 1);
-//		}
-//		return array;
-//	};
+	$scope.dataProcessor = function(data){
+		//End of Test
+		if(data.isPassed){
+			console.log(data.error);
+			$scope.mySwitchShowTest = false;
+			$scope.mySwitchEndTest = true;
+		}else{
+			$scope.mySwitchShowTest = true;
+			$scope.numberQuestion = data.index;
+			$scope.text = data.text;
+			if ($scope.text != null) {
+				$scope.mySwitchText = true;
+			} else {
+				$scope.mySwitchText = false;
+			}
+			$scope.description = data.description;
+			if ($scope.description != null) {
+				$scope.mySwitchDescription = true;
+			} else {
+				$scope.mySwitchDescription = false;
+			}
+			$scope.image = data.image;
+			if ($scope.image != null) {
+				$scope.mySwitchImage = true;
+			} else {
+				$scope.mySwitchImage = false;
+			}
+		
+			switch (data.type) {
+				//Type of question - AmericanSystemQuestion
+				case 1: {
+					console.log("case 1");
+					$scope.answers = data.answers;
+		//			$scope.nAnswers = $scope.getAnswers($scope.numberAnswers);
+					$scope.mySwitchAmericanSystemTestQuestion = true;
+					$scope.mySwitchCodeTestQuestion = false;
+					break;
+				}
+				
+				//Type of question - CodeQuestion
+				case 2: {
+					console.log("case 2");
+					$scope.mySwitchAmericanSystemTestQuestion = false;
+					$scope.mySwitchCodeTestQuestion = true;
+					break;
+				}
+									
+				//Type of question - OpenQuestion
+				case 3: {
+					console.log("case 3");
+					$scope.mySwitchAmericanSystemTestQuestion = false;
+					$scope.mySwitchCodeTestQuestion = true;
+					break;
+				}
+			}
+		}							
+	}
 
 });
 
