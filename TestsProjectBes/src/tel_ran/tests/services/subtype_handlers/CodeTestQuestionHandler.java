@@ -92,7 +92,15 @@ public class CodeTestQuestionHandler extends AbstractTestQuestionHandler impleme
 	@Transactional(readOnly=false, propagation=Propagation.REQUIRED)
 	protected int getStatus(String answer) {
 		String[]lines = answer.split("\\n");
-		String linkToCode = FileManagerService.saveCode(companyId, testId, questionId, lines);
+		
+		String linkToCode = null;
+		try {
+			linkToCode = FileManagerService.saveCode(companyId, testId, questionId, lines);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 		entityTestQuestion.setLinkToAnswer(linkToCode);
 		em.merge(entityTestQuestion);
 		

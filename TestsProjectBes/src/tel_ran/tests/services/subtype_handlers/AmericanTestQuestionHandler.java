@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import tel_ran.tests.entitys.EntityAnswersText;
 import tel_ran.tests.services.common.ICommonData;
+import tel_ran.tests.services.common.IPublicStrings;
 
 public class AmericanTestQuestionHandler extends AutoTestQuestionHandler {
 	
@@ -33,10 +34,13 @@ public class AmericanTestQuestionHandler extends AutoTestQuestionHandler {
 		// get answer options
 		List<String> list = getQuestionAttribubes().getAnswers();		
 		if(list!=null) {
-			JSONArray array = new JSONArray();			
-			for(String str : list) {
-				JSONObject jsn = new JSONObject();
-				jsn.put(ICommonData.JSN_INTEST_ONE_ANSWER_OPTION, str);
+			JSONArray array = new JSONArray();	
+			int numOfQuestions = list.size();
+			
+			for (int i = 0; i < numOfQuestions; i++) {
+				JSONObject jsn = new JSONObject();				
+				jsn.put(ICommonData.JSN_INTEST_ONE_ANSWER_OPTION, list.get(index));
+				jsn.put(ICommonData.JSN_INTEST_OPTIONS_CHARS, IPublicStrings.LETTERS[i]);
 				array.put(jsn);
 			}
 			result.put(ICommonData.JSN_INTEST_ALL_ANSWER_OPTIONS, array);			

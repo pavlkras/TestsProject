@@ -107,7 +107,7 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 				if((fileLocation = question.getFileLocationLink()) != null && question.getFileLocationLink().length() > 25 
 						&& !question.getMetaCategory().equals(TestProcessor.MC_PROGRAMMING)){
 					imageBase64Text = encodeImage(FileManagerService.BASE_DIR_IMAGES  + fileLocation);
-					outArray[1] = "data:image/png;base64," + imageBase64Text; // TO DO delete!!! hard code -- data:image/png;base64,
+					outArray[1] = "data:image/jpeg;base64," + imageBase64Text; // TO DO delete!!! hard code -- data:image/png;base64,
 				}else{
 					outArray[1] = null;
 				}

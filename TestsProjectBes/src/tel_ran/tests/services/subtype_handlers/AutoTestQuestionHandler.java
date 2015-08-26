@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tel_ran.tests.entitys.EntityQuestionAttributes;
 import tel_ran.tests.entitys.EntityTestQuestions;
 import tel_ran.tests.services.common.ICommonData;
+import tel_ran.tests.services.common.IPublicStrings;
 import tel_ran.tests.services.inner_result.dataobjects.InnerResultDataObject;
 import tel_ran.tests.services.utils.FileManagerService;
 @Component
@@ -59,9 +60,10 @@ public class AutoTestQuestionHandler extends AbstractTestQuestionHandler {
 			String fileLink = getQuestionAttribubes().getFileLocationLink();
 			json.put(ICommonData.JSN_IMAGE, getImageBase64(fileLink));
 			JSONArray answers = new JSONArray();
-			for(int max = getQuestionAttribubes().getNumberOfResponsesInThePicture(), i = 0; i < max; i++){
-				answers.put(Character.toString ((char) (i+65)));
-			}
+			int numOfQuestions = getQuestionAttribubes().getNumberOfResponsesInThePicture();
+			for (int i = 0; i < numOfQuestions; i++ )
+				answers.put(IPublicStrings.LETTERS[i]);
+						
 			json.put(ICommonData.JSN_INTEST_OPTIONS_CHARS, answers);
 			json.put(ICommonData.JSN_INTEST_INDEX, index);
 			json.put(ICommonData.JSN_INTEST_TYPE, type);

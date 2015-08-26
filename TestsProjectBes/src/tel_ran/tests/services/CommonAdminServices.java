@@ -5,10 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
-import java.util.Base64.Decoder;
-
 import javax.persistence.Query;
 
 import org.json.JSONArray;
@@ -602,7 +599,15 @@ public abstract class CommonAdminServices extends CommonServices implements
 		if (metaCategory.equals(IPublicStrings.COMPANY_AMERICAN_TEST) || metaCategory.equals(IPublicStrings.COMPANY_QUESTION)) {
 			if(fileLocationLink!=null && fileLocationLink.length()>5) {
 				System.out.println(metaCategory + " " + fileLocationLink + " " + fileLocationLink.length());
-				fileLocationLink = FileManagerService.saveImageForUserTests(metaCategory, compId, fileLocationLink);
+				
+				try {
+					fileLocationLink = FileManagerService.saveImageForUserTests(metaCategory, compId, fileLocationLink);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					fileLocationLink = null;
+					System.out.println(e);
+				}
+				
 			} else {
 				fileLocationLink = null;
 			}
