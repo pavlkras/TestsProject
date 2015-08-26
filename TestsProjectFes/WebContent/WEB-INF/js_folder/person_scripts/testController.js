@@ -5,7 +5,7 @@
 var app = angular.module("testPage", []);
 
 app.controller("QuestionTestController", function($scope, $http) {
-	$scope.mySwitchStartTest = true;
+	$scope.mySwitchStartTest = false;
 	$scope.mySwitchShowTest = false;
 	$scope.mySwitchEndTest = false;
 	$scope.mySwitchAmericanSystemTestQuestion = false;
