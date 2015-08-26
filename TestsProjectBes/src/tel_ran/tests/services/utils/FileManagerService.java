@@ -110,6 +110,7 @@ public class FileManagerService {
 			path = BASE_DIR_IMAGES + nameInner + ".png";
 			fl = new File(path);
 		}
+		fl.mkdirs();
 		
 		saveImageByPath(path, ImageCoders.decode64(image));
 		return nameInner;
@@ -284,8 +285,10 @@ public class FileManagerService {
 					+ fileName;
 			index++;
 			File fl = new File(path);
+			
 			if(!fl.exists()) {
 				ready=true;
+				fl.mkdirs();
 			}
 			
 		}
