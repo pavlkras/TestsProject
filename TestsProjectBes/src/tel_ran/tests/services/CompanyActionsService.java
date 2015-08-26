@@ -3,12 +3,7 @@ package tel_ran.tests.services;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
-
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -30,6 +25,8 @@ import tel_ran.tests.entitys.EntityTest;
 import tel_ran.tests.entitys.EntityTestQuestions;
 import tel_ran.tests.services.common.ICommonData;
 import tel_ran.tests.services.interfaces.ICompanyActionsService;
+import tel_ran.tests.services.testhandler.IPersonTestHandler;
+import tel_ran.tests.services.testhandler.PersonTestHandler;
 import tel_ran.tests.services.utils.FileManagerService;
 import tel_ran.tests.services.utils.UtilsStatic;
 import tel_ran.tests.token_cipher.TokenProcessor;
@@ -198,29 +195,31 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 					System.out.println(images_.toString());
 					JSONArray images = new JSONArray(images_);
 					jsonObj.put("pictures", images);
-					
-									
 					jsonObj.put("duration", durationStr);
 					
-//				jsonObj.put("complexityLevel",levelOfDifficulty);
-					
-					
-//				jsonObj.put("pictures", getJsonArrayImage(pictures));
-//				jsonObj.put("codesFromPerson", getJsonArrayCode(testCodeFromPerson, resultTestCodeFromPerson, "java,csharp,cpp,css,"));
+					int numberOfQuestions = test.getAmountOfQuestions();
+					JSONArray questions = new JSONArray();
+					for(int i=0; i<numberOfQuestions; i++){
+						JSONObject singleQuestion = new JSONObject();
+						singleQuestion.put("index", i);
+						singleQuestion.put("status", getTestResultsHandler(companyId, testId).getStatus(i));
+						questions.put(singleQuestion);
+					}
+					jsonObj.put("questions", questions);
+						
+					jsonObj = this.getStatusOfTest(test.getTestId());
+
 				} catch (JSONException e) {}
+				
 				res = jsonObj.toString();
-
-		
-			System.out.println(jsonObj.toString());
-
-			
-//			res = test.getJsonDetails();// TO DO Throws actions NullPointerException !!!!!!!!!!!!!
 			}
 		}
 		return res;
 	}
 
-	
+	IPersonTestHandler getTestResultsHandler(long companyId, long testId){
+		return new PersonTestHandler(companyId, testId, em);
+	}
 	
 	private String generateJsonResponseCommon(List<EntityTest> testresults, String timeZone) {		
 		JSONArray result = new JSONArray();
