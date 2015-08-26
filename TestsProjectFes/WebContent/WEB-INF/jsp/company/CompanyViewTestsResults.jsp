@@ -208,25 +208,26 @@
 			</div>
 		</a>
 		<div class="panel-body" ng-show="display.pictures">
-			<p ng-repeat="pictures_ in testDetails.pictures">
-				<img class="img-thumbnail img-previewSize" ng-src="{{pictures_.picture}}"/>
+			<p ng-repeat="x in testDetails.pictures">
+				<img class="img-thumbnail img-previewSize" ng-src="{{x.image}}"/>
 			</p>
 		</div>
 	</div>
 	<div class="panel panel-primary">
 		<a href="#">
-			<div class="panel-heading" ng-click="showTestDetails('code')">
-				<h3 id="panel-title" class="panel-title">Code written by Person<a class="anchorjs-link" href="#panel-title"></a></h3>
+			<div class="panel-heading" ng-click="showTestDetails('questions')">
+				<h3 id="panel-title" class="panel-title">Test Questions<a class="anchorjs-link" href="#panel-title"></a></h3>
 			</div>
 		</a>
-		<div class="panel-body" ng-show="display.code">
-			<div ng-repeat="codesFromPerson_ in testDetails.codesFromPerson">
+		<div class="panel-body" ng-show="display.questions">
+			<div ng-repeat="question_ in testDetails.questions">
 				<div class="container-fluid">
 				<ul class="list-group">
 	      			<li class="list-group-item">
     	    			<h3>
+							
 							Result of analyse:
-							<span class="label {{getProcessingResultStyle(codesFromPerson_.codeAnalyseResult)}}">{{codesFromPerson_.codeAnalyseResult}}</span>
+							<span class="label {{getProcessingResultStyle(question_.analyseResult)}}">{{question_.analyseResult}}</span>
 						</h3>
 	      			</li>
 				</ul>
