@@ -5,7 +5,7 @@
 var app = angular.module("testPage", []);
 
 app.controller("QuestionTestController", function($scope, $http) {
-	$scope.mySwitchStartTest = false;
+	$scope.mySwitchStartTest = true;
 	$scope.mySwitchShowTest = false;
 	$scope.mySwitchEndTest = false;
 	$scope.mySwitchAmericanSystemTestQuestion = false;
@@ -82,6 +82,13 @@ app.controller("QuestionTestController", function($scope, $http) {
 			} else {
 				$scope.mySwitchImage = false;
 			}
+			
+			$scope.options = data.options;
+			if($scope.options != null) {
+				$scope.userAmericanTest = true;
+			} else {
+				$scope.userAmericanTest = false;
+			}
 		
 			switch (data.type) {
 				//Type of question - AmericanSystemQuestion
@@ -90,7 +97,7 @@ app.controller("QuestionTestController", function($scope, $http) {
 					$scope.answers = data.answers;
 		//			$scope.nAnswers = $scope.getAnswers($scope.numberAnswers);
 					$scope.mySwitchAmericanSystemTestQuestion = true;
-					$scope.mySwitchCodeTestQuestion = false;
+					$scope.mySwitchCodeTestQuestion = false;					
 					break;
 				}
 				
@@ -98,15 +105,25 @@ app.controller("QuestionTestController", function($scope, $http) {
 				case 2: {
 					console.log("case 2");
 					$scope.mySwitchAmericanSystemTestQuestion = false;
-					$scope.mySwitchCodeTestQuestion = true;
+					$scope.mySwitchCodeTestQuestion = true;					
 					break;
 				}
-									
-				//Type of question - OpenQuestion
+				
+				//Type of question - User american Test
 				case 3: {
 					console.log("case 3");
-					$scope.mySwitchAmericanSystemTestQuestion = false;
-					$scope.mySwitchCodeTestQuestion = true;
+					$scope.answers = data.answers;
+					$scope.mySwitchAmericanSystemTestQuestion = true;
+					$scope.mySwitchCodeTestQuestion = false;	
+					$scope.userAmericanTest = true;
+					break;
+				}				
+									
+				//Type of question - OpenQuestion
+				case 4: {
+					console.log("case 4");
+					$scope.mySwitchAmericanSystemTestQuestion = true;
+					$scope.mySwitchCodeTestQuestion = true;					
 					break;
 				}
 			}
