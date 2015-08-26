@@ -39,7 +39,7 @@ public class AmericanTestQuestionHandler extends AutoTestQuestionHandler {
 			
 			for (int i = 0; i < numOfQuestions; i++) {
 				JSONObject jsn = new JSONObject();				
-				jsn.put(ICommonData.JSN_INTEST_ONE_ANSWER_OPTION, list.get(index));
+				jsn.put(ICommonData.JSN_INTEST_ONE_ANSWER_OPTION, list.get(i));
 				jsn.put(ICommonData.JSN_INTEST_OPTIONS_CHARS, IPublicStrings.LETTERS[i]);
 				array.put(jsn);
 			}

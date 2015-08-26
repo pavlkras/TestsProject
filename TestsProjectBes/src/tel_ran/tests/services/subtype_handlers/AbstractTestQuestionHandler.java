@@ -117,7 +117,7 @@ public abstract class AbstractTestQuestionHandler extends TestsPersistence imple
 			bytes = new byte[file.available()];
 			file.read(bytes);
 			file.close();
-			res = "data:image/png;base64,"+Base64.getEncoder().encodeToString(bytes);
+			res = "data:image/jpeg;base64,"+Base64.getEncoder().encodeToString(bytes);
 		} catch (FileNotFoundException e) {	} 
 		catch (IOException e) {
 		} 

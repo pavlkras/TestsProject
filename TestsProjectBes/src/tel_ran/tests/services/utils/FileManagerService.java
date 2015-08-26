@@ -82,6 +82,17 @@ public class FileManagerService {
 		
 	}
 	
+	private static void saveImageByPath(File fl, String image) {		
+		try {			
+			BufferedWriter writer = new BufferedWriter(new FileWriter(fl));
+			writer.write(image);			 
+			writer.close();
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}		
+	}
+	
 	private static void saveImageByPath(String path, String image) {		
 		try {			
 			BufferedWriter writer = new BufferedWriter(new FileWriter(path));
@@ -92,28 +103,35 @@ public class FileManagerService {
 		}		
 	}
 	
-	public static String saveImageForUserTests(String metaCategory, String compId, String image) {		
+	public static String saveImageForUserTests(String metaCategory, String compId, String image) throws IOException {		
 		if(compId == null)
 			compId = NO_COMPANY;
 		long name = System.currentTimeMillis();
-		String nameInner = File.separator + metaCategory + File.separator + 
-				compId + File.separator
-				+ "ti" + name;
 		
-				
+		String base2 = File.separator + metaCategory + File.separator
+				+ compId + File.separator;
+		String basePath = BASE_DIR_IMAGES + base2;
 		
-		String path = BASE_DIR_IMAGES + nameInner + ".png";
+		File dir = new File(basePath);
+		dir.mkdirs();
+		
+		String nameInner = "ti" + name;
+		String path = basePath + nameInner + ".jpg";
+		String nameFile = nameInner + ".jpg";
 		
 		File fl = new File(path);
 		while(fl.exists()) {
 			nameInner = nameInner + "a";
-			path = BASE_DIR_IMAGES + nameInner + ".png";
-			fl = new File(path);
+			nameFile = nameInner + ".jpg";
+			path = basePath + nameFile;
+			fl = new File(path);			
 		}
-		fl.mkdirs();
 		
-		saveImageByPath(path, ImageCoders.decode64(image));
-		return nameInner;
+		fl.createNewFile();
+		System.out.println(path);
+		
+		saveImageByPath(fl, ImageCoders.decode64(image));
+		return base2 + nameFile;
 						
 	}
 	
@@ -127,7 +145,7 @@ public class FileManagerService {
 			bytes = new byte[file.available()];
 			file.read(bytes);
 			file.close();
-			res = "data:image/png;base64,"+Base64.getEncoder().encodeToString(bytes);
+			res = "data:image/jpeg;base64,"+Base64.getEncoder().encodeToString(bytes);
 		} catch (FileNotFoundException e) {	} 
 		catch (IOException e) {
 		} 
@@ -270,28 +288,30 @@ public class FileManagerService {
 		return null;
 	}
 	
-	public static String saveCode(long compId, long testId, long questionID, String[] code) {
+	public static String saveCode(long compId, long testId, long questionID, String[] code) throws IOException {
 				
 		boolean ready = false;
 		int index = 0;
 		String path = null;
+		String basePath = testSaveWorkingDir + File.separator + compId + File.separator + testId + File.separator
+				+ BILD_ATTRIBUTES_ARRAY[PERSON_CODE_TEXT] + File.separator;
+		
+		File dir = new File(basePath);
+		dir.mkdirs();
+		File fl = null;
 		
 		while(!ready) {
 			String fileName = "code" + System.currentTimeMillis() + index + ".txt";
-			path = testSaveWorkingDir + File.separator
-					+ compId + File.separator
-					+ testId + File.separator
-					+ BILD_ATTRIBUTES_ARRAY[PERSON_CODE_TEXT] + File.separator
-					+ fileName;
+			path = basePath	+ fileName;
 			index++;
-			File fl = new File(path);
+			fl = new File(path);
 			
 			if(!fl.exists()) {
-				ready=true;
-				fl.mkdirs();
-			}
-			
+				ready=true;				
+			}			
 		}
+		
+		fl.createNewFile();		
 		
 		String lineSeparator = System.getProperty("line.separator");
 		
