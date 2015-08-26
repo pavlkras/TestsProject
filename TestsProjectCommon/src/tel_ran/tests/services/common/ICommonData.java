@@ -77,7 +77,7 @@ public interface ICommonData {
 	// -------------------------- TEST RESULTS FOR COMPANY ------------------------------ //
 	
 	static final String JSN_TEST_IS_CHECKED = "checked"; // boolean = if the test was checked by the company
-	static final String JSN_TEST_CORRECT_ANSWERS = "correct"; // int - number of correct answers
+	static final String JSN_TEST_CORRECT_ANSWERS = "amountOfCorrectAnswers"; // int - number of correct answers
 	static final String JSN_TEST_INCORRECT_ANSWERS = "incorrect"; //int - number of incorrec answers
 	static final String JSN_TEST_UNANSWERED_ANSWERS = "unanswered"; //int
 	static final String JSN_TEST_UNCHECKED_ANSWERS = "unchecked"; //int
@@ -85,12 +85,12 @@ public interface ICommonData {
 	static final String JSN_TEST_QUESTION_ID = "questionId"; //long - id for EntityTestQuestion to check
 	
 	static final String JSN_TEST_ID = "id"; // id of test = long
-	static final String JSN_TEST_QUESTION_NUMBER = "question_num"; // number of question in the test = int
+	static final String JSN_TEST_QUESTION_NUMBER = "amountOfQuestions"; // number of question in the test = int
 	static final String JSN_TEST_IS_PASSED = "passed"; // if the test is passed = boolean
 	static final String JSN_TEST_PERSON_SURNAME = "pers_surname"; // surname of the person = String
 	static final String JSN_TEST_PERSON_NAME = "pers_name"; // name of the person = String
 	static final String JSN_TEST_PERSON_ID = "pers_id"; // = int
-	
+	static final String JSN_TEST_PERCENT_OF_CORRECT = "persentOfRightAnswers"; // String 
 	
 	
 	// -------------------- JSN - FIELDS ---------------------------------------------- //
