@@ -31,7 +31,7 @@ import="java.util.*, java.text.*, tel_ran.tests.controller.AbstractAdminActions"
 
  	  <div id="right_side_company">
 	<div id="formDiv">
-	<h2>Creating new Question</h2>
+	<h2>Creating new Question Test</h2>
 	<form action="company_add_questions" method="post" id="addingForm" name="question_adding_form">
       <!--  metaCategory of question (getting from DB) -->
         <div id="longdiv">

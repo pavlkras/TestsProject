@@ -1,5 +1,6 @@
 package tel_ran.tests.controller;
 import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
@@ -125,8 +126,7 @@ Wrong Password Flow:
 		if(companyId>0){
 			boolean ress = adminService.setAutorization(companyName, password);
 			if(ress){ 				
-				result = "company/Company_main";		
-				
+				result = "company/Company_main";					
 				
 				model.addAttribute("info", adminService.getUserInformation());
 				this.setCompanyName(companyName); 
@@ -193,7 +193,7 @@ User Registered Flow:
 	public String testGeneration(Model model) {
 		StringBuffer categoryHtmlText = new StringBuffer();
 		List<String> resultCategory = adminService.getAllMetaCategoriesFromDataBase();
-		categoryHtmlText.append("<table class='table_ind'><tr><th>Category of Question:</th><th  colspan='2'>Level of difficulty</th></tr>");
+		categoryHtmlText.append("<table class='table_ind'><tr><th colspan='2'>Category of Question:</th><th>Level of difficulty</th></tr>");
 		for(String catBox:resultCategory){					
 			categoryHtmlText.append("<tr class='tr_ind'>");
 			categoryHtmlText.append("<td>").append(catBox).append(":</td>");
@@ -206,6 +206,7 @@ User Registered Flow:
 		}
 		categoryHtmlText.append("</table>");
 		model.addAttribute("categoryFill", categoryHtmlText.toString());
+		model.addAttribute("questions", adminService.getAllQuestionsList(true, null, null));
 //		result = "company/CompanyGenerateTest";
 		this.setCompanyName(companyName); 
 		return "company/CompanyGenerateTest";
@@ -278,7 +279,7 @@ Normal Flow:
 	 */
 	@RequestMapping({"/add_test"})
 	public String createTest(String category, String category1, String level_num, String personId, 
-			String personName, String personSurname,String personEmail, String selectCountQuestions, 
+			String personName, String personSurname,String personEmail, String selectCountQuestions, String questionsId,
 			Model model, HttpServletRequest request) {	
 		
 		String url = request.getRequestURL().toString();
@@ -288,11 +289,18 @@ Normal Flow:
 		System.out.println("category--"+category);//-------------------------------sysout
 		if(category1!=null)
 			System.out.println("language -- " + category1);		
-				
-		String password = getRandomPassword();
-		int result = ((ICompanyActionsService)adminService).createTestForPersonFull(category, category1, level_num, selectCountQuestions, 
-				Integer.parseInt(personId), personName, personSurname, personEmail, password);
+		List<Long> questionsIdList = null;
+		if(questionsId!=null) {
+			questionsIdList = new LinkedList<Long>();
+			String[] qIds = questionsId.split(",");
+			for(String q : qIds) {
+				questionsIdList.add(Long.parseLong(q));
+			}
+		}
 		
+		String password = getRandomPassword();
+		int result = ((ICompanyActionsService)adminService).createTestForPersonFullWithQuestions(questionsIdList, category,
+				category1, level_num, selectCountQuestions, Integer.parseInt(personId), personName, personSurname, personEmail, password);				
 		String link = null;
 		
 		if(result==0) {
@@ -506,11 +514,7 @@ f)	5 photos made during the test	------ IGOR ------*/
 		return path;
 //		return super.updatePage(path, model);
 	}
-	
-	
-	
-	
-	
+		
 	@RequestMapping({"/question_see" + "/{questId}"})
 	public String seeQuestion(@PathVariable long questId) {
 		System.out.println(questId);

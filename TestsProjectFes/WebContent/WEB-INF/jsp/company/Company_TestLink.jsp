@@ -7,8 +7,7 @@ import="java.util.*, java.text.*, tel_ran.tests.controller.Maintenance"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type"
-	content="text/html; charset=windows-1255">
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Insert title here</title>
 
 <link
@@ -17,70 +16,31 @@ import="java.util.*, java.text.*, tel_ran.tests.controller.Maintenance"%>
 <link
 	href='<c:url value="/static/css_folder/style.css"></c:url>'
 	rel="stylesheet">
+<script
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>		
+<script src="static/js_folder/header&&rightmenu_company.js">
+</script>	
+
 </head>
 <body>
 		<div id="container">
-	 	<div id ="header">
-	 		<div id="logo">
-	 			
-	 		</div>
-	 		<div id="search_area">
-	 			<input id="text_Area" type="text" placeholder="Search.."/>
-	 			<input id="button" type="button" value="search"/>
-	 		</div>
-	 		
-	 	</div>
-	 	<div id="nav_area">
-	 			<ul>
-	 				<li><a href=".">Home</li></a>
-	 				<li><a href="login">User Login</li></a>
-	 				<li><a href="CompanyActions">Company Login</li></a>
-	 				<li><a href=".">FAQ</li></a>
-	 				<li><a href=".">Contact Us</li></a>
-	 			</ul>
-	 	</div><!--end nav area-->
+		
+			<div id="right_side_company">		
 
-	 	<div id="left_side">
-        
-        
-	 		<div id="testexamples">
-               <div>
-	 			<h2>Test Examples</h2>
-              </div>
-	 			<ul>
-                
-	 				<li><a href=".">JAVA</li></a><hr>
-	 				<li><a href=".">C++</li></a><hr>
-	 				<li><a href=".">C#</li></a><hr>
-	 				<li><a href=".">Android</li></a><hr>
-	 				<li><a href=".">Javascript</li></a><hr>
-                    <li><a href=".">HTML&CSS</li></a><hr>
-                    <li><a href=".">Other Tests</li></a>
-	 			</ul>
- 		  </div><!--end tesst examles-->
+				<form action="add_test">
+					<p>${myResult}</p>
+					<br>
+					<br> <a href="#" onclick="history.back();">back</a> <br> <br>
+				</form>
+				<div id="additional_area"></div>
+			</div>
+						
 
- 	  </div><!--end left_side area-->
+			<div id="footer_area">
 
-		<div id="right_side">
-
-			<form action="add_test">
-				<p>${myResult}</p>
-				<br>
-				<br> <a href="#" onclick="history.back();">back</a> <br> <br>
-			</form>
+				<p>Copyright &copy; 2014 HrTrueTest</p>
+			</div>
 		</div>
-		<div id="additional_area"></div>
-
-	</div>
-	<!--end of right area-->
-
-
-
-	<div id="footer_area">
-
-		<p>Copyright &copy; 2014 HrTrueTest</p>
-	</div>
-	</div>
 </body>
 
 
