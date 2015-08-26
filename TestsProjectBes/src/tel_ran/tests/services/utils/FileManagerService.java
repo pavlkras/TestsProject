@@ -15,11 +15,8 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
-import java.util.Properties;
 
 import org.springframework.stereotype.Repository;
-
-import com.fasterxml.jackson.databind.PropertyName;
 
 @SuppressWarnings("resource")
 @Repository

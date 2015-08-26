@@ -4,10 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.TimeZone;
 
@@ -25,11 +23,8 @@ import tel_ran.tests.entitys.EntityPerson;
 import tel_ran.tests.entitys.EntityQuestionAttributes;
 import tel_ran.tests.entitys.EntityTest;
 import tel_ran.tests.entitys.EntityTestQuestions;
-import tel_ran.tests.rest.TestsResultsRestController;
 import tel_ran.tests.services.common.ICommonData;
 import tel_ran.tests.services.interfaces.ICompanyActionsService;
-import tel_ran.tests.services.testhandler.IPersonTestHandler;
-import tel_ran.tests.services.testhandler.PersonTestHandler;
 import tel_ran.tests.services.utils.FileManagerService;
 import tel_ran.tests.token_cipher.TokenProcessor;
 
@@ -194,20 +189,20 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 			int amCor = test.getAmountOfCorrectAnswers();
 			int amQuest = test.getAmountOfQuestions();
 			try {
-				
-				JSONArray images = new JSONArray(FileManagerService.getImage(companyId, testId));
+				List <String> images_ = FileManagerService.getImage(companyId, testId);
+				System.out.println(images_.toString());
+				JSONArray images = new JSONArray(images_);
 				jsonObj.put("pictures", images);
 				
 				jsonObj.put("duration", durationStr);
 				jsonObj.put("amountOfQuestions",amQuest);
-//				jsonObj.put("complexityLevel",levelOfDifficulty);
 				jsonObj.put("amountOfCorrectAnswers",amCor);
 				if(test.isChecked()) {
 					jsonObj.put("persentOfRightAnswers",Float.toString(Math.round((float)amCor/(float)amQuest*100))); // Add calculations from the resultTestCodeFromPerson field
 				}
-//				jsonObj.put("pictures", getJsonArrayImage(pictures));
 //				jsonObj.put("codesFromPerson", getJsonArrayCode(testCodeFromPerson, resultTestCodeFromPerson, "java,csharp,cpp,css,"));
 			} catch (JSONException e) {}
+			System.out.println(jsonObj.toString());
 			return jsonObj.toString();
 			
 //			res = test.getJsonDetails();// TO DO Throws actions NullPointerException !!!!!!!!!!!!!
@@ -310,9 +305,6 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 	
 	// ------------------- PRIVATE METHODS FOR TEST CREATION ---------------------- // BEGIN -----------
 
-	////
-	////-------------- Method for test case group AlexFoox Company return id of unique set questions ----------// BEGIN  //
-	@SuppressWarnings("unchecked")	
 	@Override  
 	public List<Long> createSetQuestions(String metaCategory, String categories1, String levelsOfDifficulty, int nQuestion) 
 		{				
@@ -320,6 +312,7 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 			return createSetQuestions(metaCategory, categories1, levelsOfDifficulty, nQuestion, result);
 		}
 
+	@SuppressWarnings("unchecked")
 	private List<Long> createSetQuestions(String metaCategory, String categories1, String levelsOfDifficulty, int nQuestion, 
 			List<Long> preparedList) {		
 		

@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import tel_ran.tests.services.PersonalActionsService;
 import tel_ran.tests.services.interfaces.IPersonalActionsService;
 import tel_ran.tests.token_cipher.TokenProcessor;
 
