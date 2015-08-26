@@ -46,7 +46,7 @@ public class PersonalActions {
 	////
 	/*@RequestMapping({"/PersonalActions"})
 	public String startPageToPerson(){ 		return "user/UserSignIn";     } */
-	/*  3.2.4. Performing Test – Control Mode  */
+	/*  3.2.4. Performing Test â€“ Control Mode  */
 	///------- this action is click on the link provided in the mail	
 	
 	@RequestMapping({"/jobSeeker_test_preparing_click_event"})	
@@ -83,7 +83,7 @@ public class PersonalActions {
 				e.printStackTrace();
 			}	
 								
-//			model.addAttribute("token", token);
+			model.addAttribute("token", token);
 			outPage = "person/PersonTestPage";
 		}
 //		boolean isReady = personalService.GetTestForPerson(passwordForCreatedTest);
