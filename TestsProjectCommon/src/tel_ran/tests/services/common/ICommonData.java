@@ -35,7 +35,7 @@ public interface ICommonData {
 	static final String JSN_CATEGORY2 = "category2"; // used for auto-question only = String
 	static final String JSN_QUESTION_TEXT = "questionText"; // common question = title of question = String	
 	static final String JSN_QUESTION_DESCRIPTION = "description"; // long text with the question's body = String
-	static final String JSN_ANSWER_OPTIONS = "answers"; //JSONArray for answers in American Test = List	
+	static final String JSN_ANSWER_OPTIONS = "options"; //JSONArray for answers in American Test = List	
 	static final String JSN_ONE_OPTION = "option"; 
 	static final String JSN_CODE_SIMPLE = "code"; // stub for programming tasks = String
 	static final String JSN_CORRECT_ANSWER_CHAR = "correctAnswer"; // char of the correct answer in American Test = String
@@ -60,7 +60,7 @@ public interface ICommonData {
 	static final String JSN_INTEST_CODE = JSN_CODE_SIMPLE; // String
 	static final String JSN_INTEST_RESULTS_LIST = JSN_LIST_OF_RESULT; // JSONArray
 	static final String JSN_INTEST_DESCRIPTION = "description"; // String
-	static final String JSN_INTEST_OPTIONS_CHARS = "options"; //JSONArray
+	static final String JSN_INTEST_OPTIONS_CHARS = "answers"; //JSONArray
 	static final String JSN_INTEST_STATUS = "status";
 	
 	//FIELDS IN THE RESPONSE FROM CLIENT IN TEST
