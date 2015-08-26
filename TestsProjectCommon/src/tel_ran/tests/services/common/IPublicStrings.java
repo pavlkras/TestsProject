@@ -56,6 +56,9 @@ public interface IPublicStrings {
 	
 	static final String USR_MAINTENANCE = "Administrator";
 	
+	// ------------- LETTERS FOR ANSWER OPTIONS IN USER AMERICAN TESTS ----------------------- //
+	
+	static final String[] LETTERS = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"};
 
 	
 }
