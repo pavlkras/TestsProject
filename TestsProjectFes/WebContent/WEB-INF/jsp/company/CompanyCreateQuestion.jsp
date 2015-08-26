@@ -2,7 +2,6 @@
 	pageEncoding="ISO-8859-1"%>
 <%@ page
 import="java.util.*, java.text.*, tel_ran.tests.controller.AbstractAdminActions"%>
-
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <!DOCTYPE html>
@@ -20,6 +19,17 @@ import="java.util.*, java.text.*, tel_ran.tests.controller.AbstractAdminActions"
  <link
 	href='<c:url value="/static/css_folder/maintenance_styles/CreateQuestionPage.css"></c:url>'
 	rel="stylesheet"> 
+<style>
+	#resultDB{
+		color: #aa0000;
+		font-size: 20px;
+    	font-weight: bold;
+	}
+	#button_OK{
+		margin-left: 40px;
+		margin-top: 8px;
+	}
+</style>
 <script src="static/js_folder/maintenance_scripts/add_question_page.js">
 </script>
 <script src="static/js_folder/header&&rightmenu_company.js">
@@ -31,8 +41,8 @@ import="java.util.*, java.text.*, tel_ran.tests.controller.AbstractAdminActions"
 
  	  <div id="right_side_company">
 	<div id="formDiv">
-	<h2>Creating new Question Test</h2>
-	<form action="company_add_questions" method="post" id="addingForm" name="question_adding_form">
+	<h2>Creating new Question</h2>
+	<form id="addingForm" name="question_adding_form">
       <!--  metaCategory of question (getting from DB) -->
         <div id="longdiv">
             <label>Meta Category</label>
@@ -60,13 +70,13 @@ import="java.util.*, java.text.*, tel_ran.tests.controller.AbstractAdminActions"
  		</div>
         <div id="compcategory">
 	        <label>Company category </label>
-	        <input type="text" name="compcategory" id="compcategory" />
+	        <input type="text" name="compcategory" id="compcategorytosend" />
        
 		</div>
         <!-- Question level Of Difficulty () --> 
         <div>
             <label>Level of difficulty</label>
-            <select name="levelOfDifficulty">
+            <select id="levelOfDifficulty" name="levelOfDifficulty">
                 <option value=1>level Of Difficulty</option>
                 <option value=1>level  1</option>
                 <option value=2>level  2</option>
@@ -102,7 +112,7 @@ import="java.util.*, java.text.*, tel_ran.tests.controller.AbstractAdminActions"
        <div id = "imageupload">
             <label>Upload Image</label>
             
-            <input type="file" name="fileLocationLink"	placeholder="/MetaCategory/Category[if exist]/questionPictureName.jpg" />
+           <input id ="takeFile" type="file"/>
             
  		</div>
        
@@ -110,25 +120,25 @@ import="java.util.*, java.text.*, tel_ran.tests.controller.AbstractAdminActions"
 	        <!-- Button test code (AJAX) -->
 	        <div>
 	            <label>Test Code A</label>
-	            <textarea name="at1"></textarea>
+	            <textarea id="at1" name="at1"></textarea>
 	 		</div>
 	        <div>
 	            <label>Test Code B</label>
-	            <textarea name="at2"></textarea>
+	            <textarea id="at2" name="at2"></textarea>
 	 		</div>
 	        <div>
 	            <label>Test Code C</label>
-	            <textarea name="at3"></textarea>
+	            <textarea id="at3" name="at3"></textarea>
 	 		</div>
 	        <div>
 	            <label>Test Code D</label>
-	            <textarea name="at4"></textarea>
+	            <textarea id="at4" name="at4"></textarea>
 	 		</div>
 	        
 	        <!-- answer char input  (1 CHAR !!! or TRUE/FALSE or empty input !!!) --> 
 	        <div>
 	            <label>Input Char a right question answer</label>
-	            <input type="text" name="correctAnswer" placeholder="D">
+	            <input type="text" id="correctAnswer" name="correctAnswer" placeholder="D">
 	 		</div>
 	        
  		</div> <!-- end american question div --> 
@@ -140,17 +150,12 @@ import="java.util.*, java.text.*, tel_ran.tests.controller.AbstractAdminActions"
 
         <div>
             <label>&nbsp;</label>
-            <br>
+            
             <input name="button_send" id="button_send"
-			type="submit" value="Add To DataBase">
+			type="button" value="Add To DataBase">
  		</div>
-        <div>
-            <label>		
-				<script type="text/javascript">
-                    document.write("${result}");
-                </script>
-			</label>
-         </div>
+        <div id="resultDB"></div>
+        <input id="button_OK" type="button" value="OK" style="display: none">
      
     </form>
     

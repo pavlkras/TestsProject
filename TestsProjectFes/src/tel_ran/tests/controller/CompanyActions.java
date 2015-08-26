@@ -468,11 +468,13 @@ f)	5 photos made during the test	------ IGOR ------*/
 	}
 	
 	@RequestMapping(value = "/company_add_questions" , method = RequestMethod.POST)
-	public String AddProcessingPage(String questionText, String descriptionText, String codeText,
+	@ResponseBody
+	public String addProcessingPage(String questionText, String descriptionText, String codeText,
 			String  category1, String metaCategory, String category2, String  compcategory, String levelOfDifficulty, 
 			String fileLocationLink, String correctAnswer, String numberAnswersOnPicture, 
 			String at1, String at2, String at3, String at4,  Model model)
 	{	
+		
 		
 		return super.AddProcessingPage(questionText, descriptionText, 
 				codeText, category1, metaCategory, category2, compcategory, levelOfDifficulty, 
@@ -484,6 +486,7 @@ f)	5 photos made during the test	------ IGOR ------*/
 	
 	@RequestMapping({ "/company_questions_update" })
 	public String updatePage(String view_mode, Model model) {
+
 		clearStringBuffer();				
 		AutoInformationTextHTML(buildingCategory1CheckBoxTextHTML());
 		String res;	
@@ -502,7 +505,7 @@ f)	5 photos made during the test	------ IGOR ------*/
 			res = adminService.getAllQuestionsList(false, null, null);
 			break;
 		default:
-			res = adminService.getAllQuestionsList(true, null, null);
+			res = adminService.getAllQuestionsList(true, null, null); 
 		
 		}
 		}

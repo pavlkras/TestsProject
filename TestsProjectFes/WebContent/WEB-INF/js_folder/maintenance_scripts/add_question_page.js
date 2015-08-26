@@ -104,7 +104,44 @@ $(document).ready(function(){
 		else {
 			$("div#compcategory").hide();
 		}
-
 		   
+	});
+	
+	var reader = new FileReader();
+	var imageToSend = " ";
+	
+	reader.onload = function(){imageToSend = btoa(reader.result);};
+	$("#takeFile").change(function(){reader.readAsBinaryString(this.files[0]);});
+	
+	
+	$("#button_send").click(function(){
+		$.ajax({
+			type: "POST", url: "company_add_questions", async : false,
+			data: {
+				metaCategory : $("#mCatSel").val(),
+				category1 : $("#catSel").val(),
+				compcategory : $("#compcategorytosend").val(),
+				levelOfDifficulty : $("#levelOfDifficulty").val(),
+				descriptionText : $("#descriptionText").val(),
+				fileLocationLink :  imageToSend,
+				at1 : $("#at1").val(),
+				at2 : $("#at2").val(),
+				at3 : $("#at3").val(),
+				at4 : $("#at4").val(),
+				correctAnswer : $("#correctAnswer").val()
+			},
+			complete: function(data){	
+			document.getElementById("resultDB").innerHTML=data.responseText;
+			$("resiltDB").css("font-size", "14px");
+			$("#button_OK").show();
+			$("#button_OK").focus();
+			
+			}
+		});
+		
+		$("#button_OK").click(function(){document.location.href = "company_add";});
+
+		
+		
 	});
 });

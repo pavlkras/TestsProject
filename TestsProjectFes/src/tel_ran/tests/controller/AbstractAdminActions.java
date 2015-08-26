@@ -127,9 +127,9 @@ public abstract class AbstractAdminActions {
 		String[] answerOptions = {at1, at2, at3, at4};
 		String message = "";
 		boolean isError = false;
-		
 		for(int i = 0; i < answerOptions.length; i++) {
-			if(answerOptions[i].length() > 0) {
+			
+			if(answerOptions[i]!=null && answerOptions[i].length() > 0) {
 				countAnswersOptions++;
 				answers.add(answerOptions[i]);
 			}
@@ -190,9 +190,10 @@ public abstract class AbstractAdminActions {
 			message = "<p class='outTextInfo'> Error adding the question, the question already exists. Try again</p>";// out
 		}
 		}
+		System.out.println(message);
 		model.addAttribute("result",message);
 		addingPage(path);
-		return path; // return too page after action
+		return message; // return too page after action
 	}
 	
 	
