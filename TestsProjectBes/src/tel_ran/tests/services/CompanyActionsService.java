@@ -3,7 +3,9 @@ package tel_ran.tests.services;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -31,6 +33,7 @@ import tel_ran.tests.services.interfaces.ICompanyActionsService;
 import tel_ran.tests.services.testhandler.IPersonTestHandler;
 import tel_ran.tests.services.testhandler.PersonTestHandler;
 import tel_ran.tests.services.utils.FileManagerService;
+import tel_ran.tests.services.utils.UtilsStatic;
 import tel_ran.tests.token_cipher.TokenProcessor;
 
 public class CompanyActionsService extends CommonAdminServices implements ICompanyActionsService {
@@ -118,7 +121,7 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 	//------------- Viewing test results  3.1.4.----------- //   BEGIN    ///
 	@Override
 	public String getTestsResultsAll(long companyId, String timeZone) {
-		System.out.println(LOG + " - 121");
+		
 		String res = "";
 		EntityCompany company = getCompany();
 		if(company!=null){
@@ -128,7 +131,7 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 				("SELECT t FROM EntityTest t WHERE t.endTestDate!=0 AND t.entityCompany = :company ORDER BY t.entityPerson")
 				.setParameter("company", company)
 				.getResultList();
-			System.out.println(LOG + " - 131 : LIST-SIZE = " + tests.size());
+			
 			res = generateJsonResponseCommon(tests, timeZone);
 		}
 		return res;
@@ -179,38 +182,34 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 				.setParameter("company", company)
 				.getSingleResult();
 			
-			
-			
-			long start = test.getStartTestDate();
-			long end = test.getEndTestDate();
-			long duration = 0;
-			if(start!=0 && end!=0 && start!=end) 
-				duration = (end-start)/1000;
-			String durationStr = Long.toString(duration) + " sec";
-			
-						
-			JSONObject jsonObj = new JSONObject();
-			
-			int amCor = test.getAmountOfCorrectAnswers();
-			int amQuest = test.getAmountOfQuestions();
-			try {
+			if(test!=null) {
 				
-				JSONArray images = new JSONArray(FileManagerService.getImage(companyId, testId));
-				jsonObj.put("pictures", images);
+				long start = test.getStartTestDate();
+				long end = test.getEndTestDate();
+												
+				String durationStr = UtilsStatic.getDuration(start, end);
+			
+				JSONObject jsonObj = null;
 				
-				jsonObj.put("duration", durationStr);
-				jsonObj.put("amountOfQuestions",amQuest);
+				try {
+					
+					jsonObj = this.getStatusOfTest(test.getTestId());
+				
+					JSONArray images = new JSONArray(FileManagerService.getImage(companyId, testId));
+					jsonObj.put("pictures", images);
+				
+					jsonObj.put("duration", durationStr);
+					
 //				jsonObj.put("complexityLevel",levelOfDifficulty);
-				jsonObj.put("amountOfCorrectAnswers",amCor);
-				if(test.isChecked()) {
-					jsonObj.put("persentOfRightAnswers",Float.toString(Math.round((float)amCor/(float)amQuest*100))); // Add calculations from the resultTestCodeFromPerson field
-				}
+					
+					
 //				jsonObj.put("pictures", getJsonArrayImage(pictures));
 //				jsonObj.put("codesFromPerson", getJsonArrayCode(testCodeFromPerson, resultTestCodeFromPerson, "java,csharp,cpp,css,"));
-			} catch (JSONException e) {}
-			return jsonObj.toString();
+				} catch (JSONException e) {}
+				res = jsonObj.toString();
 			
 //			res = test.getJsonDetails();// TO DO Throws actions NullPointerException !!!!!!!!!!!!!
+			}
 		}
 		return res;
 	}
@@ -220,7 +219,7 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 	private String generateJsonResponseCommon(List<EntityTest> testresults, String timeZone) {		
 		JSONArray result = new JSONArray();
 		for (EntityTest test: testresults){
-			System.out.println(LOG + " -201!");
+			
 			
 			JSONObject jsonObj = new JSONObject();
 			try {
@@ -628,7 +627,7 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 		Query newQ = em.createQuery(query);
 		newQ.setParameter(1, entityCompany);
 		Long result = (Long) newQ.getSingleResult();
-		System.out.println("Number of tests = " + result); // ---------------------------------SYSO - !!!!!!!!!!!!!!!!!!!!!!
+		
 		return result;
 		
 	}
@@ -644,7 +643,7 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 			jsn.put("pers_name", et.getEntityPerson().getPersonName());
 			jsn.put("pers_id", et.getEntityPerson().getPersonId());		
 			result = jsn.toString();
-			System.out.println("JSON for TEST" + result); // ---------------------------------------------------- SYSO !!!!!!!!!!!!!!!!!!!!!!!
+//			System.out.println("JSON for TEST" + result); // ---------------------------------------------------- SYSO !!!!!!!!!!!!!!!!!!!!!!!
 		}
 		
 		return result;
