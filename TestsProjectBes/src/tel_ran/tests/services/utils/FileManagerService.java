@@ -258,11 +258,18 @@ public class FileManagerService {
 		File[] res = new File(basePath).listFiles();
 		System.out.println(LOG + " - 245 - M: getImage: number of files in this directory = " + res.length);
 		////
+		
 		try {
 			for(int i =0;i<res.length;i++){
 				
-				BufferedReader reader = new BufferedReader(new FileReader(res[0]));
-				outResult.add(reader.readLine());			
+				BufferedReader reader = new BufferedReader(new FileReader(res[i]));
+				StringBuffer currentFile = new StringBuffer();
+				String sCurrentLine = "";
+				while ((sCurrentLine = reader.readLine()) != null) {
+					currentFile.append(sCurrentLine);
+				}
+				
+				outResult.add(currentFile.toString());			
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
