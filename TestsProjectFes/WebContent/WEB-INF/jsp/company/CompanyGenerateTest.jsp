@@ -82,68 +82,84 @@
 				<form action="add_test" id="adding_form_company" width="100%">
 				
 				<table width="100%">
-					<tbody>
-						<tr>
-							<td width="70%">
-								<h4 class="tableTitle">Random questions</h4>
-								<div class="categoryCheckBox">
-									<script type="text/javascript">
-										document.write("${categoryFill}");
-									</script>								
-								</div>
-							</td>
-							<td>
-								<h4 class="tableTitle">Total number of questions</h4>
-								Select Question Count:<br> 
-								<select name="selectCountQuestions">
-									<option value="5">5</option>
-									<option value="10">10</option>
-									<!-- for deleting !!! -->
-									<option value="20">20</option>
-									<option value="30">30</option>
-									<option value="50">50</option>														
+											<tbody id="testgeneration">
+							<tr>
+								<td width="70%">
+									<h2 class="tableTitle" align="center">Random questions</h2>
+									<div class="categoryCheckBox">
+										<script type="text/javascript">
+											document.write("${categoryFill}");
+										</script>
+									</div>
+								</td>
+
+							</tr>
+
+							<tr>
+								<td colspan="2"><hr></td>
+							<tr>
+							<tr>
+								<td>
+									<h4 class="tableTitle">Total number of questions</h4> Select
+									Question Count: &nbsp; <select name="selectCountQuestions">
+										<option value="5">5</option>
+										<option value="10">10</option>
+										<!-- for deleting !!! -->
+										<option value="20">20</option>
+										<option value="30">30</option>
+										<option value="50">50</option>
 								</select>
-							</td>
-						</tr>
-						<tr>
-							<td colSpan=2>
-								<h4 class="tableTitle">Manual selection</h4>
-														
-								<input id="userQuest" class='userQuestions' type="button" name='userQuestions' onclick="showUserQuestions()"
-								value="show questions list"/>
-								<input id="hideQuest" class='noQuestions' type="button" name='noQuestions' onclick="hideUserQuestions()"
-								value="hide questions list" style="display:none"/>		
-										
-								<div id="showManualSelection" style="display:none">
-									<div ng-app="test_app" ng-controller="test_contr">
-			
-										<table>
-											<tr class="tableHead">
-												<th style = "width: 50px">id</th>
-												<th>Type</th>
-												<th>Category</th>
-												<th>Level</th>
-												<th>Text</th>
-												<th>Check the question</th>						
-											</tr>
-											<tr class="tableContent" ng-repeat="q in results">					
-					 							<td class="border">{{q.id}}</td>
-					 							<td class="border" style = "width: 15%">{{q.metaCategory}}</td>
-					 							<td class="border" style = "width: 15%">{{q.category1}}</td>
-					 							<td class="border" style = "width: 10%">{{q.level}}</td>
-					 							<td class="border">{{q.shortText}}</td>
-					 							<td style = "width:10%">
-					 							<input type="checkbox" name="questionsId" value="{{q.id}}"/></td>
-											</tr>
-										</table>				
-				
-									</div> 
-								
-								</div>									
-																
-							</td>						
-						</tr>	
-															
+								</td>
+							</tr>
+
+							<tr>
+								<td colspan="2"><hr></td>
+							<tr>
+							<tr>
+								<td colSpan=2>
+									<h4 class="tableTitle">Manual selection</h4> <input
+									id="userQuest" class='userQuestions' type="button"
+									name='userQuestions' onclick="showUserQuestions()"
+									value="show questions list" /> <input id="hideQuest"
+									class='noQuestions' type="button" name='noQuestions'
+									onclick="hideUserQuestions()" value="hide questions list"
+									style="display: none" />
+
+									<div id="showManualSelection" style="display: none">
+										<div ng-app="test_app" ng-controller="test_contr">
+
+											<table>
+												<tr class="tableHead">
+													<th style="width: 50px">id</th>
+													<th>Type</th>
+													<th>Category</th>
+													<th>Level</th>
+													<th>Text</th>
+													<th>Check the question</th>
+												</tr>
+												<tr class="tableContent" ng-repeat="q in results">
+													<td class="border">{{q.id}}</td>
+													<td class="border" style="width: 15%">{{q.metaCategory}}</td>
+													<td class="border" style="width: 15%">{{q.category1}}</td>
+													<td class="border" style="width: 10%">{{q.level}}</td>
+													<td class="border">{{q.shortText}}</td>
+													<td style="width: 10%"><input type="checkbox"
+														name="questionsId" value="{{q.id}}" /></td>
+												</tr>
+											</table>
+
+										</div>
+
+									</div>
+
+								</td>
+							</tr>
+
+							<tr>
+								<td colspan="2"><hr></td>
+							<tr>
+
+
 					</tbody>				
 				</table>
 				
@@ -178,7 +194,7 @@
 								</table>
 								
 								<div id="generate_test">
-									<input type="submit" value="Generate test" />
+									<input type="submit" value="Generate test" disabled />
 								</div>
 						
 					</div>
