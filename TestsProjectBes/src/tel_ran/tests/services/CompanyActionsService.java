@@ -215,35 +215,45 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 					// list of questions (with id, categories, status)
 					// index
 					jsonObj = this.checkStatusAndGetJson(test.getTestId());
+					System.out.println(LOG + " - 218-M: getTestResultdetails, jsn = " + jsonObj.toString());
 				
 					// pictures
-					List <String> images_ = FileManagerService.getImage(companyId, testId);
-					System.out.println(LOG + " - 216 - in method: getTestResultDetails, images: " + images_.toString());
-					System.out.println(LOG + " - 217 - in method: getTestResultDetails, images number: " + images_.size());
-					JSONArray images = new JSONArray(images_);
-					jsonObj.put("pictures", images);
 					
+					List <String> images_ = FileManagerService.getImage(companyId, testId);
+					if(images_!=null) {
+						System.out.println(LOG + " - 224 - in method: getTestResultDetails, images: " + images_.toString());
+						System.out.println(LOG + " - 225 - in method: getTestResultDetails, images number: " + images_.size());
+						JSONArray imagArray = new JSONArray(images_);
+						jsonObj.put(ICommonData.JSN_TESTDETAILS_PHOTO, imagArray);
+					} else {
+						System.out.println(LOG + " - 229-M: getTestResultDetails - NO IMAGES");
+					}
+					System.out.println(LOG + " - 231-M: getTestResultdetails, jsn = " + jsonObj.toString());
 					// duration
 					jsonObj.put("duration", durationStr);
-					
+					System.out.println(LOG + " - 234-M: getTestResultdetails, jsn = " + jsonObj.toString());
 					// amount of questions
 					int numberOfQuestions = test.getAmountOfQuestions();
+					jsonObj.put(ICommonData.JSN_TESTDETAILS_QUESTIONS_NUMBER, numberOfQuestions);
 					
-					
-					JSONArray questions = new JSONArray();
-					for(int i=0; i<numberOfQuestions; i++){
-						JSONObject singleQuestion = new JSONObject();
-						singleQuestion.put("index", i);
-						singleQuestion.put("status", getTestResultsHandler(companyId, testId).getStatus(i));
-						questions.put(singleQuestion);
-					}
-					jsonObj.put("questions", questions);
+//					JSONArray questions = new JSONArray();
+//					for(int i=0; i<numberOfQuestions; i++){
+//						JSONObject singleQuestion = new JSONObject();
+//						singleQuestion.put("index", i);
+//						singleQuestion.put("status", getTestResultsHandler(companyId, testId).getStatus(i));
+//						questions.put(singleQuestion);
+//					}
+//					jsonObj.put("questions", questions);
 						
-					jsonObj = this.getStatusOfTest(test.getTestId());
+//					jsonObj = this.getStatusOfTest(test.getTestId());
 
-				} catch (JSONException e) {}
+				} catch (JSONException e) {
+					e.printStackTrace();
+					System.out.println(LOG + " - 247-M: ERROR - getTestResultdetails, jsn = " + jsonObj.toString());
+				}
 				
 				res = jsonObj.toString();
+				System.out.println(LOG + " - 247-M: getTestResultdetails, result " + res);
 			}
 		}
 		return res;
