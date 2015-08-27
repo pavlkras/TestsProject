@@ -33,17 +33,17 @@ public class PersonTestHandler implements IPersonTestHandler {
 		this.companyId = companyId;
 		this.testId = testId;
 		
-//		String json = FileManagerService.getJson(companyId, testId);
-//		
-//		if( json==null || json=="" ){
-//			jsonTestResults = new JSONArray();
-//		}else{
-//			try {
-//				jsonTestResults = new JSONArray(json);
-//			} catch (JSONException e) {
-//				e.printStackTrace();
-//			}
-//		}
+		String json = FileManagerService.getJson(companyId, testId);
+		
+		if( json==null || json=="" ){
+			jsonTestResults = new JSONArray();
+		}else{
+			try {
+				jsonTestResults = new JSONArray(json);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
 		
 	}
 	
@@ -172,5 +172,16 @@ public class PersonTestHandler implements IPersonTestHandler {
 
 	private void save() {
 		FileManagerService.saveJson(companyId, testId, jsonTestResults.toString());
+	}
+
+	@Override
+	public String getStatus(int index) {
+		String status = null;
+		try {
+			status = new JSONObject(jsonTestResults.get(index)).getString(InnerResultDataObject.KEY_STATUS);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return status;
 	}
 }

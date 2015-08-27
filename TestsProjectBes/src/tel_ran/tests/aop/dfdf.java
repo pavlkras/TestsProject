@@ -10,7 +10,7 @@ public class dfdf {
 		//// test creating file location  tree 
 		System.out.println(tt.initializeTestFileStructure(12345L,5421L));
 		//// test save image person
-		tt.saveImage(12345L,54321L, "fffffffffffffffffffffffffffffggg");
+		//tt.saveImage(12345L,54321L, "fffffffffffffffffffffffffffffggg");
 		tt.saveScreen(12345L,54321L, "xxxxxxfdgdffgdfgdfgdfgdffggg");
 		//// test save json file 
 		tt.saveJson(12345L,54321L,"xxxxxxfdgdffgdfgdfgdfgdffggg");

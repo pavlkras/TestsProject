@@ -19,5 +19,8 @@ public interface IPersonTestHandler {
 	public String next();
 	
 	//Returns number of right answers
-	public int getRightAnswersQuantity();  
+	public int getRightAnswersQuantity();
+
+	//Returns status of the question with some id
+	public String getStatus(int index);  
 }

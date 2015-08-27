@@ -11,9 +11,13 @@ import javax.persistence.TypedQuery;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import tel_ran.tests.entitys.EntityAnswersText;
 import tel_ran.tests.entitys.EntityQuestionAttributes;
+import tel_ran.tests.entitys.EntityTest;
+import tel_ran.tests.entitys.EntityTestQuestions;
 import tel_ran.tests.processor.TestProcessor;
 import tel_ran.tests.services.common.ICommonData;
 import tel_ran.tests.services.common.IPublicStrings;
@@ -266,6 +270,98 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 			}
 		} 
 		return jsn;
+	}
+	
+	@Transactional(readOnly=false, propagation = Propagation.REQUIRED)
+	protected JSONObject getStatusOfTest(long testId) throws JSONException {
+		int correct = 0;
+		int inCorrect = 0;
+		int unAnswered = 0;
+		int unChecked = 0;
+		JSONArray arrayUnchecked = new JSONArray();
+		
+		EntityTest test = em.find(EntityTest.class, testId);
+		
+		String query = "SELECT c from EntityTestQuestions c WHERE c.entityTest=?1";
+		List<EntityTestQuestions> list = em.createQuery(query).setParameter(1, test).getResultList();		
+		
+				
+		for(EntityTestQuestions etq : list) {
+			int status = etq.getStatus();
+			
+			switch(status) {
+			case ICommonData.STATUS_CORRECT :
+				correct++;
+				break;
+			case ICommonData.STATUS_INCORRECT :
+				inCorrect++;
+				break;
+			case ICommonData.STATUS_NO_ANSWER :
+				unAnswered++;
+				break;
+			case ICommonData.STATUS_UNCHECKED :
+				unChecked++;
+				JSONObject jsn = new JSONObject();
+				jsn.put(ICommonData.JSN_TEST_QUESTION_ID, etq.getId());				
+				break;
+			}
+		}
+		
+		boolean testIsPassed;
+		boolean testIsChecked;
+		
+				
+		if(unAnswered==0) {			
+			testIsPassed = true;
+			if(!test.isPassed()) {				
+				test.setPassed(true);
+				em.merge(test);				
+			}
+		} else {
+			testIsPassed = false;
+		}
+		
+		if(unChecked==0) {
+			testIsChecked = true;
+			if(!test.isChecked()) {
+				test.setChecked(true);
+				em.merge(test);
+			}
+		} else {
+			testIsChecked = false;
+		}
+		
+				
+		if(test.getAmountOfCorrectAnswers()!=correct) {
+			test.setAmountOfCorrectAnswers(correct);
+			em.merge(test);
+		}		
+		int allQuestions = test.getAmountOfQuestions();
+			
+		JSONObject result = new JSONObject();
+		result.put(ICommonData.JSN_TEST_CORRECT_ANSWERS, correct);
+		result.put(ICommonData.JSN_TEST_INCORRECT_ANSWERS, inCorrect);
+		result.put(ICommonData.JSN_TEST_IS_CHECKED, testIsChecked);
+		result.put(ICommonData.JSN_TEST_IS_PASSED, testIsPassed);
+		result.put(ICommonData.JSN_TEST_LIST_ANSWERS_TO_CHECK, arrayUnchecked);
+		result.put(ICommonData.JSN_TEST_QUESTION_NUMBER, allQuestions);
+		result.put(ICommonData.JSN_TEST_UNANSWERED_ANSWERS, unAnswered);
+		result.put(ICommonData.JSN_TEST_UNCHECKED_ANSWERS, unChecked);
+		
+		float percent;
+		int checked = allQuestions - unAnswered - unChecked;
+		if(checked==0) 
+			percent = 0;
+		else
+			percent = Math.round((float)correct/(float)checked*100);
+		
+		if(unChecked==0 && unAnswered==0) {
+			result.put("persentOfRightAnswers",Float.toString(percent)); // Add calculations from the resultTestCodeFromPerson field
+		} else if (unChecked==0){
+			result.put("persentOfRightAnswers", "not checked");
+		}
+		
+		return result;
 	}
 
 }

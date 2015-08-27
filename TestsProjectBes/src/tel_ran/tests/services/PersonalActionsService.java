@@ -1,4 +1,5 @@
 package tel_ran.tests.services;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
@@ -34,6 +35,7 @@ public class PersonalActionsService extends CommonServices implements IPersonalA
 	
 	private long testID;
 	private long companyID;
+	private static final String LOG = PersonalActionsService.class.getSimpleName();
 	////
 	@Override
 	public boolean GetTestForPerson(String testPassword) {	// creation test for person
@@ -152,85 +154,6 @@ public class PersonalActionsService extends CommonServices implements IPersonalA
 		
 	}
 	
-	
-	
-	@Transactional(readOnly=false, propagation = Propagation.REQUIRED)
-	private JSONObject getStatusOfTest(long testId) throws JSONException {
-		int correct = 0;
-		int inCorrect = 0;
-		int unAnswered = 0;
-		int unChecked = 0;
-		JSONArray arrayUnchecked = new JSONArray();
-		
-		EntityTest test = em.find(EntityTest.class, testId);
-		
-		String query = "SELECT c from EntityTestQuestions c WHERE c.entityTest=?1";
-		List<EntityTestQuestions> list = em.createQuery(query).setParameter(1, test).getResultList();		
-		
-				
-		for(EntityTestQuestions etq : list) {
-			int status = etq.getStatus();
-			
-			switch(status) {
-			case ICommonData.STATUS_CORRECT :
-				correct++;
-				break;
-			case ICommonData.STATUS_INCORRECT :
-				inCorrect++;
-				break;
-			case ICommonData.STATUS_NO_ANSWER :
-				unAnswered++;
-				break;
-			case ICommonData.STATUS_UNCHECKED :
-				unChecked++;
-				JSONObject jsn = new JSONObject();
-				jsn.put(ICommonData.JSN_TEST_QUESTION_ID, etq.getId());				
-				break;
-			}
-		}
-		
-		boolean testIsPassed;
-		boolean testIsChecked;
-		
-				
-		if(unAnswered==0) {			
-			testIsPassed = true;
-			if(!test.isPassed()) {				
-				test.setPassed(true);
-				em.merge(test);				
-			}
-		} else {
-			testIsPassed = false;
-		}
-		
-		if(unChecked==0) {
-			testIsChecked = true;
-			if(!test.isChecked()) {
-				test.setChecked(true);
-				em.merge(test);
-			}
-		} else {
-			testIsChecked = false;
-		}
-		
-		if(test.getAmountOfCorrectAnswers()!=correct) {
-			test.setAmountOfCorrectAnswers(correct);
-			em.merge(test);
-		}		
-		
-			
-		JSONObject result = new JSONObject();
-		result.put(ICommonData.JSN_TEST_CORRECT_ANSWERS, correct);
-		result.put(ICommonData.JSN_TEST_INCORRECT_ANSWERS, inCorrect);
-		result.put(ICommonData.JSN_TEST_IS_CHECKED, testIsChecked);
-		result.put(ICommonData.JSN_TEST_IS_PASSED, testIsPassed);
-		result.put(ICommonData.JSN_TEST_LIST_ANSWERS_TO_CHECK, arrayUnchecked);
-		result.put(ICommonData.JSN_TEST_QUESTION_NUMBER, test.getAmountOfQuestions());
-		result.put(ICommonData.JSN_TEST_UNANSWERED_ANSWERS, unAnswered);
-		result.put(ICommonData.JSN_TEST_UNCHECKED_ANSWERS, unChecked);
-		return result;
-	}
-
 	IPersonTestHandler getTestResultsHandler(long companyId, long testId){
 		return new PersonTestHandler(companyId, testId, em);
 	}
@@ -263,12 +186,20 @@ public class PersonalActionsService extends CommonServices implements IPersonalA
 	}
 	@Override
 	public void saveImage(long testId, String image) {
+		System.out.println(LOG + " - 189: in method  saveImage");
 		EntityTest test = em.find(EntityTest.class, testId);
 
 		if(!test.isPassed()){
-			FileManagerService.saveImage(test.getEntityCompany().getId(), testId, image);
+			System.out.println(LOG + " - 193: in method  saveImage - test is not passed");
+			try {
+				FileManagerService.saveImage(test.getEntityCompany().getId(), testId, image);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}			
 		}
 	}
+	
 	@Override
 	protected boolean ifAllowed(EntityQuestionAttributes question) {
 		
