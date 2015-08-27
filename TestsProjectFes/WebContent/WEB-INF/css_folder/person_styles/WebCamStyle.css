@@ -144,3 +144,8 @@ video {
 .contentBox {
 	position: absolute;
 }
+
+.descriptionLines {
+	margin: 0;
+	padding: 1px;
+}
