@@ -17,7 +17,7 @@
 	rel="stylesheet">
 
 <script
-	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>		
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="static/js_folder/header&&rightmenu.js">
 	
 </script>
@@ -27,21 +27,33 @@
 
 <body>
 	<div id="container">
-		
+
 		<div id="right_side">
 			<div id="formDiv">
 				<br>
 				<h2>Company LogIn</h2>
-				<br>	
-					<script type="text/javascript">
+				<br>
+				<script type="text/javascript">
 						document.write("${myResult}");						
-					</script>		
+					</script>
 				<br>
 				<form class='myButton' action="loginProcessing">
-					Login: <input type="text" name="companyName" size="24"><br>
-					<br> Password: <input type="password" name="password"
-						size="20"><br> <br> <input class='myButton'
-						type="submit" value="LogIn">
+					<div>
+						<label>Login: </label> <span class="ipsForm_required">*</span> <input
+							type="text" name="companyName" size="24">
+					</div>
+					<div>
+						<label>Password </label> <span class="ipsForm_required">*</span> <input
+							type="password" name="password" size="20">
+					</div>
+
+					<div>
+						<input class='myButton' type="submit" value="LogIn">
+					</div>
+
+
+
+
 				</form>
 				<br> <br> <a class='myButton' href="search_form">Search
 					Company</a> <br> <br> <a class='myButton' href="companyadd">Registration</a>

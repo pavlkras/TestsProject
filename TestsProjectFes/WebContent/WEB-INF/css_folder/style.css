@@ -378,3 +378,11 @@ a:visited {
 	color: white;
 }
 
+#testgeneration hr {
+	  border:0;
+	  background-color: #0054a6;
+	  height: 1px;
+	  margin-top: 10px;
+	  margin-bottom: 10px;
+}
+

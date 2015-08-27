@@ -178,7 +178,7 @@
 								</table>
 								
 								<div id="generate_test">
-									<input type="submit" value="Generate test" disabled />
+									<input type="submit" value="Generate test" />
 								</div>
 						
 					</div>

@@ -116,6 +116,7 @@ textarea {
      resize: vertical;
 }
 
-h4.tableTitle {
+h2.tableTitle {
 	margin-bottom: 0.5em;
+	color: #0054a6;
 }
