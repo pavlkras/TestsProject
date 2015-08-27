@@ -5,6 +5,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -82,9 +83,9 @@ public class FileManagerService {
 		
 	}
 	
-	private static void saveImageByPath(File fl, String image) {		
+	private static void saveImageByPath(File fl, byte[] image) {		
 		try {			
-			BufferedWriter writer = new BufferedWriter(new FileWriter(fl));
+			FileOutputStream writer = new FileOutputStream(fl.getAbsolutePath());
 			writer.write(image);			 
 			writer.close();
 			
