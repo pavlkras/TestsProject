@@ -235,6 +235,7 @@ app.directive('camera', function(CameraService) {
                     //var picture = base64dataUrl + "@END_LINE@";
                     
                   //save_image
+                   if($scope.countPhoto != 0){  
             		var link = "/TestsProjectBes/persontest/save_image";
             		$scope.httpConfig = {
             			headers : {
@@ -251,6 +252,15 @@ app.directive('camera', function(CameraService) {
             				}).error(function(data, status, headers, config) {
             			console.log("IMAGE - Error - request result to Rest");
             		});
+                   }
+                   else{
+                   	var link = "fakeReference";
+			var dataObj = "fakeData";
+
+			$http.post(link, dataObj).success(function(data, status, config) {
+				console.log("sending image - Success");
+			}).error(function(data, status, config) {console.log("sending image - Error");});
+                   }
                 }
             }
         }
