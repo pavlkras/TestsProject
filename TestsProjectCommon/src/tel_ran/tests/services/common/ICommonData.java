@@ -64,8 +64,8 @@ public interface ICommonData {
 	static final String JSN_INTEST_STATUS = "status";
 	
 	//FIELDS IN THE RESPONSE FROM CLIENT IN TEST
-	static final String JSN_INTEST_ANSWER = "answer"; // String
-	static final String JSN_INTEST_CHAR = "char"; //String
+	static final String JSN_INTEST_ANSWER = "answer"; // String	
+	static final String JSN_INTEST_IF_FINISHED = "finished"; // boolean
 	
 	//TYPES FOR SHOWING QUESTIONS
 	static final int QUESTION_TYPE_ALL_IN_IMAGE = 1; //no descriptions and answers options
@@ -78,12 +78,7 @@ public interface ICommonData {
 	
 	static final String JSN_TEST_IS_CHECKED = "checked"; // boolean = if the test was checked by the company
 	static final String JSN_TEST_CORRECT_ANSWERS = "amountOfCorrectAnswers"; // int - number of correct answers
-	static final String JSN_TEST_INCORRECT_ANSWERS = "incorrect"; //int - number of incorrec answers
-	static final String JSN_TEST_UNANSWERED_ANSWERS = "unanswered"; //int
-	static final String JSN_TEST_UNCHECKED_ANSWERS = "unchecked"; //int
-	static final String JSN_TEST_LIST_ANSWERS_TO_CHECK = "toCheck"; //array of long id
-	static final String JSN_TEST_QUESTION_ID = "questionId"; //long - id for EntityTestQuestion to check
-	
+		
 	static final String JSN_TEST_ID = "id"; // id of test = long
 	static final String JSN_TEST_QUESTION_NUMBER = "amountOfQuestions"; // number of question in the test = int
 	static final String JSN_TEST_IS_PASSED = "passed"; // if the test is passed = boolean
@@ -91,6 +86,25 @@ public interface ICommonData {
 	static final String JSN_TEST_PERSON_NAME = "pers_name"; // name of the person = String
 	static final String JSN_TEST_PERSON_ID = "pers_id"; // = int
 	static final String JSN_TEST_PERCENT_OF_CORRECT = "persentOfRightAnswers"; // String 
+	
+	
+	// ------------------------- TEST DETAILS FOR COMPANY ------------------------------- //
+	
+	static final String JSN_TESTDETAILS_DURATION = "duration"; // String
+	static final String JSN_TESTDETAILS_QUESTIONS_NUMBER = JSN_TEST_QUESTION_NUMBER; // int - number of all questions in the test
+	static final String JSN_TESTDETAILS_CORRECT_QUESTIONS_NUMBER = "amountOfCorrectAnswers"; // int
+	static final String JSN_TESTDETAILS_UNCHECKED_QUESTIONS_NUMBER = "unchecked"; //int
+	static final String JSN_TESTDETAILS_INCORRECT_ANSWERS_NUMBER = "incorret";
+	static final String JSN_TESTDETAILS_PHOTO = "pictures"; //String = array of JSON with base64 pictures
+	static final String JSN_TESTDETAILS_LIST_OF_QUESTIONS = "questions"; // String = array of JSON with details
+	
+	//details in list of questions
+	static final String JSN_TESTDETAILS_QUESTION_ID = "questionId"; // long - id for EntityTestQuestion 
+	static final String JSN_TESTDETAILS_QUESTION_METACATEGORY = "metaCategory"; // String
+	static final String JSN_TESTDETAILS_QUESTION_CATEGORY1 = "category"; // String
+	static final String JSN_TESTDETAILS_QUESTION_STATUS_NUM = "statusNumber"; // int for the array IPublicStrings.QUESTION_STATUS[]
+	static final String JSN_TESTDETAILS_QUESTION_STATUS_STR = "statusString"; // String
+	static final String JSN_TESTDETAILS_QUESTION_INDEX = "index"; // int
 	
 	
 	// -------------------- JSN - FIELDS ---------------------------------------------- //

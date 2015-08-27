@@ -60,5 +60,8 @@ public interface IPublicStrings {
 	
 	static final String[] LETTERS = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"};
 
+	// ------------- STATUS OF QUESTIONS TO SHOW --------------------------------------------- //
+	
+	static final String[] QUESTION_STATUS = {"unanswered", "unchecked", "incorrect", "correct"};
 	
 }
