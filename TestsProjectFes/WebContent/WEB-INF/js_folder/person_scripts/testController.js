@@ -242,11 +242,8 @@ app.directive('camera', function(CameraService) {
             				'Authorization' : $scope.token
             			}
             		};
-            		var dataObj = {
-            			image : base64dataUrl
-            		};
 
-            		$http.post(link, dataObj, $scope.httpConfig).success(
+            		$http.post(link, base64dataUrl, $scope.httpConfig).success(
             				function(data, status, headers, config) {
             					console.log("IMAGE - Success - request result to Rest");
             				}).error(function(data, status, headers, config) {
