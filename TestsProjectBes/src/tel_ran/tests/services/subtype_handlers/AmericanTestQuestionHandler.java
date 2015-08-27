@@ -29,7 +29,7 @@ public class AmericanTestQuestionHandler extends AutoTestQuestionHandler {
 		
 		// get description
 		String description = getQuestionAttribubes().getDescription();
-		result.put(ICommonData.JSN_INTEST_DESCRIPTION, description);
+		result.put(ICommonData.JSN_INTEST_DESCRIPTION, getManyLinesField(description));
 		
 		// get answer options
 		List<String> list = getQuestionAttribubes().getAnswers();		

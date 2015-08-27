@@ -226,11 +226,13 @@ public abstract class CommonAdminServices extends CommonServices implements
 				// 7
 				String category1 = fres[7];
 				// 8
-				
-				if(fres[8]!=null && fres[8].length() > 3) {
-					
+								
+				if(fres[8]!=null && fres[8].length() > 1) {
+					System.out.println(LOG + " - 231 M: module for bulding questions " + fres[8]);
 					answers = new ArrayList<String>();					
 					answers.add(fres[8]);
+				} else {
+					System.out.println(LOG + " - 235 M: module for bulding questions - NO CODE");
 				}
 				//
 				String metaCategory = byCategory;// TO DO !!!!!!!!!!!!!!!!!! by what category that bee save ???

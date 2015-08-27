@@ -3,7 +3,9 @@ package tel_ran.tests.services.subtype_handlers;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,6 +25,7 @@ import tel_ran.tests.services.utils.FileManagerService;
 
 public abstract class AbstractTestQuestionHandler extends TestsPersistence implements ITestQuestionHandler {
 			
+	private static final String LOG = AbstractTestQuestionHandler.class.getSimpleName();
 	protected EntityQuestionAttributes entityQuestionAttributes;
 	protected EntityTestQuestions entityTestQuestion;
 	protected long questionId;
@@ -169,6 +172,36 @@ public abstract class AbstractTestQuestionHandler extends TestsPersistence imple
 		entityTestQuestion.setStatus(result);
 		em.merge(entityTestQuestion);
 		return result;
+		
+	}
+	
+	protected JSONArray getManyLinesField(String str) {
+		String[] lines = str.split("\n");
+		String[] lines2 = str.split(System.getProperty("line.separator"));
+		System.out.println(LOG + " -179-M: getManyLinesField - lines with n = " + lines.length);
+		System.out.println(LOG + " -180-M: getManyLinesField - separator " + System.getProperty("line.separator"));
+		System.out.println(LOG + " -181-M: getManyLinesField - lines with = " + lines2.length);
+		
+		JSONArray result = new JSONArray();
+		
+		List<String> lst = new ArrayList<>();
+		for(String s : lines) {
+			JSONObject jsn = new JSONObject();
+			try {
+				
+				s = s.replaceAll("\\t", "    ");
+				jsn.put("line", s);
+				result.put(jsn);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			System.out.println(LOG + " -187-M: getManyLinesField - line: " + s);
+			lst.add(s);
+		}
+		
+		return result;
+		
 		
 	}
 	

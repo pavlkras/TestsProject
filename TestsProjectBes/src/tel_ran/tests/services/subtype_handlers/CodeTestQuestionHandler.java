@@ -1,5 +1,6 @@
 package tel_ran.tests.services.subtype_handlers;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
@@ -8,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import tel_ran.tests.entitys.EntityAnswersText;
 import tel_ran.tests.services.common.ICommonData;
+import tel_ran.tests.services.common.IPublicStrings;
 import tel_ran.tests.services.inner_result.dataobjects.InnerResultDataObject;
 import tel_ran.tests.services.subtype_handlers.gradle.CodeTester;
 import tel_ran.tests.services.utils.FileManagerService;
@@ -19,6 +21,8 @@ import java.util.List;
 public class CodeTestQuestionHandler extends AbstractTestQuestionHandler implements ITestQuestionHandler{
 	
 	
+	private static final String LOG = CodeTestQuestionHandler.class.getSimpleName();
+
 	public CodeTestQuestionHandler() {
 		super();
 		type = ICommonData.QUESTION_TYPE_CODE;
@@ -81,12 +85,27 @@ public class CodeTestQuestionHandler extends AbstractTestQuestionHandler impleme
 							
 		// get stub
 		List<String> list = getQuestionAttribubes().getAnswers();
-		if(list!=null) {
+		if(list!=null && list.size() > 0) {
 			result.put(ICommonData.JSN_INTEST_CODE, list.get(0));			
 		}
-				
+		result.put(ICommonData.JSN_INTEST_DESCRIPTION, getManyLinesField(getQuestionAttribubes().getDescription()));		
 		return result;		
 	}
+	
+	protected String preparingDescription(String str) {
+		System.out.println(str);	
+		String[]lines = str.split("\\n");
+		
+		StringBuilder result = new StringBuilder();
+		
+		for (int i = 0; i < lines.length; i++) {
+			result.append(lines[i]).append(System.getProperty("line.separator"));
+		
+		}
+		System.out.println(LOG + " -105-M: preparingDescription : " + result.toString());
+		return result.toString();
+	}
+
 
 	@Override
 	protected int checkAnswers() {
