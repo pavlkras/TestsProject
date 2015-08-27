@@ -31,13 +31,15 @@ public class FileManagerService {
 	
 	private static final String LOG = FileManagerService.class.getSimpleName();
 	
-	public static final String WORKING_DIR = System.getProperty("user.home");
+	public static final String WORKING_DIR = System.getProperty("user.home");	
 	public static final String NAME_FOLDER_FOR_SAVENG_TESTS_FILES = "TESTS_FILES_DATABASE";
 	public static final String NAME_TEST_INNER_FOLDERS = File.separator + "TESTS" + File.separator
 			+ "IDE" + File.separator + "EclipseKepler";
 	public static final String testSaveWorkingDir = WORKING_DIR + NAME_TEST_INNER_FOLDERS;
 	public static final String NAME_FOLDER_FOR_SAVENG_QUESTIONS_FILES = "QUESTION_FILES_DATABASE";	
 	public static final String BASE_DIR_IMAGES = WORKING_DIR + File.separator + NAME_FOLDER_FOR_SAVENG_QUESTIONS_FILES;	
+	public static final String BASE_CODE_TEST = WORKING_DIR + File.separator + "TESTS" + File.separator
+			+ "CHECK";
 		
 	public static final String TEST_JSON_FILE = "test.json";
 	public static final String NO_COMPANY = "admin";
@@ -324,9 +326,9 @@ public class FileManagerService {
 	}
 
 	
-	public static String getPathToCode(long compId, long testId, long questionID) {
-		// TODO Auto-generated method stub
-		return null;
+	public static String getPathToCode(long compId, long testId, String link) {
+		
+		return getBasePathForCode(compId, testId) + link;
 	}
 	
 	public static String saveCode(long compId, long testId, long questionID, String[] code) throws IOException {
@@ -334,8 +336,7 @@ public class FileManagerService {
 		boolean ready = false;
 		int index = 0;
 		String path = null;
-		String basePath = testSaveWorkingDir + File.separator + compId + File.separator + testId + File.separator
-				+ BILD_ATTRIBUTES_ARRAY[PERSON_CODE_TEXT] + File.separator;
+		String basePath = getBasePathForCode(compId, testId);
 		
 		File dir = new File(basePath);
 		dir.mkdirs();
@@ -379,5 +380,32 @@ public class FileManagerService {
 				+ BILD_ATTRIBUTES_ARRAY[PERSON_PICTURES];
 
 	}
+	
+	public static String getBasePathForCode(long compId, long testId) {
+		return testSaveWorkingDir + File.separator + compId + File.separator + testId + File.separator
+				+ BILD_ATTRIBUTES_ARRAY[PERSON_CODE_TEXT] + File.separator;
+	}
+	
+	public static void copyFiles(String source, String dest) throws IOException {
+		System.out.println(source);
+		System.out.println(dest);
+		Files.copy(new File(source).toPath(), new File(dest).toPath());	
+	}
+	
+	public static String readTheFile(String path) throws IOException {
+		StringBuilder result = new StringBuilder();
+		
+		BufferedReader reader = new BufferedReader(new FileReader(path));
+		String line = reader.readLine();
+		while(line!=null) {
+			result.append(line).append(System.getProperty("line.separator"));
+			line = reader.readLine();
+			System.out.println(LOG + " -403:M: readTheFile : line = " + line);
+		}
+		reader.close();
+		return result.toString();
+		
+	}
+	
 	
 }	

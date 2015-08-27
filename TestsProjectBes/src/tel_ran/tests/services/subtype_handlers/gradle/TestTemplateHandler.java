@@ -16,6 +16,8 @@ import java.util.LinkedList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import tel_ran.tests.services.utils.FileManagerService;
+
 public class TestTemplateHandler {
 	
 	private static final String innerFolder00 = "src";
@@ -23,7 +25,7 @@ public class TestTemplateHandler {
 	private static final String innerFolder02 = "src/test/java";
 	private static final String packageMain = "main.java";
 		
-	private static final String gradlePathJava = "gradleBuilds/java";
+	private static final String gradlePathJava = "/gradleBuilds/java";
 	private static final String buildName = "build.gradle";
 	
 	File workFolder = null;
@@ -31,8 +33,7 @@ public class TestTemplateHandler {
 	String javaPath;
 	String buildGradlePath;
 	String baseFolder;
-	
-	
+		
 	public TestTemplateHandler(String workFolderPath) throws IOException{
 		workFolder = getworkFolder(workFolderPath);
 		copyBuild();
@@ -48,7 +49,7 @@ public class TestTemplateHandler {
 		source = source.concat(File.separator).concat(buildName);
 		buildGradlePath = baseFolder.concat(File.separator).concat(buildName);
 		
-		copyFiles(source, buildGradlePath);
+		FileManagerService.copyFiles(source, buildGradlePath);
 			
 	}
 
@@ -173,7 +174,7 @@ public class TestTemplateHandler {
 				try {
 					String name = getFileName(f);
 					String newPath = destination.concat(name).concat(".java");
-					copyFiles(f.getPath(), newPath);
+					FileManagerService.copyFiles(f.getPath(), newPath);
 					
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
@@ -185,7 +186,7 @@ public class TestTemplateHandler {
 			try {
 				String name = getFileName(folder);
 				String newPath = destination.concat(name).concat(".java");
-				copyFiles(codeFromPerson, newPath);
+				FileManagerService.copyFiles(codeFromPerson, newPath);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -319,9 +320,6 @@ public class TestTemplateHandler {
 		return paths[paths.length-1];		
 	}
 	
-	private void copyFiles(String source, String dest) throws IOException {
-		Files.copy(new File(source).toPath(), new File(dest).toPath());	
-	}
 	
 	
 

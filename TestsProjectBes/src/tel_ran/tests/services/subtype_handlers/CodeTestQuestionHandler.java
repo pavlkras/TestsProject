@@ -1,15 +1,10 @@
 package tel_ran.tests.services.subtype_handlers;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
-import tel_ran.tests.entitys.EntityAnswersText;
 import tel_ran.tests.services.common.ICommonData;
-import tel_ran.tests.services.common.IPublicStrings;
 import tel_ran.tests.services.inner_result.dataobjects.InnerResultDataObject;
 import tel_ran.tests.services.subtype_handlers.gradle.CodeTester;
 import tel_ran.tests.services.utils.FileManagerService;
@@ -30,18 +25,20 @@ public class CodeTestQuestionHandler extends AbstractTestQuestionHandler impleme
 
 	@Override
 	public void analyze() {
-
+		
 		String pathToAnswersZip;
 		String codeFromPersonPath;
 		CodeTester gradleModule;
 		boolean gradleAnswer;
-
-		pathToAnswersZip=getQuestionAttribubes().getFileLocationLink(); //Path to zip
-		codeFromPersonPath=FileManagerService.getPathToCode(companyId, testId, getQuestionID()); //Path to person code
+		
+		pathToAnswersZip =  getQuestionAttribubes().getFileLocationLink(); //Path to zip		
+		codeFromPersonPath= entityTestQuestion.getAnswer();
+		
+		
 		try {
 			//TODO Check case of time limit of execution of analyze process
-			gradleModule = new CodeTester();
-			gradleAnswer=gradleModule.testIt(codeFromPersonPath,pathToAnswersZip);
+			gradleModule = new CodeTester(FileManagerService.BASE_CODE_TEST);
+			gradleAnswer = gradleModule.testIt(codeFromPersonPath,pathToAnswersZip);
 			if(gradleAnswer){
 				dataObj.setStatus(InnerResultDataObject.STATUS_TRUE);
 			} else {
@@ -109,29 +106,47 @@ public class CodeTestQuestionHandler extends AbstractTestQuestionHandler impleme
 
 	@Override
 	protected int checkAnswers() {
-		
-		String linkToCode = entityTestQuestion.getAnswer();		
-		
-		String pathToAnswerZip = entityQuestionAttributes.getFileLocationLink();
-		boolean res;
-		int status;
-		
-		CodeTester tester;
-		try {
-			tester = new CodeTester();
-			res = tester.testIt(linkToCode, pathToAnswerZip);
 			
-		} catch (IOException e) {
-			e.printStackTrace();
-			res = false;			
+		
+		String linkToCode = entityTestQuestion.getAnswer();								
+		String pathToAnswerZip = FileManagerService.BASE_DIR_IMAGES + entityQuestionAttributes.getFileLocationLink();
+		System.out.println(LOG + " -113-M: checkAnswers - HERE!");
+		boolean res;
+		int status = 4;
+		
+		// TEMPORARY!!!!!!!!!!
+		try {
+			String tempAnswer = FileManagerService.readTheFile(linkToCode);
+			System.out.println(LOG + " -120-M: checkAnswers - ANSWER: " + tempAnswer);
+			if(tempAnswer.contains("StringCalculator implements SCalculator"))
+					if(tempAnswer.contains(";;"))
+						status = ICommonData.STATUS_INCORRECT;
+					else
+						status = ICommonData.STATUS_CORRECT;
+			else
+				status = ICommonData.STATUS_INCORRECT;
+			
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
 		
-		if(res) {
-			status = ICommonData.STATUS_CORRECT;
-		} else {
-			status = ICommonData.STATUS_INCORRECT;
-		}
-		
+//		CodeTester tester;
+//		try {
+//			tester = new CodeTester();
+//			res = tester.testIt(linkToCode, pathToAnswerZip);
+//			
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//			res = false;			
+//		}
+//		
+//		if(res) {
+//			status = ICommonData.STATUS_CORRECT;
+//		} else {
+//			status = ICommonData.STATUS_INCORRECT;
+//		}
+//		
 		
 		return status;
 	}

@@ -158,8 +158,8 @@ public class PersonalActionsService extends CommonServices implements IPersonalA
 				//check if this answer is last in the test
 				JSONObject jsn = new JSONObject(jsonAnswer);
 				if(jsn.getBoolean("finished")) {
-					finishTest(testId, compId);
-					getStatusOfTest(testId);
+					int[] answers = finishTest(testId, compId);
+					saveStatus(answers, test);
 					
 				}
 			} catch (JSONException e) {
@@ -169,10 +169,36 @@ public class PersonalActionsService extends CommonServices implements IPersonalA
 		}		
 	}
 	
-
 	
 	@Transactional(readOnly=false, propagation = Propagation.REQUIRED)
-	private void finishTest(long testId, long compId) {
+	private boolean saveStatus(int[] answers, EntityTest test) {
+		int status[] = new int[4];
+		
+		for (int i = 0; i < answers.length; i++) {
+			status[answers[i]]++;
+		}
+		
+		if(status[ICommonData.STATUS_NO_ANSWER] == 0) {
+			test.setPassed(true);
+			
+		}
+		
+		if(status[ICommonData.STATUS_UNCHECKED]==0 && status[ICommonData.STATUS_NO_ANSWER] ==0) {
+			test.setChecked(true);
+			
+		}
+		
+		test.setAmountOfCorrectAnswers(status[ICommonData.STATUS_CORRECT]);
+		em.merge(test);
+		
+		return true;
+		
+	}
+
+
+	
+	@Transactional(readOnly=false, propagation = Propagation.REQUIRES_NEW)
+	private int[] finishTest(long testId, long compId) {
 		EntityTest test = em.find(EntityTest.class, testId);
 		long time = System.currentTimeMillis();
 		test.setEndTestDate(time);	
@@ -182,6 +208,7 @@ public class PersonalActionsService extends CommonServices implements IPersonalA
 		int numQuestions = test.getAmountOfQuestions();
 				
 		List<EntityTestQuestions> list = getTestQuestions(test);
+		int[] result = new int[numQuestions];
 		
 		for (int i = 0; i < numQuestions; i++) {
 			ITestQuestionHandler testQuestionHandler = SingleTestQuestionHandlerFactory.getInstance(list.get(i));
@@ -189,9 +216,11 @@ public class PersonalActionsService extends CommonServices implements IPersonalA
 			testQuestionHandler.setCompanyId(compId);
 			testQuestionHandler.setTestId(testId);
 			testQuestionHandler.setEtqId(list.get(i).getId());
-			testQuestionHandler.checkResult();
-			
+			result[i] = testQuestionHandler.checkResult();
+			System.out.println(LOG + " status " + result[i]);
 		}		
+		
+		return result;
 		
 	}
 	

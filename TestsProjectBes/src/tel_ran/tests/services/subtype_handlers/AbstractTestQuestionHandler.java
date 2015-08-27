@@ -165,10 +165,11 @@ public abstract class AbstractTestQuestionHandler extends TestsPersistence imple
 	}
 	
 	@Override
-	@Transactional(readOnly=false, propagation=Propagation.REQUIRED)
+	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
 	public int checkResult() {
 		entityTestQuestion = em.find(EntityTestQuestions.class, etqId);
 		int result = checkAnswers();
+		System.out.println(LOG + " -172-M: checkResult - result = " + result);
 		entityTestQuestion.setStatus(result);
 		em.merge(entityTestQuestion);
 		return result;
@@ -178,10 +179,7 @@ public abstract class AbstractTestQuestionHandler extends TestsPersistence imple
 	protected JSONArray getManyLinesField(String str) {
 		String[] lines = str.split("\n");
 		String[] lines2 = str.split(System.getProperty("line.separator"));
-		System.out.println(LOG + " -179-M: getManyLinesField - lines with n = " + lines.length);
-		System.out.println(LOG + " -180-M: getManyLinesField - separator " + System.getProperty("line.separator"));
-		System.out.println(LOG + " -181-M: getManyLinesField - lines with = " + lines2.length);
-		
+			
 		JSONArray result = new JSONArray();
 		
 		List<String> lst = new ArrayList<>();
@@ -196,7 +194,7 @@ public abstract class AbstractTestQuestionHandler extends TestsPersistence imple
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			System.out.println(LOG + " -187-M: getManyLinesField - line: " + s);
+			
 			lst.add(s);
 		}
 		
