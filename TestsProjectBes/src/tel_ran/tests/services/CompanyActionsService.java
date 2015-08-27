@@ -166,6 +166,28 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 		return res;
 	}
 
+	/**
+	 * Method for ViewResults - get details of test. Should return:
+	 * - duration (JSN = "duration")
+	 * - amount of question (JSN = "amountOfQuestions")
+	 * - amount of correct answers (JSN = "amountOfCorrectAnswers")
+	 * - amount of incorrect answers (JSN = "incorrect")
+	 * - amount of unchecked answers (JSN = "unchecked")
+	 * - percent of correct answers - String! (JSN = "persentOfRightAnswers")
+	 * - photo-pictures (JSN = "pictures")
+	 * - list of questions (JSN = "questions") with:
+	 * ----- index in list (JSN = "index") 
+	 * ----- ID (EntityTestQuestions) (JSN = "questionId")
+	 * ----- metaCategory (JSN = "metaCategory")
+	 * ----- category1 (JSN = "category")
+	 * ----- status (correct,incorrect,unchecked) in two options:
+	 * ----------- as number (= adress for IPublicStrings.QUESTION_STATUS[])
+	 * ----------- as String (from IPublicStrings.QUESTION_STATUS[])
+	 * 
+	 * @param companyId - id of company (by EntityCompany, it needs to get files of pictures) 
+	 * @param testId - id of test (by EntityTest)
+	 * @return JSON. Keys of JSON - see in ICommonData, JSN_TESTDETAILS_
+	 */
 	@Override
 	public String getTestResultDetails(long companyId, long testId) {
 		String res = "{}";
@@ -179,26 +201,35 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 			
 			if(test!=null) {
 				
-				long start = test.getStartTestDate();
-				long end = test.getEndTestDate();
-												
-				String durationStr = UtilsStatic.getDuration(start, end);
-			
-
 				JSONObject jsonObj = null;
 				
+				// get duration in String
+				long start = test.getStartTestDate();
+				long end = test.getEndTestDate();												
+				String durationStr = UtilsStatic.getDuration(start, end);		
+								
 				try {
 					
-					jsonObj = this.getStatusOfTest(test.getTestId());
+					// numbers of CORRECT ANSWERS, INCORRECT, UNCHECKED answers 
+					// PERCENT of Correct
+					// list of questions (with id, categories, status)
+					// index
+					jsonObj = this.checkStatusAndGetJson(test.getTestId());
 				
+					// pictures
 					List <String> images_ = FileManagerService.getImage(companyId, testId);
-					System.out.println(LOG + " - 195 - in method: getTestResultDetails, images: " + images_.toString());
-					System.out.println(LOG + " - 196 - in method: getTestResultDetails, images number: " + images_.size());
+					System.out.println(LOG + " - 216 - in method: getTestResultDetails, images: " + images_.toString());
+					System.out.println(LOG + " - 217 - in method: getTestResultDetails, images number: " + images_.size());
 					JSONArray images = new JSONArray(images_);
 					jsonObj.put("pictures", images);
+					
+					// duration
 					jsonObj.put("duration", durationStr);
 					
+					// amount of questions
 					int numberOfQuestions = test.getAmountOfQuestions();
+					
+					
 					JSONArray questions = new JSONArray();
 					for(int i=0; i<numberOfQuestions; i++){
 						JSONObject singleQuestion = new JSONObject();
@@ -454,23 +485,27 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 		int listSize;
 		
 		if(questionIdList==null) {
-			listSize =0;
+			listSize = 0;
 			questionIdList = new ArrayList<Long>();
 		} else
-			listSize = questionIdList.size();
+			listSize = questionIdList.size();		
 		
-		if (listSize < numberQuestions) {
-			List<Long> autoQuestions = this.createSetQuestions(metaCategories, categories1, complexityLevel, (numberQuestions - listSize), questionIdList);
-			if(autoQuestions == null) {				
-				return 1;
-				}
-			else
-				result = 0;
-			questionIdList.addAll(autoQuestions);
+		int numberQuestionsToAutoGenerate = numberQuestions - listSize;
+		
+		if (numberQuestionsToAutoGenerate > 0) {
+			List<Long> autoQuestions = this.createSetQuestions(metaCategories, categories1, complexityLevel, numberQuestionsToAutoGenerate, questionIdList);
+			questionIdList = autoQuestions;							
 		} 
 		
-		if(!this.createTest(questionIdList, ePerson, pass) && result!=1)
+		if(questionIdList.size() < numberQuestions)
 			result = 1;
+		else {
+		
+			if(!this.createTest(questionIdList, ePerson, pass) && result!=1)
+				result = 1;
+			else
+				result = 0; 
+		}
 		
 		return result;
 		

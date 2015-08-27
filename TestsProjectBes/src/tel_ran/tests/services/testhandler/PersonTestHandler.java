@@ -80,7 +80,7 @@ public class PersonTestHandler implements IPersonTestHandler {
 	}
 	
 	@Override
-	@Transactional(readOnly=false, propagation = Propagation.REQUIRED)
+	@Transactional(readOnly=false, propagation = Propagation.REQUIRES_NEW)
 	public boolean setAnswer(String answer) {
 		boolean res = true;
 		try {

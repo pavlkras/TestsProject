@@ -89,20 +89,9 @@ public class CodeTestQuestionHandler extends AbstractTestQuestionHandler impleme
 	}
 
 	@Override
-	@Transactional(readOnly=false, propagation=Propagation.REQUIRED)
-	protected int getStatus(String answer) {
-		String[]lines = answer.split("\\n");
+	protected int checkAnswers() {
 		
-		String linkToCode = null;
-		try {
-			linkToCode = FileManagerService.saveCode(companyId, testId, questionId, lines);
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
-		entityTestQuestion.setLinkToAnswer(linkToCode);
-		em.merge(entityTestQuestion);
+		String linkToCode = entityTestQuestion.getAnswer();		
 		
 		String pathToAnswerZip = entityQuestionAttributes.getFileLocationLink();
 		boolean res;
@@ -114,7 +103,6 @@ public class CodeTestQuestionHandler extends AbstractTestQuestionHandler impleme
 			res = tester.testIt(linkToCode, pathToAnswerZip);
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			res = false;			
 		}
@@ -128,7 +116,21 @@ public class CodeTestQuestionHandler extends AbstractTestQuestionHandler impleme
 		
 		return status;
 	}
-	
-	
+
+	@Override
+	protected String preparingAnswer(String answer) {
+		String[]lines = answer.split("\\n");
+		
+		String linkToCode = null;
+		try {
+			linkToCode = FileManagerService.saveCode(companyId, testId, questionId, lines);
+		} catch (IOException e1) {
+			
+			e1.printStackTrace();
+		}
+		return linkToCode;
+	}
+
+		
 	
 }

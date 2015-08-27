@@ -103,16 +103,22 @@ public class AutoTestQuestionHandler extends AbstractTestQuestionHandler {
 		return result;		
 	}
 	
-	
+
 	@Override
-	protected int getStatus(String answer) {
+	protected String preparingAnswer(String answer) {		
+		return answer;
+	}
+
+	@Override
+	protected int checkAnswers() {
 		String correctAnswer = entityQuestionAttributes.getCorrectAnswer();
+		String answer = entityTestQuestion.getAnswer();
 		int status;
 		if(answer.equalsIgnoreCase(correctAnswer)) {
 			status = ICommonData.STATUS_CORRECT;
 		} else {
 			status = ICommonData.STATUS_INCORRECT;
-		}			
+		}	
 		return status;
 	}
 	

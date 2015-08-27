@@ -59,9 +59,15 @@ public class OpenQuestionHandler extends AbstractTestQuestionHandler {
 		return result;		
 	}
 
+	
 	@Override
-	protected int getStatus(String answer) {		
+	protected int checkAnswers() {		
 		return ICommonData.STATUS_UNCHECKED;
+	}
+
+	@Override
+	protected String preparingAnswer(String answer) {
+		return answer;
 	}
 	
 	

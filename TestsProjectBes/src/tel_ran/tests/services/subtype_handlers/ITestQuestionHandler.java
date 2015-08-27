@@ -19,6 +19,8 @@ public interface ITestQuestionHandler {
 	void setEntityQuestionAttributes(EntityQuestionAttributes entityQuestionAttributes);
 	void setCompanyId(long companyId); 
 	void setTestId(long testId); 
+	void setEtqId(long etqId);
+	int checkResult();
 		
 	/**
 	 * Returns short version of Questions, that can be used by User or Person in tests

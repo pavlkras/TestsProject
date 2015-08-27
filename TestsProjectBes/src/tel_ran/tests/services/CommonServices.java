@@ -26,6 +26,8 @@ import tel_ran.tests.services.utils.FileManagerService;
 
 public abstract class CommonServices extends TestsPersistence implements ICommonService {
 	
+	protected final static String LOG = CommonServices.class.getSimpleName();
+	
 
 	protected List<String> getQuery(String query) {		
 		TypedQuery<String> q = em.createQuery(query, String.class);
@@ -272,19 +274,26 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 		return jsn;
 	}
 	
+	/**
+	 * NEW FLOW of saving answers
+	 * This methot is called in the end of the test to check its status: passed, checked or none
+	 * @param testId
+	 * @return
+	 * @throws JSONException
+	 */
 	@Transactional(readOnly=false, propagation = Propagation.REQUIRED)
 	protected JSONObject getStatusOfTest(long testId) throws JSONException {
 		int correct = 0;
 		int inCorrect = 0;
 		int unAnswered = 0;
 		int unChecked = 0;
-		JSONArray arrayUnchecked = new JSONArray();
-		
+				
 		EntityTest test = em.find(EntityTest.class, testId);
 		
 		String query = "SELECT c from EntityTestQuestions c WHERE c.entityTest=?1";
-		List<EntityTestQuestions> list = em.createQuery(query).setParameter(1, test).getResultList();		
 		
+		@SuppressWarnings("unchecked")
+		List<EntityTestQuestions> list = em.createQuery(query).setParameter(1, test).getResultList();			
 				
 		for(EntityTestQuestions etq : list) {
 			int status = etq.getStatus();
@@ -298,55 +307,56 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 				break;
 			case ICommonData.STATUS_NO_ANSWER :
 				unAnswered++;
+				System.out.println(LOG + " -313-M: getStatusOfTest - unanswered = " + etq.getId());
 				break;
 			case ICommonData.STATUS_UNCHECKED :
-				unChecked++;
-				JSONObject jsn = new JSONObject();
-				jsn.put(ICommonData.JSN_TEST_QUESTION_ID, etq.getId());				
+				unChecked++;	
 				break;
+			default:
+				System.out.println(LOG + " -315-M: getStatusOfTest - incorrect status = " + status);
 			}
 		}
 		
 		boolean testIsPassed;
 		boolean testIsChecked;
-		
 				
+		System.out.println(LOG + " -322-M: getStatusOfTest - CORRECT = " + correct);
+		System.out.println(LOG + " -323-M: getStatusOfTest - INCORRECT = " + inCorrect);
+		System.out.println(LOG + " -324-M: getStatusOfTest - UNANSWERED = " + unAnswered);
+		System.out.println(LOG + " -325-M: getStatusOfTest - UNCHECKED = " + unChecked);
 		if(unAnswered==0) {			
 			testIsPassed = true;
 			if(!test.isPassed()) {				
-				test.setPassed(true);
-				em.merge(test);				
+				System.out.println(LOG + " -329-M: getStatusOfTest - i'm writing that test is passed");
+				test.setPassed(true);	
+				em.merge(test);
 			}
 		} else {
 			testIsPassed = false;
 		}
 		
-		if(unChecked==0) {
+		if(unChecked==0 && testIsPassed) {
 			testIsChecked = true;
 			if(!test.isChecked()) {
-				test.setChecked(true);
+				test.setChecked(true);	
 				em.merge(test);
 			}
 		} else {
 			testIsChecked = false;
 		}
-		
-				
+						
 		if(test.getAmountOfCorrectAnswers()!=correct) {
-			test.setAmountOfCorrectAnswers(correct);
+			test.setAmountOfCorrectAnswers(correct);	
 			em.merge(test);
 		}		
+		
+				
 		int allQuestions = test.getAmountOfQuestions();
 			
 		JSONObject result = new JSONObject();
-		result.put(ICommonData.JSN_TEST_CORRECT_ANSWERS, correct);
-		result.put(ICommonData.JSN_TEST_INCORRECT_ANSWERS, inCorrect);
-		result.put(ICommonData.JSN_TEST_IS_CHECKED, testIsChecked);
-		result.put(ICommonData.JSN_TEST_IS_PASSED, testIsPassed);
-		result.put(ICommonData.JSN_TEST_LIST_ANSWERS_TO_CHECK, arrayUnchecked);
-		result.put(ICommonData.JSN_TEST_QUESTION_NUMBER, allQuestions);
-		result.put(ICommonData.JSN_TEST_UNANSWERED_ANSWERS, unAnswered);
-		result.put(ICommonData.JSN_TEST_UNCHECKED_ANSWERS, unChecked);
+		result.put(ICommonData.JSN_TESTDETAILS_CORRECT_QUESTIONS_NUMBER, correct);
+		result.put(ICommonData.JSN_TESTDETAILS_INCORRECT_ANSWERS_NUMBER, inCorrect);		
+		result.put(ICommonData.JSN_TESTDETAILS_UNCHECKED_QUESTIONS_NUMBER, unChecked);
 		
 		float percent;
 		int checked = allQuestions - unAnswered - unChecked;
@@ -354,14 +364,132 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 			percent = 0;
 		else
 			percent = Math.round((float)correct/(float)checked*100);
+		String resPercent = Float.toHexString(percent) + "%";
 		
 		if(unChecked==0 && unAnswered==0) {
-			result.put("persentOfRightAnswers",Float.toString(percent)); // Add calculations from the resultTestCodeFromPerson field
+			result.put(ICommonData.JSN_TEST_PERCENT_OF_CORRECT, resPercent); // Add calculations from the resultTestCodeFromPerson field
 		} else if (unChecked==0){
-			result.put("persentOfRightAnswers", "not checked");
+			result.put(ICommonData.JSN_TEST_PERCENT_OF_CORRECT, "not answered (" + resPercent + "/" + checked +")");
+		} else {
+			result.put(ICommonData.JSN_TEST_PERCENT_OF_CORRECT, "not checked (" + resPercent + "/" + checked + ")");
 		}
 		
 		return result;
+	}
+	
+	@Transactional(readOnly=false, propagation = Propagation.REQUIRED)
+	public JSONObject checkStatusAndGetJson(long testId) throws JSONException {
+		int correct = 0;
+		int inCorrect = 0;
+		int unAnswered = 0;
+		int unChecked = 0;
+				
+		EntityTest test = em.find(EntityTest.class, testId);
+		
+		String query = "SELECT c from EntityTestQuestions c WHERE c.entityTest=?1";
+		
+		JSONArray jsnArray = new JSONArray();
+		
+		@SuppressWarnings("unchecked")
+		List<EntityTestQuestions> list = em.createQuery(query).setParameter(1, test).getResultList();			
+				
+		int index = 0;
+		for(EntityTestQuestions etq : list) {
+			JSONObject jsnQuest = new JSONObject();
+			
+			//set ID and index
+			jsnQuest.put(ICommonData.JSN_TESTDETAILS_QUESTION_ID, etq.getId());
+			jsnQuest.put(ICommonData.JSN_TESTDETAILS_QUESTION_INDEX, index++);
+			
+			// set STATUS
+			int status = etq.getStatus();
+			jsnQuest.put(ICommonData.JSN_TESTDETAILS_QUESTION_STATUS_NUM, status);
+			jsnQuest.put(ICommonData.JSN_TESTDETAILS_QUESTION_STATUS_STR, IPublicStrings.QUESTION_STATUS[status]);
+			
+			//set category-metacategory
+			jsnQuest.put(ICommonData.JSN_TESTDETAILS_QUESTION_METACATEGORY, etq.getEntityQuestionAttributes().getMetaCategory());
+			jsnQuest.put(ICommonData.JSN_TESTDETAILS_QUESTION_CATEGORY1, etq.getEntityQuestionAttributes().getCategory1());
+			
+			jsnArray.put(jsnQuest);
+			
+			switch(status) {
+			case ICommonData.STATUS_CORRECT :
+				correct++;
+				break;
+			case ICommonData.STATUS_INCORRECT :
+				inCorrect++;
+				break;
+			case ICommonData.STATUS_NO_ANSWER :
+				unAnswered++;
+				break;
+			case ICommonData.STATUS_UNCHECKED :
+				unChecked++;							
+				break;
+			default:
+				System.out.println(LOG + " -315-M: getStatusOfTest - incorrect status = " + status);
+			}
+		}
+		
+		boolean testIsPassed;
+		boolean testIsChecked;
+						
+		if(unAnswered==0) {			
+			testIsPassed = true;
+			if(!test.isPassed()) {				
+				test.setPassed(true);						
+			}
+		} else {
+			testIsPassed = false;
+		}
+		
+		if(unChecked==0 && testIsPassed) {
+			testIsChecked = true;
+			if(!test.isChecked()) {
+				test.setChecked(true);				
+			}
+		} else {
+			testIsChecked = false;
+		}
+						
+		if(test.getAmountOfCorrectAnswers()!=correct) {
+			test.setAmountOfCorrectAnswers(correct);			
+		}		
+		
+		em.merge(test);
+		
+		int allQuestions = test.getAmountOfQuestions();
+			
+		JSONObject result = new JSONObject();
+		
+		result.put(ICommonData.JSN_TESTDETAILS_LIST_OF_QUESTIONS, jsnArray);
+		result.put(ICommonData.JSN_TESTDETAILS_CORRECT_QUESTIONS_NUMBER, correct);
+		result.put(ICommonData.JSN_TESTDETAILS_INCORRECT_ANSWERS_NUMBER, inCorrect);		
+		result.put(ICommonData.JSN_TESTDETAILS_UNCHECKED_QUESTIONS_NUMBER, unChecked);
+		
+		float percent;
+		int checked = allQuestions - unAnswered - unChecked;
+		if(checked==0) 
+			percent = 0;
+		else
+			percent = Math.round((float)correct/(float)checked*100);
+		String resPercent = Float.toHexString(percent) + "%";
+		
+		if(unChecked==0 && unAnswered==0) {
+			result.put(ICommonData.JSN_TEST_PERCENT_OF_CORRECT, resPercent); // Add calculations from the resultTestCodeFromPerson field
+		} else if (unChecked==0){
+			result.put(ICommonData.JSN_TEST_PERCENT_OF_CORRECT, "not answered (" + resPercent + "/" + checked +")");
+		} else {
+			result.put(ICommonData.JSN_TEST_PERCENT_OF_CORRECT, "not checked (" + resPercent + "/" + checked + ")");
+		}
+		
+		return result;
+		
+	}
+	
+	@SuppressWarnings("unchecked")
+	protected List<EntityTestQuestions> getTestQuestions(EntityTest test) {
+		String query = "SELECT c from EntityTestQuestions c WHERE c.entityTest=?1";
+		return em.createQuery(query).setParameter(1, test).getResultList();
 	}
 
 }

@@ -50,36 +50,42 @@ public class PersonalActionsService extends CommonServices implements IPersonalA
 
 		return actionResult;
 	}
+	
+	// ---- NO USED ----------- //
+	// ----- OLD VERSION ------- //
 	////-------  Processing  ----------------// START //
-	@Override
-	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+//	@Override
+//	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
 	public String getNextQuestion(long testId){
 		String question = null; 
-		EntityTest test = em.find(EntityTest.class, testId);
-
-		if(!test.isPassed()){
-			if(test.getStartTestDate()==0){
-				test.setStartTestDate(new Date().getTime());
-				em.persist(test);
-			}
-			IPersonTestHandler testResultsJsonHandler = getTestResultsHandler(test.getEntityCompany().getId(), testId);
-
-			question = testResultsJsonHandler.next();
-			if ( question == null ){
-				//TODO new Thread needed
-				testResultsJsonHandler.analyzeAll();
-
-				test.setAmountOfCorrectAnswers(testResultsJsonHandler.getRightAnswersQuantity());
-				test.setEndTestDate(new Date().getTime());
-				test.setPassed(true);
-				em.persist(test);
-			}
-		}
+//		EntityTest test = em.find(EntityTest.class, testId);
+//
+//		if(!test.isPassed()){
+//			if(test.getStartTestDate()==0){
+//				test.setStartTestDate(new Date().getTime());
+//				em.persist(test);
+//			}
+//			IPersonTestHandler testResultsJsonHandler = getTestResultsHandler(test.getEntityCompany().getId(), testId);
+//
+//			question = testResultsJsonHandler.next();
+//			if ( question == null ){
+//				//TODO new Thread needed
+//				testResultsJsonHandler.analyzeAll();
+//
+//				test.setAmountOfCorrectAnswers(testResultsJsonHandler.getRightAnswersQuantity());
+//				test.setEndTestDate(new Date().getTime());
+//				test.setPassed(true);
+//				em.persist(test);
+//			}
+//		}
 		return question;
 	}
 
 	
 	/**
+	 * NEW FLOW that gets all questions for the test begins here
+	 * It returns the list of the questions that have status = "unAnswered"
+	 * If there aren't such questions or the test has been passed it returns null
 	 * Returns JSON of all questions in short version (for person) for the given test
 	 * @param testId = id of the test
 	 * @return String = JSON
@@ -88,20 +94,31 @@ public class PersonalActionsService extends CommonServices implements IPersonalA
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
 	public String getAllTestQuestions(long testId) {		
 		String result = null;	
+		
+		// find test in DB by testId
 		EntityTest test = em.find(EntityTest.class, testId);
+		
+		// check if the test is passed
 		if(!test.isPassed()) {
-			test.setStartTestDate(System.currentTimeMillis());
-						
+			
+			// save start time of test if
+			if (test.getStartTestDate()==0)
+				test.setStartTestDate(System.currentTimeMillis());
+			
+			// get list of test-questions (from EntityTestQuestions)
 			List<EntityTestQuestions> questions = test.getEntityTestQuestions();
 			
-			JSONArray arrayResult = new JSONArray();
+			JSONArray arrayResult = new JSONArray();			
+			int index = 0;		
 			
-			int index = 0;
+			for (EntityTestQuestions etq : questions) {
 				
-			for (EntityTestQuestions etq : questions) {		
-				
-					if(etq.getStatus() == ICommonData.STATUS_NO_ANSWER) {						
-						EntityQuestionAttributes eqa = etq.getEntityQuestionAttributes();						
+					// check if this questions is unaswered
+					if(etq.getStatus() == ICommonData.STATUS_NO_ANSWER) {	
+						// get question (EntityQuestionAttributes) from test-question
+						EntityQuestionAttributes eqa = etq.getEntityQuestionAttributes();
+						
+						// create handler for the question and get JSON
 						ITestQuestionHandler handler = SingleTestQuestionHandlerFactory.getInstance(eqa);
 						JSONObject jsn;
 						try {
@@ -115,42 +132,66 @@ public class PersonalActionsService extends CommonServices implements IPersonalA
 				}				
 			}			
 			
-			result = arrayResult.toString();
+			if(questions.size()>0)
+				result = arrayResult.toString();
 		}
 		return result;
 	}
 	
+	/** 
+	 * The flow of saving the answer of Person
+	 * It's called by PersonTestRESTController
+	 * @param testId - id of test
+	 * @param jsonAnswer - JSON with answer and test-question ID (EntityTestQuestions) 
+	 */
 	@Override
 	@Transactional(readOnly=false, propagation = Propagation.REQUIRES_NEW)
 	public void setAnswer(long testId, String jsonAnswer){
 		
 		EntityTest test = em.find(EntityTest.class, testId);
+		long compId = test.getEntityCompany().getId();
 
 		if(!test.isPassed()){
-			getTestResultsHandler(test.getEntityCompany().getId(), testId).setAnswer(jsonAnswer);
+			//save answer
+			getTestResultsHandler(compId, testId).setAnswer(jsonAnswer);
 			try {
+				//check if this answer is last in the test
 				JSONObject jsn = new JSONObject(jsonAnswer);
 				if(jsn.getBoolean("finished")) {
-					finishTest(testId);
+					finishTest(testId, compId);
 					getStatusOfTest(testId);
 					
 				}
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
-			
-		}
-		
+			}			
+		}		
 	}
 	
+
 	
 	@Transactional(readOnly=false, propagation = Propagation.REQUIRED)
-	private void finishTest(long testId) {
+	private void finishTest(long testId, long compId) {
 		EntityTest test = em.find(EntityTest.class, testId);
 		long time = System.currentTimeMillis();
 		test.setEndTestDate(time);	
+		test.setDuration((int)(test.getStartTestDate() - time));
 		em.merge(test);
+		System.out.println(LOG + " - 181-M: fininshTest");
+		int numQuestions = test.getAmountOfQuestions();
+				
+		List<EntityTestQuestions> list = getTestQuestions(test);
+		
+		for (int i = 0; i < numQuestions; i++) {
+			ITestQuestionHandler testQuestionHandler = SingleTestQuestionHandlerFactory.getInstance(list.get(i));
+			testQuestionHandler.setEntityQuestionAttributes(list.get(i).getEntityQuestionAttributes());
+			testQuestionHandler.setCompanyId(compId);
+			testQuestionHandler.setTestId(testId);
+			testQuestionHandler.setEtqId(list.get(i).getId());
+			testQuestionHandler.checkResult();
+			
+		}		
 		
 	}
 	
@@ -186,11 +227,11 @@ public class PersonalActionsService extends CommonServices implements IPersonalA
 	}
 	@Override
 	public void saveImage(long testId, String image) {
-		System.out.println(LOG + " - 189: in method  saveImage");
+		System.out.println(LOG + " - 205: M:  saveImage");
 		EntityTest test = em.find(EntityTest.class, testId);
 
 		if(!test.isPassed()){
-			System.out.println(LOG + " - 193: in method  saveImage - test is not passed");
+			System.out.println(LOG + " - 209: M:  saveImage - test is not passed");
 			try {
 				FileManagerService.saveImage(test.getEntityCompany().getId(), testId, image);
 			} catch (IOException e) {
@@ -199,6 +240,7 @@ public class PersonalActionsService extends CommonServices implements IPersonalA
 			}			
 		}
 	}
+		
 	
 	@Override
 	protected boolean ifAllowed(EntityQuestionAttributes question) {

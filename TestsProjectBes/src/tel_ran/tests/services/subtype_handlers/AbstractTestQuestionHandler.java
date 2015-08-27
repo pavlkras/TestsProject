@@ -26,12 +26,17 @@ public abstract class AbstractTestQuestionHandler extends TestsPersistence imple
 	protected EntityQuestionAttributes entityQuestionAttributes;
 	protected EntityTestQuestions entityTestQuestion;
 	protected long questionId;
+	protected long etqId;
 	protected InnerResultDataObject dataObj;
 	protected long companyId;
 	protected long testId;
 	int type;
 	
 				
+	public void setEtqId(long etqId) {
+		this.etqId = etqId;
+	}
+
 	public void setCompanyId(long companyId) {
 		this.companyId = companyId;
 	}
@@ -136,15 +141,15 @@ public abstract class AbstractTestQuestionHandler extends TestsPersistence imple
 			String answer;
 			try {
 				answer = answerJsonObj.getString(ICommonData.JSN_INTEST_ANSWER);
-				int status = getStatus(answer);			
+				int status = ICommonData.STATUS_UNCHECKED;			
 				
-				entityTestQuestion.setAnswer(answer);
+				String answerToSave = preparingAnswer(answer);
+				entityTestQuestion.setAnswer(answerToSave);
 				entityTestQuestion.setStatus(status);
 				em.merge(entityTestQuestion);
 				
 				res = true;
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
+			} catch (JSONException e) {				
 				e.printStackTrace();
 				res = false;
 			}			
@@ -156,7 +161,19 @@ public abstract class AbstractTestQuestionHandler extends TestsPersistence imple
 		return res;
 	}
 	
-	abstract protected int getStatus(String answer);
+	@Override
+	@Transactional(readOnly=false, propagation=Propagation.REQUIRED)
+	public int checkResult() {
+		entityTestQuestion = em.find(EntityTestQuestions.class, etqId);
+		int result = checkAnswers();
+		entityTestQuestion.setStatus(result);
+		em.merge(entityTestQuestion);
+		return result;
+		
+	}
+	
+	protected abstract int checkAnswers();
+	protected abstract String preparingAnswer(String answer);
 
 
 }
