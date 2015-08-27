@@ -1,8 +1,12 @@
 <form name="questionForm" novalidate ng-submit="getQuestion(answer.name);">
             <table>
                 <tr><th colspan="2"><label>Question&nbsp;</label>{{numberQuestion+1}}</th></tr><br>
-                <tr ng-show="mySwitchImage"><td colspan="2">{{text}}</td></tr>
-                <tr ng-show="mySwitchImage"><td colspan="2"><img ng-src="{{image}}" height="400" width="600" alt="Image is not supported"></td></tr>
+                <tr ng-show="mySwitchText"><td colspan="2">{{text}}</td></tr>
+                <tr ng-show="mySwitchDescription"><td colspan="2">{{description}}</td></tr>
+                <tr ng-show="mySwitchImage"><td colspan="2"><img ng-src="{{image}}" alt="Image is not supported"></td></tr>
+            </table>
+            <table ng-show="userAmericanTest" ng-repeat="a in options">
+            	<tr><td>{{a.answers}}</td><td>{{a.answerOption}}</td></tr>
             </table>
             <table ng-show="mySwitchAmericanSystemTestQuestion">
                 <tr>

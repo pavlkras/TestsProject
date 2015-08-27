@@ -12,6 +12,7 @@ app.controller("QuestionTestController", function($scope, $http) {
 	$scope.mySwitchCodeTestQuestion = false;
 	$scope.mySwitchImage = false;
 	$scope.switchTextCamera = true;
+	$scope.countPhoto = 0;
 
 	$scope.toggleShowDetails = function() {
 		$scope.mySwitchStartTest = !$scope.mySwitchStartTest;
@@ -19,86 +20,115 @@ app.controller("QuestionTestController", function($scope, $http) {
 	};
 
 	$scope.getQuestion = function(userAnswer) {
-		$scope.take_photo();
-		var link = "/TestsProjectBes/persontest/saveprev_getnext";
-		$scope.httpConfig = {
-			headers : {
-				'Authorization' : $scope.token
-			}
-		};
+		if(($scope.countPhoto == 2) || ($scope.countPhoto == 4) || ($scope.countPhoto == 7) || ($scope.countPhoto == 8)){
+			$scope.take_photo();
+    		}
+		$scope.countPhoto++;
+		//var link = "/TestsProjectBes/getNextpersontest/saveprev_getnext";
+		var link = 'http://localhost:8080/TestsProjectFes/PersonalActions/getNext';
+		
+//		$scope.httpConfig = {
+//			headers : {
+//				'Authorization' : $scope.token
+//			}
+//		};
+				
 		var dataObj = {
-			answer : userAnswer,
-			index: $scope.numberQuestion
+			"answer" : userAnswer,
+			"index": $scope.numberQuestion,			
 		};
-
-		$http.post(link, dataObj, $scope.httpConfig).success(
+		
+		
+		$http.post(link, dataObj).success(					
 				function(data, status, headers, config) {
 					console.log("Success - request result to Rest");
 					$scope.question = data;
-
-					
-//					if ($scope.question == null) {
-//						console.log("data from rest (question) is null");
-//						$scope.mySwitchEndTest = !$scope.mySwitchEndTest;
-//						$scope.mySwitchShowTest = !$scope.mySwitchShowTest;
-//					
-//					} else {
-						//End of Test
-						if($scope.question.isPassed){
-							console.log($scope.question.error);
-							$scope.mySwitchShowTest = false;
-							$scope.mySwitchEndTest = true;
-						}else{
-							$scope.mySwitchShowTest = true;
-							
-							$scope.numberQuestion = $scope.question.index;
-							$scope.text = $scope.question.text;
-							$scope.image = $scope.question.image;
-							if ($scope.image != null) {
-								$scope.mySwitchImage = true;
-							} else {
-								$scope.mySwitchImage = false;
-							}
-	
-							switch ($scope.question.type) {
-							//Type of question - AmericanSystemQuestion
-								case 1: {
-									console.log("case 1");
-									$scope.answers = $scope.question.answers;
-	//								$scope.nAnswers = $scope.getAnswers($scope.numberAnswers);
-									$scope.mySwitchAmericanSystemTestQuestion = true;
-									$scope.mySwitchCodeTestQuestion = false;
-									break;
-								}
-									//Type of question - CodeQuestion
-								case 2: {
-									console.log("case 2");
-									$scope.mySwitchAmericanSystemTestQuestion = false;
-									$scope.mySwitchCodeTestQuestion = true;
-									break;
-								}
-							}
-							
-							data = null;
-							userAnswer = null;
-							$scope.answer = {
-								name : null
-							};
-						}
-				//	}
-
+					$scope.dataProcessor($scope.question);
+					data = null;
+					userAnswer = null;
+					$scope.answer = {
+						name : null
+					};
 				}).error(function(data, status, headers, config) {
 			console.log("Error - request result to Rest");
+			alert("Error! " + status);
 		});
 	};
 
-//	$scope.getAnswers = function(number) { //filling array of answers
-//		array = [];
-//		for (i = 0; i < number; i++) {
-//			array.push(i + 1);
-//		}
-//		return array;
-//	};
+	$scope.dataProcessor = function(data){
+		//End of Test
+		if(data.isPassed){
+			console.log(data.error);
+			$scope.mySwitchShowTest = false;
+			$scope.mySwitchEndTest = true;
+		}else{
+			$scope.mySwitchShowTest = true;
+			$scope.numberQuestion = data.index;
+			$scope.text = data.text;
+			if ($scope.text != null) {
+				$scope.mySwitchText = true;
+			} else {
+				$scope.mySwitchText = false;
+			}
+			$scope.description = data.description;
+			if ($scope.description != null) {
+				$scope.mySwitchDescription = true;
+			} else {
+				$scope.mySwitchDescription = false;
+			}
+			$scope.image = data.image;
+			if ($scope.image != null) {
+				$scope.mySwitchImage = true;
+			} else {
+				$scope.mySwitchImage = false;
+			}
+			
+			$scope.options = data.options;
+			if($scope.options != null) {
+				$scope.userAmericanTest = true;
+			} else {
+				$scope.userAmericanTest = false;
+			}
+		
+			switch (data.type) {
+				//Type of question - AmericanSystemQuestion
+				case 1: {
+					console.log("case 1");
+					$scope.answers = data.answers;
+		//			$scope.nAnswers = $scope.getAnswers($scope.numberAnswers);
+					$scope.mySwitchAmericanSystemTestQuestion = true;
+					$scope.mySwitchCodeTestQuestion = false;					
+					break;
+				}
+				
+				//Type of question - CodeQuestion
+				case 2: {
+					console.log("case 2");
+					$scope.mySwitchAmericanSystemTestQuestion = false;
+					$scope.mySwitchCodeTestQuestion = true;					
+					break;
+				}
+				
+				//Type of question - User american Test
+				case 3: {
+					console.log("case 3");
+					$scope.answers = data.answers;
+					$scope.mySwitchAmericanSystemTestQuestion = true;
+					$scope.mySwitchCodeTestQuestion = false;	
+					$scope.userAmericanTest = true;
+					break;
+				}				
+									
+				//Type of question - OpenQuestion
+				case 4: {
+					console.log("case 4");
+					$scope.mySwitchAmericanSystemTestQuestion = false;
+					$scope.mySwitchCodeTestQuestion = true;					
+					break;
+				}
+			}
+		}							
+	}
 
 });
 
@@ -166,9 +196,9 @@ app.directive('camera', function(CameraService) {
                     }
 // If camera doesn't work of if camera block
                     var onFailure = function (err) {
-                    	document.getElementById("message").innerHTML = '<h1>Your camera does not work, testing is impossible. Try to unblock camera in browser and to reload this page. </h1>';
+                    	document.getElementById("message").innerHTML = '<h3>Your camera does not work, testing is impossible. Try to unblock camera in browser and to reload this page. </h3>';
                         console.log("Error !");
-                        console.error(err);
+                       //console.error(err);
                     }
 // Make the request for the media
                     navigator.getUserMedia({
@@ -213,7 +243,6 @@ app.directive('camera', function(CameraService) {
             		};
             		var dataObj = {
             			image : base64dataUrl
-            			//number question
             		};
 
             		$http.post(link, dataObj, $scope.httpConfig).success(

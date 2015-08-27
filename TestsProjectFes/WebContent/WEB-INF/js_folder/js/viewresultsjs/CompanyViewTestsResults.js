@@ -9,7 +9,7 @@ app.controller('InputController', ['$scope','$http', 'ngDialog', function($scope
 	id: false,
 	test_details: true,
 	pictures: false,
-	code: false
+	questions: false
   };
   
   $scope.isButtonDisabled = true;
@@ -44,22 +44,22 @@ app.controller('InputController', ['$scope','$http', 'ngDialog', function($scope
 		case 'details': 
 			$scope.display.test_details = true;
 			$scope.display.pictures = false;
-			$scope.display.code = false;
+			$scope.display.questions = false;
 		break;
 		case 'camera_snapshots':
 			$scope.display.test_details = false;
 			$scope.display.pictures = true;
-			$scope.display.code = false;
+			$scope.display.questions = false;
 		break;
-		case 'code':
+		case 'questions':
 			$scope.display.test_details = false;
 			$scope.display.pictures = false;
-			$scope.display.code = true;
+			$scope.display.questions = true;
 		break;
 		default:
 			$scope.display.test_details = true;
 			$scope.display.pictures = false;
-			$scope.display.code = false;
+			$scope.display.questions = false;
 	}
   };
   
