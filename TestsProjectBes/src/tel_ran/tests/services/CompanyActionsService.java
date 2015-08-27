@@ -215,23 +215,20 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 					// list of questions (with id, categories, status)
 					// index
 					jsonObj = this.checkStatusAndGetJson(test.getTestId());
-					System.out.println(LOG + " - 218-M: getTestResultdetails, jsn = " + jsonObj.toString());
-				
+									
 					// pictures
 					
 					List <String> images_ = FileManagerService.getImage(companyId, testId);
 					if(images_!=null) {
-						System.out.println(LOG + " - 224 - in method: getTestResultDetails, images: " + images_.toString());
-						System.out.println(LOG + " - 225 - in method: getTestResultDetails, images number: " + images_.size());
+						System.out.println(LOG + " - 223 - in method: getTestResultDetails, images: " + images_.toString());
+						System.out.println(LOG + " - 224 - in method: getTestResultDetails, images number: " + images_.size());
 						JSONArray imagArray = new JSONArray(images_);
 						jsonObj.put(ICommonData.JSN_TESTDETAILS_PHOTO, imagArray);
 					} else {
 						System.out.println(LOG + " - 229-M: getTestResultDetails - NO IMAGES");
-					}
-					System.out.println(LOG + " - 231-M: getTestResultdetails, jsn = " + jsonObj.toString());
+					}					
 					// duration
-					jsonObj.put("duration", durationStr);
-					System.out.println(LOG + " - 234-M: getTestResultdetails, jsn = " + jsonObj.toString());
+					jsonObj.put("duration", durationStr);					
 					// amount of questions
 					int numberOfQuestions = test.getAmountOfQuestions();
 					jsonObj.put(ICommonData.JSN_TESTDETAILS_QUESTIONS_NUMBER, numberOfQuestions);
@@ -248,8 +245,7 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 //					jsonObj = this.getStatusOfTest(test.getTestId());
 
 				} catch (JSONException e) {
-					e.printStackTrace();
-					System.out.println(LOG + " - 247-M: ERROR - getTestResultdetails, jsn = " + jsonObj.toString());
+					e.printStackTrace();					
 				}
 				
 				res = jsonObj.toString();
