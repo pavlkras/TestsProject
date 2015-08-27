@@ -363,15 +363,15 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 		if(checked==0) 
 			percent = 0;
 		else
-			percent = Math.round((float)correct/(float)checked*100);
+			percent = Math.round((float)correct/(float)checked)*100;
 		String resPercent = Float.toHexString(percent) + "%";
 		
 		if(unChecked==0 && unAnswered==0) {
 			result.put(ICommonData.JSN_TEST_PERCENT_OF_CORRECT, resPercent); // Add calculations from the resultTestCodeFromPerson field
 		} else if (unChecked==0){
-			result.put(ICommonData.JSN_TEST_PERCENT_OF_CORRECT, "not answered (" + resPercent + "/" + checked +")");
+			result.put(ICommonData.JSN_TEST_PERCENT_OF_CORRECT, "not answered (" + resPercent + " from " + checked +")");
 		} else {
-			result.put(ICommonData.JSN_TEST_PERCENT_OF_CORRECT, "not checked (" + resPercent + "/" + checked + ")");
+			result.put(ICommonData.JSN_TEST_PERCENT_OF_CORRECT, "not checked (" + resPercent + " from " + checked + ")");
 		}
 		
 		return result;
@@ -471,15 +471,15 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 		if(checked==0) 
 			percent = 0;
 		else
-			percent = Math.round((float)correct/(float)checked*100);
+			percent = Math.round((float)correct/(float)checked)*100;
 		String resPercent = Float.toHexString(percent) + "%";
 		
 		if(unChecked==0 && unAnswered==0) {
 			result.put(ICommonData.JSN_TEST_PERCENT_OF_CORRECT, resPercent); // Add calculations from the resultTestCodeFromPerson field
 		} else if (unChecked==0){
-			result.put(ICommonData.JSN_TEST_PERCENT_OF_CORRECT, "not answered (" + resPercent + "/" + checked +")");
+			result.put(ICommonData.JSN_TEST_PERCENT_OF_CORRECT, "not answered (" + resPercent + " from " + checked +")");
 		} else {
-			result.put(ICommonData.JSN_TEST_PERCENT_OF_CORRECT, "not checked (" + resPercent + "/" + checked + ")");
+			result.put(ICommonData.JSN_TEST_PERCENT_OF_CORRECT, "not checked (" + resPercent + " from " + checked + ")");
 		}
 		
 		return result;
