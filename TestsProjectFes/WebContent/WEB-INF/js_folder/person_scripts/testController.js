@@ -122,7 +122,7 @@ app.controller("QuestionTestController", function($scope, $http) {
 				//Type of question - OpenQuestion
 				case 4: {
 					console.log("case 4");
-					$scope.mySwitchAmericanSystemTestQuestion = true;
+					$scope.mySwitchAmericanSystemTestQuestion = false;
 					$scope.mySwitchCodeTestQuestion = true;					
 					break;
 				}

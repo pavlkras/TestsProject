@@ -33,13 +33,14 @@ public class PersonalActions {
 	
 	String token;
 	
-	JSONArray arrayOfquestions;
-	JSONObject[] allQuestions;
-	String[] answers;
-	Long[] idQuestions;
-	RestTemplate restTemplate;
-	int sizeJsn;
-	HeaderRequestInterceptor interceptor;
+	private boolean listOfQuestionsHasBeenAsked = false;
+	private JSONArray arrayOfquestions;
+	private JSONObject[] allQuestions;
+	private String[] answers;
+	private Long[] idQuestions;
+	private RestTemplate restTemplate;
+	private int sizeJsn;
+	private HeaderRequestInterceptor interceptor;
 	
 	@Autowired
 	IPersonalActionsService personalService;
@@ -51,6 +52,7 @@ public class PersonalActions {
 	
 	@RequestMapping({"/jobSeeker_test_preparing_click_event"})	
 	public String jobSeeker_test_preparing_click_event(HttpServletRequest request, Model model){	
+		listOfQuestionsHasBeenAsked = true; 
 		String outPage = "user/UserSignIn";
 		String passwordForCreatedTest = request.getQueryString();
 		String token = personalService.getToken(passwordForCreatedTest);
@@ -95,6 +97,9 @@ public class PersonalActions {
 	@ResponseBody @JsonRawValue
 	public String getNext(@RequestBody String dataObj) {		
 		
+		if(!listOfQuestionsHasBeenAsked)
+			return null;
+		
 		String result = null;
 		
 		JSONObject jsn = null;
@@ -116,7 +121,7 @@ public class PersonalActions {
 				jsnNew.put(ICommonData.JSN_INTEST_ANSWER, answers[index]);
 				flag = true;
 			} catch (JSONException e) {
-				if(sizeJsn!=0 && answers[sizeJsn-1]==null) {					
+				if(sizeJsn!=0 && (answers[sizeJsn-1]==null || answers[sizeJsn-1].length() < 1)) {					
 					index = -1;
 				}
 				else
@@ -131,8 +136,7 @@ public class PersonalActions {
 					result = answer.toString();
 				} else {
 					jsnNew.put("finished", false);
-					result = allQuestions[++index].toString();
-					System.out.println("I'm here!");
+					result = allQuestions[++index].toString();					
 					System.out.println(allQuestions[index].toString());
 				}	
 					
