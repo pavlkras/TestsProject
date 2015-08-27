@@ -19,6 +19,8 @@ import java.util.Properties;
 
 import org.springframework.stereotype.Repository;
 
+import sun.util.locale.provider.LocaleServiceProviderPool.LocalizedObjectGetter;
+
 import com.fasterxml.jackson.databind.PropertyName;
 
 @SuppressWarnings("resource")
@@ -26,10 +28,12 @@ import com.fasterxml.jackson.databind.PropertyName;
 public class FileManagerService {
 //	private String workingDir = "D:\\Programming\\IDE\\EclipseKepler\\TESTS_FILES_DATABASE";
 	
+	private static final String LOG = FileManagerService.class.getSimpleName();
+	
 	public static final String WORKING_DIR = System.getProperty("user.home");
 	public static final String NAME_FOLDER_FOR_SAVENG_TESTS_FILES = "TESTS_FILES_DATABASE";
 	public static final String NAME_TEST_INNER_FOLDERS = File.separator + "TESTS" + File.separator
-			+ "IDE" + File.separator + "EclipseKepler" + File.separator;
+			+ "IDE" + File.separator + "EclipseKepler";
 	public static final String testSaveWorkingDir = WORKING_DIR + NAME_TEST_INNER_FOLDERS;
 	public static final String NAME_FOLDER_FOR_SAVENG_QUESTIONS_FILES = "QUESTION_FILES_DATABASE";	
 	public static final String BASE_DIR_IMAGES = WORKING_DIR + File.separator + NAME_FOLDER_FOR_SAVENG_QUESTIONS_FILES;	
@@ -70,24 +74,47 @@ public class FileManagerService {
 	}
 	////
 	
-	public static void saveImage(long compId, long testId, String image) {
+	public static void saveImage(long compId, long testId, String image) throws IOException {
+		System.out.println(LOG + " - 78: in method saveImage");
+		
 		Date d = new Date(System.currentTimeMillis());
-		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd_hhmmss");
-		String path = testSaveWorkingDir + File.separator 
-				+ compId + File.separator 
-				+  testId + File.separator
-				+ BILD_ATTRIBUTES_ARRAY[PERSON_PICTURES] + File.separator
-				+ sf.format(d) + ".txt";
-		saveImageByPath(path, image);		
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd_hhmmss");		
+	
+		String basePath = getBasePathForPhoto(compId, testId) + File.separator; 
+		String nameFile = sf.format(d);
+		String extension = ".txt";
+		String path;
+		int index = 0;
+		File fl = null;
+		boolean flag = false;
+		while(!flag) {
+			path = basePath + nameFile + extension;
+			
+			fl = new File(path);
+			if(fl.exists()) {
+				nameFile = nameFile + "-" + index;
+				index++;
+			} else {
+				fl.createNewFile();
+				flag = true;
+				System.out.println(LOG + " - 92: path to image, try="+index+" : " + path);
+			}
+			
+		}
+		
+		
+		saveImageByPath(fl, image);		
 		
 	}
+		
 	
+		
 	private static void saveImageByPath(File fl, String image) {		
 		try {			
 			BufferedWriter writer = new BufferedWriter(new FileWriter(fl));
 			writer.write(image);			 
 			writer.close();
-			
+			System.out.println(LOG + " - 117 - in method saveImageByPath");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}		
@@ -209,15 +236,17 @@ public class FileManagerService {
 	////
 	
 	public static List<String> getImage(long compId, long testId) {
+		System.out.println(LOG + " - 239 - in method getImage");
 		List<String> outResult = new ArrayList<String>();
-		String TEMP_PATH = testSaveWorkingDir + File.separator 
-				+ compId + File.separator 
-				+ testId + File.separator  
-				+ BILD_ATTRIBUTES_ARRAY[PERSON_PICTURES];		 
-		File[] res = new File(TEMP_PATH).listFiles();
+		
+		String basePath = getBasePathForPhoto(compId, testId);
+		System.out.println(LOG + " - 243 - M: getImage: basePath to search files = " + basePath);
+		File[] res = new File(basePath).listFiles();
+		System.out.println(LOG + " - 245 - M: getImage: number of files in this directory = " + res.length);
 		////
 		try {
-			for(int i =0;i<res.length;i++){			
+			for(int i =0;i<res.length;i++){
+				
 				BufferedReader reader = new BufferedReader(new FileReader(res[0]));
 				outResult.add(reader.readLine());			
 			}
@@ -328,6 +357,15 @@ public class FileManagerService {
 		}
 		
 		return path;
+	}
+	
+	private static String getBasePathForPhoto(long companyId, long testId) {
+		
+		return 	testSaveWorkingDir + File.separator 
+				+ companyId + File.separator 
+				+  testId + File.separator
+				+ BILD_ATTRIBUTES_ARRAY[PERSON_PICTURES];
+
 	}
 	
 }	

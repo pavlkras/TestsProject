@@ -192,7 +192,8 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 					jsonObj = this.getStatusOfTest(test.getTestId());
 				
 					List <String> images_ = FileManagerService.getImage(companyId, testId);
-					System.out.println(images_.toString());
+					System.out.println(LOG + " - 195 - in method: getTestResultDetails, images: " + images_.toString());
+					System.out.println(LOG + " - 196 - in method: getTestResultDetails, images number: " + images_.size());
 					JSONArray images = new JSONArray(images_);
 					jsonObj.put("pictures", images);
 					jsonObj.put("duration", durationStr);

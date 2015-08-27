@@ -22,6 +22,8 @@ public class PersonTestRESTController {
 	@Autowired
 	TokenProcessor tokenProcessor;
 	
+	private static final String LOG = PersonTestRESTController.class.getSimpleName();
+	
 	@RequestMapping(value="/saveprev_getnext", method=RequestMethod.POST)
 	@ResponseBody @JsonRawValue
 	String getNextAndSavePrevious(@RequestHeader(value="Authorization") String token, @RequestBody String answer){
@@ -87,10 +89,11 @@ public class PersonTestRESTController {
 	@RequestMapping(value="/save_image", method=RequestMethod.POST)
 	@ResponseBody @JsonRawValue
 	String saveImage(@RequestHeader(value="Authorization") String token, @RequestBody String image){
+		System.out.println(LOG + " - 92: in method saveImage");
 		long testId = tokenProcessor.decodeAndCheckToken(token);
 		if(testId != -1){
 			personal.saveImage(testId, image);
-		}
+		}		
 		return "";
 	}
 }

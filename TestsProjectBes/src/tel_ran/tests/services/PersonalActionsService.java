@@ -1,4 +1,5 @@
 package tel_ran.tests.services;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
@@ -34,6 +35,7 @@ public class PersonalActionsService extends CommonServices implements IPersonalA
 	
 	private long testID;
 	private long companyID;
+	private static final String LOG = PersonalActionsService.class.getSimpleName();
 	////
 	@Override
 	public boolean GetTestForPerson(String testPassword) {	// creation test for person
@@ -184,12 +186,20 @@ public class PersonalActionsService extends CommonServices implements IPersonalA
 	}
 	@Override
 	public void saveImage(long testId, String image) {
+		System.out.println(LOG + " - 189: in method  saveImage");
 		EntityTest test = em.find(EntityTest.class, testId);
 
 		if(!test.isPassed()){
-			FileManagerService.saveImage(test.getEntityCompany().getId(), testId, image);
+			System.out.println(LOG + " - 193: in method  saveImage - test is not passed");
+			try {
+				FileManagerService.saveImage(test.getEntityCompany().getId(), testId, image);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}			
 		}
 	}
+	
 	@Override
 	protected boolean ifAllowed(EntityQuestionAttributes question) {
 		
