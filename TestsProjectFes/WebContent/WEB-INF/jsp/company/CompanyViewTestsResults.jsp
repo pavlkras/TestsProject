@@ -208,8 +208,8 @@
 			</div>
 		</a>
 		<div class="panel-body" ng-show="display.pictures">
-			<p ng-repeat="x in testDetails.pictures">
-				<img class="img-thumbnail img-previewSize" ng-src="{{x.image}}"/>
+			<p ng-repeat="value in testDetails.pictures">
+				<img class="img-thumbnail img-previewSize" ng-src="{{value}}"/>
 			</p>
 		</div>
 	</div>
@@ -225,14 +225,13 @@
 				<ul class="list-group">
 	      			<li class="list-group-item">
     	    			<h3>
-							
-							Result of analyse:
-							<span class="label {{getProcessingResultStyle(question_.analyseResult)}}">{{question_.analyseResult}}</span>
+							Question {{question_.index + 1}}
 						</h3>
+						Metacategory: {{question_.metaCategory}}
+						<br>
+						Status:	<span class="label {{getProcessingResultStyle(question_.statusString)}}">{{question_.statusString}}</span>
 	      			</li>
 				</ul>
-
-				<pre nag-prism source="{{codesFromPerson_.code}}" class="{{'language-'+codesFromPerson_.programmingLanguage}}"></pre>
 				</div>
 			</div>
 		</div> 

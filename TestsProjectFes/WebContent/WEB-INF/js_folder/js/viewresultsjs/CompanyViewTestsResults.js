@@ -102,11 +102,13 @@ app.controller('InputController', ['$scope','$http', 'ngDialog', function($scope
 	$scope.getProcessingResultStyle = function(arg_){
 	//	console.log('got arg = '+arg_);
 		var res = '';
-		if(arg_ == "true"){
+		if(arg_ == "correct"){
 			res = "label-success";
-		} else if(arg_ == "false"){
+		} else if(arg_ == "incorrect"){
 			res = "label-danger";
-		};
+		} else {
+			res = "label-info";
+		}
 		return res;
 	};
 		  
