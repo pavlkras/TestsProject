@@ -9,17 +9,27 @@
                 </td></tr>
                 <tr ng-show="mySwitchImage"><td colspan="2"><img ng-src="{{image}}" alt="Image is not supported"></td></tr>
             </table>
-            <table ng-show="userAmericanTest" ng-repeat="a in options">
-            	<tr><td>{{a.answers}}</td><td>{{a.answerOption}}</td></tr>
-            </table>
-            <table ng-show="mySwitchAmericanSystemTestQuestion">
-                <tr>
-                	<td ng-repeat="n in answers"><p>{{n}}<input type="radio" value={{n}} ng-model="answer.name">&nbsp;&nbsp;</p></td>
-                    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    	<input type="submit" value="Send Answer" ng-show="answer.name">
-                    </td>
-                </tr>
-            </table>
+	<table ng-show="userAmericanTest" ng-repeat="a in options"
+		style="border: 1px solid red;">
+		<tr>
+			<td>{{a.answers}}</td>
+			<td>{{a.answerOption}}</td>
+		</tr>
+	</table>
+	<table ng-show="mySwitchAmericanSystemTestQuestion">
+		<tr>
+			<td align="center" ng-repeat="n in answers">{{n}} &nbsp;&nbsp;&nbsp;</td>
+		</tr>
+		<tr>
+			<td align="center" ng-repeat="n in answers"><input type="radio"
+				value={{n}} ng-model="answer.name"> &nbsp;&nbsp;&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan = "4">
+			<input type="submit" value="Send Answer"
+				ng-show="answer.name"></td>
+		</tr>
+	</table>
      		<table  ng-show="mySwitchCodeTestQuestion"> 
                 <tr>
                     <td><label>Answer:</label></td>
@@ -28,3 +38,4 @@
                 </tr>
              </table>
 </form>
+
