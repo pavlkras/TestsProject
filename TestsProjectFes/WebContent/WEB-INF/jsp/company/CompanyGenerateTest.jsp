@@ -109,61 +109,13 @@
 										<option value="30">30</option>
 										<option value="50">50</option>
 								</select>
-<<<<<<< HEAD
-								</td>
-							</tr>
 
-							<tr>
-								<td colspan="2"><hr></td>
-							<tr>
-							<tr>
-								<td colSpan=2>
-									<h4 class="tableTitle">Manual selection</h4> <input
-									id="userQuest" class='userQuestions' type="button"
-									name='userQuestions' onclick="showUserQuestions()"
-									value="show questions list" /> <input id="hideQuest"
-									class='noQuestions' type="button" name='noQuestions'
-									onclick="hideUserQuestions()" value="hide questions list"
-									style="display: none" />
-
-									<div id="showManualSelection" style="display: none">
-										<div ng-app="test_app" ng-controller="test_contr">
-
-											<table>
-												<tr class="tableHead">
-													<th style="width: 50px">id</th>
-													<th>Type</th>
-													<th>Category</th>
-													<th>Level</th>
-													<th>Text</th>
-													<th>Check the question</th>
-												</tr>
-												<tr class="tableContent" ng-repeat="q in results">
-													<td class="border">{{q.id}}</td>
-													<td class="border" style="width: 15%">{{q.metaCategory}}</td>
-													<td class="border" style="width: 15%">{{q.category1}}</td>
-													<td class="border" style="width: 10%">{{q.level}}</td>
-													<td class="border">{{q.shortText}}</td>
-													<td style="width: 10%"><input type="checkbox"
-														name="questionsId" value="{{q.id}}" /></td>
-												</tr>
-											</table>
-
-										</div>
-
-									</div>
-
-								</td>
-							</tr>
-
-							<tr>
-								<td colspan="2"><hr></td>
-							<tr>
-
-
-=======
-							</td>
 						</tr>
+						
+													<tr>
+								<td colspan="2"><hr></td>
+							<tr>
+						
 						<tr>
 							<td colSpan=2>
 								<h4 class="tableTitle">Manual selection</h4>
@@ -202,10 +154,14 @@
 																
 							</td>						
 						</tr>	
-															
->>>>>>> origin/master
+						
+							<tr>
+								<td colspan="2"><hr></td>
+							<tr>
 					</tbody>				
 				</table>
+				
+										
 				
 				<div class="center">
 			
