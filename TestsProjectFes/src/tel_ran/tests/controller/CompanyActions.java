@@ -92,7 +92,7 @@ public class CompanyActions extends AbstractAdminActions implements Serializable
 	// IGOR Action Re-mapping
 	@RequestMapping({"/company_main"})
 	public String loginSucceessCompany(Model model){
-		System.out.println("I send info");
+		
 		model.addAttribute(AbstractAdminActions.RESULT, adminService.getUserInformation());
 		return "company/Company_main";
 	}
@@ -206,9 +206,10 @@ User Registered Flow:
 		}
 		categoryHtmlText.append("</table>");
 		model.addAttribute("categoryFill", categoryHtmlText.toString());
-		model.addAttribute("questions", adminService.getAllQuestionsList(true, null, null));
+		model.addAttribute("userQuestions", adminService.getAllQuestionsList(true, null, null));
+		
 //		result = "company/CompanyGenerateTest";
-		this.setCompanyName(companyName); 
+//		this.setCompanyName(companyName); 
 		return "company/CompanyGenerateTest";
 	}
 	
@@ -236,7 +237,7 @@ User Registered Flow:
 			flag = adminService.createCompany(C_Name, C_Site, C_Specialization, C_AmountEmployes, C_Password);
 		}catch(Throwable th){
 			th.printStackTrace();
-			System.out.println("catch creation company FES");
+			
 		}
 
 		if(flag){
@@ -529,8 +530,7 @@ f)	5 photos made during the test	------ IGOR ------*/
 		
 	@RequestMapping({"/question_see" + "/{questId}"})
 	public String seeQuestion(@PathVariable long questId) {
-		System.out.println(questId);
-						
+								
 		return adminService.getJsonQuestionById(questId);
 	}
 	
