@@ -139,7 +139,7 @@ $(document).ready(function(){
 			}
 		});
 		
-		$("#button_OK").click(function(){document.location.href = "company_add";});
+		$("#button_OK").click(function(){document.location.href = "company_add_";});
 
 		
 		

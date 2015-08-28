@@ -136,8 +136,8 @@ public class PersonalActions {
 					result = answer.toString();
 				} else {
 					jsnNew.put("finished", false);
-					result = allQuestions[++index].toString();					
-					System.out.println(allQuestions[index].toString());
+					result = allQuestions[++index].toString();				
+					
 				}	
 					
 			} catch (JSONException e) {

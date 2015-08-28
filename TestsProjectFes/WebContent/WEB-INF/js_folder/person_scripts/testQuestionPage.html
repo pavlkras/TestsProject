@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <form align="left" name="questionForm" novalidate
 	ng-submit="getQuestion(answer.name);">
 	<table>
@@ -15,6 +16,19 @@
 			<td><img ng-src="{{image}}" alt="Image is not supported"></td>
 		</tr>
 	</table>
+=======
+<form name="questionForm" novalidate ng-submit="getQuestion(answer.name);">
+            <table>
+                <tr><th colspan="2"><label>Question&nbsp;</label>{{numberQuestion+1}}</th></tr><br>
+                <tr ng-show="mySwitchText"><td colspan="2">{{text}}</td></tr>
+                <tr ng-show="mySwitchDescription"><td colspan="2">
+                	<table ng-repeat="l in description">
+                		<tr><td><PRE class="descriptionLines">{{l.line}}</PRE></td></tr>
+                	</table>                
+                </td></tr>
+                <tr ng-show="mySwitchImage"><td colspan="2"><img ng-src="{{image}}" alt="Image is not supported"></td></tr>
+            </table>
+>>>>>>> origin/master
 	<table ng-show="userAmericanTest" ng-repeat="a in options"
 		style="border: 1px solid red;">
 		<tr>
@@ -36,6 +50,7 @@
 				ng-show="answer.name"></td>
 		</tr>
 	</table>
+<<<<<<< HEAD
 	<table ng-show="mySwitchCodeTestQuestion">
 		<tr>
 			<td><label>Answer:</label></td>
@@ -48,4 +63,14 @@
 				ng-show="answer.name"></td>
 		</tr>
 	</table>
+=======
+     		<table  ng-show="mySwitchCodeTestQuestion"> 
+                <tr>
+                    <td><label>Answer:</label></td>
+                    <td><textarea ng-model="answer.name" cols="70" rows="10"></textarea></td>
+                    <td>&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" value="Send Answer" ng-show="answer.name"></td>
+                </tr>
+             </table>
+>>>>>>> origin/master
 </form>
+

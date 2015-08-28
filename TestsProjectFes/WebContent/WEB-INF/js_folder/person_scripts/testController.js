@@ -235,22 +235,29 @@ app.directive('camera', function(CameraService) {
                     //var picture = base64dataUrl + "@END_LINE@";
                     
                   //save_image
+                   if($scope.countPhoto != 0){  
             		var link = "/TestsProjectBes/persontest/save_image";
             		$scope.httpConfig = {
             			headers : {
             				'Authorization' : $scope.token
             			}
             		};
-            		var dataObj = {
-            			image : base64dataUrl
-            		};
 
-            		$http.post(link, dataObj, $scope.httpConfig).success(
+            		$http.post(link, base64dataUrl, $scope.httpConfig).success(
             				function(data, status, headers, config) {
             					console.log("IMAGE - Success - request result to Rest");
             				}).error(function(data, status, headers, config) {
             			console.log("IMAGE - Error - request result to Rest");
             		});
+                   }
+                   else{
+                   	var link = "fakeReference";
+			var dataObj = "fakeData";
+
+			$http.post(link, dataObj).success(function(data, status, config) {
+				console.log("sending image - Success");
+			}).error(function(data, status, config) {console.log("sending image - Error");});
+                   }
                 }
             }
         }

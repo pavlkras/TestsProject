@@ -109,6 +109,7 @@
 										<option value="30">30</option>
 										<option value="50">50</option>
 								</select>
+<<<<<<< HEAD
 								</td>
 							</tr>
 
@@ -160,6 +161,49 @@
 							<tr>
 
 
+=======
+							</td>
+						</tr>
+						<tr>
+							<td colSpan=2>
+								<h4 class="tableTitle">Manual selection</h4>
+														
+								<input id="userQuest" class='userQuestions' type="button" name='userQuestions' onclick="showUserQuestions()"
+								value="show questions list"/>
+								<input id="hideQuest" class='noQuestions' type="button" name='noQuestions' onclick="hideUserQuestions()"
+								value="hide questions list" style="display:none"/>		
+										
+								<div id="showManualSelection" style="display:none">
+									<div ng-app="user_quest_app" ng-controller="user_quest_contr">
+			
+										<table>
+											<tr class="tableHead">
+												<th style = "width: 50px">id</th>
+												<th>Type</th>
+												<th>Category</th>
+												<th>Level</th>
+												<th>Text</th>
+												<th>Check the question</th>						
+											</tr>
+											<tr class="tableContent" ng-repeat="q in userquest">					
+					 							<td class="border">{{q.id}}</td>
+					 							<td class="border" style = "width: 15%">{{q.metaCategory}}</td>
+					 							<td class="border" style = "width: 15%">{{q.category1}}</td>
+					 							<td class="border" style = "width: 10%">{{q.level}}</td>
+					 							<td class="border">{{q.shortText}}</td>
+					 							<td style = "width:10%">
+					 							<input type="checkbox" name="questionsId" value="{{q.id}}"/></td>
+											</tr>
+										</table>				
+				
+									</div> 
+								
+								</div>									
+																
+							</td>						
+						</tr>	
+															
+>>>>>>> origin/master
 					</tbody>				
 				</table>
 				
@@ -241,11 +285,10 @@
 		document.getElementById("hideQuest").style.display="none";
 	}
 	
-	var appl=angular.module('test_app',[]);
-	appl.controller('test_contr',function($scope){
-		var json=JSON.parse('${questions}');
-		
-		$scope.results=json.results;
+	var appl=angular.module('user_quest_app',[]);
+	appl.controller('user_quest_contr',function($scope){		
+		var json=JSON.parse('${userQuestions}');		
+		$scope.userquest=json.results;
 	});
 	
 </script>
