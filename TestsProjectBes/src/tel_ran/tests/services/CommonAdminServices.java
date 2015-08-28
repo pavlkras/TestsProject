@@ -759,8 +759,10 @@ public abstract class CommonAdminServices extends CommonServices implements
 			jsn = getPartOfJSON(eqa);	
 			String shrt = eqa.getDescription();
 			if(shrt==null) {
+				
 				jsn.put(ICommonData.JSN_QUESTION_SHORT_DESCRIPTION, "See the image");
 			} else {
+				shrt = shrt.replaceAll("\\n", "  ");
 				int len = shrt.length();
 				if(len>ICommonData.SHORT_DESCR_LEN) 
 					shrt = shrt.substring(0, ICommonData.SHORT_DESCR_LEN);		
