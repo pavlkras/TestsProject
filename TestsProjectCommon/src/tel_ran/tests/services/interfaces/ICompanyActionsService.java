@@ -114,6 +114,13 @@ public interface ICompanyActionsService extends ICommonAdminService {
 	 */
 	public List<String> listOfCreatedTest();
 	
+	/**
+	 * Return JSONArray of question details with answers of the person
+	 * @param companyId
+	 * @param testQuestionId
+	 * @return
+	 */
+	public String getQuestionDetails(long companyId, long testQuestionId);
 
 
 	//Company actions for 3.1.4. Viewing test results

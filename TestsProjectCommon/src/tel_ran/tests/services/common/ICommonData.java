@@ -5,6 +5,7 @@ public interface ICommonData {
 	static final String TESTS_RESULTS_BY_DATES = "/tests_results_by_dates";
 	static final String TESTS_RESULTS_BY_PERSON_ID = "/tests_results_by_person";
 	static final String TEST_RESULT_DETAILS = "/test_details";
+	static final String TEST_QUESTION_DETAILS="/question_details"; // QUERY for the question's details (with answer of the person) for the company look
 	static final String DATE_FORMAT = "yyyy-MM-dd";
 	static final String delimiter = ",";
 	static final int TOKEN_VALID_IN_SECONDS = 300;
@@ -59,7 +60,7 @@ public interface ICommonData {
 	static final String JSN_INTEST_ALL_ANSWER_OPTIONS = JSN_ANSWER_OPTIONS; // JSONArray
 	static final String JSN_INTEST_CODE = JSN_CODE_SIMPLE; // String
 	static final String JSN_INTEST_RESULTS_LIST = JSN_LIST_OF_RESULT; // JSONArray
-	static final String JSN_INTEST_DESCRIPTION = "description"; // String
+	static final String JSN_INTEST_DESCRIPTION = "description"; // JSONArray String
 	static final String JSN_INTEST_OPTIONS_CHARS = "answers"; //JSONArray
 	static final String JSN_INTEST_STATUS = "status";
 	
@@ -67,7 +68,7 @@ public interface ICommonData {
 	static final String JSN_INTEST_ANSWER = "answer"; // String	
 	static final String JSN_INTEST_IF_FINISHED = "finished"; // boolean
 	
-	//TYPES FOR SHOWING QUESTIONS
+	//TYPES FOR DISPLAY QUESTIONS
 	static final int QUESTION_TYPE_ALL_IN_IMAGE = 1; //no descriptions and answers options
 	static final int QUESTION_TYPE_CODE = 2; //no image; there're description and field with stub
 	static final int QUESTION_TYPE_AMERICAN_TEST = 3; //can be description, image and answers options
@@ -105,6 +106,36 @@ public interface ICommonData {
 	static final String JSN_TESTDETAILS_QUESTION_STATUS_NUM = "statusNumber"; // int for the array IPublicStrings.QUESTION_STATUS[]
 	static final String JSN_TESTDETAILS_QUESTION_STATUS_STR = "statusString"; // String
 	static final String JSN_TESTDETAILS_QUESTION_INDEX = "index"; // int
+	
+	// --------------------------- QUESTIONS DETAILS FOR COMPANY ---------------------------- //
+	
+	static final String JSN_QUESTDET_QUESTION_ID = "questionId"; // long = id for EntityTestQuestion 
+	static final String JSN_QUESTDET_METACATEGORY = "metaCategory"; // String = metaCategory of the question
+	static final String JSN_QUESTDET_CATEGORY1 = "category"; // String = category of the question
+	static final String JSN_QUESTDET_STATUS_NUM = "statusNumber"; // int for the array IPublicStrings.QUESTION_STATUS[]
+	static final String JSN_QUESTDET_STATUS_STR = "statusString"; //String = "correct", "incorrect"...
+	static final String JSN_QUESTDET_INDEX = "index"; // int = index of the question in the given test
+	static final String JSN_QUESTDET_TEXT = "text"; //String = short question(title)
+	static final String JSN_QUESTDET_IMAGE = "image"; //String=base64 
+	static final String JSN_QUESTDET_TYPE = "type"; // int - type to display question. See QUESTION_TYPE_... in this file
+	static final String JSN_QUESTDET_ANSWER_OPTIONS_LIST = "options"; // JSONArray. Contains "answerOption" and "letter"
+	static final String JSN_QUESTDET_ANSWER_OPTION = "answerOption"; // String - one option of the answer (American Test)
+	static final String JSN_QUESTDET_ANSWER_OPTION_LETTER = "letter"; // String = number of the option (A, B, C or D)
+	static final String JSN_QUESTDET_CODE_STUB = "code"; //JSONArray of String. One String = one line
+	static final String JSN_QUESTDET_DESCRIPTION = "description"; //JSONArray of String. One String = one line
+	static final String JSN_QUESTDET_ANSWERS_LETTERS = "letters"; //JSONArray of String for American Question (A, B, C, D)	
+	static final String JSN_QUESTDET_CORRECT_ANSWER = "correctAnswer"; //String
+	
+	//ANSWER
+	static final String JSN_QUESTDET_ANSWER = "answer"; //JSONArray of String. It may contain one String or some String (for code and other many-lines answers)
+	
+	//GRADE (MARK)	
+	static final String JSN_QUESTDET_GRADE_TYPE = "gradeType"; //int = see GRAFE_TYPE_... below
+	static final String JSN_QUESTDET_GRADE_OPTIONS = "gradeOptions"; //JSONArray of String for 0 and 1 types (see IPublicStrings.GRADE_OPTIONS)
+	
+	static final int GRADE_TYPE_CORRECT = 0; // correct OR incorrect
+	static final int GRADE_TYPE_5BALLS = 1; // 1 - 2 - 3 - 4 - 5
+	static final int GRADE_TYPE_PERCENT = 2; // from 0% to 100%	
 	
 	
 	// -------------------- JSN - FIELDS ---------------------------------------------- //
