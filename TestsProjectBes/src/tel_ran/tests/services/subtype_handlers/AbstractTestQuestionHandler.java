@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
+import org.gradle.jarjar.org.apache.commons.lang.NullArgumentException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,6 +21,7 @@ import tel_ran.tests.entitys.EntityQuestionAttributes;
 import tel_ran.tests.entitys.EntityTestQuestions;
 import tel_ran.tests.services.TestsPersistence;
 import tel_ran.tests.services.common.ICommonData;
+import tel_ran.tests.services.common.IPublicStrings;
 import tel_ran.tests.services.inner_result.dataobjects.InnerResultDataObject;
 import tel_ran.tests.services.utils.FileManagerService;
 
@@ -28,12 +30,14 @@ public abstract class AbstractTestQuestionHandler extends TestsPersistence imple
 	private static final String LOG = AbstractTestQuestionHandler.class.getSimpleName();
 	protected EntityQuestionAttributes entityQuestionAttributes;
 	protected EntityTestQuestions entityTestQuestion;
-	protected long questionId;
+	protected long questionId = -1;
 	protected long etqId;
-	protected InnerResultDataObject dataObj;
+//	protected InnerResultDataObject dataObj;
 	protected long companyId;
 	protected long testId;
-	int type;
+	
+	int type; // type to display questions for FES
+	int gradeType; //type of grade (correct/incorrect, 1-2-3-4-5, percent...)
 	
 				
 	public void setEtqId(long etqId) {
@@ -58,37 +62,39 @@ public abstract class AbstractTestQuestionHandler extends TestsPersistence imple
 		this.questionId = questionId;
 	}
 
-	final public void fromJsonString(String json, long companyId, long testId) {
-		dataObj = new Gson().fromJson(json, InnerResultDataObject.class);
-		this.companyId = companyId;
-		this.testId = testId;
-	}
+//	final public void fromJsonString(String json, long companyId, long testId) {
+//		dataObj = new Gson().fromJson(json, InnerResultDataObject.class);
+//		this.companyId = companyId;
+//		this.testId = testId;
+//	}
 
-	final public void createFromQuestion(long questionId, String metacategory) {
-		dataObj = new InnerResultDataObject();
-		dataObj.setQuestionID(questionId);
-		dataObj.setMetacategory(metacategory);
-		dataObj.setStatus(InnerResultDataObject.STATUS_NOT_ASKED);		
-	}
+//	final public void createFromQuestion(long questionId, String metacategory) {
+//		dataObj = new InnerResultDataObject();
+//		dataObj.setQuestionID(questionId);
+//		dataObj.setMetacategory(metacategory);
+//		dataObj.setStatus(InnerResultDataObject.STATUS_NOT_ASKED);		
+//	}
 	
-	final public String toJsonString() {
-		return new Gson().toJson(dataObj);
-	}
+//	final public String toJsonString() {
+//		return new Gson().toJson(dataObj);
+//	}
 
-	final public long getQuestionID() {
-		if(dataObj!=null)
-			return dataObj.getQuestionID();
-		else
-			return questionId;
-	}
+//	final public long getQuestionID() {
+//		if(dataObj!=null)
+//			return dataObj.getQuestionID();
+//		else
+//			return questionId;
+//	}
 
-	final public String getStatus() {
-		return dataObj.getStatus();
-	}
+//	final public String getStatus() {
+//		return dataObj.getStatus();
+//	}
 	
 	public EntityQuestionAttributes getQuestionAttribubes() {
-		if(entityQuestionAttributes == null){
-			entityQuestionAttributes = em.find(EntityQuestionAttributes.class, getQuestionID());
+		if(entityQuestionAttributes==null) {
+			System.out.println(LOG + " - !!! NO ENTITY QUESTION ATTRIBUTES for this Handler!");
+			if(questionId!=-1)
+				entityQuestionAttributes = em.find(EntityQuestionAttributes.class, questionId);				
 		}
 		return entityQuestionAttributes;
 	}
@@ -206,5 +212,60 @@ public abstract class AbstractTestQuestionHandler extends TestsPersistence imple
 	protected abstract int checkAnswers();
 	protected abstract String preparingAnswer(String answer);
 
+	
+	// METACATEGORY, CATEGORY, TEXT, TYPE, ANSWER OF PERSON, GRADE_TYPE, GRADE_OPTIONS (for nonchecked questions)
+	// QUESTION_ID, STATUS
+	@Override
+	public JSONObject getJsonWithCorrectAnswer(EntityTestQuestions entityTestQuestion) throws JSONException {
+		if(entityQuestionAttributes==null) 
+			throw new NullArgumentException("entityQuestionAttributes");
+		JSONObject jsn = new JSONObject();
+		try {
+			jsn.put(ICommonData.JSN_QUESTDET_QUESTION_ID, entityTestQuestion.getId());
+			int status = entityTestQuestion.getStatus();
+			jsn.put(ICommonData.JSN_QUESTDET_STATUS_NUM, status);
+			jsn.put(ICommonData.JSN_QUESTDET_STATUS_STR, IPublicStrings.QUESTION_STATUS[status]);
+			jsn.put(ICommonData.JSN_QUESTDET_METACATEGORY, entityQuestionAttributes.getMetaCategory());
+			jsn.put(ICommonData.JSN_QUESTDET_CATEGORY1, entityQuestionAttributes.getCategory1());
+			jsn.put(ICommonData.JSN_QUESTDET_TEXT, entityQuestionAttributes.getQuestionId().getQuestionText());
+			jsn.put(ICommonData.JSN_QUESTDET_TYPE, this.getType());
+			jsn.put(ICommonData.JSN_QUESTDET_ANSWER, getAnswerInJSON(entityTestQuestion));
+			jsn.put(ICommonData.JSN_QUESTDET_GRADE_TYPE, this.gradeType);
+			putOptionsForCheck(status, ICommonData.JSN_QUESTDET_GRADE_OPTIONS, jsn);
+			
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+				
+		return jsn;
+	}
+	
+	
+	
+	protected void putOptionsForCheck(int status, String key, JSONObject jsn) throws JSONException {
+		if(status == ICommonData.STATUS_UNCHECKED) {
+			JSONArray result = new JSONArray();
+			String[] options = IPublicStrings.GRADE_OPTIONS[this.gradeType];
+			if(options!=null && options.length > 0)
+				for (String str : options) {
+					result.put(str);
+				}
+			jsn.put(key, result);
+		}
+		
+	}
 
+	protected JSONArray getAnswerInJSON(EntityTestQuestions etq) {
+		return this.getManyLinesField(etq.getAnswer());
+	}
+	
+
+
+	protected void putImageForJSON(String key, JSONObject jsn) throws JSONException {
+		String fileLink = getQuestionAttribubes().getFileLocationLink();
+		if(fileLink!=null && fileLink.length()>2)
+			jsn.put(key, getImageBase64(fileLink));
+	}
 }

@@ -4,15 +4,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import tel_ran.tests.entitys.EntityQuestionAttributes;
+import tel_ran.tests.entitys.EntityTestQuestions;
 
 public interface ITestQuestionHandler {
-	public void createFromQuestion(long questionId, String metacategory);
-	public void fromJsonString(String json, long companyId, long testId);
-	public String toJsonString();
-	public long getQuestionID();
-	public String getStatus();
-	public void analyze();
-	public boolean setPersonAnswer(JSONObject answerJsonObj);
+//	public void createFromQuestion(long questionId, String metacategory);
+//	public void fromJsonString(String json, long companyId, long testId);
+	
+//	public String toJsonString();
+//	public long getQuestionID();
+//	public String getStatus();
+//	public void analyze();
+//	public boolean setPersonAnswer(JSONObject answerJsonObj);
 	public boolean setPersonAnswer(JSONObject answerJsonObj, long etqId);
 	public String getQuestionJson(int index);
 	public String getQuestionViewResultJson();
@@ -29,4 +31,12 @@ public interface ITestQuestionHandler {
 	 * @throws JSONException 
 	 */
 	public JSONObject getJsonForTest(long eqtId, int index) throws JSONException;
+	
+	/**
+	 * Returns full version of Question with Person's answer
+	 * @param entityTestQuestion
+	 * @return
+	 * @throws JSONException 
+	 */
+	JSONObject getJsonWithCorrectAnswer(EntityTestQuestions entityTestQuestion) throws JSONException; 
 }

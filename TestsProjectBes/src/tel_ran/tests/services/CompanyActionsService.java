@@ -24,7 +24,10 @@ import tel_ran.tests.entitys.EntityQuestionAttributes;
 import tel_ran.tests.entitys.EntityTest;
 import tel_ran.tests.entitys.EntityTestQuestions;
 import tel_ran.tests.services.common.ICommonData;
+import tel_ran.tests.services.common.IPublicStrings;
 import tel_ran.tests.services.interfaces.ICompanyActionsService;
+import tel_ran.tests.services.subtype_handlers.ITestQuestionHandler;
+import tel_ran.tests.services.subtype_handlers.SingleTestQuestionHandlerFactory;
 import tel_ran.tests.services.testhandler.IPersonTestHandler;
 import tel_ran.tests.services.testhandler.PersonTestHandler;
 import tel_ran.tests.services.utils.FileManagerService;
@@ -693,6 +696,69 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 		
 		return result;
 	}
+
+	// RETURN JSON for QUESTION DETAIL (with Person's answer) by test-question Id and company Id
+	// Fields in the JSON:
+	// 
+	// QUESTION IN TEST
+	// -- test-question Id ("questionId") - long (id from EntityTestQuestion)
+	// -- index ("index") - int = index of the question in this test
+	// -- status (correct, incorrect, unchecked) may be in two forms:
+	// ---- in numbers ("statusNumber") - int - corresponds with IPublicStrings.QUESTION_STATUS[]
+	// ---- in Strings ("statusString") - String = values from this array
+	//
+	// QUESTION INFO
+	// -- type to display question ("type") - 1=auto, 2=code, 3=american, 4=open. See ICommonData TYPES FOR DISPLAY QUESTIONS
+	// -- metaCategory ("metaCategory") = String
+	// -- category1 ("category") = String
+	// -- short text of the question ("text") = String (main question = title of the question) 
+	// -- description, long text ("description") = Array; "line" - String for one line 	// for american and open questions
+	// -- image ("image") = String in base64												// for all questions except Programming task
+	// -- code stub ("code") = Array of Strings, each String = one line  					// ONLY for programming task
+	// -- answer's options for American Test ("options") = Array, that includes fields:  	// ONLY for american tests
+	// ----- text of the option ("answerOption") = String 
+	// ----- letter of the option ("letter") = String (A, B, C or D...) 
+	// -- letters for answer options ("letters") = array of String (A, B, C, D, E..) 		// for auto and american tests
+	//
+	// ANSWER
+	// -- answer of the Person ("answer") = Array of String; "line" - String for one line 
+	//
+	// INFO FOR GRADE (CHECK) - only for unchecked questions
+	// -- type of grade ("gradeType") = int: 0 - correct/incorrect, 1 - 1/2/3/4/5, 2 - percent (from 0% to 100%)
+	// -- grade options ("gradeOptions") = array of String 								      // for 0 and 1 types	
+	@Override
+	@Transactional
+	public String getQuestionDetails(long companyId, long testQuestionId) {
+		String res = "{}";
+		entityCompany = em.find(EntityCompany.class, companyId);
+		if(entityCompany!=null) {
+			EntityTestQuestions entityTestQuestion = em.find(EntityTestQuestions.class, testQuestionId);
+			if(entityTestQuestion!=null && entityTestQuestion.getEntityTest().getEntityCompany().equals(entityCompany)) {
+				
+				JSONObject jsonObject = null;
+				
+				try {
+					EntityQuestionAttributes entityQuestionAttributes = entityTestQuestion.getEntityQuestionAttributes();
+					ITestQuestionHandler handler = SingleTestQuestionHandlerFactory.getInstance(entityTestQuestion);
+					jsonObject = handler.getJsonWithCorrectAnswer(entityTestQuestion);
+														
+					jsonObject.put(ICommonData.JSN_QUESTDET_INDEX, this.getIndexForTestQuestion(testQuestionId, false));
+									
+					res = jsonObject.toString();
+					
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}						
+				
+				
+			}		
+		}
+		return res;
+	}
+
+			
+				
 
 
 	// ------------------- PRIVATE METHODS FOR TEST CREATION ---------------------- // END -----------

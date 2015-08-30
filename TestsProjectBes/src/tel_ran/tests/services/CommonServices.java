@@ -3,6 +3,7 @@ package tel_ran.tests.services;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
@@ -13,6 +14,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.mysql.fabric.xmlrpc.base.Array;
 
 import tel_ran.tests.entitys.EntityAnswersText;
 import tel_ran.tests.entitys.EntityQuestionAttributes;
@@ -490,6 +493,54 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 	protected List<EntityTestQuestions> getTestQuestions(EntityTest test) {
 		String query = "SELECT c from EntityTestQuestions c WHERE c.entityTest=?1";
 		return em.createQuery(query).setParameter(1, test).getResultList();
+	}
+	
+	/**
+	 * Returns index of the given test-question in whole list of questions for the given test
+	 * @param testQuestion = id for EntityTestQuestion table
+	 * @param onlyUnanswered - if true - it returns index of the question in the list of only unanswered questions; if false - in the list of all questions in this test
+	 * @return index
+	 */
+	protected int getIndexForTestQuestion(long testQuestionId, boolean onlyUnanswered) {
+		EntityTestQuestions etq = em.find(EntityTestQuestions.class, testQuestionId);
+		EntityTest test = etq.getEntityTest();
+		List<Long> list = null;
+		if(onlyUnanswered)
+			list = em.createQuery("SELECT c.tQuestionId FROM EntityTestQuestions c WHERE c.entityTest=?1 AND c.status=?2 ORDER BY c.tQuestionId").
+			setParameter(1, test).setParameter(2, ICommonData.STATUS_NO_ANSWER).getResultList();
+		else
+			list = em.createQuery("SELECT c.tQuestionId FROM EntityTestQuestions c WHERE c.entityTest=?1 ORDER BY c.tQuestionId").
+			setParameter(1, test).getResultList();
+		
+		return binarySearchForList(list, etq.getId());		
+	}
+	
+	private int binarySearchForList(List<Long> list, long object) {	
+		if(list.size()>0) {
+		if(list.getClass().equals(ArrayList.class)) {
+			System.out.println("I'm here");
+			int size = list.size();
+			int begin = 0;
+			int end = size+1;
+			int middle;
+			while(end-begin > 1) {
+				middle = (end-begin)/2;
+				if(list.get(middle) >= object) {
+					begin = middle;
+				} else if (list.get(middle) < object) {
+					end = middle;
+				} 
+			}		
+		
+		if(list.get(begin) == object)
+			return begin;
+		return -1;
+		} else {
+			return list.indexOf(object);	
+			
+		}
+		}	
+	return -1;
 	}
 
 }

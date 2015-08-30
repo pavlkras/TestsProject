@@ -1,9 +1,12 @@
 package tel_ran.tests.services.subtype_handlers;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
+import tel_ran.tests.entitys.EntityQuestionAttributes;
+import tel_ran.tests.entitys.EntityTestQuestions;
 import tel_ran.tests.services.common.ICommonData;
 import tel_ran.tests.services.inner_result.dataobjects.InnerResultDataObject;
 import tel_ran.tests.services.subtype_handlers.gradle.CodeTester;
@@ -21,44 +24,38 @@ public class CodeTestQuestionHandler extends AbstractTestQuestionHandler impleme
 	public CodeTestQuestionHandler() {
 		super();
 		type = ICommonData.QUESTION_TYPE_CODE;
+		gradeType = 0;
 	}
 
-	@Override
-	public void analyze() {
-		
-		String pathToAnswersZip;
-		String codeFromPersonPath;
-		CodeTester gradleModule;
-		boolean gradleAnswer;
-		
-		pathToAnswersZip =  getQuestionAttribubes().getFileLocationLink(); //Path to zip		
-		codeFromPersonPath= entityTestQuestion.getAnswer();
-		
-		
-		try {
-			//TODO Check case of time limit of execution of analyze process
-			gradleModule = new CodeTester(FileManagerService.BASE_CODE_TEST);
-			gradleAnswer = gradleModule.testIt(codeFromPersonPath,pathToAnswersZip);
-			if(gradleAnswer){
-				dataObj.setStatus(InnerResultDataObject.STATUS_TRUE);
-			} else {
-				dataObj.setStatus(InnerResultDataObject.STATUS_FALSE);
-			}
-		} catch (IOException e) {
-			//TODO Check case of exception inside of gradle module
-			e.printStackTrace();
-		}
-	}
+//	@Override
+//	public void analyze() {
+//		
+//		String pathToAnswersZip;
+//		String codeFromPersonPath;
+//		CodeTester gradleModule;
+//		boolean gradleAnswer;
+//		
+//		pathToAnswersZip =  getQuestionAttribubes().getFileLocationLink(); //Path to zip		
+//		codeFromPersonPath= entityTestQuestion.getAnswer();
+//		
+//		
+//		try {
+//			//TODO Check case of time limit of execution of analyze process
+//			gradleModule = new CodeTester(FileManagerService.BASE_CODE_TEST);
+//			gradleAnswer = gradleModule.testIt(codeFromPersonPath,pathToAnswersZip);
+//			if(gradleAnswer){
+//				dataObj.setStatus(InnerResultDataObject.STATUS_TRUE);
+//			} else {
+//				dataObj.setStatus(InnerResultDataObject.STATUS_FALSE);
+//			}
+//		} catch (IOException e) {
+//			//TODO Check case of exception inside of gradle module
+//			e.printStackTrace();
+//		}
+//	}
 
 
-	@Override
-	public boolean setPersonAnswer(JSONObject answerJsonObj) {
-		// TODO Auto-generated method stub
-		// Saving fields to files
-
-		return false;
-	}
-
+	
 	@Override
 	public String getQuestionJson(int index) {
 		String stub = getQuestionAttribubes().getAnswers().get(0);
@@ -165,6 +162,35 @@ public class CodeTestQuestionHandler extends AbstractTestQuestionHandler impleme
 		return linkToCode;
 	}
 
+	
+	// CODE STUB, ANSWER + DATA FROM SUPER + DESCRIPTION
+	@Override
+	public JSONObject getJsonWithCorrectAnswer(EntityTestQuestions entityTestQuestion) throws JSONException {
+		JSONObject result = super.getJsonWithCorrectAnswer(entityTestQuestion);
+		
+		result.put(ICommonData.JSN_QUESTDET_DESCRIPTION, getManyLinesField(getQuestionAttribubes().getDescription()));
+		
+		List<String> list = entityQuestionAttributes.getAnswers();
+		if(list!=null && list.size() > 0)
+			result.put(ICommonData.JSN_QUESTDET_CODE_STUB, list.get(0));
+		
+		String link = entityTestQuestion.getAnswer();
+		if(link!=null && link.length()>3) {			
+			List<String> lines = FileManagerService.readFileToList(link);
+			if(list!=null && list.size() > 0) {
+				JSONArray array = new JSONArray();
+				for(String str : lines) {
+					JSONObject jsn = new JSONObject();
+					jsn.put("line", str);
+					array.put(jsn);
+				}
+				result.put(ICommonData.JSN_QUESTDET_ANSWER, array);
+			}
+				
+		}
+		
+		return result;
+	}
 		
 	
 }

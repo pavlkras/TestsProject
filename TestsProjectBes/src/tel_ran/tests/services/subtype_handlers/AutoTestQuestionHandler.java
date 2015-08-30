@@ -20,37 +20,37 @@ import tel_ran.tests.services.inner_result.dataobjects.InnerResultDataObject;
 import tel_ran.tests.services.utils.FileManagerService;
 @Component
 public class AutoTestQuestionHandler extends AbstractTestQuestionHandler {
-
-	
+		
 	
 	public AutoTestQuestionHandler(){		
 		super();
 		type = ICommonData.QUESTION_TYPE_ALL_IN_IMAGE;
+		gradeType = 0;
 	}
 
-	@Override
-	public void analyze() {
-		if(getQuestionAttribubes().getCorrectAnswer().equals(dataObj.getPersonAnswer())){
-			dataObj.setStatus(InnerResultDataObject.STATUS_TRUE);
-		} else {
-			dataObj.setStatus(InnerResultDataObject.STATUS_FALSE);
-		}
-	}
+//	@Override
+//	public void analyze() {
+//		if(getQuestionAttribubes().getCorrectAnswer().equals(dataObj.getPersonAnswer())){
+//			dataObj.setStatus(InnerResultDataObject.STATUS_TRUE);
+//		} else {
+//			dataObj.setStatus(InnerResultDataObject.STATUS_FALSE);
+//		}
+//	}
 
-	@Override
-	public boolean setPersonAnswer(JSONObject answerJsonObj) {
-		//TODO Export string to constant
-		String personAnswer = "";
-		try {
-			personAnswer = answerJsonObj.getString("answer");
-		} catch (JSONException e) {
-			System.out.println("answer was not found inside of request");
-			return false;
-		}
-		dataObj.setPersonAnswer(personAnswer);
-		analyze();
-		return true;
-	}
+//	@Override
+//	public boolean setPersonAnswer(JSONObject answerJsonObj) {
+//		//TODO Export string to constant
+//		String personAnswer = "";
+//		try {
+//			personAnswer = answerJsonObj.getString("answer");
+//		} catch (JSONException e) {
+//			System.out.println("answer was not found inside of request");
+//			return false;
+//		}
+//		dataObj.setPersonAnswer(personAnswer);
+//		analyze();
+//		return true;
+//	}
 
 	@Override
 	public String getQuestionJson(int index) {
@@ -88,19 +88,24 @@ public class AutoTestQuestionHandler extends AbstractTestQuestionHandler {
 		JSONObject result = super.getJsonForTest(eqtId, index);
 		
 		// get image
-		String fileLink = getQuestionAttribubes().getFileLocationLink();
-		if(fileLink!=null && fileLink.length() > 2) {
-			result.put(ICommonData.JSN_INTEST_IMAGE, getImageBase64(fileLink));
-		}
-		
-		// get options chars (A, B, C, D, ...)
-		JSONArray answers = new JSONArray();
-		for(int max = getQuestionAttribubes().getNumberOfResponsesInThePicture(), i = 0; i < max; i++){
-			answers.put(Character.toString ((char) (i+65)));
-		}
-		result.put(ICommonData.JSN_INTEST_OPTIONS_CHARS, answers);	
+		putImageForJSON(ICommonData.JSN_INTEST_IMAGE, result);
 				
+		// get options chars (A, B, C, D, ...)
+		putLettersForAnswerOptions(getQuestionAttribubes().getNumberOfResponsesInThePicture(), 
+				ICommonData.JSN_INTEST_OPTIONS_CHARS,
+				result);
+						
 		return result;		
+	}
+	
+	protected void putLettersForAnswerOptions(int numOfQuestion, String key, JSONObject jsn) 
+			throws JSONException {
+		JSONArray result = new JSONArray();		
+		for(int i = 0; i < numOfQuestion; i++){
+			result.put(IPublicStrings.LETTERS[i]);
+		}
+		jsn.put(key, result);
+			
 	}
 	
 
@@ -108,7 +113,8 @@ public class AutoTestQuestionHandler extends AbstractTestQuestionHandler {
 	protected String preparingAnswer(String answer) {		
 		return answer;
 	}
-
+	
+	
 	@Override
 	protected int checkAnswers() {
 		String correctAnswer = entityQuestionAttributes.getCorrectAnswer();
@@ -121,8 +127,30 @@ public class AutoTestQuestionHandler extends AbstractTestQuestionHandler {
 		}	
 		return status;
 	}
+
+	// IMAGE, ANSWER_LETTERS, CORRECT ANSWER + DATA FROM SUPER
+	@Override
+	public JSONObject getJsonWithCorrectAnswer(EntityTestQuestions entityTestQuestion) throws JSONException {
+		JSONObject result = super.getJsonWithCorrectAnswer(entityTestQuestion);
+		
+		int size = getQuestionAttribubes().getNumberOfResponsesInThePicture();
+		putLettersForAnswerOptions(size, ICommonData.JSN_QUESTDET_ANSWERS_LETTERS, result);
+		putImageForJSON(ICommonData.JSN_QUESTDET_IMAGE, result);
+		
+		result.put(ICommonData.JSN_QUESTDET_CORRECT_ANSWER, getQuestionAttribubes().getCorrectAnswer());		
+		
+		return result;
+	}
 	
-	
-	
+	@Override
+	protected JSONArray getAnswerInJSON(EntityTestQuestions etq) {
+		String answer = etq.getAnswer();
+		JSONArray result = new JSONArray();
+		result.put(answer);
+		return result;
+	}
+
+
+
 		
 }

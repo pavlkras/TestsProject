@@ -21,33 +21,39 @@ public class SingleTestQuestionHandlerFactory {
 //		put("Text", "tel_ran.tests.services.subtype_handlers.TextTestQuestionHandler");
 //	}};
 	
-	public static ITestQuestionHandler getInstance(EntityQuestionAttributes question){
-		String metaCategory = question.getMetaCategory();
-		ITestQuestionHandler testQuestionResult = getTestQuestionHandler(metaCategory);
-		testQuestionResult.createFromQuestion(question.getId(), metaCategory);
-		return testQuestionResult;
-	}
+//	public static ITestQuestionHandler getInstance(EntityQuestionAttributes question){
+//		String metaCategory = question.getMetaCategory();
+//		ITestQuestionHandler testQuestionResult = getTestQuestionHandler(metaCategory);
+//		
+//		testQuestionResult.createFromQuestion(question.getId(), metaCategory);
+//		return testQuestionResult;
+//	}
 
 	//Restoring ITestQuestionHandler from single question json
-	public static ITestQuestionHandler getInstance(JSONObject singleQuestion, long companyId, long testId){
-		String metaCategory = null;
-		try {
-			metaCategory = singleQuestion.getString(InnerResultDataObject.KEY_METACATEGORY);			
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		ITestQuestionHandler testQuestionHandler = null;
-		if(metaCategory != null){
-			testQuestionHandler = getTestQuestionHandler(metaCategory);
-			testQuestionHandler.fromJsonString(singleQuestion.toString(), companyId, testId);
-		}
-		return testQuestionHandler;
-	}
+//	public static ITestQuestionHandler getInstance(JSONObject singleQuestion, long companyId, long testId){
+//		String metaCategory = null;
+//		try {
+//			metaCategory = singleQuestion.getString(InnerResultDataObject.KEY_METACATEGORY);			
+//		} catch (JSONException e) {
+//			e.printStackTrace();
+//		}
+//		ITestQuestionHandler testQuestionHandler = null;
+//		if(metaCategory != null){
+//			testQuestionHandler = getTestQuestionHandler(metaCategory);
+//			testQuestionHandler.fromJsonString(singleQuestion.toString(), companyId, testId);
+//		}
+//		return testQuestionHandler;
+//	}
 
 	public static ITestQuestionHandler getInstance(EntityTestQuestions etq) {
 		String metaCategory = etq.getEntityQuestionAttributes().getMetaCategory();
 		if(metaCategory!=null) {
-			return getTestQuestionHandler(metaCategory);
+			ITestQuestionHandler result = getTestQuestionHandler(metaCategory);
+			result.setEntityQuestionAttributes(etq.getEntityQuestionAttributes());
+			result.setCompanyId(etq.getEntityTest().getEntityCompany().getId());
+			result.setEtqId(etq.getId());
+			result.setTestId(etq.getEntityTest().getTestId());
+			return result;
 		}				
 		return null;
 				

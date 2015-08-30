@@ -119,7 +119,7 @@ public class PersonalActionsService extends CommonServices implements IPersonalA
 						EntityQuestionAttributes eqa = etq.getEntityQuestionAttributes();
 						
 						// create handler for the question and get JSON
-						ITestQuestionHandler handler = SingleTestQuestionHandlerFactory.getInstance(eqa);
+						ITestQuestionHandler handler = SingleTestQuestionHandlerFactory.getInstance(etq);
 						JSONObject jsn;
 						try {
 							jsn = handler.getJsonForTest(etq.getId(), index);

@@ -102,7 +102,28 @@ public class TestsResultsRestController {
 		return res;
 	}
 	
+	/**
+	 * Return JSON with Question details
+	 * @param questId = test-question id (for EntityTestQuestion), that can be find in the results of Query testDetails
+	 * @param token
+	 * @return String
+	 */
+	@RequestMapping(value=ICommonData.TEST_QUESTION_DETAILS + "/{questId}", method=RequestMethod.GET)
+	@ResponseBody @JsonRawValue
+	String questionDetails(@PathVariable long questId, @RequestHeader(value="Authorization") String token){
+		long companyId = tokenProcessor.decodeAndCheckToken(token);
+		String res = "";
+		if(companyId != -1){
+			res = company.getQuestionDetails(companyId, questId);
+		} else {
+			res = getJsonErrorMessage();
+		}
+		return res;
+	}
+	
 	private String getJsonErrorMessage(){
 		return "{\"Error\":\"Please relogin\"}";
 	}
+	
+	
 }

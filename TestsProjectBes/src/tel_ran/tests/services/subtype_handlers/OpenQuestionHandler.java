@@ -1,5 +1,8 @@
 package tel_ran.tests.services.subtype_handlers;
 
+import java.util.List;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.transaction.annotation.Propagation;
@@ -8,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tel_ran.tests.entitys.EntityQuestionAttributes;
 import tel_ran.tests.entitys.EntityTestQuestions;
 import tel_ran.tests.services.common.ICommonData;
+import tel_ran.tests.services.utils.FileManagerService;
 
 public class OpenQuestionHandler extends AbstractTestQuestionHandler {
 
@@ -16,19 +20,9 @@ public class OpenQuestionHandler extends AbstractTestQuestionHandler {
 	public OpenQuestionHandler() {
 		super();
 		type = ICommonData.QUESTION_TYPE_OPEN;
+		gradeType = 0;
 	}
 
-	@Override
-	public void analyze() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public boolean setPersonAnswer(JSONObject answerJsonObj) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
 	@Override
 	public String getQuestionJson(int index) {
@@ -69,9 +63,19 @@ public class OpenQuestionHandler extends AbstractTestQuestionHandler {
 	protected String preparingAnswer(String answer) {
 		return answer;
 	}
-	
-	
-		
 
 
+	// DESCRIPTION, ANSWER + DATA FROM SUPER
+	@Override
+	public JSONObject getJsonWithCorrectAnswer(EntityTestQuestions entityTestQuestion) throws JSONException {
+		JSONObject result = super.getJsonWithCorrectAnswer(entityTestQuestion);
+		result.put(ICommonData.JSN_QUESTDET_DESCRIPTION, getManyLinesField(getQuestionAttribubes().getDescription()));
+				
+		JSONArray array = getManyLinesField(entityTestQuestion.getAnswer());
+		result.put(ICommonData.JSN_QUESTDET_ANSWER, array);
+				
+		return result;
+	}
+
+	
 }

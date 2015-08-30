@@ -15,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
@@ -412,6 +413,26 @@ public class FileManagerService {
 		reader.close();
 		return result.toString();
 		
+	}
+	
+	public static List<String> readFileToList(String path) {
+		List<String> result = new LinkedList<>();
+		
+		BufferedReader reader;
+		try {
+			reader = new BufferedReader(new FileReader(path));
+			String line = reader.readLine();
+			while(line!=null) {
+				result.add(line);
+				line = reader.readLine();
+			}
+			reader.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return result;
 	}
 	
 	

@@ -20,7 +20,7 @@ import tel_ran.tests.services.subtype_handlers.SingleTestQuestionHandlerFactory;
 import tel_ran.tests.services.utils.FileManagerService;
 @Component
 public class PersonTestHandler implements IPersonTestHandler {
-	private JSONArray jsonTestResults;
+//	private JSONArray jsonTestResults;
 	public static final String KEY_INDEX = "index";
 	
 	
@@ -35,49 +35,49 @@ public class PersonTestHandler implements IPersonTestHandler {
 		
 		String json = FileManagerService.getJson(companyId, testId);
 		
-		if( json==null || json=="" ){
-			jsonTestResults = new JSONArray();
-		}else{
-			try {
-				jsonTestResults = new JSONArray(json);
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-		}
+//		if( json==null || json=="" ){
+//			jsonTestResults = new JSONArray();
+//		}else{
+//			try {
+//				jsonTestResults = new JSONArray(json);
+//			} catch (JSONException e) {
+//				e.printStackTrace();
+//			}
+//		}
 		
 	}
 	
-	@Override
-	public boolean addQuestions(List<Long> questionsID) {
-		boolean res = true;
-		try {
-			for(Long questionID : questionsID){
-				EntityQuestionAttributes questionAttr = em.find(EntityQuestionAttributes.class, questionID);
-				ITestQuestionHandler questionResult = SingleTestQuestionHandlerFactory.getInstance(questionAttr);
-				//questionResult.
-				
-				jsonTestResults.put(new JSONObject(questionResult.toJsonString()));
-			}
-		} catch (Exception e) {
-				e.printStackTrace();
-				res = false;
-		} finally {
-			if(res){
-				save();	
-			}
-		}
-		return res;
-	}
+//	@Override
+//	public boolean addQuestions(List<Long> questionsID) {
+//		boolean res = true;
+//		try {
+//			for(Long questionID : questionsID){
+//				EntityQuestionAttributes questionAttr = em.find(EntityQuestionAttributes.class, questionID);
+//				ITestQuestionHandler questionResult = SingleTestQuestionHandlerFactory.getInstance(questionAttr);
+//				//questionResult.
+//				
+//				jsonTestResults.put(new JSONObject(questionResult.toJsonString()));
+//			}
+//		} catch (Exception e) {
+//				e.printStackTrace();
+//				res = false;
+//		} finally {
+//			if(res){
+//				save();	
+//			}
+//		}
+//		return res;
+//	}
 
-	private ITestQuestionHandler getInstanceFromJson(JSONObject json){
-		ITestQuestionHandler questionResult = SingleTestQuestionHandlerFactory.getInstance(json, companyId, testId);
-		return questionResult;
-	}
+//	private ITestQuestionHandler getInstanceFromJson(JSONObject json){
+//		ITestQuestionHandler questionResult = SingleTestQuestionHandlerFactory.getInstance(json, companyId, testId);
+//		return questionResult;
+//	}
 
-	@Override
-	public int length() {
-		return jsonTestResults.length();
-	}
+//	@Override
+//	public int length() {
+//		return jsonTestResults.length();
+//	}
 	
 	@Override
 	@Transactional(readOnly=false, propagation = Propagation.REQUIRES_NEW)
@@ -87,10 +87,7 @@ public class PersonTestHandler implements IPersonTestHandler {
 			JSONObject jsn = new JSONObject(answer);
 			long etqId = jsn.getLong(ICommonData.JSN_INTEST_QUESTION_ID);
 			EntityTestQuestions etq = em.find(EntityTestQuestions.class, etqId);
-			ITestQuestionHandler testQuestionHandler = SingleTestQuestionHandlerFactory.getInstance(etq);
-			testQuestionHandler.setEntityQuestionAttributes(etq.getEntityQuestionAttributes());
-			testQuestionHandler.setCompanyId(companyId);
-			testQuestionHandler.setTestId(testId);
+			ITestQuestionHandler testQuestionHandler = SingleTestQuestionHandlerFactory.getInstance(etq);			
 			testQuestionHandler.setPersonAnswer(jsn, etqId);
 		} catch (JSONException e1) {
 			// TODO Auto-generated catch block
@@ -113,75 +110,77 @@ public class PersonTestHandler implements IPersonTestHandler {
 //		save();
 		return res;
 	}
+//
+//	@Override
+//	public boolean analyzeAll() {
+//		
+//		boolean res = true;
+//		for(int i=0, length = jsonTestResults.length(); i < length; i++){
+//			JSONObject jsonObj = null;
+//			try {
+//				jsonObj = jsonTestResults.getJSONObject(i);
+//				if(jsonObj.get(InnerResultDataObject.KEY_STATUS).equals(InnerResultDataObject.STATUS_NOT_ALALYZED)){
+//					ITestQuestionHandler testQuestionResult = getInstanceFromJson(jsonObj);
+//					testQuestionResult.analyze();
+//					jsonTestResults.put(i, new JSONObject(testQuestionResult.toJsonString()));
+//				}
+//			} catch (JSONException e) {
+//				e.printStackTrace();
+//			}
+//		}
+//		save();
+//		return res;
+//	}
 
-	@Override
-	public boolean analyzeAll() {
-		
-		boolean res = true;
-		for(int i=0, length = jsonTestResults.length(); i < length; i++){
-			JSONObject jsonObj = null;
-			try {
-				jsonObj = jsonTestResults.getJSONObject(i);
-				if(jsonObj.get(InnerResultDataObject.KEY_STATUS).equals(InnerResultDataObject.STATUS_NOT_ALALYZED)){
-					ITestQuestionHandler testQuestionResult = getInstanceFromJson(jsonObj);
-					testQuestionResult.analyze();
-					jsonTestResults.put(i, new JSONObject(testQuestionResult.toJsonString()));
-				}
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-		}
-		save();
-		return res;
-	}
+//	@Override
+//	public int getRightAnswersQuantity() {
+//		int res = 0;
+//		for(int i=0, length = jsonTestResults.length(); i < length; i++){
+//			JSONObject jsonObj = null;
+//			try {
+//				jsonObj = jsonTestResults.getJSONObject(i);
+//				if(jsonObj.get(InnerResultDataObject.KEY_STATUS).equals(InnerResultDataObject.STATUS_TRUE)){
+//					res++;
+//				}
+//			} catch (JSONException e) {
+//				e.printStackTrace();
+//			}
+//		}
+//		return res;
+//	}
 
-	@Override
-	public int getRightAnswersQuantity() {
-		int res = 0;
-		for(int i=0, length = jsonTestResults.length(); i < length; i++){
-			JSONObject jsonObj = null;
-			try {
-				jsonObj = jsonTestResults.getJSONObject(i);
-				if(jsonObj.get(InnerResultDataObject.KEY_STATUS).equals(InnerResultDataObject.STATUS_TRUE)){
-					res++;
-				}
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-		}
-		return res;
-	}
+//	@Override
+//	public String next() {
+//		String res = null;
+//		for(int i=0, length = jsonTestResults.length(); i < length; i++){
+//			try {
+//				JSONObject jsonObj = jsonTestResults.getJSONObject(i);
+//				if(jsonObj.get(InnerResultDataObject.KEY_STATUS).equals(InnerResultDataObject.STATUS_NOT_ASKED)){
+//					ITestQuestionHandler testQuestionResult = getInstanceFromJson(jsonObj);
+//					res = testQuestionResult.getQuestionJson(i);
+//					break;
+//				}
+//			} catch (JSONException e) {
+//				e.printStackTrace();
+//			}
+//		}
+//		return res;
+//	}
 
-	@Override
-	public String next() {
-		String res = null;
-		for(int i=0, length = jsonTestResults.length(); i < length; i++){
-			try {
-				JSONObject jsonObj = jsonTestResults.getJSONObject(i);
-				if(jsonObj.get(InnerResultDataObject.KEY_STATUS).equals(InnerResultDataObject.STATUS_NOT_ASKED)){
-					ITestQuestionHandler testQuestionResult = getInstanceFromJson(jsonObj);
-					res = testQuestionResult.getQuestionJson(i);
-					break;
-				}
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-		}
-		return res;
-	}
+//	private void save() {
+//		FileManagerService.saveJson(companyId, testId, jsonTestResults.toString());
+//	}
 
-	private void save() {
-		FileManagerService.saveJson(companyId, testId, jsonTestResults.toString());
-	}
+//	@Override
+//	public String getStatus(int index) {
+//		String status = null;
+//		try {
+//			status = new JSONObject(jsonTestResults.get(index)).getString(InnerResultDataObject.KEY_STATUS);
+//		} catch (JSONException e) {
+//			e.printStackTrace();
+//		}
+//		return status;
+//	}
 
-	@Override
-	public String getStatus(int index) {
-		String status = null;
-		try {
-			status = new JSONObject(jsonTestResults.get(index)).getString(InnerResultDataObject.KEY_STATUS);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return status;
-	}
+
 }
