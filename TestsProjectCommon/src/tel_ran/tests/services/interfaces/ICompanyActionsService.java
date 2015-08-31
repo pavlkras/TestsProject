@@ -82,8 +82,8 @@ public interface ICompanyActionsService extends ICommonAdminService {
 	 * 2 - invalid value in the field personEmail
 	 * 3 - not enough data to generate the text. Categories1 should be specified, but the field is null	 * 
 	 */
-	public int createTestForPersonFull(String metaCategories, String categories1, String difLevel, String nQuestion, int personPassport,
-			String personName, String personSurname, String personEmail, String pass);
+//	public int createTestForPersonFull(String metaCategories, String categories1, String difLevel, String nQuestion, int personPassport,
+//			String personName, String personSurname, String personEmail, String pass);
 		
 
 	/**
@@ -122,6 +122,13 @@ public interface ICompanyActionsService extends ICommonAdminService {
 	 */
 	public String getQuestionDetails(long companyId, long testQuestionId);
 
+	/**
+	 * Return JSON Array = list of unchecked questions in the given test 
+	 * @param companyId
+	 * @param testId
+	 * @return String (JSON) or "{}", if there aren't unchecked questions in this test
+	 */
+	public String getListOfUncheckedQuestions(long companyId, long testId);
 
 	//Company actions for 3.1.4. Viewing test results
 	public String getTestsResultsAll(long companyId, String timeZone);

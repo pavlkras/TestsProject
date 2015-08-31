@@ -62,12 +62,16 @@ public interface IPublicStrings {
 
 	// ------------- STATUS OF QUESTIONS TO SHOW --------------------------------------------- //
 	
-	static final String[] QUESTION_STATUS = {"unanswered", "unchecked", "incorrect", "correct"};
+	static final String UNCHECKED_QUESTION = "unchecked";
+	static final String CORRECT_QUESTION = "correct";
+	static final String INCORRECT_QUESTION = "incorrect";
+	static final String[] QUESTION_STATUS = {"unanswered", UNCHECKED_QUESTION, INCORRECT_QUESTION, CORRECT_QUESTION};
+	
 	
 	// ------------- GRADE OPTIONS ------------------------------------------------------------ //
 	
 	static final String[][] GRADE_OPTIONS = {
-												{"correct", "incorrect"}, // 0 - GRADE_OPTIONS_CORRECT
+												{INCORRECT_QUESTION, CORRECT_QUESTION}, // 0 - GRADE_OPTIONS_CORRECT
 												{"1", "2", "3", "4", "5"}, // 1 -  5-BALLS
 												{} //2 - PERCENT
 											};

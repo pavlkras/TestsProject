@@ -5,6 +5,7 @@ public interface ICommonData {
 	static final String TESTS_RESULTS_BY_DATES = "/tests_results_by_dates";
 	static final String TESTS_RESULTS_BY_PERSON_ID = "/tests_results_by_person";
 	static final String TEST_RESULT_DETAILS = "/test_details";
+	static final String TEST_RESULTS_UNCHECKED_LIST = "/unchecked_questions";
 	static final String TEST_QUESTION_DETAILS="/question_details"; // QUERY for the question's details (with answer of the person) for the company look
 	static final String DATE_FORMAT = "yyyy-MM-dd";
 	static final String delimiter = ",";
