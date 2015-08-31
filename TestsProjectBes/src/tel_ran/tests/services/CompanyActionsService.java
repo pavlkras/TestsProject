@@ -263,12 +263,8 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 	}
 	
 	/**
-	 * Method for ViewResults - get list of UNCHECKED questions. Should return:	 
-	 * - amount of question (JSN = "amountOfQuestions")
-	 * - amount of correct answers (JSN = "amountOfCorrectAnswers")
-	 * - amount of incorrect answers (JSN = "incorrect")
-	 * - amount of unchecked answers (JSN = "unchecked")
-	 * - percent of correct answers - String! (JSN = "persentOfRightAnswers")	 
+	 * Method for ViewResults - get list of UNCHECKED questions. Should return:	 	 
+	 * - amount of unchecked answers (JSN = "unchecked")	 	 
 	 * - list of questions (JSN = "questions") with:
 	 * ----- index in list (JSN = "index") 
 	 * ----- ID (EntityTestQuestions) (JSN = "questionId")
