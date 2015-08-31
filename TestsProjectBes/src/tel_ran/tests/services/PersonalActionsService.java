@@ -202,7 +202,7 @@ public class PersonalActionsService extends CommonServices implements IPersonalA
 		EntityTest test = em.find(EntityTest.class, testId);
 		long time = System.currentTimeMillis();
 		test.setEndTestDate(time);	
-		test.setDuration((int)(test.getStartTestDate() - time));
+		test.setDuration((int)(time - test.getStartTestDate()));
 		em.merge(test);
 		System.out.println(LOG + " - 181-M: fininshTest");
 		int numQuestions = test.getAmountOfQuestions();
