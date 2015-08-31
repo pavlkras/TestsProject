@@ -138,6 +138,8 @@ Wrong Password Flow:
 			result = "company/CompanySignIn";
 			model.addAttribute("result", " This Company not exist - " + companyName);
 		}
+		
+		System.out.println(((ICompanyActionsService)adminService).checkAnswer(1, "{\"mark\":\"correct\";\"id\":90}"));
 		return result;
 	}
 	// END  --------------- Use case Company Login--------------
