@@ -1,7 +1,6 @@
 package tel_ran.tests.services.interfaces;
 
 import java.util.List;
-import java.util.Map;
 
 import tel_ran.tests.services.fields.ApplicationFinalFields;
 

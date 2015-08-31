@@ -7,6 +7,8 @@ public interface ICommonData {
 	static final String TEST_RESULT_DETAILS = "/test_details";
 	static final String TEST_RESULTS_UNCHECKED_LIST = "/unchecked_questions";
 	static final String TEST_QUESTION_DETAILS="/question_details"; // QUERY for the question's details (with answer of the person) for the company look
+	static final String TEST_CHECK_ANSWER = "/check_answer";
+	
 	static final String DATE_FORMAT = "yyyy-MM-dd";
 	static final String delimiter = ",";
 	static final int TOKEN_VALID_IN_SECONDS = 300;
@@ -137,6 +139,10 @@ public interface ICommonData {
 	static final int GRADE_TYPE_CORRECT = 0; // correct OR incorrect
 	static final int GRADE_TYPE_5BALLS = 1; // 1 - 2 - 3 - 4 - 5
 	static final int GRADE_TYPE_PERCENT = 2; // from 0% to 100%	
+	
+	// -------------------- CHECK QUESTION --------------------------------------------- //
+	static final String JSN_CHECK_MARK = "mark"; //String = mark
+	static final String JSN_CHECK_ID = "id"; //long = if for EntityTestQuestions
 	
 	
 	// -------------------- JSN - FIELDS ---------------------------------------------- //
