@@ -92,12 +92,7 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 	}
 	
 
-	//-------------Use Case Company Sign up 3.1.2----------- //   BEGIN    ///
-
-
-
-	//-------------Use Case Company Sign up 3.1.2-----------  /// END  ///
-
+	
 	//------------- 	Use case Ordering Test 3.1.3 -------------/// BEGIN ////
 	
 		
@@ -115,8 +110,14 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 	
 
 	//------------- 	Use case Ordering Test 3.1.3 -------------/// END  ////	
+	
+	
 
 	//------------- Viewing test results  3.1.4.----------- //   BEGIN    ///
+	
+	
+	// LISTS OF TESTS ------------------ 
+	
 	@Override
 	public String getTestsResultsAll(long companyId, String timeZone) {
 		
@@ -168,6 +169,11 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 		}
 		return res;
 	}
+	
+	
+	
+	// LISTS OF QUESTIONS  ------------------ //
+	
 
 	/**
 	 * Method for ViewResults - get details of test. Should return:
@@ -222,9 +228,7 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 					// pictures
 					
 					List <String> images_ = FileManagerService.getImage(companyId, testId);
-					if(images_!=null) {
-						System.out.println(LOG + " - 223 - in method: getTestResultDetails, images: " + images_.toString());
-						System.out.println(LOG + " - 224 - in method: getTestResultDetails, images number: " + images_.size());
+					if(images_!=null) {						
 						JSONArray imagArray = new JSONArray(images_);
 						jsonObj.put(ICommonData.JSN_TESTDETAILS_PHOTO, imagArray);
 					} else {
@@ -257,11 +261,64 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 		}
 		return res;
 	}
-
-	IPersonTestHandler getTestResultsHandler(long companyId, long testId){
-		return new PersonTestHandler(companyId, testId, em);
+	
+	/**
+	 * Method for ViewResults - get list of UNCHECKED questions. Should return:	 
+	 * - amount of question (JSN = "amountOfQuestions")
+	 * - amount of correct answers (JSN = "amountOfCorrectAnswers")
+	 * - amount of incorrect answers (JSN = "incorrect")
+	 * - amount of unchecked answers (JSN = "unchecked")
+	 * - percent of correct answers - String! (JSN = "persentOfRightAnswers")	 
+	 * - list of questions (JSN = "questions") with:
+	 * ----- index in list (JSN = "index") 
+	 * ----- ID (EntityTestQuestions) (JSN = "questionId")
+	 * ----- metaCategory (JSN = "metaCategory")
+	 * ----- category1 (JSN = "category")
+	 * ----- status (unchecked) in two options:
+	 * ----------- as number (= adress for IPublicStrings.QUESTION_STATUS[])
+	 * ----------- as String (from IPublicStrings.QUESTION_STATUS[])
+	 * 
+	 * @param companyId - id of company (by EntityCompany, it needs to get files of pictures) 
+	 * @param testId - id of test (by EntityTest)
+	 * @return JSON. Keys of JSON - see in ICommonData, JSN_TESTDETAILS_
+	 */ 
+	@Override
+	public String getListOfUncheckedQuestions(long companyId, long testId) {		
+		String res = "{}";
+		entityCompany = em.find(EntityCompany.class, companyId);
+		if(entityCompany!=null){
+			EntityTest test = (EntityTest) em.createQuery
+				("SELECT t FROM EntityTest t WHERE t.testId = :testId AND t.entityCompany = :company")
+				.setParameter("testId", testId)
+				.setParameter("company", entityCompany)
+				.getSingleResult();
+			
+			if(test!=null) {
+				
+				JSONObject jsonObj = null;
+				
+				try {
+					jsonObj = this.getListOfUncheckedQuestions(test.getTestId());
+					res = jsonObj.toString();
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+		}
+		return res;
 	}
 	
+	@Override
+	public String encodeIntoToken(long companyId) {
+		//encodes current timestamp and companyId into token
+		String token = tokenProcessor.encodeIntoToken(companyId, ICommonData.TOKEN_VALID_IN_SECONDS);
+		return token;
+	}	
+	
+	//PRIVATE
+	// JSON for Lists of test
 	private String generateJsonResponseCommon(List<EntityTest> testresults, String timeZone) {		
 		JSONArray result = new JSONArray();
 		for (EntityTest test: testresults){
@@ -289,30 +346,29 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 		return result.toString();
 	}
 	
-//	public String getJsonDetails() {
-
-//}
-
-	@Override
-	public String encodeIntoToken(long companyId) {
-		//encodes current timestamp and companyId into token
-		String token = tokenProcessor.encodeIntoToken(companyId, ICommonData.TOKEN_VALID_IN_SECONDS);
-		return token;
-	}	
-	//------------- Viewing test results  3.1.4.----------- // END ////	
-
-
-
-
-	@Override
-	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
-	public int createTestForPersonFull(String metaCategories, String categories1, String difLevel, String nQuestion, int personPassport,
-			String personName, String personSurname, String personEmail, String pass) {		
-		return this.createTestForPersonFullWithQuestions(null, metaCategories, categories1, difLevel, nQuestion, 
-				personPassport, personName, personSurname, personEmail, pass);
-	}
-
+	// Person handler	
+		private IPersonTestHandler getTestResultsHandler(long companyId, long testId){
+			return new PersonTestHandler(companyId, testId, em);
+		}
+		
 	
+		
+		
+	//------------- Viewing test results  3.1.4.----------- // END ////	
+	
+	
+	// ------------ Creating tests -------------------------// BEGIN ////
+		
+	// old version
+//	@Override
+//	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
+//	public int createTestForPersonFull(String metaCategories, String categories1, String difLevel, String nQuestion, int personPassport,
+//			String personName, String personSurname, String personEmail, String pass) {		
+//		return this.createTestForPersonFullWithQuestions(null, metaCategories, categories1, difLevel, nQuestion, 
+//				personPassport, personName, personSurname, personEmail, pass);
+//	}
+
+	// gate for create test	with creation person
 	@Override
 	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
 	public int createTestForPersonFullWithQuestions(List<Long> questionIdList, String metaCategories, String categories1, String difLevel, String nQuestion, int personPassport,
@@ -325,7 +381,7 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 		return this.testFromQuestionList(questionIdList, ePerson, pass, metaCategories, categories1, difLevel, nQuestion);
 
 	}
-	
+		
 
 	@Override
 	public int createSetQuestiosnAndTest(String metaCategory, String category1, String level_num, String nQuestion, 
@@ -336,10 +392,15 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 		return testFromQuestionList(null, temp, pass, metaCategory, category1, level_num, nQuestion);
 	}
 
+	@Override  
+	public List<Long> createSetQuestions(String metaCategory, String categories1, String levelsOfDifficulty, int nQuestion) 
+		{				
+			List<Long> result = null; 			
+			return createSetQuestions(metaCategory, categories1, levelsOfDifficulty, nQuestion, result);
+		}
 
 
-
-	
+	// gate for create test	for given Person 
 	@Override
 	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
 	public int createTestFromQuestionList(List<Long> questionIdList, int personId, String pass, String metaCategories, String categories1, 
@@ -350,17 +411,7 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 	}
 
 	
-	
-
-	
-	// ------------------- PRIVATE METHODS FOR TEST CREATION ---------------------- // BEGIN -----------
-
-	@Override  
-	public List<Long> createSetQuestions(String metaCategory, String categories1, String levelsOfDifficulty, int nQuestion) 
-		{				
-			List<Long> result = null; 			
-			return createSetQuestions(metaCategory, categories1, levelsOfDifficulty, nQuestion, result);
-		}
+	// PRIVATE METHODS FOR TEST CREATION ---------------------- // BEGIN -----------
 
 	@SuppressWarnings("unchecked")
 	private List<Long> createSetQuestions(String metaCategory, String categories1, String levelsOfDifficulty, int nQuestion, 
@@ -529,8 +580,7 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 		
 		return result;
 	}
-	
-	//// TO DO ! CHECK UNIQUE !!!!!!!!!!!!!!!!!	
+		
 	private static int randomAttributeQuestionsId(List<Long> allAttributeQuestionsId, Long nQuestion, 
 			HashSet<Long> listOfId){
 		
@@ -624,9 +674,13 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 		
 		return person;
 	}
+	
+	// ------------------------- creating TEST ---------------- // END
 
 	
-
+	// ------------------------- info about TESTS and COMPANY -------------- // BEGIN
+	
+	// info about COMPANY
 	@Override
 	public String getUserInformation() {
 		String result = null;	
@@ -669,6 +723,7 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 		return resultList;
 	}
 	
+	// number of created and sended tests
 	private long getNumberTests() {
 		String query = "SELECT COUNT(et) from EntityTest et ";
 		query = query.concat(" WHERE et.entityCompany=?1");
@@ -679,6 +734,7 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 		return result;
 		
 	}
+	
 	
 	private String getTestJson(EntityTest et) throws JSONException {
 		String result = null;
@@ -691,7 +747,6 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 			jsn.put("pers_name", et.getEntityPerson().getPersonName());
 			jsn.put("pers_id", et.getEntityPerson().getPersonId());		
 			result = jsn.toString();
-//			System.out.println("JSON for TEST" + result); // ---------------------------------------------------- SYSO !!!!!!!!!!!!!!!!!!!!!!!
 		}
 		
 		return result;
@@ -747,7 +802,7 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 					res = jsonObject.toString();
 					
 				} catch (JSONException e) {
-					// TODO Auto-generated catch block
+					
 					e.printStackTrace();
 				}						
 				
@@ -757,7 +812,8 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 		return res;
 	}
 
-			
+
+
 				
 
 

@@ -380,6 +380,83 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 		return result;
 	}
 	
+	
+	/**
+	 * Fill JSONObject with short information about question in the test. It includes:
+	 * -- test-question ID
+	 * -- status (in num and String)
+	 * -- metaCategory
+	 * -- category
+	 * @param etq
+	 * @param jsnQuest
+	 * @param index
+	 * @return
+	 * @throws JSONException
+	 */
+	private int getObjectForShortQuestionInfo (EntityTestQuestions etq, JSONObject jsnQuest) throws JSONException {
+		int status = etq.getStatus();
+		
+		//set ID and index
+		jsnQuest.put(ICommonData.JSN_TESTDETAILS_QUESTION_ID, etq.getId());		
+	
+		//set STATUS	
+		jsnQuest.put(ICommonData.JSN_TESTDETAILS_QUESTION_STATUS_NUM, status);
+		jsnQuest.put(ICommonData.JSN_TESTDETAILS_QUESTION_STATUS_STR, IPublicStrings.QUESTION_STATUS[status]);
+	
+		//set category-metacategory
+		jsnQuest.put(ICommonData.JSN_TESTDETAILS_QUESTION_METACATEGORY, etq.getEntityQuestionAttributes().getMetaCategory());
+		jsnQuest.put(ICommonData.JSN_TESTDETAILS_QUESTION_CATEGORY1, etq.getEntityQuestionAttributes().getCategory1());
+		
+		return status;
+	}
+	
+	/**
+	 * Return JSONObject with list of questions and some info about all test.
+	 * JSON includes fields:
+	 * -- "questions" = list of questions (array) with fields:
+	 * ------ test-question ID
+	 * ------ status (in num and String)
+	 * ------ metaCategory
+	 * ------ category
+	 * ------ index in list
+	 * -- number of unchecked questions
+	 * @param testId
+	 * @param fullList
+	 * @return
+	 * @throws JSONException
+	 */
+	@Transactional
+	public JSONObject getListOfUncheckedQuestions(long testId) throws JSONException {
+		EntityTest test = em.find(EntityTest.class, testId);
+		String query = "SELECT c from EntityTestQuestions c WHERE c.entityTest=?1 AND c.status=?2";
+		@SuppressWarnings("unchecked")
+		List<EntityTestQuestions> list = em.createQuery(query).setParameter(1, test).setParameter(2, ICommonData.STATUS_UNCHECKED)
+				.getResultList();
+		JSONObject result = new JSONObject();
+		int num = 0;
+		JSONArray array = new JSONArray();
+		if(list!=null) {			
+			for (EntityTestQuestions etq : list) {
+				JSONObject jsn = new JSONObject();
+				getObjectForShortQuestionInfo(etq, jsn);
+				num++;
+				jsn.put(ICommonData.JSN_TESTDETAILS_QUESTION_INDEX, num);
+				array.put(jsn);
+			}
+			
+		}
+		result.put(ICommonData.JSN_TESTDETAILS_LIST_OF_QUESTIONS, array);
+		result.put(ICommonData.JSN_TESTDETAILS_UNCHECKED_QUESTIONS_NUMBER, num);
+		return result;
+	}
+	
+	/**
+	 * Return JSONObject with list of questions and some info about all test.	 
+	 * @param testId
+	 * @param fullList
+	 * @return
+	 * @throws JSONException
+	 */
 	@Transactional(readOnly=false, propagation = Propagation.REQUIRED)
 	public JSONObject checkStatusAndGetJson(long testId) throws JSONException {
 		int correct = 0;
@@ -397,23 +474,13 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 		List<EntityTestQuestions> list = em.createQuery(query).setParameter(1, test).getResultList();			
 				
 		int index = 0;
-		for(EntityTestQuestions etq : list) {
-			JSONObject jsnQuest = new JSONObject();
+		for(EntityTestQuestions etq : list) {			
 			
-			//set ID and index
-			jsnQuest.put(ICommonData.JSN_TESTDETAILS_QUESTION_ID, etq.getId());
-			jsnQuest.put(ICommonData.JSN_TESTDETAILS_QUESTION_INDEX, index++);
+				JSONObject jsnQuest = new JSONObject();
+				int status = this.getObjectForShortQuestionInfo(etq, jsnQuest);
+				jsnQuest.put(ICommonData.JSN_TESTDETAILS_QUESTION_INDEX, index);			
+				jsnArray.put(jsnQuest);
 			
-			// set STATUS
-			int status = etq.getStatus();
-			jsnQuest.put(ICommonData.JSN_TESTDETAILS_QUESTION_STATUS_NUM, status);
-			jsnQuest.put(ICommonData.JSN_TESTDETAILS_QUESTION_STATUS_STR, IPublicStrings.QUESTION_STATUS[status]);
-			
-			//set category-metacategory
-			jsnQuest.put(ICommonData.JSN_TESTDETAILS_QUESTION_METACATEGORY, etq.getEntityQuestionAttributes().getMetaCategory());
-			jsnQuest.put(ICommonData.JSN_TESTDETAILS_QUESTION_CATEGORY1, etq.getEntityQuestionAttributes().getCategory1());
-			
-			jsnArray.put(jsnQuest);
 			
 			switch(status) {
 			case ICommonData.STATUS_CORRECT :
@@ -433,8 +500,7 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 			}
 		}
 		
-		boolean testIsPassed;
-		boolean testIsChecked;
+		boolean testIsPassed;		
 						
 		if(unAnswered==0) {			
 			testIsPassed = true;
@@ -445,14 +511,11 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 			testIsPassed = false;
 		}
 		
-		if(unChecked==0 && testIsPassed) {
-			testIsChecked = true;
+		if(unChecked==0 && testIsPassed) {			
 			if(!test.isChecked()) {
 				test.setChecked(true);				
 			}
-		} else {
-			testIsChecked = false;
-		}
+		} 
 						
 		if(test.getAmountOfCorrectAnswers()!=correct) {
 			test.setAmountOfCorrectAnswers(correct);			

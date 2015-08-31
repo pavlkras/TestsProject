@@ -104,6 +104,7 @@ public class TestsResultsRestController {
 	
 	/**
 	 * Return JSON with Question details
+	 * URL = /question_details/{questId}
 	 * @param questId = test-question id (for EntityTestQuestion), that can be find in the results of Query testDetails
 	 * @param token
 	 * @return String
@@ -118,6 +119,23 @@ public class TestsResultsRestController {
 		} else {
 			res = getJsonErrorMessage();
 		}
+		return res;
+	}
+	
+	/**
+	 * Return JSON = List of unchecked questions
+	 * URL = /unchecked_questions/{testId}
+	 * @return
+	 */
+	@RequestMapping(value=ICommonData.TEST_RESULTS_UNCHECKED_LIST + "/{testId}", method=RequestMethod.GET)
+	@ResponseBody @JsonRawValue
+	String uncheckedQuestions(@PathVariable long testId, @RequestHeader(value="Authorization") String token) {
+		long companyId = tokenProcessor.decodeAndCheckToken(token);
+		String res = "";
+		if(companyId != -1) 
+			res = company.getListOfUncheckedQuestions(companyId, testId);
+		else
+			res = getJsonErrorMessage();
 		return res;
 	}
 	
