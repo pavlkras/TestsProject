@@ -19,7 +19,7 @@ public class EntityTestQuestions {
 	@ManyToOne
 	private EntityQuestionAttributes eqaId;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name="TEST_ID", nullable=false)
 	private EntityTest entityTest;
 	

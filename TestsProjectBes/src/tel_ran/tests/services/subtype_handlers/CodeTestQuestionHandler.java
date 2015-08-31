@@ -191,6 +191,12 @@ public class CodeTestQuestionHandler extends AbstractTestQuestionHandler impleme
 		
 		return result;
 	}
+
+	//impossible to change status for this type of question
+	@Override
+	protected int getStatusFromMark(String mark) {		
+		return -1;
+	}
 		
 	
 }

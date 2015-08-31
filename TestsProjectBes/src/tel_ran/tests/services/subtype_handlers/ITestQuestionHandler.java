@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 import tel_ran.tests.entitys.EntityQuestionAttributes;
 import tel_ran.tests.entitys.EntityTestQuestions;
+import tel_ran.tests.services.common.IPublicStrings;
 
 public interface ITestQuestionHandler {
 //	public void createFromQuestion(long questionId, String metacategory);
@@ -39,4 +40,12 @@ public interface ITestQuestionHandler {
 	 * @throws JSONException 
 	 */
 	JSONObject getJsonWithCorrectAnswer(EntityTestQuestions entityTestQuestion) throws JSONException; 
+	
+	/**
+	 * MANUAL CHECK ANSWERS OF PERSON
+	 * save the mark into DB and returns number of a new status of the question
+	 * @param mark - String from IPublcStrings.GRADE_OPTIONS[][]
+	 * @return
+	 */
+	int setMark(String mark);
 }

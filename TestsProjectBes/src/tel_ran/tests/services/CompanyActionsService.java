@@ -28,6 +28,8 @@ import tel_ran.tests.services.common.IPublicStrings;
 import tel_ran.tests.services.interfaces.ICompanyActionsService;
 import tel_ran.tests.services.subtype_handlers.ITestQuestionHandler;
 import tel_ran.tests.services.subtype_handlers.SingleTestQuestionHandlerFactory;
+import tel_ran.tests.services.testhandler.CompanyTestHandler;
+import tel_ran.tests.services.testhandler.ICompanyTestHandler;
 import tel_ran.tests.services.testhandler.IPersonTestHandler;
 import tel_ran.tests.services.testhandler.PersonTestHandler;
 import tel_ran.tests.services.utils.FileManagerService;
@@ -306,6 +308,39 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 		return res;
 	}
 	
+	
+	// CHECK ANSWER OF PERSON
+	@Override	
+	public String checkAnswer(long companyId, String mark) {
+		String response = "";
+		entityCompany = em.find(EntityCompany.class, companyId);
+		if(entityCompany!=null) {
+			try {
+				JSONObject jsn = new JSONObject(mark);
+				String res = jsn.getString(ICommonData.JSN_CHECK_MARK);
+				long testQuestionId = jsn.getLong(ICommonData.JSN_CHECK_ID);
+				EntityTestQuestions etq = em.find(EntityTestQuestions.class, testQuestionId);
+				if(etq!=null && etq.getStatus()==ICommonData.STATUS_UNCHECKED) {
+					ITestQuestionHandler handler = SingleTestQuestionHandlerFactory.getInstance(etq);
+					int newStatus = handler.setMark(res);
+					response = IPublicStrings.QUESTION_STATUS[newStatus];
+					ICompanyTestHandler testHandler = SingleTestQuestionHandlerFactory.getTestCompanyHandler();
+					long testId = etq.getEntityTest().getTestId();
+					System.out.println(testId);
+					testHandler.setTestId(testId);
+					testHandler.renewStatusOfTest();
+//					this.renewStatusOfTest(etq.getEntityTest().getTestId());
+				}
+							
+			} catch (JSONException e) {
+				e.printStackTrace();			
+			}
+		}
+		
+		return response;
+	}
+
+	
 	@Override
 	public String encodeIntoToken(long companyId) {
 		//encodes current timestamp and companyId into token
@@ -343,10 +378,10 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 	}
 	
 	// Person handler	
-		private IPersonTestHandler getTestResultsHandler(long companyId, long testId){
-			return new PersonTestHandler(companyId, testId, em);
-		}
-		
+//		private IPersonTestHandler getTestResultsHandler(long companyId, long testId){
+//			return new PersonTestHandler(companyId, testId, em);
+//		}
+//		
 	
 		
 		
@@ -354,6 +389,7 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 	
 	
 	// ------------ Creating tests -------------------------// BEGIN ////
+		
 		
 	// old version
 //	@Override
@@ -364,6 +400,8 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 //				personPassport, personName, personSurname, personEmail, pass);
 //	}
 
+		
+		
 	// gate for create test	with creation person
 	@Override
 	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
@@ -567,15 +605,15 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 		
 	}
 	
-	private boolean checkCategory1 (String metaCategory, String category1) {
-		boolean result = false;
-		
-		List<String> categories1InDb = this.getCategories1ByMetaCategory(metaCategory);
-		if(categories1InDb.contains(category1))
-			result = true;
-		
-		return result;
-	}
+//	private boolean checkCategory1 (String metaCategory, String category1) {
+//		boolean result = false;
+//		
+//		List<String> categories1InDb = this.getCategories1ByMetaCategory(metaCategory);
+//		if(categories1InDb.contains(category1))
+//			result = true;
+//		
+//		return result;
+//	}
 		
 	private static int randomAttributeQuestionsId(List<Long> allAttributeQuestionsId, Long nQuestion, 
 			HashSet<Long> listOfId){
@@ -807,6 +845,7 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 		}
 		return res;
 	}
+
 
 
 

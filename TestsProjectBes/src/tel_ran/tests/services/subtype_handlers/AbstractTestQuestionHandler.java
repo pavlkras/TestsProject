@@ -42,6 +42,7 @@ public abstract class AbstractTestQuestionHandler extends TestsPersistence imple
 				
 	public void setEtqId(long etqId) {
 		this.etqId = etqId;
+		this.entityTestQuestion = em.find(EntityTestQuestions.class, etqId);
 	}
 
 	public void setCompanyId(long companyId) {
@@ -268,4 +269,20 @@ public abstract class AbstractTestQuestionHandler extends TestsPersistence imple
 		if(fileLink!=null && fileLink.length()>2)
 			jsn.put(key, getImageBase64(fileLink));
 	}
+	
+	@Override
+	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
+	public int setMark(String mark) {
+		int newStatus = getStatusFromMark(mark);
+		
+		//if the type of the question doesn't allow to change status 
+		// newStatus will be -1
+		if(newStatus!=-1) {
+			entityTestQuestion.setStatus(newStatus);
+			em.merge(entityTestQuestion);
+		}
+		return newStatus;
+	}
+	
+	abstract protected int getStatusFromMark(String mark);
 }

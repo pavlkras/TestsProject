@@ -25,6 +25,8 @@ import tel_ran.tests.processor.TestProcessor;
 import tel_ran.tests.services.common.ICommonData;
 import tel_ran.tests.services.common.IPublicStrings;
 import tel_ran.tests.services.interfaces.ICommonService;
+import tel_ran.tests.services.subtype_handlers.ITestQuestionHandler;
+import tel_ran.tests.services.subtype_handlers.SingleTestQuestionHandlerFactory;
 import tel_ran.tests.services.utils.FileManagerService;
 
 public abstract class CommonServices extends TestsPersistence implements ICommonService {
@@ -277,60 +279,41 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 		return jsn;
 	}
 	
-	/**
-	 * NEW FLOW of saving answers
-	 * This methot is called in the end of the test to check its status: passed, checked or none
-	 * @param testId
-	 * @return
-	 * @throws JSONException
-	 */
-	@Transactional(readOnly=false, propagation = Propagation.REQUIRED)
-	protected JSONObject getStatusOfTest(long testId) throws JSONException {
-		int correct = 0;
-		int inCorrect = 0;
-		int unAnswered = 0;
-		int unChecked = 0;
-				
-		EntityTest test = em.find(EntityTest.class, testId);
+	// returns array with amount of answers in the test:
+	// 4 - all
+	// 3 - correct
+	// 2 - inCorrect
+	// 1 - unChecked
+	// 0 - unAnswered	
+	@Transactional(readOnly=false, propagation = Propagation.REQUIRES_NEW)
+	protected int[] renewStatusOfTest(long testId) {
+		int[] result = new int[5];
 		
+		EntityTest test = em.find(EntityTest.class, testId);
 		String query = "SELECT c from EntityTestQuestions c WHERE c.entityTest=?1";
 		
 		@SuppressWarnings("unchecked")
-		List<EntityTestQuestions> list = em.createQuery(query).setParameter(1, test).getResultList();			
-				
+		List<EntityTestQuestions> list = em.createQuery(query).setParameter(1, test).getResultList();	
+		
 		for(EntityTestQuestions etq : list) {
-			int status = etq.getStatus();
+			int status = etq.getStatus();			
+			result[4]++;
+			result[status]++;
+			System.out.println(status);
 			
-			switch(status) {
-			case ICommonData.STATUS_CORRECT :
-				correct++;
-				break;
-			case ICommonData.STATUS_INCORRECT :
-				inCorrect++;
-				break;
-			case ICommonData.STATUS_NO_ANSWER :
-				unAnswered++;
-				System.out.println(LOG + " -313-M: getStatusOfTest - unanswered = " + etq.getId());
-				break;
-			case ICommonData.STATUS_UNCHECKED :
-				unChecked++;	
-				break;
-			default:
-				System.out.println(LOG + " -315-M: getStatusOfTest - incorrect status = " + status);
-			}
 		}
 		
-		boolean testIsPassed;
-		boolean testIsChecked;
+		boolean testIsPassed;		
 				
-		System.out.println(LOG + " -322-M: getStatusOfTest - CORRECT = " + correct);
-		System.out.println(LOG + " -323-M: getStatusOfTest - INCORRECT = " + inCorrect);
-		System.out.println(LOG + " -324-M: getStatusOfTest - UNANSWERED = " + unAnswered);
-		System.out.println(LOG + " -325-M: getStatusOfTest - UNCHECKED = " + unChecked);
-		if(unAnswered==0) {			
+		System.out.println(LOG + " -320-M: renewStatusOfTest - CORRECT = " + result[ICommonData.STATUS_CORRECT]);
+		System.out.println(LOG + " -323-M: renewStatusOfTest - INCORRECT = " + result[ICommonData.STATUS_INCORRECT]);
+		System.out.println(LOG + " -324-M: renewStatusOfTest - UNANSWERED = " + result[ICommonData.STATUS_NO_ANSWER]);
+		System.out.println(LOG + " -325-M: renewStatusOfTest - UNCHECKED = " + result[ICommonData.STATUS_UNCHECKED]);
+		
+		if(result[ICommonData.STATUS_NO_ANSWER]==0) {			
 			testIsPassed = true;
 			if(!test.isPassed()) {				
-				System.out.println(LOG + " -329-M: getStatusOfTest - i'm writing that test is passed");
+				System.out.println(LOG + " -328-M: renewStatusOfTest - i'm writing that test is passed");
 				test.setPassed(true);	
 				em.merge(test);
 			}
@@ -338,40 +321,49 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 			testIsPassed = false;
 		}
 		
-		if(unChecked==0 && testIsPassed) {
-			testIsChecked = true;
+		if(result[ICommonData.STATUS_UNCHECKED]==0 && testIsPassed) {			
 			if(!test.isChecked()) {
 				test.setChecked(true);	
 				em.merge(test);
 			}
-		} else {
-			testIsChecked = false;
 		}
 						
-		if(test.getAmountOfCorrectAnswers()!=correct) {
-			test.setAmountOfCorrectAnswers(correct);	
+		if(test.getAmountOfCorrectAnswers()!=result[ICommonData.STATUS_CORRECT]) {
+			test.setAmountOfCorrectAnswers(result[ICommonData.STATUS_CORRECT]);	
 			em.merge(test);
-		}		
+		}
 		
-				
-		int allQuestions = test.getAmountOfQuestions();
+		return result;
+	}
+	
+	/**
+	 * NEW FLOW of saving answers
+	 * This methot is called in the end of the test to check its status: passed, checked or none
+	 * @param testId
+	 * @return
+	 * @throws JSONException
+	 */	
+	@Transactional(readOnly=false)
+	protected JSONObject getStatusOfTest(long testId) throws JSONException {
+		
+		int[] anwersStatus = renewStatusOfTest(testId);
 			
 		JSONObject result = new JSONObject();
-		result.put(ICommonData.JSN_TESTDETAILS_CORRECT_QUESTIONS_NUMBER, correct);
-		result.put(ICommonData.JSN_TESTDETAILS_INCORRECT_ANSWERS_NUMBER, inCorrect);		
-		result.put(ICommonData.JSN_TESTDETAILS_UNCHECKED_QUESTIONS_NUMBER, unChecked);
+		result.put(ICommonData.JSN_TESTDETAILS_CORRECT_QUESTIONS_NUMBER, anwersStatus[ICommonData.STATUS_CORRECT]);
+		result.put(ICommonData.JSN_TESTDETAILS_INCORRECT_ANSWERS_NUMBER, anwersStatus[ICommonData.STATUS_INCORRECT]);		
+		result.put(ICommonData.JSN_TESTDETAILS_UNCHECKED_QUESTIONS_NUMBER, anwersStatus[ICommonData.STATUS_UNCHECKED]);
 		
 		float percent;
-		int checked = allQuestions - unAnswered - unChecked;
+		int checked = anwersStatus[4] - anwersStatus[ICommonData.STATUS_NO_ANSWER] - anwersStatus[ICommonData.STATUS_UNCHECKED];
 		if(checked==0) 
 			percent = 0;
 		else
-			percent = Math.round((float)correct/(float)checked)*100;
+			percent = Math.round((float)anwersStatus[ICommonData.STATUS_CORRECT]/(float)checked)*100;
 		String resPercent = Float.toHexString(percent) + "%";
 		
-		if(unChecked==0 && unAnswered==0) {
+		if(anwersStatus[ICommonData.STATUS_UNCHECKED]==0 && anwersStatus[ICommonData.STATUS_NO_ANSWER]==0) {
 			result.put(ICommonData.JSN_TEST_PERCENT_OF_CORRECT, resPercent); // Add calculations from the resultTestCodeFromPerson field
-		} else if (unChecked==0){
+		} else if (anwersStatus[ICommonData.STATUS_UNCHECKED]==0){
 			result.put(ICommonData.JSN_TEST_PERCENT_OF_CORRECT, "not answered (" + resPercent + " from " + checked +")");
 		} else {
 			result.put(ICommonData.JSN_TEST_PERCENT_OF_CORRECT, "not checked (" + resPercent + " from " + checked + ")");
@@ -605,5 +597,15 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 		}	
 	return -1;
 	}
+	
+//	protected ITestQuestionHandler getHandler(EntityTestQuestions etq) {
+//		ITestQuestionHandler handler = SingleTestQuestionHandlerFactory.getInstance(etq);
+//		handler.setEntityQuestionAttributes(etq.getEntityQuestionAttributes());
+//		handler.setCompanyId(etq.getEntityTest().getEntityCompany().getId());
+//		handler.setEtqId(etq.getId());
+//		handler.setTestId(etq.getEntityTest().getTestId());
+//		return handler;
+//	}
+	
 
 }

@@ -60,7 +60,7 @@
 
 <bean id="personal_actions" class="tel_ran.tests.services.PersonalActionsService"/> 
 
-
+<bean id="testHandler" class ="tel_ran.tests.services.testhandler.CompanyTestHandler" scope="prototype"/>
 
 <!-- Utils -->
 	<bean id="springApplicationContext" class="tel_ran.tests.services.utils.SpringApplicationContext"/>
@@ -80,6 +80,7 @@
 <!-- Token processing -->
 	<bean id="cipher" class="tel_ran.tests.token_cipher.AESCipher" scope="singleton"/>
 	<bean id="tokenProc" class="tel_ran.tests.token_cipher.TokenProcessor" scope="singleton"/>
+	
 <!-- EOF Token processing -->
 
 </beans>

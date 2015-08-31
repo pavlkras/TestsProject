@@ -9,6 +9,7 @@ import java.util.TimeZone;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -143,5 +144,26 @@ public class TestsResultsRestController {
 		return "{\"Error\":\"Please relogin\"}";
 	}
 	
+	/**
+	 * CHECK for unchecked person's question
+	 * The method receives String = JSON:
+	 * -- "mark" = correct or incorrect or other (from gradeOptions)
+	 * -- "id" - id of test-question 
+	 * It returns a new value of the question status
+	 * @param token = token 
+	 * @return String = status of the question in the DB or ""
+	 */
+	@RequestMapping(value="/check_answer", method=RequestMethod.POST)
+	@ResponseBody @JsonRawValue
+	String checkAnswer(@RequestHeader(value="Authorization") String token, @RequestBody String mark) {
+		long companyId = tokenProcessor.decodeAndCheckToken(token);
+		String res = "";
+		if(companyId!=-1) {
+			res = company.checkAnswer(companyId, mark);
+		} else {
+			res = getJsonErrorMessage();
+		}
+		return res;
+	}
 	
 }

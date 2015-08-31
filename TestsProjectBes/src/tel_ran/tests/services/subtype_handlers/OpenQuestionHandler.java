@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tel_ran.tests.entitys.EntityQuestionAttributes;
 import tel_ran.tests.entitys.EntityTestQuestions;
 import tel_ran.tests.services.common.ICommonData;
+import tel_ran.tests.services.common.IPublicStrings;
 import tel_ran.tests.services.utils.FileManagerService;
 
 public class OpenQuestionHandler extends AbstractTestQuestionHandler {
@@ -41,8 +42,8 @@ public class OpenQuestionHandler extends AbstractTestQuestionHandler {
 		// from SUPER - text of question, id of EntityTestQuestion, index, type
 		JSONObject result = super.getJsonForTest(eqtId, index);
 				
-		// description
-		result.put(ICommonData.JSN_INTEST_DESCRIPTION, getQuestionAttribubes().getDescription());
+		// description		
+		result.put(ICommonData.JSN_INTEST_DESCRIPTION, getManyLinesField(getQuestionAttribubes().getDescription()));
 		
 		// get image
 		String fileLink = getQuestionAttribubes().getFileLocationLink();
@@ -75,6 +76,17 @@ public class OpenQuestionHandler extends AbstractTestQuestionHandler {
 		result.put(ICommonData.JSN_QUESTDET_ANSWER, array);
 				
 		return result;
+	}
+
+
+	@Override
+	protected int getStatusFromMark(String mark) {
+		int res =-1;		
+		if(mark.equals(IPublicStrings.GRADE_OPTIONS[0][1]))
+			res = ICommonData.STATUS_CORRECT;
+		if(mark.equals(IPublicStrings.GRADE_OPTIONS[0][0]))
+			res = ICommonData.STATUS_INCORRECT;
+		return res;
 	}
 
 	

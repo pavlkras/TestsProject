@@ -4,10 +4,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import tel_ran.tests.entitys.EntityQuestionAttributes;
+import tel_ran.tests.entitys.EntityTest;
 import tel_ran.tests.entitys.EntityTestQuestions;
 import tel_ran.tests.processor.TestProcessor;
 import tel_ran.tests.services.common.IPublicStrings;
 import tel_ran.tests.services.inner_result.dataobjects.InnerResultDataObject;
+import tel_ran.tests.services.testhandler.ICompanyTestHandler;
 import tel_ran.tests.services.utils.SpringApplicationContext;
 
 public class SingleTestQuestionHandlerFactory {
@@ -45,14 +47,18 @@ public class SingleTestQuestionHandlerFactory {
 //		return testQuestionHandler;
 //	}
 
+	
 	public static ITestQuestionHandler getInstance(EntityTestQuestions etq) {
-		String metaCategory = etq.getEntityQuestionAttributes().getMetaCategory();
+		EntityQuestionAttributes eqa = etq.getEntityQuestionAttributes();
+		EntityTest test = etq.getEntityTest();
+		String metaCategory = eqa.getMetaCategory();
 		if(metaCategory!=null) {
 			ITestQuestionHandler result = getTestQuestionHandler(metaCategory);
-			result.setEntityQuestionAttributes(etq.getEntityQuestionAttributes());
-			result.setCompanyId(etq.getEntityTest().getEntityCompany().getId());
+			
+			result.setEntityQuestionAttributes(eqa);
+			result.setCompanyId(eqa.getCompanyId().getId());
 			result.setEtqId(etq.getId());
-			result.setTestId(etq.getEntityTest().getTestId());
+			result.setTestId(test.getTestId());
 			return result;
 		}				
 		return null;
@@ -70,5 +76,9 @@ public class SingleTestQuestionHandlerFactory {
 //			e.printStackTrace();
 //		}
 //		return null;
+	}
+	
+	public static ICompanyTestHandler getTestCompanyHandler() {
+		return (ICompanyTestHandler) SpringApplicationContext.getBean("testHandler");
 	}
 }
