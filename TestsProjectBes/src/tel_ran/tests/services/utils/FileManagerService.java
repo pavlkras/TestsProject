@@ -9,21 +9,29 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Properties;
+
+
+
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import org.springframework.stereotype.Repository;
 
-import sun.util.locale.provider.LocaleServiceProviderPool.LocalizedObjectGetter;
+import tel_ran.tests.services.subtype_handlers.programming.ICodeTester;
 
-import com.fasterxml.jackson.databind.PropertyName;
+
 
 @SuppressWarnings("resource")
 @Repository
@@ -32,28 +40,39 @@ public class FileManagerService {
 	
 	private static final String LOG = FileManagerService.class.getSimpleName();
 	
-	public static final String WORKING_DIR = System.getProperty("user.home");	
-	public static final String NAME_FOLDER_FOR_SAVENG_TESTS_FILES = "TESTS_FILES_DATABASE";
-	public static final String NAME_TEST_INNER_FOLDERS = File.separator + "TESTS" + File.separator
-			+ "IDE" + File.separator + "EclipseKepler";
-	public static final String testSaveWorkingDir = WORKING_DIR + NAME_TEST_INNER_FOLDERS;
-	public static final String NAME_FOLDER_FOR_SAVENG_QUESTIONS_FILES = "QUESTION_FILES_DATABASE";	
-	public static final String BASE_DIR_IMAGES = WORKING_DIR + File.separator + NAME_FOLDER_FOR_SAVENG_QUESTIONS_FILES;	
-	public static final String BASE_CODE_TEST = WORKING_DIR + File.separator + "TESTS" + File.separator
-			+ "CHECK";
-		
-	public static final String TEST_JSON_FILE = "test.json";
-	public static final String NO_COMPANY = "admin";
+	//base path
+	private static final String WORKING_DIR = System.getProperty("user.home") + File.separator + "HRTrueTests" + File.separator;
+	//saving into the server:
+	// request.getSession().getServletContext().getRealPath("/WEB-INF/");
+	// or @Autowired ServletContext servletContext;
+	// but context can be each for each virtual machine for "distributed" application
+	
+	// main folders
+	private static final String DATA_FILES = WORKING_DIR + "data" + File.separator;
+	private static final String TEST_FILES = WORKING_DIR + "tests" + File.separator;;
+	private static final String TO_PROGRAM_COMPILE = WORKING_DIR + "check_program" + File.separator;
+	
+	//folders for data 	
+	public static final String BASE_DIR_IMAGES = DATA_FILES + "QUESTION_FILES_DATABASE"; //images for questions in DB
+	public static final String BASE_DIR_FILES = DATA_FILES + "files"; //gradle builds and other
+	public static final String BASE_DIR_SIMPLE_FILES = BASE_DIR_FILES + File.separator + "simples"; 
+	
+	//folders for personal tests
+	private static final String testSaveWorkingDir = TEST_FILES + "IDE" + File.separator + "EclipseKepler";
+	private static final String[] BILD_ATTRIBUTES_ARRAY = {"PersonPictures","ScreenPictures","PersonCodeText"};
+	private static final int PERSON_PICTURES = 0;
+	private static final int SCREEN_PICTURES = 1;
+	private static final int PERSON_CODE_TEXT = 2;
+	
+	//folders for check programs
+	public static final String BASE_CODE_TEST = TO_PROGRAM_COMPILE + "check";
 	
 	
-	public FileManagerService(){
-//		workingDir = System.getProperty("user.dir") + File.separator + NAME_FOLDER_FOR_SAVENG_TESTS_FILES; //  this global directory for saving files
-	}
-	////
-	static final String[] BILD_ATTRIBUTES_ARRAY = {"PersonPictures","ScreenPictures","PersonCodeText"};
-	static final int PERSON_PICTURES = 0;
-	static final int SCREEN_PICTURES = 1;
-	static final int PERSON_CODE_TEXT = 2;
+	private static final String TEST_JSON_FILE = "test.json";
+	private static final String NO_COMPANY = "admin";
+			
+	
+	
 //	static final int JSON_FILE = 3;
 	////
 	
@@ -68,7 +87,7 @@ public class FileManagerService {
 								testSaveWorkingDir + File.separator 
 								+ compId + File.separator 
 								+ testId + File.separator 
-								+ BILD_ATTRIBUTES_ARRAY[i]));// creating a new directiry for person test 
+								+ BILD_ATTRIBUTES_ARRAY[i]));// creating a new directory for person test 
 			}
 			result = true;
 		} catch (IOException e) {
@@ -363,12 +382,18 @@ public class FileManagerService {
 		
 		fl.createNewFile();		
 		
+		saveFileByLines(code, fl);
+		
+		return path;
+	}
+	
+	public static void saveFileByLines(String[] lines, File fl) {
 		String lineSeparator = System.getProperty("line.separator");
 		
 		BufferedWriter writer;
 		try {
-			writer = new BufferedWriter(new FileWriter(path));
-			for(String str : code) {
+			writer = new BufferedWriter(new FileWriter(fl));
+			for(String str : lines) {
 				writer.write(str + lineSeparator);
 			}				 
 			writer.close();
@@ -376,8 +401,6 @@ public class FileManagerService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		return path;
 	}
 	
 	private static String getBasePathForPhoto(long companyId, long testId) {
@@ -435,5 +458,52 @@ public class FileManagerService {
 		return result;
 	}
 	
+	public static File getUniqueFolder(String baseFolderPath, String basisName) {				
+		
+		File result = null;		
+		
+		//create name for a new folder
+		String tempName = getUniquePath(basisName);
+		String tempPath = baseFolderPath + File.separator + tempName;
+		result = new File(tempPath);
+		
+		// if the directory exist, rename it
+		// if the directory doesn't exist, create it
+		if (result.exists()) {
+			result = getUniqueFolder(baseFolderPath, basisName);
+		} else 			
+			try{
+				result.mkdirs();
+				
+			} catch (Exception e) {
+				//If the rights to access the folder are insufficient
+				result = null;
+				e.printStackTrace();
+			}			
+		
+				
+		return result;
+	}
+	
+	
+	private static String getUniquePath(String basisName) {		
+		return basisName + System.currentTimeMillis();
+		
+	}
+	
+		
+	/**
+	 * Finds in the ZIP the file by its name and extracts it to the given folder
+	 * @param zip - ZIP file
+	 * @param fileNameInZip - name of the file that should be extract from the ZIP
+	 * @param path - String - folder to save the extracted file. Important: the folder should exist. 
+	 * @throws IOException
+	 */
+	public static void extractFromZip(ZipFile zip, String fileNameInZip, String path) throws IOException {
+		
+		String destPath = path.concat(File.separator).concat(fileNameInZip);		
+		ZipEntry file = zip.getEntry(fileNameInZip);
+		Files.copy(zip.getInputStream(file), new File(destPath).toPath(), StandardCopyOption.REPLACE_EXISTING);		
+	}
 	
 }	

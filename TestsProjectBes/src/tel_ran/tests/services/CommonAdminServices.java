@@ -431,7 +431,7 @@ public abstract class CommonAdminServices extends CommonServices implements
 	
 	protected void DeleteImageFromFolder(String linkForDelete) {		
 		try {
-			Files.delete(Paths.get(System.getProperty("user.dir") + "\\" + FileManagerService.NAME_FOLDER_FOR_SAVENG_QUESTIONS_FILES + linkForDelete));
+			Files.delete(Paths.get(FileManagerService.BASE_DIR_IMAGES + linkForDelete));
 		} catch (IOException e) {
 			System.out.println("BES delete image from folder catch IOException, image is not exist !!!");// ------------------------------------------------------- sysout
 			//e.printStackTrace();   

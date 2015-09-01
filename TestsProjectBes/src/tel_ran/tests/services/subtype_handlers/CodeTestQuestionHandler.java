@@ -9,7 +9,7 @@ import tel_ran.tests.entitys.EntityQuestionAttributes;
 import tel_ran.tests.entitys.EntityTestQuestions;
 import tel_ran.tests.services.common.ICommonData;
 import tel_ran.tests.services.inner_result.dataobjects.InnerResultDataObject;
-import tel_ran.tests.services.subtype_handlers.gradle.CodeTester;
+import tel_ran.tests.services.subtype_handlers.programming.CodeTester;
 import tel_ran.tests.services.utils.FileManagerService;
 
 import java.io.IOException;
@@ -110,40 +110,23 @@ public class CodeTestQuestionHandler extends AbstractTestQuestionHandler impleme
 		System.out.println(LOG + " -113-M: checkAnswers - HERE!");
 		boolean res;
 		int status = 4;
-		
-		// TEMPORARY!!!!!!!!!!
+						
+		CodeTester tester;
 		try {
-			String tempAnswer = FileManagerService.readTheFile(linkToCode);
-			System.out.println(LOG + " -120-M: checkAnswers - ANSWER: " + tempAnswer);
-			if(tempAnswer.contains("StringCalculator implements SCalculator"))
-					if(tempAnswer.contains(";;"))
-						status = ICommonData.STATUS_INCORRECT;
-					else
-						status = ICommonData.STATUS_CORRECT;
-			else
-				status = ICommonData.STATUS_INCORRECT;
+			tester = new CodeTester();
+			res = tester.testIt(linkToCode, pathToAnswerZip);
 			
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+			res = false;			
 		}
 		
-//		CodeTester tester;
-//		try {
-//			tester = new CodeTester();
-//			res = tester.testIt(linkToCode, pathToAnswerZip);
-//			
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//			res = false;			
-//		}
-//		
-//		if(res) {
-//			status = ICommonData.STATUS_CORRECT;
-//		} else {
-//			status = ICommonData.STATUS_INCORRECT;
-//		}
-//		
+		if(res) {
+			status = ICommonData.STATUS_CORRECT;
+		} else {
+			status = ICommonData.STATUS_INCORRECT;
+		}
+		
 		
 		return status;
 	}

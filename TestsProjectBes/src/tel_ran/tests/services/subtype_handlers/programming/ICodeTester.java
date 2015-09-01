@@ -1,4 +1,4 @@
-package tel_ran.tests.services.subtype_handlers.gradle;
+package tel_ran.tests.services.subtype_handlers.programming;
 
 public interface ICodeTester {
 	
@@ -8,7 +8,5 @@ public interface ICodeTester {
 	public static String testTemplatePath = "";
 	public static String workFolderPath = "";
 		
-	public static String ReadMeFile = "Readme.txt";
-	public static String LinkToJUnitFile = "JUnit";
-	public static String LinkToInterface = "Interface";
+	
 };
