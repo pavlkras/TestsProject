@@ -1,12 +1,12 @@
 public class StringCalculator implements SCalculator {
  
- String multiply(String op1, String op2) {
+ public String multiply(String op1, String op2) {
   
   int i1;
   try {
    i1 = Integer.parseInt(op1);
   } catch (NumberFormatException e) {
-   return SCalculator.WRONG;;
+   return SCalculator.WRONG;
    
   }
   

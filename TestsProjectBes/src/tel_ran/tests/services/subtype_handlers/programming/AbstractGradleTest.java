@@ -13,6 +13,7 @@ import java.util.zip.ZipFile;
 
 import org.gradle.tooling.BuildException;
 import org.gradle.tooling.BuildLauncher;
+import org.gradle.tooling.CancellationToken;
 import org.gradle.tooling.GradleConnector;
 import org.gradle.tooling.ProjectConnection;
 
@@ -20,17 +21,20 @@ import tel_ran.tests.services.utils.FileManagerService;
 
 public abstract class AbstractGradleTest extends AbstractProgramTestHandler {
 	
+	private static final String LOG = AbstractGradleTest.class.getSimpleName();
+	
 	protected static final String STANDARD_BUILD_NAME = "build.gradle";
 	private String buildGradlePath;
+	private String projectPath;
 	
 	protected String pathToSimpeBuild;	
-	
-
+	protected String pathToSimpleFolder;
 	
 	
 	private void copyBuild(String path) throws IOException {
 		String sourceFile = getPathToBuild();		
-		buildGradlePath = path.concat(STANDARD_BUILD_NAME);		
+		buildGradlePath = path.concat(File.separator).concat(STANDARD_BUILD_NAME);
+		projectPath = path;
 		FileManagerService.copyFiles(sourceFile, buildGradlePath);			
 	}
 	
@@ -54,6 +58,7 @@ public abstract class AbstractGradleTest extends AbstractProgramTestHandler {
 	@Override
 	public String getPathToBuild() {	
 		String result = pathToSimpeBuild; 
+		System.out.println(LOG + " 59 result = " + pathToSimpeBuild);
 		File fl = new File(result);
 		
 		if(!fl.exists())
@@ -70,7 +75,11 @@ public abstract class AbstractGradleTest extends AbstractProgramTestHandler {
 	abstract protected String getBuildText();
 
 	protected void createBuildFile(File fl) throws IOException {
-		fl.createNewFile();		
+		File dirs = new File(pathToSimpleFolder);
+		if(!dirs.exists())
+			dirs.mkdirs();
+		fl.createNewFile();	
+		
 		String[] lines = getBuildText().split("\\n");
 		
 		FileManagerService.saveFileByLines(lines, fl);		
@@ -91,16 +100,18 @@ public abstract class AbstractGradleTest extends AbstractProgramTestHandler {
 	@Override
 	public boolean test() {
 		
-		GradleConnector connector = GradleConnector.newConnector();
-		connector.forProjectDirectory(new File(buildGradlePath));
+		GradleConnector connector = GradleConnector.newConnector();		
+		connector.forProjectDirectory(new File(projectPath));
 		ProjectConnection connection = connector.connect();
+		ByteArrayOutputStream stream = null;
+		ByteArrayOutputStream err = null;
 
 		boolean result = false;
 		
 		try {
 			BuildLauncher launcher = connection.newBuild();
-			ByteArrayOutputStream stream = new ByteArrayOutputStream();
-			ByteArrayOutputStream err = new ByteArrayOutputStream();
+			stream = new ByteArrayOutputStream();
+			err = new ByteArrayOutputStream();
 			launcher.forTasks("build");
 			launcher.setStandardOutput(stream);
 			launcher.setStandardError(err);
@@ -120,10 +131,34 @@ public abstract class AbstractGradleTest extends AbstractProgramTestHandler {
 				result = true;
 			}
 		}
+		
+		
+		
 
 	} finally {
+		try {
+			stream.close();
+			err.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
 		connection.close();
+		
 	}
+		
+		
+		Runtime rt = Runtime.getRuntime();
+	    try {
+	        rt.exec(new String[]{"cmd.exe","/c","graddle --stop"});
+
+	    } catch (IOException e) {
+	        // TODO Auto-generated catch block
+	        e.printStackTrace();
+	    }
+
+		
 		
 	return result;
 	}

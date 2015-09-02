@@ -17,16 +17,18 @@ import tel_ran.tests.services.utils.FileManagerService;
 
 public class GradleJava extends AbstractGradleTest {
 	
-	private static String PATH_TO_GRADLE_BUILD = BASE_PATH_FOR_BUILDS + "java";
+	private static final String LOG = GradleJava.class.getSimpleName();
 	
-	private static String GRADLE_TEXT = "apply plugin: 'java'\n\n" +
+	private static final String PATH_TO_GRADLE_BUILD = BASE_PATH_FOR_BUILDS + "java";
+	
+	private static final String GRADLE_TEXT = "apply plugin: 'java'\n\n" +
 										"repositories {\nmavenCentral()\n}\n\n" +
 										"dependencies{\n" +
 										"testCompile group: 'junit', name: 'junit', version: '4.+'\n}";
 	
 	private static final String innerFolder00 = "src";
-	private static final String innerFolder01 = "src/main/java";
-	private static final String innerFolder02 = "src/test/java";
+	private static final String innerFolder01 = "src" + File.separator + "main" + File.separator + "java";
+	private static final String innerFolder02 = "src" + File.separator + "test" + File.separator + "java";
 	
 	private static final String packageMain = "main.java";
 	private static final String READ_ME_FILE = "Readme.txt";
@@ -37,6 +39,8 @@ public class GradleJava extends AbstractGradleTest {
 	public GradleJava() {
 		super();
 		pathToSimpeBuild = FileManagerService.BASE_DIR_SIMPLE_FILES + PATH_TO_GRADLE_BUILD + File.separator + STANDARD_BUILD_NAME;
+		pathToSimpleFolder = FileManagerService.BASE_DIR_SIMPLE_FILES + PATH_TO_GRADLE_BUILD;
+		System.out.println(LOG + " 42 " + pathToSimpeBuild);
 	}
 
 	
@@ -50,11 +54,7 @@ public class GradleJava extends AbstractGradleTest {
 		
 		StringBuffer tmp = new StringBuffer("");		
 		
-		//folder src
-		tmp.append(path).append(File.separator).append(innerFolder00);			
-		File file = new File(tmp.toString());		
-		file.mkdirs();
-		
+				
 		//folder main and path
 		tmp = new StringBuffer("");
 		tmp.append(path).append(File.separator).append(innerFolder01);
@@ -66,7 +66,7 @@ public class GradleJava extends AbstractGradleTest {
 		this.pathToTestFiles = tmp.toString();
 				
 		//creation folders
-		file = new File(this.pathToProgramFiles);
+		File file = new File(this.pathToProgramFiles);
 		file.mkdirs();
 		file = new File(this.pathToTestFiles);
 		file.mkdirs();
@@ -81,12 +81,13 @@ public class GradleJava extends AbstractGradleTest {
 	@Override
 	protected String getFileName(File f) throws IOException {
 		BufferedReader reader = null;
-		
+		System.out.println(LOG + " 84 getFileName from file = " + f.getName());
 		String result = null;		
 		
 		boolean classFound = false;
 		boolean isPackage = false;
 		boolean isMainPackage = false;
+		
 		
 		try {
 			reader = new BufferedReader(new FileReader(f));
@@ -115,6 +116,9 @@ public class GradleJava extends AbstractGradleTest {
 					
 						classFound = true;					
 					}				
+				} else {
+					result = "noJava";
+					break;
 				}
 			}
 		} finally {
@@ -170,9 +174,9 @@ public class GradleJava extends AbstractGradleTest {
 			// new name of class in destination folder
 			String name = getFileName(codeFromPerson);
 			String newPath = destination.concat(name).concat(".java");
-			
+			System.out.println(LOG + " 173 ready to copy files!");
 			FileManagerService.copyFiles(codeFromPerson.getPath(), newPath);
-			
+			System.out.println(LOG + " 185 copy files from " + codeFromPerson + " to " + newPath);
 		} catch (IOException e) {
 			
 			e.printStackTrace();

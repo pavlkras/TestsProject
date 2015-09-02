@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public class CodeTester implements ICodeTester {
 
-	IProgramTestHandler testTemplateHandler = null;
+	IProgramTestHandler testTemplateHandler;
 		
 	public CodeTester() throws IOException{
 		testTemplateHandler = new GradleJava();
@@ -26,7 +26,7 @@ public class CodeTester implements ICodeTester {
 //			saveResults(results);
 		}
 		
-		testTemplateHandler.cleanWorkFolder();
+//		testTemplateHandler.cleanWorkFolder();
 	
 		return results;
 	}
