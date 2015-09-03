@@ -100,16 +100,19 @@ public abstract class AbstractGradleTest extends AbstractProgramTestHandler {
 	@Override
 	public boolean test() {
 		
-		GradleConnector connector = GradleConnector.newConnector();		
+		GradleConnector connector = GradleConnector.newConnector();				
 		connector.forProjectDirectory(new File(projectPath));
-		ProjectConnection connection = connector.connect();
+		ProjectConnection connection = null; 
 		ByteArrayOutputStream stream = null;
 		ByteArrayOutputStream err = null;
 
 		boolean result = false;
 		
 		try {
-			BuildLauncher launcher = connection.newBuild();
+			
+			connection = connector.connect();
+			
+			BuildLauncher launcher = connection.newBuild();			
 			stream = new ByteArrayOutputStream();
 			err = new ByteArrayOutputStream();
 			launcher.forTasks("build");
@@ -119,8 +122,8 @@ public abstract class AbstractGradleTest extends AbstractProgramTestHandler {
 			try {
 				launcher.run();
 			} catch (BuildException e) {
-				
-			}
+				e.printStackTrace();
+			} 
 
 		if (err != null) {			
 			String res2 = err.toString();
@@ -146,17 +149,19 @@ public abstract class AbstractGradleTest extends AbstractProgramTestHandler {
 	
 		connection.close();
 		
+		
 	}
+	
 		
 		
-		Runtime rt = Runtime.getRuntime();
-	    try {
-	        rt.exec(new String[]{"cmd.exe","/c","graddle --stop"});
-
-	    } catch (IOException e) {
-	        // TODO Auto-generated catch block
-	        e.printStackTrace();
-	    }
+//		Runtime rt = Runtime.getRuntime();
+//	    try {
+//	        rt.exec(new String[]{"cmd.exe","/c","graddle --stop"});
+//
+//	    } catch (IOException e) {
+//	        // TODO Auto-generated catch block
+//	        e.printStackTrace();
+//	    }
 
 		
 		

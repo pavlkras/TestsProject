@@ -23,7 +23,7 @@ public class EntityTestQuestions {
 	@JoinColumn(name="TEST_ID", nullable=false)
 	private EntityTest entityTest;
 	
-	@Column(name="answer", length = 3000)
+	@Column(name="answer", length = 10000)
 	private String answer;	
 	
 	private String linkToAnswer;

@@ -557,6 +557,7 @@ public abstract class CommonAdminServices extends CommonServices implements
 	@Transactional(readOnly=false,propagation=Propagation.REQUIRED) 
 	protected EntityAnswersText writeNewAnswer(String answer, EntityQuestionAttributes qAttrId){		
 		EntityAnswersText temp = new EntityAnswersText();
+		System.out.println(LOG + " 560 " + answer);
 		temp.setAnswerText(answer);		
 		temp.setQuestionAttributeId(qAttrId);	
 		em.persist(temp);	

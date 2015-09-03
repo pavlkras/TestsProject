@@ -188,10 +188,17 @@ public class GradleJava extends AbstractGradleTest {
 	@Override
 	protected void archiveReading(ZipFile zip) throws IOException {	
 			
-			Map<String, String> files = new HashMap<String, String>();		
-			ZipEntry readme = zip.getEntry(GradleJava.READ_ME_FILE); 		
-			InputStream in = zip.getInputStream(readme);		
-			BufferedReader reader = new BufferedReader(new InputStreamReader(in));				
+		// reading READ_ME file
+		// we get a map with information like:
+		// "interface" : (name of file with Interface)
+		// "JUnit" : (name of file with JUnit test)
+		Map<String, String> fileNames = new HashMap<String, String>();		
+		ZipEntry readme = zip.getEntry(GradleJava.READ_ME_FILE); 		
+		InputStream in = null;
+		BufferedReader reader = null;
+		try{
+			in = zip.getInputStream(readme);		
+			reader = new BufferedReader(new InputStreamReader(in));				
 			String line = null;		
 			do {
 				line = reader.readLine();			
@@ -199,16 +206,19 @@ public class GradleJava extends AbstractGradleTest {
 					String[] lineContent = line.split(":");
 
 					if (lineContent.length > 1) {
-						files.put(lineContent[0], lineContent[1].replace(" ", ""));				
+						fileNames.put(lineContent[0], lineContent[1].replace(" ", ""));				
 					}	
 				}
 			} while (line!=null);
-			
+		} finally {
 			reader.close();
 			in.close();	
-			
-			FileManagerService.extractFromZip(zip, files.get(GradleJava.LinkToJUnitFile), this.pathToTestFiles);
-			FileManagerService.extractFromZip(zip, files.get(GradleJava.LinkToInterface), this.pathToProgramFiles);					
+		}
+		
+		//extraction files from the archive by their names
+		FileManagerService.extractFromZip(zip, fileNames.get(GradleJava.LinkToJUnitFile), this.pathToTestFiles);
+		FileManagerService.extractFromZip(zip, fileNames.get(GradleJava.LinkToInterface), this.pathToProgramFiles);
+				
 			
 	}
 
