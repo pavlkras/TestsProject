@@ -26,7 +26,7 @@ public class CodeTester implements ICodeTester {
 //			saveResults(results);
 		}
 		
-//		testTemplateHandler.cleanWorkFolder();
+		testTemplateHandler.cleanWorkFolder();
 	
 		return results;
 	}
