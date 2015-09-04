@@ -157,8 +157,7 @@
 										<td class="text-left" st-ratio="20">{{ x.personSurname }}</td>
 										<td class="text-left" st-ratio="20">{{ x.testDate }}</td>
 										<td class="text-left" st-ratio="20">{{ x.persentOfRightAnswers }}</td>
-										<td class="text-left" st-ratio="20" ng-click="showDetails(x.testid)"><a
-											href="#">Details</a></td>
+										<td class="text-left" st-ratio="20" ng-click="showDetails(x.testid)"><a href="#">Details</a></td>
 									</tr>
 								</tbody>
 								<tfoot>
@@ -225,7 +224,7 @@
 				<ul class="list-group">
 	      			<li class="list-group-item">
     	    			<h3>
-							Question {{question_.index + 1}}
+							<a ng-href="#" ng-click="showQuestion(question_.questionId)">Question {{question_.index + 1}}</a>
 						</h3>
 						Metacategory: {{question_.metaCategory}}
 						<br>
@@ -240,6 +239,22 @@
 </div>
 </div>
 </script>
+
+
+<script type="text/ng-template" id="questionDetails">
+<div class="ngdialog ngdialog-overlay">
+<div class="ngdialog-content">
+ <div class="bs-example">    
+	<div class="panel panel-primary">
+			<div class="panel-heading">
+				<h3 id="panel-title" class="panel-title">Question Details<a class="anchorjs-link" href="#panel-title"></a></h3>
+			</div>		
+	</div>
+ </div>
+</div>
+</div>
+</script>
+		
 		
 <div id="additional_area"></div>
 	</div>

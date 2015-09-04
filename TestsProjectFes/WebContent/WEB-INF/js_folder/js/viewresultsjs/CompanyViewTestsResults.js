@@ -124,11 +124,11 @@ app.controller('InputController', ['$scope','$http', 'ngDialog', function($scope
 		});
 	};
 	  
-	$scope.showCode = function(){
+	$scope.showQuestion = function(){
 		ngDialog.open({ 
     	  controller: 'InputController',
     	  className: 'ngdialog-theme-default',
-    	  template: 'code',
+    	  template: 'questionDetails',
     	  scope: $scope
 		});
 	};
