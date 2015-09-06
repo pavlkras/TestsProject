@@ -1,7 +1,5 @@
 package tel_ran.tests.controller;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,10 +19,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.annotation.JsonRawValue;
-
 import tel_ran.tests.services.common.ICommonData;
 import tel_ran.tests.services.interfaces.IPersonalActionsService;
+import tel_ran.tests.strings.AppProps;
+
+import com.fasterxml.jackson.annotation.JsonRawValue;
 
 @Controller
 @Scope("session")
@@ -32,6 +31,9 @@ import tel_ran.tests.services.interfaces.IPersonalActionsService;
 public class PersonalActions {
 	
 	String token;
+	
+	@Autowired
+	AppProps appProps;
 	
 	private boolean listOfQuestionsHasBeenAsked = false;
 	private JSONArray arrayOfquestions;
@@ -65,7 +67,7 @@ public class PersonalActions {
 			interceptors.add(interceptor);			
 			restTemplate.setInterceptors(interceptors);
 			
-			String result = restTemplate.postForObject("http://localhost:8080/TestsProjectBes/persontest/getquestions", 
+			String result = restTemplate.postForObject("http://"+appProps.getHostname()+"/TestsProjectBes/persontest/getquestions", 
 					null, String.class);
 			
 			try {
@@ -146,7 +148,7 @@ public class PersonalActions {
 			}				
 					
 			if(flag) {
-				boolean success = restTemplate.postForObject("http://localhost:8080/TestsProjectBes/persontest/postAnswers", 
+				boolean success = restTemplate.postForObject("http://"+appProps.getHostname()+"/TestsProjectBes/persontest/postAnswers", 
 					jsnNew.toString(), Boolean.class);
 			}
 					

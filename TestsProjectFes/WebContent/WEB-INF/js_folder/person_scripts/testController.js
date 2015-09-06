@@ -25,7 +25,7 @@ app.controller("QuestionTestController", function($scope, $http) {
     		}
 		$scope.countPhoto++;
 		//var link = "/TestsProjectBes/getNextpersontest/saveprev_getnext";
-		var link = 'http://localhost:8080/TestsProjectFes/PersonalActions/getNext';
+		var link = '/TestsProjectFes/PersonalActions/getNext';
 		
 //		$scope.httpConfig = {
 //			headers : {
