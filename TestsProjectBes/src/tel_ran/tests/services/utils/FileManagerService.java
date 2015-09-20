@@ -29,6 +29,7 @@ import java.util.zip.ZipFile;
 
 import org.springframework.stereotype.Repository;
 
+import tel_ran.tests.services.CompanyActionsService;
 import tel_ran.tests.services.subtype_handlers.programming.ICodeTester;
 
 
@@ -72,22 +73,29 @@ public class FileManagerService {
 	private static final String NO_COMPANY = "admin";
 			
 	
-	
-//	static final int JSON_FILE = 3;
-	////
+	//monitors
+	private static final Object MONITOR_PHOTO = new Object();
+	private static final Object MONITOR_IMAGES = new Object();
+	private static final Object MONITOR_INITIALIZE = new Object();
+	private static final Object MONITOR_DELETE = new Object();
+	private static final Object	MONITOR_CODE = new Object();
 	
 	public static boolean initializeTestFileStructure(long compId, long testId) {
 				
 		boolean result = false;		
 		try {		
-			for(int i=0;i<BILD_ATTRIBUTES_ARRAY.length;i++){
-				Files.
-				createDirectories(
+			
+			synchronized (MONITOR_INITIALIZE) {			
+			
+				for(int i=0;i<BILD_ATTRIBUTES_ARRAY.length;i++){
+					Files.
+					createDirectories(
 						Paths.get(
 								testSaveWorkingDir + File.separator 
 								+ compId + File.separator 
 								+ testId + File.separator 
 								+ BILD_ATTRIBUTES_ARRAY[i]));// creating a new directory for person test 
+				}
 			}
 			result = true;
 		} catch (IOException e) {
@@ -98,8 +106,7 @@ public class FileManagerService {
 	////
 	
 	public static void saveImage(long compId, long testId, String image) throws IOException {
-		System.out.println(LOG + " - 78: in method saveImage");
-		
+				
 		Date d = new Date(System.currentTimeMillis());
 		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd_hhmmss");		
 	
@@ -110,22 +117,23 @@ public class FileManagerService {
 		int index = 0;
 		File fl = null;
 		boolean flag = false;
-		while(!flag) {
-			path = basePath + nameFile + extension;
+		
+		synchronized (MONITOR_PHOTO) {
+			while(!flag) {
+				path = basePath + nameFile + extension;
 			
-			fl = new File(path);
-			if(fl.exists()) {
-				nameFile = nameFile + "-" + index;
-				index++;
-			} else {
-				fl.createNewFile();
-				flag = true;
-				System.out.println(LOG + " - 92: path to image, try="+index+" : " + path);
+				fl = new File(path);
+				if(fl.exists()) {
+					nameFile = nameFile + "-" + index;
+					index++;
+				} else {
+					fl.createNewFile();
+					flag = true;
+					System.out.println(LOG + " - 92: path to image, try="+index+" : " + path);
+				}
+			
 			}
-			
-		}
-		
-		
+		}		
 		saveImageByPath(fl, image);		
 		
 	}
@@ -134,8 +142,7 @@ public class FileManagerService {
 		try {			
 			BufferedWriter writer = new BufferedWriter(new FileWriter(fl));
 			writer.write(image);			 
-			writer.close();
-			System.out.println(LOG + " - 117 - in method saveImageByPath");
+			writer.close();			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}		
@@ -181,15 +188,18 @@ public class FileManagerService {
 		String nameFile = nameInner + ".jpg";
 		
 		File fl = new File(path);
-		while(fl.exists()) {
-			nameInner = nameInner + "a";
-			nameFile = nameInner + ".jpg";
-			path = basePath + nameFile;
-			fl = new File(path);			
-		}
 		
-		fl.createNewFile();
-		System.out.println(path);
+		synchronized (MONITOR_IMAGES) {
+				
+			while(fl.exists()) {
+				nameInner = nameInner + "a";
+				nameFile = nameInner + ".jpg";
+				path = basePath + nameFile;
+				fl = new File(path);			
+			}
+		
+			fl.createNewFile();
+		}
 		
 		saveImageByPath(fl, ImageCoders.decode64(image));
 		return base2 + nameFile;
@@ -318,22 +328,32 @@ public class FileManagerService {
 	
 	public static boolean deleteCompany(long compId) {		
 		boolean result = false;		
+		
+		synchronized (MONITOR_DELETE) {
+		
 		try {
 			recurrCleanFolder(new File(testSaveWorkingDir + File.separator + compId));
 			result = true;
 		} catch (Exception e) {			
 			e.printStackTrace();
+		
+		}
 		}
 		return result;
 	}
 	
 	public static boolean deleteTest(long compId, long testId) {
-		boolean result = false;		
+		boolean result = false;	
+		
+		synchronized (MONITOR_DELETE) {
+			
+		
 		try {
 			recurrCleanFolder(new File(testSaveWorkingDir + File.separator + compId + File.separator + testId));
 			result = true;
 		} catch (Exception e) {			
 			e.printStackTrace();
+		}
 		}
 		return result;
 	}
@@ -369,6 +389,8 @@ public class FileManagerService {
 		dir.mkdirs();
 		File fl = null;
 		
+		synchronized(MONITOR_CODE) {
+		
 		while(!ready) {
 			String fileName = "code" + System.currentTimeMillis() + index + ".txt";
 			path = basePath	+ fileName;
@@ -380,7 +402,8 @@ public class FileManagerService {
 			}			
 		}
 		
-		fl.createNewFile();		
+		fl.createNewFile();
+		}
 		
 		saveFileByLines(code, fl);
 		
