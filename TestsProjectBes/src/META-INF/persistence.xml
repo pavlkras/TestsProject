@@ -6,11 +6,11 @@
  <properties>
  <property name="hibernate.hbm2ddl.auto" value="update"/>
  <property name="hibernate.connection.url" 
- value="jdbc:mysql://localhost/HR_DB"/>
+ value="jdbc:mysql://hrdb.cejqwxdcufsf.us-east-1.rds.amazonaws.com:3306/hr_db"/>
  <property name="hibernate.connection.driver_class" 
  value="com.mysql.jdbc.Driver"/>
  <property name="hibernate.connection.username" value="root"/>
- <property name="hibernate.connection.password" value="toor"/>
+ <property name="hibernate.connection.password" value="12345.com"/>
  </properties>
   </persistence-unit>
 </persistence>
