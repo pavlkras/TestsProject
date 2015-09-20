@@ -470,7 +470,7 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 			
 				JSONObject jsnQuest = new JSONObject();
 				int status = this.getObjectForShortQuestionInfo(etq, jsnQuest);
-				jsnQuest.put(ICommonData.JSN_TESTDETAILS_QUESTION_INDEX, index);			
+				jsnQuest.put(ICommonData.JSN_TESTDETAILS_QUESTION_INDEX, index++);			
 				jsnArray.put(jsnQuest);
 			
 			
