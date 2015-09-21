@@ -3,9 +3,14 @@
  */
 $(document).ready(function(){
 	$("#inputCategoryField").css("display","none");
-	$("div#codepattern").hide(); 
-	$("div#americanquestion").hide(); 
-	$("div#compcategory").hide();
+    $("div#codepattern").hide();
+    $("div#questionCategory1").hide();
+    $("div#americanquestion").hide();
+    $("div#compcategory").hide();
+    $("div#levelOfDifficultyForm").hide();
+    $("div#questionDescription").hide();
+    $("div#imageupload").hide();
+    $("div#buttonSend").hide();
 	
 	$("#addingForm").keyup(function(){
 		var $catSelect = $("#catSel").val();
@@ -80,17 +85,37 @@ $(document).ready(function(){
 	$( "#mCatSel" ).change(function() {
 		var $catSelect = $("#mCatSel").val();
 		
-		if ($catSelect == "American Test") {
-			$("div#americanquestion").show(); 
-			$("div#codepattern").hide(); 
-	    }
-		else if($catSelect == "Open Question") {
-			$("div#americanquestion").hide(); 
-	    }
-		else if($catSelect == "none") {
-			$("div#codepattern").hide(); 
-			$("div#americanquestion").hide(); 
-	    }
+		 if ($catSelect == "American Test") {
+	            $("div#americanquestion").show();
+	            $("div#codepattern").hide();
+	            $("div#questionCategory1").show();
+	            $("div#levelOfDifficultyForm").show();
+	            $("div#questionDescription").show();
+	            $("div#imageupload").show();
+	            $("div#buttonSend").show();
+	            $("div#aboutCategoryChosen").hide();
+
+	        }
+	        else if($catSelect == "Open Question") {
+	            $("div#americanquestion").hide();
+	            $("div#questionCategory1").show();
+	            $("div#levelOfDifficultyForm").show();
+	            $("div#questionDescription").show();
+	            $("div#imageupload").show();
+	            $("div#buttonSend").show();
+	            $("div#aboutCategoryChosen").hide();
+	        }
+	        else if($catSelect == "none") {
+	            $("div#codepattern").hide();
+	            $("div#americanquestion").hide();
+	            $("div#questionCategory1").hide();
+	            $("div#levelOfDifficultyForm").hide();
+	            $("div#questionDescription").hide();
+	            $("div#imageupload").hide();
+	            $("div#buttonSend").hide();
+	            $("div#aboutCategoryChosen").show();
+
+	        }
 
 		   
 	});

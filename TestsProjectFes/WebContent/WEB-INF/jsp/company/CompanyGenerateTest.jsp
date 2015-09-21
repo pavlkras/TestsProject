@@ -188,7 +188,7 @@
 									</tr>
 									<tr>
 										<td>E-mail:</td>
-										<td><input type="text" name="personEmail" size=20
+										<td><input type="email" name="personEmail" size=20
 											placeholder="josh-jakson@mail.com" /> <br></td>
 									</tr>
 								</table>

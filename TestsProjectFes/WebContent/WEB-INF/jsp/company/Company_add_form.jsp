@@ -61,7 +61,7 @@
 							<tr>
 								<td class="td_left">WEB-SITE</td>
 
-								<td class="td_right"><input type="text" name="C_Site"
+								<td class="td_right"><input type="url" name="C_Site"
 									id="login_id" size="40" /></td>
 								<td class="td_info"></td>
 								<td>&nbsp;</td>

@@ -75,3 +75,32 @@
 #homepage a {
 	text-decoration:none;
 }
+
+#aboutCategoryChosen,
+.correctAnswer {
+    color: #0A3C59;
+    font-style: italic;
+}
+
+#levelOfDifficultyForm input {
+    width: 2em;
+}
+
+#americanquestion h4 {
+    text-align: center;
+    color: #0054A6;
+}
+
+.correctAnswer {
+    font-size: 0.8em;
+}
+
+.correctAnswer input {
+    margin-left: 0.2em;
+    width: 2em;
+}
+
+#americanquestion textarea {
+    margin-bottom: 0.3em;
+}
+
