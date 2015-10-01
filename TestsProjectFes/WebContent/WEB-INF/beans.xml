@@ -33,8 +33,9 @@
 <bean id="appProperties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"> 
 	    <property name="locations" value="classpath:tel_ran/tests/strings/application.properties" />
 </bean>
-<bean id="appProps" class="tel_ran.tests.strings.AppProps" scope="singleton">
+<!-- <bean id="appProps" class="tel_ran.tests.strings.AppProps" scope="singleton">
 	<property name="hostname" value="${host.name.${phase}}" /> 
-</bean>
+</bean>  -->
 <!-- External Properties Support END -->
+
 </beans>

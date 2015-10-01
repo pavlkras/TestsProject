@@ -24,22 +24,25 @@ app.controller("QuestionTestController", function($scope, $http) {
 			$scope.take_photo();
     		}
 		$scope.countPhoto++;
-		//var link = "/TestsProjectBes/getNextpersontest/saveprev_getnext";
-		var link = '/TestsProjectFes/PersonalActions/getNext';
+	
+//		var link = "/TestsProjectBes/getNextpersontest/saveprev_getnext";
+		var link = "/TestsProjectBes/persontest/saveprev_getnext";
+//		var link = '/TestsProjectFes/PersonalActions/getNext';
 		
-//		$scope.httpConfig = {
-//			headers : {
-//				'Authorization' : $scope.token
-//			}
-//		};
+		
+		$scope.httpConfig = {
+			headers : {
+				'Authorization' : $scope.token
+			}
+		};
 				
 		var dataObj = {
 			"answer" : userAnswer,
-			"index": $scope.numberQuestion,			
+			"index": $scope.numberQuestion,		
+			"testQuestId" : $scope.questionId,
 		};
 		
-		
-		$http.post(link, dataObj).success(					
+		$http.post(link, dataObj, $scope.httpConfig).success(					
 				function(data, status, headers, config) {
 					console.log("Success - request result to Rest");
 					$scope.question = data;
@@ -64,6 +67,7 @@ app.controller("QuestionTestController", function($scope, $http) {
 		}else{
 			$scope.mySwitchShowTest = true;
 			$scope.numberQuestion = data.index;
+			$scope.questionId = data.testQuestId;
 			$scope.text = data.text;
 			if ($scope.text != null) {
 				$scope.mySwitchText = true;
