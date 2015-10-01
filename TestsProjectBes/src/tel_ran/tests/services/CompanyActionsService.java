@@ -78,7 +78,8 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 	@Override
 	protected EntityCompany getCompany() {	
 		if((this.entityCompany==null) || (this.entityCompany.getId()!=this.id)) {
-			System.out.println(LOG + "81 - BUT I HAVE ID = " + this.entityCompany.getId());
+		
+//				System.out.println(LOG + "81 - BUT I HAVE ID = " + this.entityCompany.getId());
 			if(this.id>=0)
 				this.entityCompany = em.find(EntityCompany.class, id);
 			else
@@ -130,6 +131,7 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 	
 	@Override
 	public String getTestsResultsAll(long companyId, String timeZone) {		
+		this.id = companyId;
 		String res = "";
 		EntityCompany company = getCompany();
 		if(company!=null){

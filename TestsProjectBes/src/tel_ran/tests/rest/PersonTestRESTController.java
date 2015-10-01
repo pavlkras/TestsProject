@@ -62,8 +62,7 @@ public class PersonTestRESTController {
 	
 	@RequestMapping(value="/save_image", method=RequestMethod.POST)
 	@ResponseBody @JsonRawValue
-	String saveImage(@RequestHeader(value="Authorization") String token, @RequestBody String image){
-		System.out.println(LOG + " - 92: in method saveImage");
+	String saveImage(@RequestHeader(value="Authorization") String token, @RequestBody String image){		
 		long testId = tokenProcessor.decodeAndCheckToken(token);
 		if(testId != -1){
 			personal.saveImage(testId, image);

@@ -175,8 +175,7 @@ public abstract class AbstractTestQuestionHandler extends TestsPersistence imple
 	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
 	public int checkResult() {
 		entityTestQuestion = em.find(EntityTestQuestions.class, etqId);
-		int result = checkAnswers();
-		System.out.println(LOG + " -172-M: checkResult - result = " + result);
+		int result = checkAnswers();		
 		entityTestQuestion.setStatus(result);
 		em.merge(entityTestQuestion);
 		return result;

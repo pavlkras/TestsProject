@@ -81,12 +81,11 @@ public class PersonalActionsService extends CommonServices implements IPersonalA
 	
 
 	@Override
-	public void saveImage(long testId, String image) {
-		System.out.println(LOG + " - 205: M:  saveImage");
+	public void saveImage(long testId, String image) {		
 		EntityTest test = em.find(EntityTest.class, testId);
 
 		if(!test.isPassed()){
-			System.out.println(LOG + " - 209: M:  saveImage - test is not passed");
+			
 			try {
 				FileManagerService.saveImage(test.getEntityCompany().getId(), testId, image);
 			} catch (IOException e) {
@@ -132,8 +131,7 @@ public class PersonalActionsService extends CommonServices implements IPersonalA
 			
 			if(answer!=null && answer.length()>3)
 				try {
-					gotAnswer = this.saveAnswer(answer);
-					System.out.println(LOG + " 315 - " + this.toString() + " get answer " + answer);
+					gotAnswer = this.saveAnswer(answer);					
 				} catch (JSONException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -152,8 +150,7 @@ public class PersonalActionsService extends CommonServices implements IPersonalA
 					.setParameter(2, gotAnswer).setParameter(3, ICommonData.STATUS_NO_ANSWER).getResultList();
 			
 				
-			if(questions!=null && questions.size()>0) {
-				System.out.println(LOG + " 332 - questions.size = " + questions.size());				
+			if(questions!=null && questions.size()>0) {							
 				int index = entityTest.getAmountOfQuestions() - questions.size();
 				EntityTestQuestions etq = questions.get(0);				
 				ITestQuestionHandler handler = SingleTestQuestionHandlerFactory.getInstance(etq);

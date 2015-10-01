@@ -257,7 +257,7 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 			
 		}		
 		
-		System.out.println(result); // ------------------------------------------------- SYSO ------ !!!!!!!!!!!!!!
+//		System.out.println(result); // ------------------------------------------------- SYSO ------ !!!!!!!!!!!!!!
 		return result;		
 	}
 	
@@ -299,21 +299,21 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 			int status = etq.getStatus();			
 			result[4]++;
 			result[status]++;
-			System.out.println(status);
+//			System.out.println(status);
 			
 		}
 		
 		boolean testIsPassed;		
 				
-		System.out.println(LOG + " -320-M: renewStatusOfTest - CORRECT = " + result[ICommonData.STATUS_CORRECT]);
-		System.out.println(LOG + " -323-M: renewStatusOfTest - INCORRECT = " + result[ICommonData.STATUS_INCORRECT]);
-		System.out.println(LOG + " -324-M: renewStatusOfTest - UNANSWERED = " + result[ICommonData.STATUS_NO_ANSWER]);
-		System.out.println(LOG + " -325-M: renewStatusOfTest - UNCHECKED = " + result[ICommonData.STATUS_UNCHECKED]);
+//		System.out.println(LOG + " -320-M: renewStatusOfTest - CORRECT = " + result[ICommonData.STATUS_CORRECT]);
+//		System.out.println(LOG + " -323-M: renewStatusOfTest - INCORRECT = " + result[ICommonData.STATUS_INCORRECT]);
+//		System.out.println(LOG + " -324-M: renewStatusOfTest - UNANSWERED = " + result[ICommonData.STATUS_NO_ANSWER]);
+//		System.out.println(LOG + " -325-M: renewStatusOfTest - UNCHECKED = " + result[ICommonData.STATUS_UNCHECKED]);
 		
 		if(result[ICommonData.STATUS_NO_ANSWER]==0) {			
 			testIsPassed = true;
 			if(!test.isPassed()) {				
-				System.out.println(LOG + " -328-M: renewStatusOfTest - i'm writing that test is passed");
+//				System.out.println(LOG + " -328-M: renewStatusOfTest - i'm writing that test is passed");
 				test.setPassed(true);	
 				em.merge(test);
 			}
@@ -488,7 +488,7 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 				unChecked++;							
 				break;
 			default:
-				System.out.println(LOG + " -315-M: getStatusOfTest - incorrect status = " + status);
+//				System.out.println(LOG + " -315-M: getStatusOfTest - incorrect status = " + status);
 			}
 		}
 		
@@ -573,7 +573,7 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 	private int binarySearchForList(List<Long> list, long object) {	
 		if(list.size()>0) {
 		if(list.getClass().equals(ArrayList.class)) {
-			System.out.println("I'm here");
+			
 			int size = list.size();
 			int begin = 0;
 			int end = size+1;

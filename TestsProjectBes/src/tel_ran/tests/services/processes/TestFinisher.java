@@ -30,27 +30,22 @@ public class TestFinisher extends TestsPersistence implements ITestProcess {
 
 	@Override
 	@Transactional(readOnly=false, propagation = Propagation.REQUIRES_NEW)
-	public void run() {
-		System.out.println(LOG + " -398 - in finishTest");
+	public void run() {		
 		EntityTest test = em.find(EntityTest.class, testId);
 		long time = System.currentTimeMillis();
 		test.setEndTestDate(time);	
 		test.setDuration((int)(time - test.getStartTestDate()));
-		em.merge(test);
-		System.out.println(LOG + " - 404: fininshTest");
-		int numQuestions = test.getAmountOfQuestions();
-				
+		em.merge(test);	
+		int numQuestions = test.getAmountOfQuestions();				
 		List<EntityTestQuestions> list = getTestQuestions(test);
-		int[] result = new int[numQuestions];
-		
+		int[] result = new int[numQuestions];		
 		for (int i = 0; i < numQuestions; i++) {
 			ITestQuestionHandler testQuestionHandler = SingleTestQuestionHandlerFactory.getInstance(list.get(i));
 			testQuestionHandler.setEntityQuestionAttributes(list.get(i).getEntityQuestionAttributes());
 			testQuestionHandler.setCompanyId(test.getEntityCompany().getId());
 			testQuestionHandler.setTestId(testId);
 			testQuestionHandler.setEtqId(list.get(i).getId());
-			result[i] = testQuestionHandler.checkResult();
-			System.out.println(LOG + " status " + result[i]);
+			result[i] = testQuestionHandler.checkResult();			
 		}		
 		
 		saveStatus(result, test);	
