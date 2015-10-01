@@ -77,8 +77,14 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 	
 	@Override
 	protected EntityCompany getCompany() {	
-		if(this.entityCompany==null && this.id>=0)
-			this.entityCompany = em.find(EntityCompany.class, id);
+		if((this.entityCompany==null) || (this.entityCompany.getId()!=this.id)) {
+			System.out.println(LOG + "81 - BUT I HAVE ID = " + this.entityCompany.getId());
+			if(this.id>=0)
+				this.entityCompany = em.find(EntityCompany.class, id);
+			else
+				this.entityCompany = null;
+		}
+		System.out.println(LOG + " 82 - my companyId = " + id + " =? " + entityCompany.getId());
 		return this.entityCompany;
 	}
 	
@@ -123,8 +129,7 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 	// LISTS OF TESTS ------------------ 
 	
 	@Override
-	public String getTestsResultsAll(long companyId, String timeZone) {
-		this.id = companyId;
+	public String getTestsResultsAll(long companyId, String timeZone) {		
 		String res = "";
 		EntityCompany company = getCompany();
 		if(company!=null){
@@ -236,7 +241,7 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 						JSONArray imagArray = new JSONArray(images_);
 						jsonObj.put(ICommonData.JSN_TESTDETAILS_PHOTO, imagArray);
 					} else {
-						System.out.println(LOG + " - 229-M: getTestResultDetails - NO IMAGES");
+//						System.out.println(LOG + " - 229-M: getTestResultDetails - NO IMAGES");
 					}					
 					// duration
 					jsonObj.put("duration", durationStr);					
@@ -260,7 +265,7 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 				}
 				
 				res = jsonObj.toString();
-				System.out.println(LOG + " - 247-M: getTestResultdetails, result " + res);
+//				System.out.println(LOG + " - 247-M: getTestResultdetails, result " + res);
 			}
 		}
 		return res;
@@ -328,7 +333,7 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 					response = IPublicStrings.QUESTION_STATUS[newStatus];
 					ICompanyTestHandler testHandler = SingleTestQuestionHandlerFactory.getTestCompanyHandler();
 					long testId = etq.getEntityTest().getTestId();
-					System.out.println(testId);
+//					System.out.println(testId);
 					testHandler.setTestId(testId);
 					testHandler.renewStatusOfTest();
 //					this.renewStatusOfTest(etq.getEntityTest().getTestId());
@@ -652,7 +657,7 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 		EntityTest test = new EntityTest();		
 		test.setPassword(pass); 
 		test.setStartTestDate(0L);// setting parameter for wotchig method in FES
-		test.setEndTestDate(0L);// setting parameter for wotchig method in FES
+		test.setEndTestDate(0L);// setting parameter for wotchig method in FES		
 		
 		EntityCompany ec = this.getCompany();
 		if(ec!=null)
