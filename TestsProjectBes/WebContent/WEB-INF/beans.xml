@@ -58,9 +58,17 @@
 <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor" />
 
 
-<bean id="personal_actions" class="tel_ran.tests.services.PersonalActionsService"/> 
+<bean id="personal_actions" class="tel_ran.tests.services.PersonalActionsService" scope="prototype"/> 
 
 <bean id="testHandler" class ="tel_ran.tests.services.testhandler.CompanyTestHandler" scope="prototype"/>
+
+<bean id="testFinisher" class="tel_ran.tests.services.processes.TestFinisher" scope="prototype"/>
+
+<bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+    <property name="corePoolSize" value="5" />
+    <property name="maxPoolSize" value="10" />
+    <property name="queueCapacity" value="25" />
+</bean>
 
 <!-- Utils -->
 	<bean id="springApplicationContext" class="tel_ran.tests.services.utils.SpringApplicationContext"/>

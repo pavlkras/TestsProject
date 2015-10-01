@@ -1,18 +1,13 @@
 package tel_ran.tests.services;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
-import org.hibernate.Hibernate;
-import org.hibernate.Query;
-import org.hibernate.Session;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.task.TaskExecutor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +16,8 @@ import tel_ran.tests.entitys.EntityTest;
 import tel_ran.tests.entitys.EntityTestQuestions;
 import tel_ran.tests.services.common.ICommonData;
 import tel_ran.tests.services.interfaces.IPersonalActionsService;
+import tel_ran.tests.services.processes.ITestProcess;
+import tel_ran.tests.services.processes.TestFinisher;
 import tel_ran.tests.services.subtype_handlers.ITestQuestionHandler;
 import tel_ran.tests.services.subtype_handlers.SingleTestQuestionHandlerFactory;
 import tel_ran.tests.services.testhandler.IPersonTestHandler;
@@ -28,13 +25,26 @@ import tel_ran.tests.services.testhandler.PersonTestHandler;
 import tel_ran.tests.services.utils.FileManagerService;
 import tel_ran.tests.token_cipher.TokenProcessor;
 
+
 public class PersonalActionsService extends CommonServices implements IPersonalActionsService {	
-	
+			
 	@Autowired
 	TokenProcessor tokenProcessor;
 	
+	private EntityTest entityTest;
+	
 	private long testID;
 	private long companyID;
+	
+	/**
+	 * TaskExecutor is used for the process of test finishing (analyzing in a thread)
+	 */
+	@Autowired
+	TaskExecutor taskExecutor;
+	
+	@Autowired
+	ITestProcess testFinisher;
+	
 	private static final String LOG = PersonalActionsService.class.getSimpleName();
 	////
 	@Override
@@ -51,183 +61,12 @@ public class PersonalActionsService extends CommonServices implements IPersonalA
 		return actionResult;
 	}
 	
-	// ---- NO USED ----------- //
-	// ----- OLD VERSION ------- //
-	////-------  Processing  ----------------// START //
-//	@Override
-//	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
-	public String getNextQuestion(long testId){
-		String question = null; 
-//		EntityTest test = em.find(EntityTest.class, testId);
-//
-//		if(!test.isPassed()){
-//			if(test.getStartTestDate()==0){
-//				test.setStartTestDate(new Date().getTime());
-//				em.persist(test);
-//			}
-//			IPersonTestHandler testResultsJsonHandler = getTestResultsHandler(test.getEntityCompany().getId(), testId);
-//
-//			question = testResultsJsonHandler.next();
-//			if ( question == null ){
-//				//TODO new Thread needed
-//				testResultsJsonHandler.analyzeAll();
-//
-//				test.setAmountOfCorrectAnswers(testResultsJsonHandler.getRightAnswersQuantity());
-//				test.setEndTestDate(new Date().getTime());
-//				test.setPassed(true);
-//				em.persist(test);
-//			}
-//		}
-		return question;
-	}
-
-	
-	/**
-	 * NEW FLOW that gets all questions for the test begins here
-	 * It returns the list of the questions that have status = "unAnswered"
-	 * If there aren't such questions or the test has been passed it returns null
-	 * Returns JSON of all questions in short version (for person) for the given test
-	 * @param testId = id of the test
-	 * @return String = JSON
-	 */	
-	@Override
-	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
-	public String getAllTestQuestions(long testId) {		
-		String result = null;	
-		
-		// find test in DB by testId
-		EntityTest test = em.find(EntityTest.class, testId);
-		
-		// check if the test is passed
-		if(!test.isPassed()) {
-			
-			// save start time of test if
-			if (test.getStartTestDate()==0)
-				test.setStartTestDate(System.currentTimeMillis());
-			
-			// get list of test-questions (from EntityTestQuestions)
-			List<EntityTestQuestions> questions = test.getEntityTestQuestions();
-			
-			JSONArray arrayResult = new JSONArray();			
-			int index = 0;		
-			
-			for (EntityTestQuestions etq : questions) {
-				
-					// check if this questions is unaswered
-					if(etq.getStatus() == ICommonData.STATUS_NO_ANSWER) {	
-						// get question (EntityQuestionAttributes) from test-question
-						EntityQuestionAttributes eqa = etq.getEntityQuestionAttributes();
-						
-						// create handler for the question and get JSON
-						ITestQuestionHandler handler = SingleTestQuestionHandlerFactory.getInstance(etq);
-						JSONObject jsn;
-						try {
-							jsn = handler.getJsonForTest(etq.getId(), index);
-							arrayResult.put(jsn);	
-							index++;
-						} catch (JSONException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}											
-				}				
-			}			
-			
-			if(questions.size()>0)
-				result = arrayResult.toString();
-		}
-		return result;
-	}
-	
-	/** 
-	 * The flow of saving the answer of Person
-	 * It's called by PersonTestRESTController
-	 * @param testId - id of test
-	 * @param jsonAnswer - JSON with answer and test-question ID (EntityTestQuestions) 
-	 */
-	@Override
-	@Transactional(readOnly=false, propagation = Propagation.REQUIRES_NEW)
-	public void setAnswer(long testId, String jsonAnswer){
-		
-		EntityTest test = em.find(EntityTest.class, testId);
-		long compId = test.getEntityCompany().getId();
-
-		if(!test.isPassed()){
-			//save answer
-			getTestResultsHandler(compId, testId).setAnswer(jsonAnswer);
-			try {
-				//check if this answer is last in the test
-				JSONObject jsn = new JSONObject(jsonAnswer);
-				if(jsn.getBoolean("finished")) {
-					int[] answers = finishTest(testId, compId);
-					saveStatus(answers, test);
-					
-				}
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}			
-		}		
-	}
-	
-	
-	@Transactional(readOnly=false, propagation = Propagation.REQUIRED)
-	private boolean saveStatus(int[] answers, EntityTest test) {
-		int status[] = new int[4];
-		
-		for (int i = 0; i < answers.length; i++) {
-			status[answers[i]]++;
-		}
-		
-		if(status[ICommonData.STATUS_NO_ANSWER] == 0) {
-			test.setPassed(true);
-			
-		}
-		
-		if(status[ICommonData.STATUS_UNCHECKED]==0 && status[ICommonData.STATUS_NO_ANSWER] ==0) {
-			test.setChecked(true);
-			
-		}
-		
-		test.setAmountOfCorrectAnswers(status[ICommonData.STATUS_CORRECT]);
-		em.merge(test);
-		
-		return true;
-		
-	}
-
-
-	
-	@Transactional(readOnly=false, propagation = Propagation.REQUIRES_NEW)
-	private int[] finishTest(long testId, long compId) {
-		EntityTest test = em.find(EntityTest.class, testId);
-		long time = System.currentTimeMillis();
-		test.setEndTestDate(time);	
-		test.setDuration((int)(time - test.getStartTestDate()));
-		em.merge(test);
-		System.out.println(LOG + " - 181-M: fininshTest");
-		int numQuestions = test.getAmountOfQuestions();
-				
-		List<EntityTestQuestions> list = getTestQuestions(test);
-		int[] result = new int[numQuestions];
-		
-		for (int i = 0; i < numQuestions; i++) {
-			ITestQuestionHandler testQuestionHandler = SingleTestQuestionHandlerFactory.getInstance(list.get(i));
-			testQuestionHandler.setEntityQuestionAttributes(list.get(i).getEntityQuestionAttributes());
-			testQuestionHandler.setCompanyId(compId);
-			testQuestionHandler.setTestId(testId);
-			testQuestionHandler.setEtqId(list.get(i).getId());
-			result[i] = testQuestionHandler.checkResult();
-			System.out.println(LOG + " status " + result[i]);
-		}		
-		
-		return result;
-		
-	}
 	
 	IPersonTestHandler getTestResultsHandler(long companyId, long testId){
 		return new PersonTestHandler(companyId, testId, em);
 	}
-	////-------  Processing  ----------------// END //
+	
+
 	@Override
 	public String getToken(String password) {
 		// TODO password is potentially dangerous because it is directly the same inside of the request.
@@ -240,20 +79,7 @@ public class PersonalActionsService extends CommonServices implements IPersonalA
 		return token;
 	}
 	
-	public boolean testIsPassed(long testId){
-		boolean res = false;
-		EntityTest test = null;		
-		try{
-			test = em.find(EntityTest.class, testId);
-			if(test.isPassed()){
-				res = true;
-			}
-		}catch (Exception e){
-			e.printStackTrace();
-		}
 
-		return res;
-	}
 	@Override
 	public void saveImage(long testId, String image) {
 		System.out.println(LOG + " - 205: M:  saveImage");
@@ -286,6 +112,102 @@ public class PersonalActionsService extends CommonServices implements IPersonalA
 	public String getUserInformation() {		
 		return null;
 	}
+
+	@Override
+	@Transactional(readOnly=false)
+	public String saveAndGetNextQuestion(long testId, String answer) {
+		
+		if(this.entityTest==null || this.testID != testId) {
+			entityTest = em.find(EntityTest.class, testId);
+			this.testID = testId;
+		}
+		String result = null;
+		
+		
+		
+		// check if the test is passed
+		if(!entityTest.isPassed()) {
+			long gotAnswer = -1;
+			//save answer
+			
+			if(answer!=null && answer.length()>3)
+				try {
+					gotAnswer = this.saveAnswer(answer);
+					System.out.println(LOG + " 315 - " + this.toString() + " get answer " + answer);
+				} catch (JSONException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+						
+			// save start time of test is new
+			if (entityTest.getStartTestDate()==0) {
+				entityTest.setStartTestDate(System.currentTimeMillis());
+				em.merge(entityTest);
+			}
+			
+			
+			// get list of test-questions (from EntityTestQuestions)				
+			String query = "SELECT c FROM EntityTestQuestions c WHERE c.entityTest=?1 AND c.id!=?2 AND c.status=?3 ORDER by c.id";
+			List<EntityTestQuestions> questions = em.createQuery(query).setParameter(1, entityTest)
+					.setParameter(2, gotAnswer).setParameter(3, ICommonData.STATUS_NO_ANSWER).getResultList();
+			
+				
+			if(questions!=null && questions.size()>0) {
+				System.out.println(LOG + " 332 - questions.size = " + questions.size());				
+				int index = entityTest.getAmountOfQuestions() - questions.size();
+				EntityTestQuestions etq = questions.get(0);				
+				ITestQuestionHandler handler = SingleTestQuestionHandlerFactory.getInstance(etq);
+				JSONObject jsn = null;
+				try {
+					jsn = handler.getJsonForTest(etq.getId(), index);
+											
+				} catch (JSONException e) {					
+					e.printStackTrace();
+				}	
+				result = jsn.toString();
+			} else {	
+				//if the test is finished (no questions in the response from DB), 
+				//TestFinisher will be start in a new Thread
+				testFinisher.setTestId(testId);
+				taskExecutor.execute(testFinisher);
+			}
+						
+		}		
+		
+		return result;
+		
+		
+	}
+	
+	
+	
+	
+	
+	private long saveAnswer(String answer) throws JSONException {	
+
+		System.out.println(answer);
+
+		
+			JSONObject jsn = new JSONObject(answer);
+			long etqId = 0;
+			try {
+				etqId = jsn.getLong(ICommonData.JSN_INTEST_QUESTION_ID);
+				EntityTestQuestions etq = em.find(EntityTestQuestions.class, etqId);
+				if(etq.getStatus()==ICommonData.STATUS_NO_ANSWER) {
+					ITestQuestionHandler testQuestionHandler = SingleTestQuestionHandlerFactory.getInstance(etq);	
+					testQuestionHandler.setPersonAnswer(jsn, etqId);				
+				}	
+			} catch (JSONException e) {
+				
+			}
+							
+			
+			return etqId;
+		
+	}
+		
+	
+	
 	
 	
 	
