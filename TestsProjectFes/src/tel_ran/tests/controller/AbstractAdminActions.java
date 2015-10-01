@@ -174,7 +174,11 @@ public abstract class AbstractAdminActions {
 			////
 
 		try {
-			int lvl = Integer.parseInt(levelOfDifficulty);
+			int lvl;
+			if(levelOfDifficulty==null || levelOfDifficulty.isEmpty())
+				lvl = 3;
+			else
+				lvl = Integer.parseInt(levelOfDifficulty);
 			actionRes = adminService.createNewQuestion(questionText, fileLocationLink, repMetaCategory, category1, lvl, answers, correctAnswer, 
 					0, numberOfResponsesInThePicture, descriptionText, codeText, repCategory);
 		} catch (Exception e) {
