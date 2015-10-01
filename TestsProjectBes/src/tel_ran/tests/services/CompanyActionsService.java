@@ -44,7 +44,7 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 	
 	public static final String LOG = CompanyActionsService.class.getSimpleName();
 	
-	long id;
+	long id=-1;
 	
 	//-------------Use Case Company Login 3.1.1----------- //   BEGIN    ///
 	@Override
@@ -76,7 +76,9 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 	}
 	
 	@Override
-	protected EntityCompany getCompany() {		
+	protected EntityCompany getCompany() {	
+		if(this.entityCompany==null && this.id>=0)
+			this.entityCompany = em.find(EntityCompany.class, id);
 		return this.entityCompany;
 	}
 	
@@ -122,7 +124,7 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 	
 	@Override
 	public String getTestsResultsAll(long companyId, String timeZone) {
-		
+		this.id = companyId;
 		String res = "";
 		EntityCompany company = getCompany();
 		if(company!=null){

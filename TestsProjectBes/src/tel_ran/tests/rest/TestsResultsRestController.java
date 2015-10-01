@@ -31,15 +31,19 @@ public class TestsResultsRestController {
 	@Autowired
 	TokenProcessor tokenProcessor;
 	
+	private long companyId;
+	
 	public static final String LOG = TestsResultsRestController.class.getSimpleName();
 	
 	@RequestMapping(value=ICommonData.TESTS_RESULTS, method=RequestMethod.GET)
 	@ResponseBody @JsonRawValue
 	String all(@RequestHeader(value="TimeZone") String timeZone, @RequestHeader(value="Authorization") String token){		
-		long companyId = tokenProcessor.decodeAndCheckToken(token);
-		String res = "";
-		if(companyId != -1){			
-			res = company.getTestsResultsAll(companyId, timeZone);
+		
+		if(companyId==0)
+			companyId = tokenProcessor.decodeAndCheckToken(token);
+		String res = "";		
+		if(companyId != -1){				
+			res = company.getTestsResultsAll(companyId, timeZone);			
 		} else {
 			res = getJsonErrorMessage();
 		}
