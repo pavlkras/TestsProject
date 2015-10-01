@@ -10,7 +10,8 @@
   http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
  <import resource="beans.xml" /> 
 <!-- components of the application service getting result of any query -->
-<bean id="company" class="tel_ran.tests.services.CompanyActionsService" /> <!-- class for application model -->
+
+<bean id="company" class="tel_ran.tests.services.CompanyActionsService" scope="prototype"/> <!-- class for application model -->
 <context:component-scan base-package="tel_ran.tests.rest"/>
 
 <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">

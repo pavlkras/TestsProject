@@ -7,6 +7,7 @@ import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,6 +23,7 @@ import tel_ran.tests.token_cipher.TokenProcessor;
 import com.fasterxml.jackson.annotation.JsonRawValue;
 
 @Controller
+@Scope("session")
 @RequestMapping({"/view_results_rest"})
 public class TestsResultsRestController {
 	@Autowired
