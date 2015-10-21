@@ -12,12 +12,13 @@ import javax.persistence.TypedQuery;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.mysql.fabric.xmlrpc.base.Array;
-
-import tel_ran.tests.entitys.EntityAnswersText;
+import tel_ran.tests.data_loader.IDataTestsQuestions;
+import tel_ran.tests.data_loader.TestsPersistence;
+import tel_ran.tests.entitys.EntityTexts;
 import tel_ran.tests.entitys.EntityQuestionAttributes;
 import tel_ran.tests.entitys.EntityTest;
 import tel_ran.tests.entitys.EntityTestQuestions;
@@ -25,11 +26,16 @@ import tel_ran.tests.processor.TestProcessor;
 import tel_ran.tests.services.common.ICommonData;
 import tel_ran.tests.services.common.IPublicStrings;
 import tel_ran.tests.services.interfaces.ICommonService;
-import tel_ran.tests.services.subtype_handlers.ITestQuestionHandler;
-import tel_ran.tests.services.subtype_handlers.SingleTestQuestionHandlerFactory;
 import tel_ran.tests.services.utils.FileManagerService;
+import tel_ran.tests.token_cipher.TokenProcessor;
 
 public abstract class CommonServices extends TestsPersistence implements ICommonService {
+	
+	@Autowired
+	TokenProcessor tokenProcessor;
+	
+	@Autowired
+	IDataTestsQuestions testQuestsionsData;	
 	
 	protected final static String LOG = CommonServices.class.getSimpleName();
 	
@@ -75,7 +81,7 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 	protected String getQuestionWithDelimeters(EntityQuestionAttributes eqa) {
 		StringBuilder result = new StringBuilder("");
 		result.append(eqa.getId()).append(DELIMITER); // - 0 = id
-		result.append(eqa.getQuestionId().getQuestionText()).append(DELIMITER); // - 1 = question
+		result.append(eqa.getEntityTitleQuestion().getQuestionText()).append(DELIMITER); // - 1 = question
 		result.append(eqa.getDescription()).append(DELIMITER); // - 2 = description
 		result.append(eqa.getCategory1()).append(DELIMITER);  // - 4 = lang cod	and company's categories
 		result.append(eqa.getCorrectAnswer()).append(DELIMITER); // - 5 = correct answer (letter or number)
@@ -87,11 +93,11 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 	}
 	
 	protected String getAnswers(EntityQuestionAttributes eqa) {
-		List<EntityAnswersText> anRes;
+		List<EntityTexts> anRes;
 		StringBuilder outRes = new StringBuilder("");
 		if(eqa.getQuestionAnswersList() != null){					
 			anRes = eqa.getQuestionAnswersList();
-			for(EntityAnswersText rRes :anRes){
+			for(EntityTexts rRes :anRes){
 				outRes.append(rRes.getAnswerText()).append(DELIMITER);
 			}
 		}
@@ -103,7 +109,7 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 		String[] outArray = new String[4];
 		StringBuilder  outRes = new StringBuilder("");
 		StringBuilder outAnsRes = new StringBuilder("");	
-		List<EntityAnswersText> answers;
+		List<EntityTexts> answers;
 		long id = (long)Integer.parseInt(questionID);
 		EntityQuestionAttributes question = em.find(EntityQuestionAttributes.class, id);
 		
@@ -126,14 +132,14 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 				
 			switch(actionKey){
 				case ACTION_GET_ARRAY: 
-					outRes.append(question.getQuestionId().getQuestionText()).append(DELIMITER); // text of question or Description to picture or code									
+					outRes.append(question.getEntityTitleQuestion().getQuestionText()).append(DELIMITER); // text of question or Description to picture or code									
 					outRes.append(question.getCorrectAnswer()).append(DELIMITER); // correct answer char 
 					outRes.append(question.getNumberOfResponsesInThePicture()).append(DELIMITER); // number of answers chars on image
 					outRes.append(question.getMetaCategory());
 					break;
 					
 				case ACTION_GET_FULL_ARRAY: 
-					outRes.append(question.getQuestionId().getQuestionText()).append(DELIMITER);// text of question
+					outRes.append(question.getEntityTitleQuestion().getQuestionText()).append(DELIMITER);// text of question
 					outRes.append(question.getDescription()).append(DELIMITER);  	// text of  Description 	
 					outRes.append(question.getMetaCategory()).append(DELIMITER); // meta category 
 					outRes.append(question.getCategory1()).append(DELIMITER); // language of sintax code in question
@@ -148,7 +154,7 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 			}		
 			
 			if(answers != null){
-				for(EntityAnswersText tAn :answers) {
+				for(EntityTexts tAn :answers) {
 					outAnsRes.append(tAn.getAnswerText()).append(DELIMITER);	// answers on text if exist!!!
 				}
 				outArray[3] = outAnsRes.toString();
@@ -232,7 +238,7 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 			try {
 				JSONObject jsn = getPartOfJSON(eqa);
 				jsn.put(ICommonData.JSN_CORRECT_ANSWER_CHAR, eqa.getCorrectAnswer());
-				jsn.put(ICommonData.JSN_QUESTION_TEXT, eqa.getQuestionId().getQuestionText());
+				jsn.put(ICommonData.JSN_QUESTION_TEXT, eqa.getEntityTitleQuestion().getQuestionText());
 				jsn.put(ICommonData.JSN_ANSWERS_NUMBER, eqa.getNumberOfResponsesInThePicture());
 				jsn.put(ICommonData.JSN_QUESTION_DESCRIPTION, eqa.getDescription());
 				

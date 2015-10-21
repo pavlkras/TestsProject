@@ -13,8 +13,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import tel_ran.tests.entitys.EntityCompany;
-import tel_ran.tests.entitys.EntityQuestion;
 import tel_ran.tests.entitys.EntityQuestionAttributes;
+import tel_ran.tests.entitys.EntityTitleQuestion;
 import tel_ran.tests.entitys.EntityUser;
 import tel_ran.tests.interfaces.IConstants;
 import tel_ran.tests.services.common.ICommonData;
@@ -25,51 +25,7 @@ public class UserActionService extends CommonServices implements IUserActionServ
 	
 	private EntityUser entityUser;
 	
-	////------ User Authorization and Registration case -----------// BEGIN //
-	@Override
-	public boolean IsUserExist(String userMail, String userPassword) {
-		boolean actionResult = false;			
-		String[] authorizationTest = GetUserByMail(userMail);		
-		if(authorizationTest != null && authorizationTest[PASSWORD].equals(userPassword)){			
-			actionResult = true;
-		}else{
-			System.out.println("obj is null -UserActionService-IsUserExist BES");
-		}
-		return actionResult;
-	}	
-	////
-	@Override
-	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
-	public boolean AddingNewUser(String[] args) {		
-		boolean result = false;
-		if (em.find(EntityUser.class, args[EMAIL]) == null) {
-			EntityUser user = new EntityUser();
-			user.setFirstName(args[FIRSTNAME]);
-			user.setName(args[LASTTNAME]);
-			user.setPassword(args[PASSWORD]);
-			user.setEmail(args[EMAIL]);
-			em.persist(user);
-			result = true;
-		}
-		return result;
-	}
-	////
-	@Override
-	public String[] GetUserByMail(String userMail) {		
-		String[] result;
-		entityUser = em.find(EntityUser.class, userMail);		
-		if (entityUser != null) {
-			result = new String[4];
-			result[FIRSTNAME] = entityUser.getFirstName();
-			result[LASTTNAME] = entityUser.getLastName();
-			result[PASSWORD] = entityUser.getPassword();
-			result[EMAIL] = entityUser.getEmail();
-		} else{
-			result = null;
-		}		
-		return result;
-	}
-	////------- User Authorization and Registration case -------------------// END //	
+
 
 	////------- Test mode Test for User case ----------------// BEGIN //
 	
@@ -104,7 +60,7 @@ public class UserActionService extends CommonServices implements IUserActionServ
 		q.setParameter(1, catName);
 		q.setParameter(2, Integer.parseInt(complexityLevel));
 
-		List<EntityQuestion> qlist = q.getResultList();
+		List<EntityTitleQuestion> qlist = q.getResultList();
 		String res = String.valueOf(qlist.size());
 		return res;
 	}
@@ -119,7 +75,7 @@ public class UserActionService extends CommonServices implements IUserActionServ
 		Query q = em.createQuery(query);
 		q.setParameter(1, catName);
 		q.setParameter(2, Integer.parseInt(level));
-		List<EntityQuestion> qlist = q.getResultList();
+		List<EntityTitleQuestion> qlist = q.getResultList();
 		String res = String.valueOf(qlist.size());
 		return res;
 	}
@@ -164,33 +120,20 @@ public class UserActionService extends CommonServices implements IUserActionServ
 	////-------  Test Code From Users and Persons Case  ----------------// END //	
 	@Override
 	protected boolean ifAllowed(EntityQuestionAttributes question) {
-		if(question.getCompanyId() == null)
+		if(question.getEntityCompany() == null)
 			return true;
 		return false;
 	}
 	
 	// ------------ USER INFORMATION ------------------------------------ //
 	
+		
 	@Override
-	public String getUserInformation() {
-		String result = null;		
-		if(entityUser!=null) {
-			JSONObject jsn = new JSONObject();
-			try {
-				jsn.put(ICommonData.MAP_ACCOUNT_NAME, entityUser.getEmail());
-				jsn.put(ICommonData.MAP_ACCOUNT_EMAIL, entityUser.getEmail());
-				jsn.put(ICommonData.MAP_ACCOUNT_FIRST_NAME, entityUser.getFirstName());
-				jsn.put(ICommonData.MAP_ACCOUNT_LAST_NAME, entityUser.getLastName());
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			result = jsn.toString();				
-			
-		}		
-	
-		return result;
+	public String getUserInformation(String arg0) {
+		
+		
+		
+		return null;
 	}
 	
 	

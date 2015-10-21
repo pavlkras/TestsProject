@@ -47,22 +47,6 @@ public class MaintenanceService extends CommonAdminServices implements IMaintena
 	protected String getLimitsForQuery() {
 		return null;
 	}
-
-
-	@Override
-	public String getUserInformation() {
-		JSONObject jsn = new JSONObject();
-		try {
-			jsn.put(ICommonData.MAP_ACCOUNT_NAME, IPublicStrings.USR_MAINTENANCE);
-			jsn.put(ICommonData.MAP_ACCOUNT_QUESTION_NUMBER, getNumberQuestion());
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}	
-								
-		return jsn.toString();
-	}
-	
 	
 
 	////-------------- Reading from file and Adding Questions into DB Case ----------// BEGIN  //

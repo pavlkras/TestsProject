@@ -52,7 +52,7 @@ public class PersonalActionsService extends CommonServices implements IPersonalA
 		boolean actionResult = false;
 		EntityTest tempRes = (EntityTest) em.createQuery("SELECT test FROM EntityTest test WHERE test.password='"+testPassword+"'").getSingleResult();
 		if(tempRes != null){
-			testID = tempRes.getTestId();
+			testID = tempRes.getId();
 			companyID = 0;//tempRes.getCompanyId();      //------ to do ?????
 			getTestResultsHandler(companyID, testID);
 			actionResult = true;
@@ -74,7 +74,7 @@ public class PersonalActionsService extends CommonServices implements IPersonalA
 		String token = null;
 		EntityTest test = (EntityTest) em.createQuery("Select t from EntityTest t where t.password='" + password +"'" ).getSingleResult();
 		if(test != null){
-			token = tokenProcessor.encodeIntoToken(test.getTestId(), ICommonData.TOKEN_VALID_IN_SECONDS);
+			token = tokenProcessor.encodeIntoToken(test.getId(), ICommonData.TOKEN_VALID_IN_SECONDS);
 		}
 		return token;
 	}
@@ -107,10 +107,6 @@ public class PersonalActionsService extends CommonServices implements IPersonalA
 		return null;
 	}
 	
-	@Override
-	public String getUserInformation() {		
-		return null;
-	}
 
 	@Override
 	@Transactional(readOnly=false)
@@ -201,6 +197,12 @@ public class PersonalActionsService extends CommonServices implements IPersonalA
 			
 			return etqId;
 		
+	}
+
+	@Override
+	public String getUserInformation(String arg0) {
+		
+		return null;
 	}
 		
 	

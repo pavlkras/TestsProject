@@ -35,6 +35,7 @@ import tel_ran.tests.services.testhandler.PersonTestHandler;
 import tel_ran.tests.services.utils.FileManagerService;
 import tel_ran.tests.services.utils.UtilsStatic;
 import tel_ran.tests.token_cipher.TokenProcessor;
+import tel_ran.tests.token_cipher.User;
 
 public class CompanyActionsService extends CommonAdminServices implements ICompanyActionsService {
 	
@@ -46,30 +47,13 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 	
 	long id=-1;
 	
-	//-------------Use Case Company Login 3.1.1----------- //   BEGIN    ///
-	@Override
-	public boolean setAutorization(String username, String password) { 
-		boolean result = false;
-		entityCompany = (EntityCompany) em.createQuery("Select c from EntityCompany c where c.C_Name='" + username + "'").getSingleResult();
-		
-		if(entityCompany != null){
-			if( entityCompany.getPassword().equals(password)){
-				result = true;
-			}else{
-				result = false;
-			}			
-		}
-		this.id = entityCompany.getId();
-		return result;
-	}
-	//-------------Use Case Company Login 3.1.1----------- //   END    ///
 	
 	//-------------Override super class methods ----------- // BEGIN ////
 	
 	@Override
 	protected boolean ifAllowed(EntityQuestionAttributes eqa) {
 		
-		if(eqa.getCompanyId().equals(entityCompany))
+		if(eqa.getEntityCompany().equals(entityCompany))
 			return true;
 		
 		return false;
@@ -234,7 +218,7 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 					// PERCENT of Correct
 					// list of questions (with id, categories, status)
 					// index
-					jsonObj = this.checkStatusAndGetJson(test.getTestId());
+					jsonObj = this.checkStatusAndGetJson(test.getId());
 									
 					// pictures
 					
@@ -305,7 +289,7 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 				JSONObject jsonObj = null;
 				
 				try {
-					jsonObj = this.getListOfUncheckedQuestions(test.getTestId());
+					jsonObj = this.getListOfUncheckedQuestions(test.getId());
 					res = jsonObj.toString();
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
@@ -334,7 +318,7 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 					int newStatus = handler.setMark(res);
 					response = IPublicStrings.QUESTION_STATUS[newStatus];
 					ICompanyTestHandler testHandler = SingleTestQuestionHandlerFactory.getTestCompanyHandler();
-					long testId = etq.getEntityTest().getTestId();
+					long testId = etq.getEntityTest().getId();
 //					System.out.println(testId);
 					testHandler.setTestId(testId);
 					testHandler.renewStatusOfTest();
@@ -350,6 +334,45 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 	}
 
 	
+	// Person handler	
+	//		private IPersonTestHandler getTestResultsHandler(long companyId, long testId){
+	//			return new PersonTestHandler(companyId, testId, em);
+	//		}
+	//		
+		
+			
+			
+		//------------- Viewing test results  3.1.4.----------- // END ////	
+		
+		
+		// ------------ Creating tests -------------------------// BEGIN ////
+			
+			
+		// old version
+	//	@Override
+	//	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
+	//	public int createTestForPersonFull(String metaCategories, String categories1, String difLevel, String nQuestion, int personPassport,
+	//			String personName, String personSurname, String personEmail, String pass) {		
+	//		return this.createTestForPersonFullWithQuestions(null, metaCategories, categories1, difLevel, nQuestion, 
+	//				personPassport, personName, personSurname, personEmail, pass);
+	//	}
+	
+			
+			
+		// gate for create test	with creation person
+		@Override
+		@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
+		public int createTestForPersonFullWithQuestions(List<Long> questionIdList, String metaCategories, String categories1, String difLevel, String nQuestion, int personPassport,
+				String personName, String personSurname, String personEmail, String pass) {
+			
+			EntityPerson ePerson = this.createEntityPerson(personPassport, personName, personSurname, personEmail);
+			if(ePerson==null)
+				return 2;
+			
+			return this.testFromQuestionList(questionIdList, ePerson, pass, metaCategories, categories1, difLevel, nQuestion);
+	
+		}
+
 	@Override
 	public String encodeIntoToken(long companyId) {
 		//encodes current timestamp and companyId into token
@@ -369,7 +392,7 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 				jsonObj.put(ICommonData.JSN_TEST_IS_CHECKED, test.isChecked());
 				jsonObj.put("personName",test.getEntityPerson().getPersonName());
 				jsonObj.put("personSurname",test.getEntityPerson().getPersonSurname());
-				jsonObj.put("testid",test.getTestId());
+				jsonObj.put("testid",test.getId());
 				SimpleDateFormat sdf = new SimpleDateFormat(ICommonData.DATE_FORMAT);
 				sdf.setTimeZone(TimeZone.getTimeZone(timeZone));
 				jsonObj.put("testDate", sdf.format(new Date(test.getStartTestDate())));
@@ -411,21 +434,6 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 
 		
 		
-	// gate for create test	with creation person
-	@Override
-	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
-	public int createTestForPersonFullWithQuestions(List<Long> questionIdList, String metaCategories, String categories1, String difLevel, String nQuestion, int personPassport,
-			String personName, String personSurname, String personEmail, String pass) {
-		
-		EntityPerson ePerson = this.createEntityPerson(personPassport, personName, personSurname, personEmail);
-		if(ePerson==null)
-			return 2;
-		
-		return this.testFromQuestionList(questionIdList, ePerson, pass, metaCategories, categories1, difLevel, nQuestion);
-
-	}
-		
-
 	@Override
 	public int createSetQuestiosnAndTest(String metaCategory, String category1, String level_num, String nQuestion, 
 			int personId, String pass) {
@@ -666,7 +674,7 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 				test.setEntityCompany(entityCompany);
 		test.setEntityPerson(ePerson);
 		em.persist(test);
-		long testId = test.getTestId();
+		long testId = test.getId();
 		
 		if( questionIdList.size() > 0 ){
 			long companyId = entityCompany.getId();
@@ -724,25 +732,7 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 	// ------------------------- info about TESTS and COMPANY -------------- // BEGIN
 	
 	// info about COMPANY
-	@Override
-	public String getUserInformation() {
-		String result = null;	
-		
-		if(entityCompany!=null) {
-			JSONObject jsn = new JSONObject();
-			try {
-				jsn.put(ICommonData.MAP_ACCOUNT_NAME, entityCompany.getC_Name());
-				jsn.put(ICommonData.MAP_ACCOUNT_WEB, entityCompany.getC_Site());
-				jsn.put(ICommonData.MAP_ACCOUNT_QUESTION_NUMBER, getNumberQuestion());
-				jsn.put(ICommonData.MAP_ACCOUNT_TESTS_NUM, getNumberTests());
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}			
-			result = jsn.toString();
-			}
-		return result;
-	}
+
 
 	@Override
 	public List<String> listOfCreatedTest() {
@@ -766,24 +756,13 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 		return resultList;
 	}
 	
-	// number of created and sended tests
-	private long getNumberTests() {
-		String query = "SELECT COUNT(et) from EntityTest et ";
-		query = query.concat(" WHERE et.entityCompany=?1");
-		Query newQ = em.createQuery(query);
-		newQ.setParameter(1, entityCompany);
-		Long result = (Long) newQ.getSingleResult();
-		
-		return result;
-		
-	}
-	
+
 	
 	private String getTestJson(EntityTest et) throws JSONException {
 		String result = null;
 		JSONObject jsn = new JSONObject();
 		if(et!=null) {
-			jsn.put("id", et.getTestId());
+			jsn.put("id", et.getId());
 			jsn.put("question_num", et.getAmountOfQuestions());
 			jsn.put("passed", et.isPassed());
 			jsn.put("pers_surname", et.getEntityPerson().getPersonSurname());
