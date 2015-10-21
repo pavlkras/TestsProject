@@ -19,7 +19,7 @@ public class EntityCompany implements Serializable {
 	@OneToMany (mappedBy = "entityCompany")
 	private List<EntityTest> personsTests; 
 	///
-	@OneToMany(mappedBy = "companyId", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "entityCompany", fetch = FetchType.LAZY)
 	List<EntityQuestionAttributes> questionAttributes;
 	///
 	
@@ -28,17 +28,25 @@ public class EntityCompany implements Serializable {
 	private String C_Specialization;
 	private String C_AmountEmployes;
 	private String C_Password;
-
-	public void setPassword(String password) {
-		C_Password = password;
+	private String C_email;	
+	
+	public String getC_Password() {
+		return C_Password;
 	}
+	public void setC_Password(String c_Password) {
+		C_Password = c_Password;
+	}
+	public String getC_email() {
+		return C_email;
+	}
+	public void setC_email(String c_email) {
+		C_email = c_email;
+	}
+	
 	public long getId() {
 		return id;
 	}
 
-	public String getPassword() {
-		return C_Password;
-	}
 	public String getC_Name() {
 		return C_Name;
 	}

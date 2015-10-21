@@ -14,7 +14,7 @@ public class EntityTestQuestions {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)	
-	private long tQuestionId;
+	private long id;
 	
 	@ManyToOne
 	private EntityQuestionAttributes eqaId;
@@ -37,10 +37,10 @@ public class EntityTestQuestions {
 		this.entityTest = entityTest;
 	}
 	public long getId() {
-		return tQuestionId;
+		return id;
 	}
 	public void setId(long id) {
-		this.tQuestionId = id;
+		this.id = id;
 	}
 	public EntityQuestionAttributes getEntityQuestionAttributes() {
 		return eqaId;

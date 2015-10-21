@@ -29,11 +29,11 @@ public class EntityQuestionAttributes implements Serializable {
 	
 	////codeQuestionTable
 	@ManyToOne
-	private EntityQuestion questionId;
+	private EntityTitleQuestion entityTitleQuestion;
 	
 	////link to the company that has created this question (EntityCompany)
 	@ManyToOne	
-	private EntityCompany companyId;
+	private EntityCompany entityCompany;
 	
 	////name of MetaCategory (Attention, Programming Task, etc)
 	@Column(name = "metaCategory")
@@ -60,8 +60,8 @@ public class EntityQuestionAttributes implements Serializable {
 	private String fileLocationLink;
 	
 	////links to some text fields that can be used for American Tests and Programming Tasks (EntityAnswersText) 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "questionAttributeId")
-	List<EntityAnswersText> questionAnswersList;
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "entityQuestionAttributes")
+	List<EntityTexts> questionAnswersList;
 		
 	////letter of the correct answer (for American Tests)
 	@Column(name = "correctAnswer")
@@ -70,15 +70,6 @@ public class EntityQuestionAttributes implements Serializable {
 	////total number of responses for American tests
 	@Column(name = "numresponses")
 	private int numberOfResponsesInThePicture;
-	
-	////text field for the code stub (Programming Tasks)
-	// expired. to use EntityAnswersTest for ProgrammingTasks
-	//@Column(name = "codeLine", length = 1500)
-	//private String codeLine;
-	
-
-	
-	////	
 	
 	
 	public EntityQuestionAttributes() {	}
@@ -89,30 +80,18 @@ public class EntityQuestionAttributes implements Serializable {
 	public void setDescription(String description) {
 		this.description = description;
 	}	
-	public EntityCompany getCompanyId() {
-		return companyId;
+	public EntityCompany getEntityCompany() {
+		return entityCompany;
 	}
-	public void setCompanyId(EntityCompany companyId) {
-		this.companyId = companyId;
+	public void setCompanyId(EntityCompany entityCompany) {
+		this.entityCompany = entityCompany;
 	}
-//	public String getCodeLine() {
-//		return codeLine;
-//	}
-//	public void setCodeLine(String codeLine) {
-//		this.codeLine = codeLine;
-//	}
 
-//	public String getLineCod() {
-//		return codeLine;
-//	}
-//	public void setLineCod(String lineCod) {
-//		this.codeLine = lineCod;
-//	}	
-	public EntityQuestion getQuestionId() {
-		return questionId;
+	public EntityTitleQuestion getEntityTitleQuestion() {
+		return entityTitleQuestion;
 	}
-	public void setQuestionId(EntityQuestion questionId) {
-		this.questionId = questionId;
+	public void setEntityTitleQuestion(EntityTitleQuestion titleQuestion) {
+		this.entityTitleQuestion = titleQuestion;
 	}
 	public String getFileLocationLink() {
 		return fileLocationLink;
@@ -149,10 +128,10 @@ public class EntityQuestionAttributes implements Serializable {
 	public void setCorrectAnswer(String correctAnswer) {
 		this.correctAnswer = correctAnswer;
 	}
-	public List<EntityAnswersText> getQuestionAnswersList() {
+	public List<EntityTexts> getQuestionAnswersList() {
 		return questionAnswersList;
 	}
-	public void setQuestionAnswersList(List<EntityAnswersText> questionAnswers) {
+	public void setQuestionAnswersList(List<EntityTexts> questionAnswers) {
 		this.questionAnswersList = questionAnswers;
 	}
 	public int getNumberOfResponsesInThePicture() {
@@ -175,7 +154,7 @@ public class EntityQuestionAttributes implements Serializable {
 		if(questionAnswersList!=null) {
 			List<String> result = new ArrayList<String>();
 		
-			for(EntityAnswersText eat : questionAnswersList) {
+			for(EntityTexts eat : questionAnswersList) {
 				result.add(eat.getAnswerText());
 			}
 		
@@ -187,7 +166,7 @@ public class EntityQuestionAttributes implements Serializable {
 	////
 	@Override
 	public String toString() {
-		return questionId.getId()
+		return entityTitleQuestion.getId()
 				+ ApplicationFinalFields.DELIMITER + metaCategory
 				+ ApplicationFinalFields.DELIMITER + category1
 				+ ApplicationFinalFields.DELIMITER + category2			
@@ -196,7 +175,7 @@ public class EntityQuestionAttributes implements Serializable {
 				+ ApplicationFinalFields.DELIMITER + fileLocationLink	
 				+ ApplicationFinalFields.DELIMITER + correctAnswer
 				+ ApplicationFinalFields.DELIMITER + numberOfResponsesInThePicture
-				+ ApplicationFinalFields.DELIMITER + companyId;
+				+ ApplicationFinalFields.DELIMITER + entityCompany;
 	}
 	
 

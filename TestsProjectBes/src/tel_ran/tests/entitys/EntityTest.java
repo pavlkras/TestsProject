@@ -18,7 +18,7 @@ public class EntityTest {
 	////
 	@Id
 	@GeneratedValue
-	private long testId; 
+	private long id; 
 	
 	/**
 	 * Password is used to find the test. It should be unique.
@@ -55,9 +55,7 @@ public class EntityTest {
 	private EntityCompany entityCompany;
 	@ManyToOne
 	private EntityPerson entityPerson;
-	
-	
-	
+		
 	public EntityTest() {}
 
 	public void setAmountOfCorrectAnswers(int amountOfCorrectAnswers) {
@@ -66,87 +64,9 @@ public class EntityTest {
 	public void setAmountOfQuestions(int amountOfQuestions) {
 		this.amountOfQuestions = amountOfQuestions;
 	}
-//	private JSONArray getJsonArrayImage(String paths){
-//		JSONArray ar = new JSONArray();
-//		if(!paths.equals(null)||!paths.equals("")){ 
-//
-//			String[] pathsArray = paths.split(",");  
-//			for(String path:pathsArray){					
-//				JSONObject jsonObj = new JSONObject();		
-//				String file = getFileWithinString(path);
-//
-//				if(file != null){
-//					try {
-//						jsonObj.put("picture", file);
-//					} catch (JSONException e) {
-//						e.printStackTrace();
-//					}
-//					ar.put(jsonObj);
-//				}
-//			}
-//		}
-//		return ar;
-//	}
-	
-//	private JSONArray getJsonArrayCode(String paths, String codeAnalyseResults, String programmingLanguages){
-//		JSONArray ar = new JSONArray();
-//		if(	!paths.equals(null)&&
-//			!paths.equals("")&&
-//			!codeAnalyseResults.equals(null)&&
-//			!codeAnalyseResults.equals("")&&
-//			!programmingLanguages.equals(null)&&
-//			!programmingLanguages.equals("")){ 
-//
-//			String[] pathsArray = paths.split(",");  
-//			String[] codeAnalyseResultsArray = codeAnalyseResults.split(",");
-//			String[] programmingLanguagesArray = programmingLanguages.split(",");
-//			
-//			if(pathsArray.length == codeAnalyseResultsArray.length && codeAnalyseResultsArray.length == programmingLanguagesArray.length){
-//				for(int i=0; i<pathsArray.length; i++){
-//					JSONObject jsonObj = new JSONObject();		
-//					
-//					String file = getFileWithinString(pathsArray[i]);
-//
-//					if(file != null){
-//						try {
-//							jsonObj.put("code", file);
-//							jsonObj.put("codeAnalyseResult", codeAnalyseResultsArray[i]);
-//							jsonObj.put("programmingLanguage", programmingLanguagesArray[i]);
-//						} catch (JSONException e) {
-//							e.printStackTrace();
-//						}
-//						ar.put(jsonObj);
-//					}
-//				}
-//			}
-//		}
-//		return ar;
-//	}
 
-//	public String getFileWithinString(String path){
-//		String res = null;
-//		BufferedReader in=null;
-//		try {
-//			in = new BufferedReader(new FileReader(path));
-//			String line;
-//			StringBuffer stringBuffWithFileContent = new StringBuffer();
-//			while((line = in.readLine()) != null){
-//				stringBuffWithFileContent.append(line);
-//				stringBuffWithFileContent.append("\n");
-//			}
-//			res = stringBuffWithFileContent.toString();
-//		} catch (FileNotFoundException e) {
-//		} catch (IOException e) {
-//		} finally{
-//			try {
-//				in.close();
-//			} catch (Exception e) {}
-//		}
-//		return res;
-//	}
-
-	public long getTestId() {
-		return testId;
+	public long getId() {
+		return id;
 	}
 
 	public String getPassword() {
