@@ -7,7 +7,7 @@
 		var $RtemP = "request";
 		$.ajax({
 			type : "POST",
-			url : "categoryCreationAction",
+			url : "categoryList",
 			data : "request" + $RtemP,
 			success : function(response) {
 				// we have the response				

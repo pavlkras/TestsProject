@@ -7,16 +7,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Company View</title>
-<link
-	href='<c:url value="/static/css_folder/user_styles/IndexPage.css"></c:url>'
+<link href='<c:url value="/static/css_folder/user_styles/IndexPage.css"></c:url>'
 	rel="stylesheet">
-<link
-	href='<c:url value="/static/css_folder/style.css"></c:url>'
+<link href='<c:url value="/static/css_folder/style.css"></c:url>'
 	rel="stylesheet">
-<script
-	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>	
-	<script src="static/js_folder/header&&rightmenu_company.js">
-</script>	
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>	
+<script src="static/js_folder/header&&rightmenu.js"></script>	
 
 </head>
 <body>
@@ -49,6 +45,11 @@
 			<p>Copyright &copy; 2014 HrTrueTest</p>
 		</div>
 	</div>
+	
+	<script>	
+	var roleNumber = ${role};	
+	getMenu(roleNumber);</script>	
+	
 </body>
 
 

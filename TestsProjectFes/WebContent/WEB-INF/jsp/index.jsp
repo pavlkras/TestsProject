@@ -4,124 +4,65 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <!DOCTYPE html>
 <html>
-
-<script
-	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<link
-	href='<c:url value="/static/css_folder/style.css"></c:url>'
-	rel="stylesheet">
-<link
-	href='<c:url value="/static/css_folder/user_styles/IndexPage.css"></c:url>'
-	rel="stylesheet">
-
-
-
-	
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-
 <head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title>HRTrueTest Home</title>
+
+	<script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
+	<script type="text/javascript" src="static/js_folder/header&&rightmenu.js"></script>
+	<link href='<c:url value="/static/css_folder/style.css"></c:url>'
+		rel="stylesheet">
+	<link href='<c:url value="/static/css_folder/user_styles/IndexPage.css"></c:url>'
+		rel="stylesheet">	
 </head>
 
-
 <body>
-	 <div id="container">
-	 	<div id ="header">
-	 		<div id="logo">
-	 			
-	 		</div>
-	 		<div id="search_area">
-	 			<input id="text_Area" type="text" placeholder="Search.."/>
-	 			<input id="button" type="button" value="search"/>
-	 		</div>
-	 		
-	 	</div>
-	 	<div id="nav_area">
-	 			<ul>
-	 				<li><a href=".">Home</a></li>
-	 				<li><a href="login">User Login</a></li>
-	 				<li><a href="CompanyActions">Company Login</a></li>
-	 				<li><a href=".">FAQ</a></li>
-	 				<li><a href=".">Contact Us</a></li>
-	 			</ul>
-	 	</div><!--end nav area-->
-
-	 	<div id="left_side">
-        
-        
-	 		<div id="testexamples">
-               <div>
-	 			<h2>Test Examples</h2>
-              </div>
-	 			<ul>
-                
-	 				<li><a href=".">JAVA</a></li><hr>
-	 				<li><a href=".">C++</a></li><hr>
-	 				<li><a href=".">C#</a></li><hr>
-	 				<li><a href=".">Android</a></li><hr>
-	 				<li><a href=".">Javascript</a></li><hr>
-                    <li><a href=".">HTML&CSS</a></li><hr>
-                    <li><a href=".">Other Tests</a></li>
-	 			</ul>
- 		  </div><!--end tesst examles-->
-
- 	  </div><!--end left_side area-->	
-
- 	  <div id="right_side">
-
-
-	 	<div id="description">
-		  <h2>About Us</h2>
+	<div id="container">
+		<div id="right_side">
+			<div id="description">
+				<h2>About Us</h2>
+				<div id="imgDiv">
+				<img class="leftimg" src="static/images/test.jpg" alt="sf tours logo" name="logo" width="300" align="left" height="240" id="exam" />
+				<br>
+				The control tests project (aka the project) is intended for performing and analysis
+				of the professional and psychological tests allowing the companies to select the best candidates for hiring.<br><br>
+				This document describes a development scope of MVP (Minimal Valued Product).<br><br>
+				The Software being developed under the project gives tools for testing automation of the candidates
+				to get specific jobs. The customers of the project software may be as companies for a candidate's selection as well
+				as persons for training.<br><br>
+				The MVP consists of 4 following independent parts of development:<br>	
+				<ul>
+					<li>Company Actions</li>
+					<li>Personal Actions</li>
+					<li>Tests Maintenance</li>
+					<li>Creation of test's questions</li>
+				</ul>			
+				</div>
+				<div class="clearFloat"></div>
+				
+							
+				Company Actions involve the following Use Cases:<br>
+				<ul><li>Registration</li><li>Login</li><li>Ordering test for a specified candidate </li>
+				<li>Viewing test results</li></ul><br>
+				Personal Actions involve the following Use Cases:
+				<ul><li>Registration</li><li>Login</li><li>Performing Test</li><li>Trainee Mode</li>
+				<li>Control Mode</li></ul><br>
+				Tests Maintenance involves the following Use Cases:
+				<ul><li>Entering test data</li><li>Update test data</li><li>Bulk entering test data</li></ul>
+				
+			</div><!--end of our description area-->
+			<div id="additional_area"> </div>
+		</div><!--end of right area-->		
+		<div id="footer_area">
+			<p> Copyright &copy; 2014 HrTrueTest</p>
 			
-            
-			<p>
-            <img src="static/images/test.jpg" alt="sf tours logo" name="logo" width="300" 	         align="left" height="240" id="exam" />
-            The control tests project (aka the project) is intended for performing and analysis of the professional and psychological tests allowing the companies to select the best candidates for hiring
-            
-            This document describes a development scope of MVP (Minimal Valued Product)
-            The Software being developed under the project gives tools for testing automation of the candidates to get specific jobs
-            The customers of the project software may be as companies for a candidate's selection as well as persons for training 
-            The MVP consists of three following independent parts of development:
-            Company Actions
-            Personal Actions
-            Tests Maintenance 
-            Creation of test's questions
-            Company Actions involve the following Use Cases:
-            Registration
-            Login
-            Ordering test for a specified candidate 
-            Viewing test results
-            Personal Actions involve the following Use Cases:
-            Registration
-            Login
-            Performing Test
-            Trainee Mode
-            Control Mode
-            Tests Maintenance involves the following Use Cases:
-            Entering test data
-            Update test data
-            Bulk entering test data
-            
-            </p> 	
-				 			
-
-
-				 	    
-				 		
-				 		
-				 		
-				 		
-	 	</div><!--end of our description area-->
-				 	<div id="additional_area"> </div>
-				 		
- 	  </div><!--end of right area-->
- 	
-
-
- 	<div id="footer_area">
-	
- 	<p> Copyright &copy; 2014 HrTrueTest</p>
+		</div>
 	</div>
-</div>
+	<script>	
+	var roleNumber = ${role};	
+	getMenu(roleNumber);</script>	
 </body>
 </html>
+
+
+

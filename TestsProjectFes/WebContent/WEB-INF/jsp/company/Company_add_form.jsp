@@ -6,9 +6,8 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<script
-	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<script src="/TestsProjectFes/static_js/js/CompanyJS/add_company.js"></script>
+<script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
+<script src="/TestsProjectFes/static_js/CompanyJS/add_company.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
 
 <script src="static/js_folder/header&&rightmenu.js"></script>
@@ -129,5 +128,6 @@
 				<p>Copyright &copy; 2014 HrTrueTest</p>
 			</div>
 		</div>
+	<script>var roleNumber = ${role}; getMenu(roleNumber);</script>
 </body>
 </html>

@@ -24,8 +24,8 @@ visibility: hidden;
 font-size: 0.80em;
 }
 </style>
-<script
-	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="static/js_folder/header&&rightmenu.js"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <script type="text/javascript">
 	$(document).ready(function() {		
@@ -128,48 +128,8 @@ font-size: 0.80em;
 <title>Sign up page</title>
 </head>
 <body>
-	<div id="container">
-	 	<div id ="header">
-	 		<div id="logo">
-	 			
-	 		</div>
-	 		<div id="search_area">
-	 			<input id="text_Area" type="text" placeholder="Search.."/>
-	 			<input id="button" type="button" value="search"/>
-	 		</div>
-	 		
-	 	</div>
-	 	<div id="nav_area">
-	 			<ul>
-	 				<li><a href=".">Home</li></a>
-	 				<li><a href="login">User Login</li></a>
-	 				<li><a href="CompanyActions">Company Login</li></a>
-	 				<li><a href=".">FAQ</li></a>
-	 				<li><a href=".">Contact Us</li></a>
-	 			</ul>
-	 	</div><!--end nav area-->
-
-	 	<div id="left_side">
-        
-        
-	 		<div id="testexamples">
-               <div>
-	 			<h2>Test Examples</h2>
-              </div>
-	 			<ul>
-                
-	 				<li><a href=".">JAVA</li></a><hr>
-	 				<li><a href=".">C++</li></a><hr>
-	 				<li><a href=".">C#</li></a><hr>
-	 				<li><a href=".">Android</li></a><hr>
-	 				<li><a href=".">Javascript</li></a><hr>
-                    <li><a href=".">HTML&CSS</li></a><hr>
-                    <li><a href=".">Other Tests</li></a>
-	 			</ul>
- 		  </div><!--end tesst examles-->
-
- 	  </div><!--end left_side area-->
-
+	<div id="container">	 	
+	 
  	  <div id="right_side">
 
 	 		<div id="formDiv">
@@ -225,6 +185,7 @@ font-size: 0.80em;
 	
  	<p> Copyright &copy; 2014 HrTrueTest</p>
 	</div>
+	<script>var r = ${role}; getMenu(r);</script>	
 </div>
 </body>
 </html>

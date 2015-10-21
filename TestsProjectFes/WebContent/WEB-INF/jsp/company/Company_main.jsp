@@ -14,23 +14,23 @@
 <link
 	href='<c:url value="/static/css_folder/company_styles/company.css"></c:url>'
 	rel="stylesheet">	
-<script
-	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>	
-	<script src="static/js_folder/header&&rightmenu_company.js">
-</script>	
-<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+
+<script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
+<script src="https://code.angularjs.org/1.4.7/angular.min.js"></script>
+<script src="static/js_folder/header&&rightmenu.js"></script>	
+
 
 </head>
 <body>
 		<div id="container">
 
-		<div id="right_side_company">
+		<div id="right_side">
 
 			<h2>Success Company Login</h2>
 			<div ng-app="lgn_app" ng-controller="lgn_contr" class="inform">
 				
-					<h3>{{name}}</h3>
-					<div class="site">{{webs}}</div>
+					<h3>{{company}}</h3>
+					<div class="site">{{web}}</div>
 					<div class="us_info">Questions in DB: {{num_question}}<br/>
 					Sended tests: {{num_tests}}</p></div>
 				
@@ -50,14 +50,21 @@
 	</div>
 
 <script>	
-	var appl=angular.module('lgn_app',[]);
+	
+	var roleNumber = ${role};		
+	getMenu(roleNumber);
+	
+	var appl=angular.module('lgn_app',[]);	
 	appl.controller('lgn_contr',function($scope){
-		var json=JSON.parse('${info}');
-		$scope.name = json.name;	
-		$scope.webs = json.website;
+		var json=JSON.parse('${account}');
+		$scope.company = json.company;	
+		$scope.web = json.web;
 		$scope.num_question = json.question_num;
 		$scope.num_tests = json.tests_num;
-	}); </script>
+	}); 
+
+	
+	</script>
 	
 </body>
 
