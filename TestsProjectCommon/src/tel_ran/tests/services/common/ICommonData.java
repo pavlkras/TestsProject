@@ -147,13 +147,12 @@ public interface ICommonData {
 	
 	// -------------------- JSN - FIELDS ---------------------------------------------- //
 	
-	static final String MAP_ACCOUNT_NAME = "name";
-	static final String MAP_ACCOUNT_WEB = "website"; // only for compamy
+	
 	static final String MAP_ACCOUNT_QUESTION_NUMBER = "question_num"; // only for company and maintenance
 	static final String MAP_ACCOUNT_TESTS_NUM = "tests_num"; // only for company
-	static final String MAP_ACCOUNT_EMAIL = "email"; // only for users
-	static final String MAP_ACCOUNT_FIRST_NAME = "first_name"; // only for users
-	static final String MAP_ACCOUNT_LAST_NAME = "last_name"; // only for users
+//	static final String MAP_ACCOUNT_EMAIL = "email"; // only for users
+//	static final String MAP_ACCOUNT_FIRST_NAME = "first_name"; // only for users
+//	static final String MAP_ACCOUNT_LAST_NAME = "last_name"; // only for users
 	
 	// ------------------- STATUS FOR QUESTIONS IN THE TEST ---------------------------- //
 	
