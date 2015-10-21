@@ -30,8 +30,7 @@ public class UserActions implements Serializable{
 		
 	}
 
-	@RequestMapping({"/"})
-	public String Index(){     return "index";       }// this mapping to index page !!!!!! for all users and all company !!!!
+	
 	//--------------------- fields of this class ---------------------------
 	private List<String> testResultList;
 	private List<String> questionList = null;
@@ -40,63 +39,7 @@ public class UserActions implements Serializable{
 	private static int counter = 0;
 	private String userMailForSession;
 
-	/*
-	 3.2. User Actions 
-	3.2.1. Login	
-	 */
-	//// ------  login case --------- // BEGIN //
-	@RequestMapping(value = "/login", method = {RequestMethod.POST, RequestMethod.GET})
-	public String userlogin(String userEmail, String password, HttpServletRequest request, Model pageModel) {
-		String outPage = "user/UserSignIn";
-		return outPage;		
-	}
 	
-	//// ------  login case --------- // BEGIN //
-	@RequestMapping(value = "/login_action", method = {RequestMethod.POST, RequestMethod.GET})
-	public String login_action(String userEmail, String password, HttpServletRequest request, Model pageModel) {
-		String outPage = "user/UserSignIn";
-		String sign_up = request.getParameter("sign_up");
-		if(sign_up != null){
-			outPage = "user/UserRegistration";
-		}else{
-			////		
-			boolean getUser = userService.IsUserExist(userEmail, password);
-
-			if (getUser) {	
-				userMailForSession = userEmail;
-				outPage = "user/UserAccountPage";
-			} else{
-				pageModel.addAttribute("logedUser", "wrong password");
-			}
-		}
-		return outPage;		
-	}
-	/*
-	3.2.2. Registration (Sign up)
-	 */ 
-	////-----------  Registration case -------------- // BEGIN //
-	@RequestMapping(value = "/signup_action", method = RequestMethod.POST)
-	public String signup_action(String firstname, String lastname,String email, String password, Model model) {
-		String outPage = "user/UserSignIn";
-		//
-		if (email != null) {				
-			String[] userArgs = { firstname, lastname, email,  password};			
-			boolean actionRes = userService.AddingNewUser(userArgs);
-			if(actionRes){
-				userMailForSession = email;
-				outPage = "user/UserAccountPage";
-			}else{
-				outPage = "user/UserSignIn";
-				model.addAttribute("logedUser","Registration is Failed !");
-			}
-		}
-		//
-		return outPage;
-	}
-	////------  Registration case -- // END //
-	/*
-	3.2.3. Performing Test – Trainee Mode
-	 */
 	////------------------ Filling test parameters  ------------------// BEGIN //
 	@RequestMapping(value = "/createTestForUser")
 	public String allCategoriesAndLevelsSelection(Model model){

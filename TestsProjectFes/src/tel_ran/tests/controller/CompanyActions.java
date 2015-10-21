@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
 
-import javax.annotation.PostConstruct;
 import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -17,25 +16,23 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 
-import jdk.nashorn.internal.parser.JSONParser;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonObjectFormatVisitor;
-import com.fasterxml.jackson.databind.util.JSONPObject;
-
 import tel_ran.tests.services.common.IPublicStrings;
 import tel_ran.tests.services.interfaces.ICommonAdminService;
 import tel_ran.tests.services.interfaces.ICompanyActionsService;
+import tel_ran.tests.users.Visitor;
 
 
 @Controller
@@ -45,7 +42,7 @@ public class CompanyActions extends AbstractAdminActions implements Serializable
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
 	// --- private fields 
 	private	String companyName;
 	private long companyId = -1;
@@ -76,120 +73,6 @@ public class CompanyActions extends AbstractAdminActions implements Serializable
 	public void setCompanyName(String companyName) {
 		this.companyName = companyName;
 	}
-	////
-	// Action Re-mapping for Send Ajax request to DB if equal  user and priority level, and set: flAuthorization=true;
-	@RequestMapping({"/CompanyActions"})
-	public String signIn(){		
-		return "company/CompanySignIn";  
-	}
-
-	// IGOR Action Re-mapping
-	@RequestMapping({"/create_request"})
-	public String createRequest(){
-		return "company/CompanyTestsResultsStartPage";
-	}
-	
-	// IGOR Action Re-mapping
-	@RequestMapping({"/company_main"})
-	public String loginSucceessCompany(Model model){
-		
-		model.addAttribute(AbstractAdminActions.RESULT, adminService.getUserInformation());
-		return "company/Company_main";
-	}
-
-	/* ----------Use case Company Login--------------
-Login Normal Flow: 
-1.	The user enters a company username and password. 
-2.	The user presses a submit button
-3.	The System moves to a home page for the specific company. Alternative flows: Wrong Company Username, Wrong Password
-3.1.1.1.	Wrong Company Username
-Pre-Conditions:
-1.	The user enters wrong username
-Wrong Username Flow:
-1.	The alert window appears with message: â€œCompany with <username> is not registered. Type the right company username or  go to registrationâ€�
-2.	Returns to the Login
-3.1.1.2.	Wrong Password
-Pre-Conditions:
-1.	The user enters wrong password
-Wrong Password Flow:
-1.	The alert window appears with message: â€œWrong password. Type the right passwordâ€�
-2.	Returns to the Login */
-	//
-
-	@RequestMapping("/loginProcessing")
-	public String loginProcessing(String companyName, String password, Model model){
-		////// Method getCompanyByName(companyName) - return companyId;
-		///	boolean IfExistCompany
-		companyId = adminService.getCompanyByName(companyName);
-		String result;		
-		////if(IfExistCompany){
-		if(companyId>0){
-			boolean ress = adminService.setAutorization(companyName, password);
-			if(ress){ 				
-				result = "company/Company_main";					
-				
-				model.addAttribute("info", adminService.getUserInformation());
-				this.setCompanyName(companyName); 
-			}else{
-				result = "company/CompanySignIn";
-				model.addAttribute("result", " This password not variable try again " );
-			}
-		}else {	       			
-			result = "company/CompanySignIn";
-			model.addAttribute("result", " This Company not exist - " + companyName);
-		}
-		
-		System.out.println(((ICompanyActionsService)adminService).checkAnswer(1, "{\"mark\":\"correct\";\"id\":90}"));
-		return result;
-	}
-	// END  --------------- Use case Company Login--------------
-
-	/* -------------Use Case Company Sign up 3.1.2-----------
-	/*Pre-conditions:
-1.	The System is running up
-2.	The company is not registered in the System
-Registration Normal Flow:
-1.	The user enters a company username
-2.	The user enters an web site of company
-3.	The user selects the company specialization (Education, Software development, Telecommunication, etc.)
-4.	The user selects number of the employees (up to 10, 10-50, 50-100, 100-500, 500-1000, more 1000)
-5.	The user enters password
-6.	The user enters password confirmation. Alternative flow: Wrong Password Confirmation
-7.	The user presses a submit button
-8.	The System moves to Login page. Alternative flow: Company Registered 
-3.1.2.3.	Wrong Password Confirmation
-Pre-Conditions:
-1.	The user enters wrong password confirmation
-Wrong Password Confirmation Flow
-1.	The alert window appears with message: â€œWrong password confirmation. Type the same passwordâ€�
-2.	Returns to the Registration Flow with #6. That is all filled fields except password confirmation should remain filled
-3.1.2.4.	Company Registered
-Pre-Conditions:
-1.	The user enters company username that already has been registered
-User Registered Flow:
-1.	The alert window appears with message: â€œThe company <username> already registered. Type another company username or go to Login with this oneâ€�
-2.	Returns to  the Registration Flow
-        	----------Company  ALEX FOOX -----------*/
-	@RequestMapping({"/search_form"})
-	public String query() {
-		return "company/Company_search_form";
-	}
-
-	@RequestMapping({"/query_processing"})
-	public String queryProcessing(String jpaStr, Model model) {
-		String[] result = adminService.getAnySingleQuery(jpaStr);
-		StringBuffer buf = new StringBuffer();
-		for (String str : result)
-			buf.append(str).append("<br>");
-		model.addAttribute("myResult", buf.toString());
-		return "company/Company_search_form";
-	}
-	////
-	@RequestMapping({"/companyadd"})
-	public String addCompany() {
-		return "company/Company_add_form";
-	}
-	
 	
 	@RequestMapping({"/testGeneration"})
 	public String testGeneration(Model model) {
@@ -215,43 +98,6 @@ User Registered Flow:
 		return "company/CompanyGenerateTest";
 	}
 	
-	//// method response JSON, Ajax on company add page 
-	@RequestMapping(value="/add_processing_ajax",method=RequestMethod.POST)
-	public @ResponseBody JsonResponse ajaxRequestStream(HttpServletRequest request) {   
-		String name_company = request.getParameter("name");
-		JsonResponse res = new JsonResponse(); 
-		long tRes = adminService.getCompanyByName(name_company);
-		if(tRes == -1){    			
-			res.setStatus("SUCCESS");
-			res.setResult(name_company); 			
-		} else{
-			res.setStatus("ERROR");	
-			res.setResult(name_company); 
-		}
-		return res;
-	}
-
-	////
-	@RequestMapping({"/add_processing"})
-	public String addProcessing(String C_Name,String C_Site, String C_Specialization,String C_AmountEmployes,String C_Password,Model model) {
-		boolean flag = false;		
-		try{
-			flag = adminService.createCompany(C_Name, C_Site, C_Specialization, C_AmountEmployes, C_Password);
-		}catch(Throwable th){
-			th.printStackTrace();
-			
-		}
-
-		if(flag){
-			model.addAttribute("myResult", "<H3>Company Added Success. Please log in</H3>");
-			return "company/CompanySignIn";
-		}
-		else{
-			model.addAttribute("meResult", "<H3>This Company - "+C_Name+".  Already Exist!</H3>");
-			return "company/CompanySignIn";
-		}
-	}
-	//-------------Use Case Company Sign up 3.1.2-----------
 
 	/*-------------Use case Ordering Test 3.1.3-------------
 Pre-Conditions:
@@ -427,29 +273,25 @@ f)	5 photos made during the test	------ IGOR ------*/
 	
 
 
-	/**
-	 * CREATE questions by auto generation
-	 * @param category = list of metaCategories
-	 * @param nQuestions = total number of questions to create
-	 * @param levelOfDifficulty = list of dif.Level 
-	 * @param model
-	 */
-	@RequestMapping({"/addQuestionsFromResourses"})
-	public String moduleForBuildingQuestions(String category, String nQuestions, Model model) {		
-		String path = "company/CompanyOtherResourses";
-		return super.moduleForBuildingQuestions(category, nQuestions, model, path);// return too page after action
-	}
+//	/**
+//	 * CREATE questions by auto generation
+//	 * @param category = list of metaCategories
+//	 * @param nQuestions = total number of questions to create
+//	 * @param levelOfDifficulty = list of dif.Level 
+//	 * @param model
+//	 */
+//	@RequestMapping({"/addQuestionsFromResourses"})
+//	public String moduleForBuildingQuestions(String category, String nQuestions, Model model) {		
+//		String path = "company/CompanyOtherResourses";
+//		return super.moduleForBuildingQuestions(category, nQuestions, model, path);// return too page after action
+//	}
 
 	
 	/**
 	 * List of auto-metaCategory for page with auto generation
 	 * 
 	 */
-	@RequestMapping({"/company_otherResursCreation"})
-	public String maintenanceOtherResurses() {
-		String path = "company/CompanyOtherResourses";
-		return super.maintenanceOtherResurses(path);
-	}	
+	
 	
 	
 	protected void AutoInformationTextHTML(String string) {
@@ -457,19 +299,15 @@ f)	5 photos made during the test	------ IGOR ------*/
 	}
 	
 	
-	@RequestMapping(value="/categoryList", method=RequestMethod.POST)  
-	public @ResponseBody AbstractAdminActions.JsonResponse handlerCode(HttpServletRequest request) {	
-		return super.handlerCode(request);
-	}
 	
 	
 	// ------------------------- ADDING QUESTION. MANUAL --------- //
 	
 	@RequestMapping({ "/company_add" })
-	public String addingPage() {		
+	public String addingPage(@ModelAttribute Visitor visitor) {	
+		
 		return super.addingPage("company/CompanyCreateQuestion"); // - Page = MaintenanceAddingPage
-	}
-	
+	}	
 	//temporary!!!!
 	//TODO - problem with double list in creating questions
 	@RequestMapping({ "/company_add_" })
@@ -535,8 +373,8 @@ f)	5 photos made during the test	------ IGOR ------*/
 								
 		return adminService.getJsonQuestionById(questId);
 	}
-	
-	// ----------------------------- SEE THE QUESTION -------------------------- //
+
+
 
 	
 }

@@ -21,7 +21,7 @@ import org.springframework.web.client.RestTemplate;
 
 import tel_ran.tests.services.common.ICommonData;
 import tel_ran.tests.services.interfaces.IPersonalActionsService;
-import tel_ran.tests.strings.AppProps;
+import tel_ran.tests.utils.AppProps;
 
 import com.fasterxml.jackson.annotation.JsonRawValue;
 
