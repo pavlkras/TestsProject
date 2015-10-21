@@ -20,43 +20,10 @@
 
 
 
-	<!-- <bean id="adminAuthorizAspect" class="tel_ran.tests.aop.AdminAuthorizedBench" />
-	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
-
-	<aop:config>
-		<aop:aspect ref="adminAuthorizAspect">
-			<aop:pointcut
-				expression="execution(* tel_ran.tests.services.MaintenanceService.*(..)) "
-				id="myCut" />
-			<aop:around method="correctAdminAuthorized" pointcut-ref="myCut" />
-		</aop:aspect>
-	</aop:config>
-
-	<bean id="companyAuthorizAspect" class="tel_ran.tests.aop.CompanyAuthorizedBench" />
-	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
-
-	<aop:config>
-		<aop:aspect ref="companyAuthorizAspect">
-			<aop:pointcut expression="execution(* tel_ran.tests.services.CompanyActionsService.*(..)) " id="myCut1" />
-			<aop:around method="correctCompanyAuthorized"
-				pointcut-ref="myCut1" />
-		</aop:aspect>
-	</aop:config>
-
-	<bean id="userAuthorizAspect" class="tel_ran.tests.aop.UserAuthorizedBench" />
-	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
-
-	<aop:config>
-		<aop:aspect ref="userAuthorizAspect">
-			<aop:pointcut expression="execution(* tel_ran.tests.services.PersonalActionsService.*(..)) " id="myCut2" />
-			<aop:around method="correctUserAuthorized" pointcut-ref="myCut2" />
-		</aop:aspect>
-	</aop:config>
-	 -->
-<!--  <bean id="company_actions" class="tel_ran.tests.services.CompanyActionsService"/> -->
-<!--  or add <context:annotation-config/> -->
 <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor" />
 
+<bean id="autoData" class="tel_ran.tests.data_loader.AutorizationData"></bean>
+<bean id="testQuestsionsData" class="tel_ran.tests.data_loader.TestQuestionsData"></bean>
 
 <bean id="personal_actions" class="tel_ran.tests.services.PersonalActionsService" scope="prototype"/> 
 
