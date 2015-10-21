@@ -59,7 +59,7 @@ public class CodeTestQuestionHandler extends AbstractTestQuestionHandler impleme
 	@Override
 	public String getQuestionJson(int index) {
 		String stub = getQuestionAttribubes().getAnswers().get(0);
-		getQuestionAttribubes().getQuestionId().getQuestionText(); //question text
+		getQuestionAttribubes().getEntityTitleQuestion().getQuestionText(); //question text
 		getQuestionAttribubes().getDescription(); //description
 		// TODO Auto-generated method stub
 		return null;

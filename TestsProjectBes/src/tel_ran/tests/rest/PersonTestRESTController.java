@@ -16,7 +16,6 @@ import tel_ran.tests.token_cipher.TokenProcessor;
 import com.fasterxml.jackson.annotation.JsonRawValue;
 
 @Controller
-@Scope("session") /*session timer default = 20min*/
 @RequestMapping({"/persontest"})
 public class PersonTestRESTController {
 	

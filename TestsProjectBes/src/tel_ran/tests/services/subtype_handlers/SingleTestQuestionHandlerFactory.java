@@ -56,9 +56,9 @@ public class SingleTestQuestionHandlerFactory {
 			ITestQuestionHandler result = getTestQuestionHandler(metaCategory);
 			
 			result.setEntityQuestionAttributes(eqa);
-			result.setCompanyId(eqa.getCompanyId().getId());
+			result.setCompanyId(eqa.getEntityCompany().getId());
 			result.setEtqId(etq.getId());
-			result.setTestId(test.getTestId());
+			result.setTestId(test.getId());
 			return result;
 		}				
 		return null;

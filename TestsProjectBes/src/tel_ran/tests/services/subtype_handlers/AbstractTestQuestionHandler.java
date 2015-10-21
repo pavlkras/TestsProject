@@ -17,9 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.google.gson.Gson;
 
+import tel_ran.tests.data_loader.TestsPersistence;
 import tel_ran.tests.entitys.EntityQuestionAttributes;
 import tel_ran.tests.entitys.EntityTestQuestions;
-import tel_ran.tests.services.TestsPersistence;
 import tel_ran.tests.services.common.ICommonData;
 import tel_ran.tests.services.common.IPublicStrings;
 import tel_ran.tests.services.inner_result.dataobjects.InnerResultDataObject;
@@ -103,7 +103,7 @@ public abstract class AbstractTestQuestionHandler extends TestsPersistence imple
 	@Override
 	public JSONObject getJsonForTest(long eqtId, int index) throws JSONException {
 		JSONObject result = new JSONObject();
-		result.put(ICommonData.JSN_INTEST_QUESTION_TEXT, getQuestionAttribubes().getQuestionId().getQuestionText());
+		result.put(ICommonData.JSN_INTEST_QUESTION_TEXT, getQuestionAttribubes().getEntityTitleQuestion().getQuestionText());
 		result.put(ICommonData.JSN_INTEST_QUESTION_ID, eqtId);
 		
 		// status
@@ -227,7 +227,7 @@ public abstract class AbstractTestQuestionHandler extends TestsPersistence imple
 			jsn.put(ICommonData.JSN_QUESTDET_STATUS_STR, IPublicStrings.QUESTION_STATUS[status]);
 			jsn.put(ICommonData.JSN_QUESTDET_METACATEGORY, entityQuestionAttributes.getMetaCategory());
 			jsn.put(ICommonData.JSN_QUESTDET_CATEGORY1, entityQuestionAttributes.getCategory1());
-			jsn.put(ICommonData.JSN_QUESTDET_TEXT, entityQuestionAttributes.getQuestionId().getQuestionText());
+			jsn.put(ICommonData.JSN_QUESTDET_TEXT, entityQuestionAttributes.getEntityTitleQuestion().getQuestionText());
 			jsn.put(ICommonData.JSN_QUESTDET_TYPE, this.getType());
 			jsn.put(ICommonData.JSN_QUESTDET_ANSWER, getAnswerInJSON(entityTestQuestion));
 			jsn.put(ICommonData.JSN_QUESTDET_GRADE_TYPE, this.gradeType);

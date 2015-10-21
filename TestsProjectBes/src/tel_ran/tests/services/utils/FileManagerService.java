@@ -171,13 +171,11 @@ public class FileManagerService {
 		}		
 	}
 	
-	public static String saveImageForUserTests(String metaCategory, String compId, String image) throws IOException {		
-		if(compId == null)
-			compId = NO_COMPANY;
+	public static String saveImageForUserTests(String metaCategory, String uniqueName, String image) throws IOException {				
 		long name = System.currentTimeMillis();
 		
 		String base2 = File.separator + metaCategory + File.separator
-				+ compId + File.separator;
+				+ uniqueName + File.separator;
 		String basePath = BASE_DIR_IMAGES + base2;
 		
 		File dir = new File(basePath);

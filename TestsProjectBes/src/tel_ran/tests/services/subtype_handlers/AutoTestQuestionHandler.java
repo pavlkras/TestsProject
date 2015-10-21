@@ -56,7 +56,7 @@ public class AutoTestQuestionHandler extends AbstractTestQuestionHandler {
 	public String getQuestionJson(int index) {
 		JSONObject json = new JSONObject();
 		try {
-			json.put(ICommonData.JSN_INTEST_QUESTION_TEXT, getQuestionAttribubes().getQuestionId().getQuestionText());
+			json.put(ICommonData.JSN_INTEST_QUESTION_TEXT, getQuestionAttribubes().getEntityTitleQuestion().getQuestionText());
 			String fileLink = getQuestionAttribubes().getFileLocationLink();
 			json.put(ICommonData.JSN_IMAGE, getImageBase64(fileLink));
 			JSONArray answers = new JSONArray();
