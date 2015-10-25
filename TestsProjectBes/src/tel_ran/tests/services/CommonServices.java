@@ -28,6 +28,7 @@ import tel_ran.tests.services.common.IPublicStrings;
 import tel_ran.tests.services.interfaces.ICommonService;
 import tel_ran.tests.services.utils.FileManagerService;
 import tel_ran.tests.token_cipher.TokenProcessor;
+import tel_ran.tests.token_cipher.User;
 
 public abstract class CommonServices extends TestsPersistence implements ICommonService {
 	
@@ -38,6 +39,24 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 	IDataTestsQuestions testQuestsionsData;	
 	
 	protected final static String LOG = CommonServices.class.getSimpleName();
+	
+	
+	// ***** RENEWED ***********************************************
+	
+	
+	@Override
+	public List<String> getUsersCategories1FromDataBase(String token) {
+		User user = tokenProcessor.decodeRoleToken(token);
+		List<String> result = null;
+		if(user.isAutorized()) {
+			result = testQuestsionsData.getUserCategories(user.getId(), user.getRole());
+		}
+				
+		return result;
+	}
+	
+	
+	
 	
 
 	protected List<String> getQuery(String query) {		
@@ -216,20 +235,6 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 		return  TestProcessor.getMetaCategory();
 	}
 
-	@Override
-	public List<String> getUsersCategories1FromDataBase() {
-		StringBuilder query = new StringBuilder("Select DISTINCT q.category1 FROM EntityQuestionAttributes q WHERE (q.metaCategory='");
-		query.append(IPublicStrings.COMPANY_AMERICAN_TEST).append("' OR q.metaCategory='").append(IPublicStrings.COMPANY_QUESTION).
-			append("') AND q.category1 is not null");
-		String str = getLimitsForQuery();
-		if(str!=null)
-			query.append(" AND q.").append(str);
-		query.append(" ORDER BY q.category1");	
-		
-				
-		return getQuery(query.toString());
-	}
-	
 	@Override
 	public String getJsonQuestionById(long id) {
 		EntityQuestionAttributes eqa = em.find(EntityQuestionAttributes.class, id);

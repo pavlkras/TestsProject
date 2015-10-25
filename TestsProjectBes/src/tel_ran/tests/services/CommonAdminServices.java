@@ -7,9 +7,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Query;
-
-import org.json.JSONArray;
+import json_models.IJsonModels;
+import json_models.SimpleArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.transaction.annotation.Propagation;
@@ -17,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import tel_ran.tests.entitys.EntityTexts;
 import tel_ran.tests.entitys.EntityCompany;
-import tel_ran.tests.entitys.EntityTitleQuestion;
 import tel_ran.tests.entitys.EntityQuestionAttributes;
 import tel_ran.tests.processor.TestProcessor;
 import tel_ran.tests.services.common.ICommonData;
@@ -32,6 +30,8 @@ public abstract class CommonAdminServices extends CommonServices implements
 	protected static int MIN_NUMBER_OF_CATEGORIES = 1;
 	protected static boolean FLAG_AUTHORIZATION = false;	
 	
+	
+	//RENEWD ******************************
 	@Override
 	public String getUserInformation(String token) {
 		String result = "";	
@@ -54,106 +54,77 @@ public abstract class CommonAdminServices extends CommonServices implements
 			
 		return result;
 	}
-
+	
 	
 	@Override
-	public long getCompanyByName(String companyName) {
-		long result = -1;			
-		EntityCompany tempCompanyEntity = null;
-
-		try {
-			tempCompanyEntity = (EntityCompany) em.createQuery("Select c from EntityCompany c where c.C_Name='" + companyName+"'" ).getSingleResult();			
-		} catch (Exception e) {
-			//e.printStackTrace();
-		}		
-		if(tempCompanyEntity != null && tempCompanyEntity.getC_Name().equalsIgnoreCase(companyName)){
-			result = tempCompanyEntity.getId();
-		}
+	public String getAllQuestionsList(String token, Boolean typeOfQuestion, String metaCategory, String category1) {
+		
+		String result = "";	
+		User user = tokenProcessor.decodeRoleToken(token);
+		
+		if(user.isAutorized()) {
+			List<IJsonModels> list = testQuestsionsData.getQuesionsList(typeOfQuestion, metaCategory, category1, user.getId(), user.getRole());
+			SimpleArray array = new SimpleArray();			
+			array.addAll(list);
+			try {
+				result = array.getString();
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}			
+		}				
 		return result;
 	}
-
-
-	
-	////-------------- MANUAL Creation and Adding ONE Question into DB Case ----------// BEGIN  //
-	
-	@Override	
-	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW) 
-	public boolean createNewAmericanTest(String token, String category, int levelOfDifficulty,
-			List<String> answerOptions, String correctAnswer,
-			String description, String fileLocationLink) {
-		//1 - default settings
-		String questionText = IPublicStrings.COMPANY_AMERICAN_TEST_QUESTION;
-		String metaCategory = IPublicStrings.COMPANY_AMERICAN_TEST;
-		int answerOptionsNumber = answerOptions.size();
 		
-		//2 - question save
-		return fullCreateNewQuestion(token, questionText, metaCategory, category, null, levelOfDifficulty,
-				description, fileLocationLink, answerOptions, correctAnswer, answerOptionsNumber);
-	}
-
-	@Override	
-	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW) 
-	public boolean createNewOpenQuestion(String token, String category1, int levelOfDifficulty,
-			String description) {
-		//1 - default settings
-		String questionText = IPublicStrings.COMPANY_QUESTION_QUESTION;
-		String metaCategory = IPublicStrings.COMPANY_QUESTION;
-		//2 - question save
-		return fullCreateNewQuestion(token, questionText, metaCategory, category1, null,
-				levelOfDifficulty, description, null, null, null, 0);		
-	}
 	
 
-	@Override
-	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW) 
-	public boolean createNewQuestion(String token, String questionText,
-			String fileLocationLink, String metaCategory, String category1, 
-			int levelOfDifficulty, List<String> answers, String correctAnswerChar,
-			int questionNumber, int numberOfResponsesInThePicture, String description, 
-			String codeText, String category2){
+	
+	////--------------  Adding ONE Question into DB Case ----------// BEGIN  //
 
-		if(metaCategory == null) {
-			if(answers==null || answers.size() == 0)
-				metaCategory = IPublicStrings.COMPANY_QUESTION;
-			else
-				metaCategory = IPublicStrings.COMPANY_AMERICAN_TEST;
-		}
 		
+	@Transactional(readOnly=false, propagation=Propagation.REQUIRED) 
+	protected boolean fullCreateNewQuestion(String token, String questionText,
+			String metaCategory, String category1, String category2,
+			int levelOfDifficulty, String description, String fileLocationLink, List<String> answers, String correctAnswerChar,
+			int answerOptionsNumber) {				
 		
-		if(codeText!=null) {
-			if(answers==null) {
-				answers = new ArrayList<String>();				
-			}
-			answers.add(codeText);
-		}
+		boolean result = false;
 		
-				
-		if(numberOfResponsesInThePicture==0 && answers!=null) {
-			numberOfResponsesInThePicture = answers.size();
-
+		//1 - check token
+		User user = tokenProcessor.decodeRoleToken(token);	
+		if(!user.isAutorized()) return false;
+		
+		//2 - check if the questionText is specified		
+		if(questionText == null) {
+			if (metaCategory.equals(IPublicStrings.COMPANY_AMERICAN_TEST))
+				questionText = IPublicStrings.COMPANY_AMERICAN_TEST_QUESTION;
+			else if (metaCategory.equals(IPublicStrings.COMPANY_QUESTION))
+				questionText = IPublicStrings.COMPANY_QUESTION_QUESTION;			
 		}
 			
-		boolean flagAction = false;	
-
+		//3 - save files			
+		if (metaCategory.equals(IPublicStrings.COMPANY_AMERICAN_TEST) || metaCategory.equals(IPublicStrings.COMPANY_QUESTION)) {
+			if(fileLocationLink!=null && fileLocationLink.length()>5) {								
+				try {
+					fileLocationLink = FileManagerService.saveImageForUserTests(metaCategory, user.getUniqueName(), fileLocationLink);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					fileLocationLink = null;
+					System.out.println(e);
+				}				
+			} else {
+				fileLocationLink = null;
+			}				
+		}
 		
-		return fullCreateNewQuestion(token, questionText, metaCategory, category1, category2, 
-				levelOfDifficulty, description, fileLocationLink, answers, correctAnswerChar, numberOfResponsesInThePicture);	
+		//4 - create question
+		result = testQuestsionsData.saveNewQuestion(fileLocationLink, metaCategory, category1, category2, levelOfDifficulty,
+				answers, correctAnswerChar, answerOptionsNumber, description, questionText, user.getId(), user.getRole());
+				
+	
+		return result;
 	}
-	
-	////-------------- MANUAL Creation and Adding ONE Question into DB Case ----------// END  //
-	
-	//// ------------- Build Data 
-	////-------------- AUTO Creation and Adding MANY Questions into DB from Generated Question Case ----------// BEGIN  //
-
-	/** „то оно делает:
-	 * 1. √енерирует задачи в том числе дл€ программировани€ (дл€ запуска надо указать константу
-	 * TestProcessor.PROGRAMMING или можно использовать 4-е (индекс=3) значение из списка метакатегорий
-	 * 2. ѕишет архивы по указанному пути (создает папку Programming Task, в нее кладет архивы)
-	 * 3. архивы формата zip содержат три файла: Readme.txt с содержанием (сейчас везде одинаково):
-	 * Interface: SCalculator.java
-	 * JUnit: SCalculator_Test.java		
-	 * 4. ‘ункци€ генерации (это все тот же метод startProcess) возвращает лист массивов стрингов (как и прежде)		 
-	 */	
+		
 
 	@Override
 	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW) 
@@ -196,7 +167,7 @@ public abstract class CommonAdminServices extends CommonServices implements
 				 * 7 - languageName	(bee as meta category for question witch code example)  ( this field may bee null!!!)
 				 * 8 - code pattern	 (pattern code for Person)	( this field may bee null!!!)
 				 */				
-
+	
 				// 0
 				String questionText = fres[0].replace("'", "");					
 				// 1
@@ -238,11 +209,92 @@ public abstract class CommonAdminServices extends CommonServices implements
 		}
 		
 		return flagAction;
+	
+	}
 
+	@Override	
+	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW) 
+	public boolean createNewAmericanTest(String token, String category, int levelOfDifficulty,
+			List<String> answerOptions, String correctAnswer,
+			String description, String fileLocationLink) {
+		//1 - default settings
+		String questionText = IPublicStrings.COMPANY_AMERICAN_TEST_QUESTION;
+		String metaCategory = IPublicStrings.COMPANY_AMERICAN_TEST;
+		int answerOptionsNumber = answerOptions.size();
+		
+		//2 - question save
+		return fullCreateNewQuestion(token, questionText, metaCategory, category, null, levelOfDifficulty,
+				description, fileLocationLink, answerOptions, correctAnswer, answerOptionsNumber);
 	}
 	
-	////-------------- Creation and Adding MANY Questions into DB from Generated Question Case ----------// END  //
+	@Override	
+	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW) 
+	public boolean createNewOpenQuestion(String token, String category1, int levelOfDifficulty,
+			String description) {
+		//1 - default settings
+		String questionText = IPublicStrings.COMPANY_QUESTION_QUESTION;
+		String metaCategory = IPublicStrings.COMPANY_QUESTION;
+		//2 - question save
+		return fullCreateNewQuestion(token, questionText, metaCategory, category1, null,
+				levelOfDifficulty, description, null, null, null, 0);		
+	}
 	
+	@Override
+	@Transactional(readOnly=false,propagation=Propagation.REQUIRES_NEW) 
+	public boolean createNewQuestion(String token, String questionText,
+			String fileLocationLink, String metaCategory, String category1, 
+			int levelOfDifficulty, List<String> answers, String correctAnswerChar,
+			int questionNumber, int numberOfResponsesInThePicture, String description, 
+			String codeText, String category2){
+	
+		if(metaCategory == null) {
+			if(answers==null || answers.size() == 0)
+				metaCategory = IPublicStrings.COMPANY_QUESTION;
+			else
+				metaCategory = IPublicStrings.COMPANY_AMERICAN_TEST;
+		}
+		
+		
+		if(codeText!=null) {
+			if(answers==null) {
+				answers = new ArrayList<String>();				
+			}
+			answers.add(codeText);
+		}
+		
+				
+		if(numberOfResponsesInThePicture==0 && answers!=null) {
+			numberOfResponsesInThePicture = answers.size();
+	
+		}
+			
+		boolean flagAction = false;	
+	
+		
+		return fullCreateNewQuestion(token, questionText, metaCategory, category1, category2, 
+				levelOfDifficulty, description, fileLocationLink, answers, correctAnswerChar, numberOfResponsesInThePicture);	
+	}
+
+	//**************************************************************
+	
+	
+	
+	@Override
+	public long getCompanyByName(String companyName) {
+		long result = -1;			
+		EntityCompany tempCompanyEntity = null;
+
+		try {
+			tempCompanyEntity = (EntityCompany) em.createQuery("Select c from EntityCompany c where c.C_Name='" + companyName+"'" ).getSingleResult();			
+		} catch (Exception e) {
+			//e.printStackTrace();
+		}		
+		if(tempCompanyEntity != null && tempCompanyEntity.getC_Name().equalsIgnoreCase(companyName)){
+			result = tempCompanyEntity.getId();
+		}
+		return result;
+	}
+
 	
 
 	////-------------- Search Method by Category or Categories and level of difficulty ----------// BEGIN  //
@@ -451,128 +503,8 @@ public abstract class CommonAdminServices extends CommonServices implements
 	abstract protected EntityCompany getCompany();
 	
 	abstract protected EntityCompany renewCompany();
-	
-//	@Transactional(readOnly=false, propagation=Propagation.REQUIRED) 
-//	protected long createQuestion(String questionText) {
-//		EntityTitleQuestion objectQuestion;		
-//		
-//		if(questionText == null) {
-//			questionText = ICommonData.NO_QUESTION;
-//		}
-//		//// query if question exist as text in Data Base
-//		Query tempRes = em.createQuery("SELECT q FROM EntityQuestion q WHERE q.questionText='"+questionText+"'");
-//		try{			
-//			objectQuestion = (EntityTitleQuestion) tempRes.getSingleResult();			
-//			
-//		}catch(javax.persistence.NoResultException e){				
-//			objectQuestion = new EntityTitleQuestion();	
-//			objectQuestion.setQuestionText(questionText);			
-//			em.persist(objectQuestion);			
-//		}								
-//		return objectQuestion.getId();		
-//		
-//	}
-	
-//	@Transactional(readOnly=false,propagation=Propagation.REQUIRED) 
-//	protected EntityQuestionAttributes createAttributes(String fileLocationLink,
-//			String metaCategory, String category1, String category2, int levelOfDifficulty,
-//			List<String> answers, String correctAnswerChar, int answerOptionsNumber, String description,
-//			EntityTitleQuestion objectQuestion, EntityCompany company){
-//		
-//		EntityQuestionAttributes questionAttributesList = new EntityQuestionAttributes();// new question attributes creation		
-//				
-//		questionAttributesList.setDescription(description);		
-//		if(company!=null) {
-//	
-//			questionAttributesList.setCompanyId(company);
-//		}
-//		questionAttributesList.setEntityTitleQuestion(objectQuestion);	
-//		questionAttributesList.setFileLocationLink(fileLocationLink);// file location path (string) 		
-//		questionAttributesList.setMetaCategory(metaCategory);
-//		questionAttributesList.setCategory1(category1);		
-//		questionAttributesList.setCategory2(category2);
-//		questionAttributesList.setLevelOfDifficulty(levelOfDifficulty);	
-//		questionAttributesList.setCorrectAnswer(correctAnswerChar);		
-//		questionAttributesList.setNumberOfResponsesInThePicture(answerOptionsNumber);
-//
-//		em.persist(questionAttributesList);	
-//		
-//		if(answers != null)	{			
-//			List<EntityTexts> answersList = new ArrayList<EntityTexts>();
-//			for (String answerText : answers) {	
-//				
-//				if(answerText!=null && answerText.length()>0) {
-//					EntityTexts ans = writeNewAnswer(answerText, questionAttributesList); 
-//					answersList.add(ans);
-//				}
-//			}			
-//			questionAttributesList.setQuestionAnswersList(answersList);// mapping to answers
-//			em.merge(questionAttributesList);	
-//		}
-//				
-//		return questionAttributesList;
-//	}
-	
-//	@Transactional(readOnly=false,propagation=Propagation.REQUIRED) 
-//	protected EntityTexts writeNewAnswer(String answer, EntityQuestionAttributes qAttrId){		
-//		EntityTexts temp = new EntityTexts();
-//		System.out.println(LOG + " 560 " + answer);
-//		temp.setAnswerText(answer);		
-//		temp.setEntityQuestionAttributes(qAttrId);	
-//		em.persist(temp);	
-//		em.clear();
-//		return temp;
-//	}
-	
-//	@Transactional(readOnly=false,propagation=Propagation.REQUIRED) 
-//	protected EntityTexts writeNewAnswer(String answer, long keyAttr){		
-//		return writeNewAnswer(answer, em.find(EntityQuestionAttributes.class, keyAttr));		
-//	}	
-	
-	
-	@Transactional(readOnly=false, propagation=Propagation.REQUIRED) 
-	protected boolean fullCreateNewQuestion(String token, String questionText,
-			String metaCategory, String category1, String category2,
-			int levelOfDifficulty, String description, String fileLocationLink, List<String> answers, String correctAnswerChar,
-			int answerOptionsNumber) {				
 		
-		boolean result = false;
-		
-		//1 - check token
-		User user = tokenProcessor.decodeRoleToken(token);	
-		if(!user.isAutorized()) return false;
-		
-		//2 - check if the questionText is specified		
-		if(questionText == null) {
-			if (metaCategory.equals(IPublicStrings.COMPANY_AMERICAN_TEST))
-				questionText = IPublicStrings.COMPANY_AMERICAN_TEST_QUESTION;
-			else if (metaCategory.equals(IPublicStrings.COMPANY_QUESTION))
-				questionText = IPublicStrings.COMPANY_QUESTION_QUESTION;			
-		}
-			
-		//3 - save files			
-		if (metaCategory.equals(IPublicStrings.COMPANY_AMERICAN_TEST) || metaCategory.equals(IPublicStrings.COMPANY_QUESTION)) {
-			if(fileLocationLink!=null && fileLocationLink.length()>5) {								
-				try {
-					fileLocationLink = FileManagerService.saveImageForUserTests(metaCategory, user.getUniqueName(), fileLocationLink);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					fileLocationLink = null;
-					System.out.println(e);
-				}				
-			} else {
-				fileLocationLink = null;
-			}				
-		}
-		
-		//4 - create question
-		result = testQuestsionsData.saveNewQuestion(fileLocationLink, metaCategory, category1, category2, levelOfDifficulty,
-				answers, correctAnswerChar, answerOptionsNumber, description, questionText, user.getId(), user.getRole());
-				
-
-		return result;
-	}
-		
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
@@ -614,99 +546,6 @@ public abstract class CommonAdminServices extends CommonServices implements
 	}
 	
 
-	@Override
-	public String getAllQuestionsList(Boolean typeOfQuestion, String metaCategory, String category1) {
-		StringBuilder query = new StringBuilder("SELECT c FROM EntityQuestionAttributes c WHERE ");
-		int num = 0;
-		int numOfAnd = 0;
-		String limit = getLimitsForQuery();
-		if(limit!=null) {
-			query.append("c.").append(limit);
-			num++;			
-		}
-		
-		if(metaCategory==null) {
-			if(typeOfQuestion!=null) {			
-				numOfAnd = checkIfAnd(num, numOfAnd, query);
-				num++;
-				
-				if(typeOfQuestion) {		
-				
-				query.append("(c.metaCategory='").append(IPublicStrings.COMPANY_AMERICAN_TEST)
-						.append("' OR c.metaCategory='").append(IPublicStrings.COMPANY_QUESTION)
-						.append("')");
-				} else {
-					List<String> cat = TestProcessor.getMetaCategory();
-					int count = cat.size();
-					query.append("(");
-					for(String c : cat) {
-						query.append("c.metaCategory='").append(c).append("' OR ");					
-					}
-					int len = query.length();						
-					query.delete(len-4, len);
-					query.append(")");				
-				}
-			}
-		} else {
-			numOfAnd = checkIfAnd(num, numOfAnd, query);			
-			query.append("c.metaCategory=").append(metaCategory);
-			num++;
-		}
-		
-		if(category1!=null) {
-			numOfAnd = checkIfAnd(num, numOfAnd, query);	
-			query.append("c.category1=").append(category1);
-			num++;
-		}
-		
-		query.append(" ORDER BY c.id DESC");
-		System.out.println(query.toString()); // ---------------------------------------- SYSO ---- !!!!!!!!!!!!!!!!!!!!!
-		
-		List<EntityQuestionAttributes> listOfEqa = em.createQuery(query.toString()).getResultList();
-		
-		JSONObject resultJsn = new JSONObject();
-		JSONArray arrayResult = new JSONArray();		
-		
-		for(EntityQuestionAttributes eqa : listOfEqa) {
-			try {
-				arrayResult.put(getShortQuestionJson(eqa));
-				resultJsn.put(ICommonData.JSN_LIST_OF_RESULT, arrayResult);
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-				
-		
-		return resultJsn.toString();
-	}
 	
-	private int checkIfAnd(int num, int andNum, StringBuilder str) {
-		if(andNum < num) {
-			andNum++;
-			str.append(" AND ");
-		}
-		return andNum;
-	}
-	
-	private JSONObject getShortQuestionJson(EntityQuestionAttributes eqa) throws JSONException {
-		JSONObject jsn = null;
-		if(eqa!=null) {
-			jsn = getPartOfJSON(eqa);	
-			String shrt = eqa.getDescription();
-			if(shrt==null) {
-				
-				jsn.put(ICommonData.JSN_QUESTION_SHORT_DESCRIPTION, "See the image");
-			} else {
-				shrt = shrt.replaceAll("\\n", "  ");
-				int len = shrt.length();
-				if(len>ICommonData.SHORT_DESCR_LEN) 
-					shrt = shrt.substring(0, ICommonData.SHORT_DESCR_LEN);		
-				jsn.put(ICommonData.JSN_QUESTION_SHORT_DESCRIPTION, shrt);
-			}
-			System.out.println("JSON " + jsn.toString()); // ---------------------------------------- SYSO --- !!!!!!!!!!!!!!!!!!!!!!!!!!
-		} 
-		return jsn;
-	}
 	
 }

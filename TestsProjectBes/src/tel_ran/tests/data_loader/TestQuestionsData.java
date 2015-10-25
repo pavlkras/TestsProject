@@ -5,6 +5,13 @@ import java.util.List;
 
 import javax.persistence.Query;
 
+import json_models.IJsonModels;
+import json_models.QuestionModel;
+import json_models.SimpleArray;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,7 +19,9 @@ import tel_ran.tests.entitys.EntityCompany;
 import tel_ran.tests.entitys.EntityQuestionAttributes;
 import tel_ran.tests.entitys.EntityTexts;
 import tel_ran.tests.entitys.EntityTitleQuestion;
+import tel_ran.tests.processor.TestProcessor;
 import tel_ran.tests.services.common.ICommonData;
+import tel_ran.tests.services.common.IPublicStrings;
 import tel_ran.tests.services.fields.Role;
 
 public class TestQuestionsData extends TestsPersistence implements
@@ -129,11 +138,127 @@ public class TestQuestionsData extends TestsPersistence implements
 		return temp;
 	}
 	
+	@Override
+	@Transactional
+	public List<String> getUserCategories(long id, Role role) {		
+
+		StringBuilder query = new StringBuilder("Select DISTINCT q.category1 FROM EntityQuestionAttributes q WHERE (q.metaCategory='");
+		query.append(IPublicStrings.COMPANY_AMERICAN_TEST).append("' OR q.metaCategory='").append(IPublicStrings.COMPANY_QUESTION).
+			append("') AND q.category1 is not null");
+		
+		switch(role) {
+			case COMPANY :
+				query.append(" AND q.").append(getLimitsForCompanyQuery(id)); break;
+			case ADMINISTRATOR :
+				query.append(" AND q.").append(getLimitsForNotCompanyQuery()); break;
+			case USER :		
+			case GUEST :
+			case PERSON: 
+			default:		
+		}	
+		query.append(" ORDER BY q.category1");	
+		List<String> result = em.createQuery(query.toString()).getResultList();		
+		
+		return result;
+	}
+
+	
+	@Override
+	@Transactional
+	public List<IJsonModels> getQuesionsList(Boolean typeOfQuestion, String metaCategory,
+			String category1, long id, Role role) {
+		
+		//1 - start query 
+		StringBuilder query = new StringBuilder("SELECT c FROM EntityQuestionAttributes c WHERE ");
+		boolean needAND = false;
+		
+		//2 - adding id or other limits
+		switch(role) {
+		case COMPANY :
+			query.append(" c.").append(getLimitsForCompanyQuery(id)); needAND = true; break;
+		case ADMINISTRATOR :
+			query.append(" c.").append(getLimitsForNotCompanyQuery()); needAND = true; break;
+		case USER :		
+		case GUEST :
+		case PERSON: 
+		default:		
+		}	
+		
+		//3 - adding metaCategories		
+		if(needAND) {
+			query.append(" AND");			
+		}	
+		
+		if(metaCategory==null) {
+			
+			if(typeOfQuestion) {								
+				query.append(" (c.metaCategory='").append(IPublicStrings.COMPANY_AMERICAN_TEST)
+						.append("' OR c.metaCategory='").append(IPublicStrings.COMPANY_QUESTION)
+						.append("')");
+				} else {
+					List<String> cat = TestProcessor.getMetaCategory();
+					int count = cat.size();
+					query.append(" (");
+					for(String c : cat) {
+						query.append("c.metaCategory='").append(c).append("' OR ");					
+					}
+					int len = query.length();						
+					query.delete(len-4, len);
+					query.append(")");				
+				}
+		} else {					
+			query.append(" c.metaCategory=").append(metaCategory);			
+		}
+		
+			
+		
+		//4 - adding categories		
+		if(category1!=null) {		
+			query.append(" AND");
+			query.append(" c.category1=").append(category1);			
+		}
+		
+		//5 - adding sort		
+		query.append(" ORDER BY c.id DESC");		
+		System.out.println(query.toString()); // ---------------------------------------- SYSO ---- !!!!!!!!!!!!!!!!!!!!!
+						
+		//6 - get result 
+		List<EntityQuestionAttributes> listOfEqa = em.createQuery(query.toString()).getResultList();
+		List<IJsonModels> resultList = null;
+		
+		if(!listOfEqa.isEmpty()) {			
+			resultList = new ArrayList<IJsonModels>();
+			for(EntityQuestionAttributes eqa : listOfEqa) {
+				boolean isImage;
+				if(eqa.getFileLocationLink()!=null) {
+					isImage = true;				
+				} else {
+					isImage = false;			
+				}
+				QuestionModel question = new QuestionModel(eqa.getId(), eqa.getMetaCategory(), 
+						eqa.getCategory1(), eqa.getCategory2(), eqa.getLevelOfDifficulty(), isImage);				
+				question.addShortDescription(eqa.getDescription());
+				resultList.add(question);					
+			}			
+		}
+		return resultList;
+	}
+			
+	
 	//------------------------------------ INNER METHODS ------------------------------------------------//
 	private String getLimitsForCompanyQuery(long id) {	
 //		EntityCompany ec = em.find(EntityCompany.class, id);
 		return "entityCompany='" + id + "'";
 	}
+	
+	private String getLimitsForNotCompanyQuery() {	
+		return "entityCompany is null";
+	}
+
+
+	
+	
+
 
 
 
