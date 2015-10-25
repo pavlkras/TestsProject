@@ -61,7 +61,7 @@ public interface ICommonService extends ApplicationFinalFields {
 	 * The user - from maintenance part (where CompanyId = null)	
 	 * The maintenance - from whole table without any restrictions.	 
 	 */
-	List<String> getUsersCategories1FromDataBase();
+	List<String> getUsersCategories1FromDataBase(String token);
 	
 	
 	/**

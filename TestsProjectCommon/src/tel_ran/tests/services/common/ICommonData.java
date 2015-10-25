@@ -30,7 +30,7 @@ public interface ICommonData {
 	static final boolean TYPE_OF_QUESTION_AUTO = false;
 
 	// --------------------- JSON - FIELDS ------------------------------------------ //
-	
+	// COPIED TO JSON KEYS !!!!!!!!!!!!!!!!!!!!!!!!!
 	static final String JSN_QUESTION_ID = "id"; // id in EntityQuestionAttributes = long
 	static final String JSN_QUESTION_INDEX = "index"; 
 	static final String JSN_QUESTION_TYPE = "question_type"; // user or auto 

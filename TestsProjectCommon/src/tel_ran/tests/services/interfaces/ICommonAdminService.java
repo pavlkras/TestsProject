@@ -50,6 +50,7 @@ public interface ICommonAdminService extends ICommonService {
 	boolean  createNewQuestion(String token, String questionText,String fileLocationLink, String metaCategory, String category, int levelOfDifficulty, List<String> answers, 
 			String correctAnswer,int questionNumber, int numberOfResponsesInThePicture,	String description, String codeText, String languageName);
 
+	
 	/**
 	 * Method for the manual creation of a new Question for Open Question Form (UserTest)  
 	 * MetaCategory will be auto specified = "C Open Question"	 
@@ -113,7 +114,7 @@ public interface ICommonAdminService extends ICommonService {
 	 * with typeOfQuestion and metaCategory if they are specified.
 	 * @return
 	 */
-	String getAllQuestionsList(Boolean typeOfQuestion, String metaCategory, String category1);	
+	String getAllQuestionsList(String token, Boolean typeOfQuestion, String metaCategory, String category1);	
 		
 
 		
