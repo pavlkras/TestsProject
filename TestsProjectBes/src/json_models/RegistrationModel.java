@@ -87,14 +87,16 @@ public class RegistrationModel extends AutorizationModel implements IJsonModels 
 		
 	}
 	
-	
-
-	@Override
-	public String getString() throws JSONException {
+	public JSONObject getJSON() throws JSONException {
 		JSONObject json = new JSONObject();
 		json.put(JSONKeys.SIGNUP_USER_EXIST, this.userExist);
 		json.put(JSONKeys.SIGNUP_SUCCESS, this.success);
-		return json.toString();
+		return json;
+	}
+
+	@Override
+	public String getString() throws JSONException {		
+		return getJSON().toString();
 	}
 
 	

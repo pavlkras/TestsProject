@@ -3,6 +3,7 @@ package json_models;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -107,7 +108,12 @@ public class AutorizationModel implements IJsonModels {
 	}
 
 	@Override
-	public String getString() throws JSONException {
+	public String getString() throws JSONException {		
+		return getJSON().toString();
+	}
+
+	@Override
+	public JSONObject getJSON() throws JSONException {
 		JSONObject object = new JSONObject();
 		object.put(JSONKeys.AUTO_TOKEN, this.token);
 		object.put(JSONKeys.AUTO_ROLENUMBER, this.roleNumber);
@@ -132,7 +138,12 @@ public class AutorizationModel implements IJsonModels {
 			object.put(JSONKeys.AUTO_SPECIALIZATION, this.spec);
 		if(this.employesNumber!=null)
 			object.put(JSONKeys.AUTO_EMPL_NUMBER, this.employesNumber);
-		return object.toString();
+		return object;
+	}
+
+	@Override
+	public JSONArray getJSONArray() throws JSONException {		
+		return null;
 	}
 	
 }
