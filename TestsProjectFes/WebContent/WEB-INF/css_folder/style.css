@@ -259,15 +259,24 @@ a:visited {
 /*----------------start right area----------------*/
 
 
-#right_side {
-	position: relative;
-	float: right;
+#right_side {	
 	width: 804px;
 	margin-left: 10px;
 	margin-bottom: 10px;
 	margin-top: 10px;
 
 }
+
+.centerBlock {
+	position: relative;
+	float: right;	
+}
+
+.mainBlock {
+	
+	float: right;	
+}
+
 
 #right_side_viewresults {
 	position: relative;

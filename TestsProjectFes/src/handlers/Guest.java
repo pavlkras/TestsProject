@@ -25,8 +25,30 @@ public class Guest extends AbstractHandler {
 	public List<String> getPossibleMetaCaterories() {		
 		return null;
 	}
-
 	
+	@Override
+	public List<String> getUsersCategories() {		
+		return null;
+	}
 
+	@Override
+	public boolean createNewQuestion(String questionText,
+			String fileLocationLink, String metaCategory, String category1,
+			int lvl, List<String> answers, String correctAnswer, int i,
+			int countAnswersOptions, String descriptionText, String codeText,
+			String repCategory) {
+		return false;
+	}
+	
+	@Override
+	public String getAllQuestionsList(String view_mode) {	
+		return null;
+	}
+	
+	@Override
+	public String getQuestionById(long questId) {
+	// TO DO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		return null;
+	}
 
 }

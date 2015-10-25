@@ -6,7 +6,7 @@
 [0~~/
 [1~~/
 [2~~/login
-[3~~/CompanyLogin
+[3~~/companyLogin
 [4~~/login
 
 /index~~*
@@ -15,3 +15,5 @@
 /company_main~~3
 /query_processing~~4
 /autoGeneration~~3,4
+/add_question~~3,4
+/questions_update~~3,4

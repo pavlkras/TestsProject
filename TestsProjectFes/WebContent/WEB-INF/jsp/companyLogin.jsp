@@ -28,7 +28,7 @@
 <body>
 	<div id="container">
 
-		<div id="right_side">
+		<div id="right_side" class="centerBlock">
 			<div id="formDiv">
 				<br>
 				<h2>Company LogIn</h2>

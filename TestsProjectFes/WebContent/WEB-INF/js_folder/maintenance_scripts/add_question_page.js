@@ -141,7 +141,7 @@ $(document).ready(function(){
 	
 	$("#button_send").click(function(){
 		$.ajax({
-			type: "POST", url: "company_add_questions", async : false,
+			type: "POST", url: "add_question_action", async : false,
 			data: {
 				metaCategory : $("#mCatSel").val(),
 				category1 : $("#catSel").val(),
@@ -164,7 +164,7 @@ $(document).ready(function(){
 			}
 		});
 		
-		$("#button_OK").click(function(){document.location.href = "company_add_";});
+		$("#button_OK").click(function(){document.location.href = "add_question";});
 
 		
 		

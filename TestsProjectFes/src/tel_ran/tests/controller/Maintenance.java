@@ -57,63 +57,11 @@ public class Maintenance extends AbstractAdminActions {
 		
 	// ----------------------- ADDING QUESTIONS -------------------------------------------------- //
 	
+
+	
 	/**************************************/
-	@RequestMapping({ "/maintenanceadd" })
-	public String addingPage() {		
-		return super.addingPage("maintenance/MaintenanceAddingPage");
-	}
-	/**************************************/
-	
-	@RequestMapping({ "/update" })
-	public String UpdatePage(Model model) {
-		String path = "maintenance/MaintenanceUpdatePage";
-		return super.updatePage(path, model);		
-	}
-	
-	
-//	@RequestMapping({"/otherResursCreationMethod"})
-//	public String maintenanceOtherResurses() {
-//		return super.maintenanceOtherResurses("maintenance/MaintenanceOtherResurses");
-//	}	
-	
-	
-	// --------- adding questions from any.txt file on user computer -----//  END  //
-	// -------------- Module For Building Questions in to DB ----------------////
-	
-
-//	@RequestMapping({ "/moduleForBuildingQuestions" })
-//	public String moduleForBuildingQuestions(String category, String nQuestions, Model model) {	
-//		return super.moduleForBuildingQuestions(category, nQuestions, model, "maintenance/MaintenanceOtherResurses");// return too page after action
-//	}
-	
-	/*
-	 * 3.3.1. Adding test question Pre-Conditions: 
-	 * String questionText,
-	 * String fileLocationLink,  
-	 * String metaCategory,
-	 * String category, 
-	 * int levelOfDifficulty,
-	 * List<String> answers, 
-	 * String correctAnswer,
-	 * int questionNumber,
-	 * int numberOfResponsesInThePicture,
-	 * String description, 
-	 * String codeText, 
-	 * String languageName
-	 */
-	@RequestMapping(value = "/add_actions" , method = RequestMethod.POST)
-	public String AddProcessingPage(String questionText, String descriptionText, String codeText,
-			String  category1, String metaCategory, String category2, String  compcategory, String levelOfDifficulty, 
-			String fileLocationLink, String correctAnswer, String numberAnswersOnPicture, 
-			String at1, String at2, String at3, String at4,  Model model)
-	{	
-
-		return super.AddProcessingPage(questionText, descriptionText, 
-				codeText, category1, metaCategory, category2, compcategory, levelOfDifficulty, 
-				fileLocationLink, correctAnswer, numberAnswersOnPicture, at1, at2, at3, at4, model, "maintenance/MaintenanceAddingPage");
-			
-
-	}
+		
+		
 	//
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// use case 3.3.2 Update Test Question

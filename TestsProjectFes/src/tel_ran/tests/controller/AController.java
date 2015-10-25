@@ -26,6 +26,7 @@ public abstract class AController {
 	public final static String VISITOR = "visitor"; 
 	public static final String RESULT = "result";
 	public static final String ACCOUNT_INFO = "account";
+	public static final String QUESTION = "question";
 	
 	public static String metaCategoryListHTML;
 		
@@ -73,6 +74,11 @@ public abstract class AController {
 		}
 		return result.toString();
 	}
+	
+	protected String getStringInBold(String str) {
+		return "<b>" + str + "</b>";
+	}
+	
 
 	protected class JsonResponse {
 		private String status = null;
@@ -91,7 +97,6 @@ public abstract class AController {
 		}
 	}
 	
-	
-	
+
 
 }

@@ -108,98 +108,7 @@ public abstract class AbstractAdminActions {
 //		res.setResult(concatRes);
 //		return res;
 //	}
-	
-	// --------------- CREATE QUESTIONS. MANUAL ------------------------------------------------------ //
-	
-	public String addingPage(String path) {
-		clearStringBuffer();
-		AutoInformationTextHTML(buildingUsersCategoryBoxTestHTML());
-		return path;
-	}
 		
-	public String AddProcessingPage(String questionText, String descriptionText, String codeText,
-			String  category1, String metaCategory, String category2, String  compcategory, String levelOfDifficulty, 
-			String fileLocationLink, String correctAnswer, String numberAnswersOnPicture, 
-			String at1, String at2, String at3, String at4,  Model model, String path)
-	{	
-		boolean actionRes = false; // flag work action
-		List<String> answers = new ArrayList<>();
-		int countAnswersOptions = 0;
-		String[] answerOptions = {at1, at2, at3, at4};
-		String message = "";
-		boolean isError = false;
-		for(int i = 0; i < answerOptions.length; i++) {
-			
-			if(answerOptions[i]!=null && answerOptions[i].length() > 0) {
-				countAnswersOptions++;
-				answers.add(answerOptions[i]);
-			}
-		}
-		
-		if(countAnswersOptions==0) {
-			answers = null;
-			if(metaCategory==IPublicStrings.COMPANY_AMERICAN_TEST) { 
-				message = "<p class='outTextInfo'> Error adding the question. You should fill in 2 or more answer options</p>";
-				isError = true;
-			}
-			
-		} else if (countAnswersOptions == 1) {
-			message = "<p class='outTextInfo'> Error adding the question. Should be more than 1 answer options</p>";
-			isError = true;
-		}
-		
-		
-		if(!isError) {
-					
-			int numberOfResponsesInThePicture;
-			
-			try {
-				numberOfResponsesInThePicture = Integer.parseInt(numberAnswersOnPicture);
-			} catch (Exception e) {
-				numberOfResponsesInThePicture = 0;
-			}
-			
-			if(category1.equals("Create company category")) {
-				category1 = compcategory;
-			}
-			
-			String repCategory = null;
-			if(category2!=null) {
-				repCategory = category2.replaceAll(",", "").replaceAll("none", "");
-			}
-			
-			String repMetaCategory = null;
-			if(metaCategory!=null)
-				repMetaCategory = metaCategory.replaceAll(",", "").replaceAll("none", ""); 
-			////
-
-		try {
-			int lvl;
-			if(levelOfDifficulty==null || levelOfDifficulty.isEmpty())
-				lvl = 3;
-			else
-				lvl = Integer.parseInt(levelOfDifficulty);
-//			actionRes = adminService.createNewQuestion(questionText, fileLocationLink, repMetaCategory, category1, lvl, answers, correctAnswer, 
-//					0, numberOfResponsesInThePicture, descriptionText, codeText, repCategory);
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println("maintenance addProcessingPage :method: Exception");//----------------------------------------------------sysout
-		}
-		
-		// ==========================================
-		if (actionRes) {
-			message = "<p class='outTextInfoAdded'> Question successfully added</p>";			
-			actionRes = false;
-		} else {
-			// write alternative flow !!!
-			message = "<p class='outTextInfo'> Error adding the question, the question already exists. Try again</p>";// out
-		}
-		}
-		System.out.println(message);
-		model.addAttribute("result",message);
-		addingPage(path);
-		return message; // return too page after action
-	}
 	
 	
 	// ----------------------- METHODS FOR LISTS AND TEXTS----------------------------------------------- // 
@@ -215,7 +124,7 @@ public abstract class AbstractAdminActions {
 		String result;
 		List<String> categoryList;
 		try {
-			categoryList = adminService.getUsersCategories1FromDataBase();
+			categoryList = adminService.getUsersCategories1FromDataBase("");
 			result = getOptionsFromList(categoryList, getStringInBold(IMessages.NO_CATEGORIES_IN_DB));			
 		} catch (Exception e) {
 			result = getStringInBold(IMessages.NO_DATA_BASE);		
@@ -226,9 +135,10 @@ public abstract class AbstractAdminActions {
 		
 	}
 	
+	
 	protected String checkUsersCategoryBoxTestHTML(StringBuffer baseStr) {
 		String result = null;
-		List<String> categoryList = adminService.getUsersCategories1FromDataBase();
+		List<String> categoryList = adminService.getUsersCategories1FromDataBase("");
 		List<String> results = new ArrayList<>();
 		for (String str : categoryList) {
 			if(baseStr.indexOf(str)==-1)
@@ -360,14 +270,7 @@ public abstract class AbstractAdminActions {
 	
 	// ------------------------- UPDATE PAGE -------------------------------------------------- //
 		
-	public String updatePage(String path, Model model) {
-		clearStringBuffer();				
-		AutoInformationTextHTML(buildingCategory1CheckBoxTextHTML());
-		String res = adminService.getAllQuestionsList(true, null, null);
-		
-		model.addAttribute(RESULT, res);
-		return path;
-	}
+	
 	
 	
 	

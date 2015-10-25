@@ -13,8 +13,8 @@
     				'<li>'+
     				'<a href="#">Question Maintance <span class="arrow">&#9660;</span></a>'+
     				'<ul class="sub-menu">'+
-    					'<li><a href="company_add">Creating questions</a></li>'+
-    					'<li><a href="company_questions_update">Update/delete questions</a></li>'+
+    					'<li><a href="add_question">Creating questions</a></li>'+
+    					'<li><a href="questions_update">Update/delete questions</a></li>'+
     					'<li><a href="autoGeneration">Auto generation</a></li>'+
     				'</ul>'+
     				'</li>'+
@@ -27,8 +27,8 @@
     				'<li>'+
     				'<a href="#">Question Maintance <span class="arrow">&#9660;</span></a>'+
     				'<ul class="sub-menu">'+
-    					'<li><a href="maintenanceadd">Creating questions</a></li>'+
-    					'<li><a href="update">Update/delete questions</a></li>'+
+    					'<li><a href="add_question">Creating questions</a></li>'+
+    					'<li><a href="questions_update">Update/delete questions</a></li>'+
     					'<li><a href="autoGeneration">Auto generation</a></li>'+
     				'</ul>'+
     				'</li>'+
