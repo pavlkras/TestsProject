@@ -6,6 +6,17 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
+
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,7 +45,8 @@ public abstract class AbstractHandler implements IHandler {
 	protected String token = ""; //token for getting information from BES. It contains id and role	
 	protected Role role;
 	protected int roleNumber;
-	protected final static String ROLE = "role"; 
+	protected final static String ROLE = "role";
+	protected static String PATH_ADDRESS_TO_SERVICE = "";
 	
 	protected ICommonService service;
 	
@@ -295,6 +307,47 @@ public abstract class AbstractHandler implements IHandler {
 		return null;
 	}
 	
+	//------------END  Use case Ordering Test 3.1.3-------------
+	protected boolean sendEmail(String link, String personEmail) {
+		boolean result = false;
+		final String username = "senderurltest@gmail.com";
+		final String password = "sender54321.com";
+		String subject = "Email from HR";
+		String text = "\nPress for this link :  "+ link + "\n";
+
+		try {
+
+			Properties props = new Properties();
+			props.put("mail.smtp.host", "smtp.gmail.com");
+			props.put("mail.smtp.socketFactory.port", "465");
+			props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+			props.put("mail.smtp.auth", "true");
+			props.put("mail.smtp.port", "465");
+
+			Session session = Session.getDefaultInstance(props, new Authenticator() {
+				protected PasswordAuthentication getPasswordAuthentication() {
+					return new PasswordAuthentication(username, password);
+				}
+			});
+
+			Message message = new MimeMessage(session);		            
+			message.setFrom(new InternetAddress(username));		            
+			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(personEmail));		            
+			message.setSubject(subject);		            
+			message.setText(text);
+			session.setDebug(true);
+
+			Transport.send(message);
+			result = true;
+
+		}  catch (AddressException e) {
+			e.printStackTrace();
+		} catch (MessagingException e) {
+			e.printStackTrace();
+
+		}
+		return result;
+	}
 
 		
 }

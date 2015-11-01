@@ -46,7 +46,7 @@ public class CompanyActions extends AbstractAdminActions implements Serializable
 	// --- private fields 
 	private	String companyName;
 	private long companyId = -1;
-	private static String PATH_ADDRESS_TO_SERVICE = "";
+	
 	RestTemplate restTemplate =  new RestTemplate();
 
 
@@ -74,34 +74,7 @@ public class CompanyActions extends AbstractAdminActions implements Serializable
 		this.companyName = companyName;
 	}
 	
-	@RequestMapping({"/testGeneration"})
-	public String testGeneration(Model model) {
-		StringBuffer categoryHtmlText = new StringBuffer();
-		List<String> resultCategory = adminService.getAllMetaCategoriesFromDataBase();
-		categoryHtmlText.append("<table class='table_ind'><tr><th colspan='2'>Category of Question:</th><th>Level of difficulty</th></tr>");
-		for(String catBox:resultCategory){					
-			categoryHtmlText.append("<tr class='tr_ind'>");
-			categoryHtmlText.append("<td>").append(catBox).append(":</td>");
-			categoryHtmlText.append("<td><input class='category' type='checkbox' name='category' value='").
-				append(catBox).append("' /></td>");
-			categoryHtmlText.append("<td><select name='level_num' disabled>").
-				append("<option value='1'>1</option>").append("<option value='2'>2</option>").
-				append("<option value='3'>3</option>").append("<option value='4'>4</option>").
-				append("<option value='5'>5</option>").append("</select></td></tr>");						
-		}
-		categoryHtmlText.append("</table>");
-		model.addAttribute("categoryFill", categoryHtmlText.toString());
-//		model.addAttribute("userQuestions", adminService.getAllQuestionsList(true, null, null)); - TEMPORARY!!!!!!!!!!!!!!!!!
-		
-		
-		
-		
-		
-		
-//		result = "company/CompanyGenerateTest";
-//		this.setCompanyName(companyName); 
-		return "company/CompanyGenerateTest";
-	}
+	
 	
 
 	/*-------------Use case Ordering Test 3.1.3-------------
@@ -116,127 +89,10 @@ Normal Flow:
 5.	The System generates a test and a link for that test
 6.	The System presents the link for performing the test in the control mode  */
 	//
-	/**
-	 * CREATE NEW TEST for person
-	 * 
-	 * @param metaCategory 
-	 * @param category1 - for programming language
-	 * @param level_num
-	 * @param personId
-	 * @param personName
-	 * @param personSurname
-	 * @param personEmail 
-	 * @param selectCountQuestions
-	 * @param model
-	 * @param request
-	 * @return
-	 */
-	@RequestMapping({"/add_test"})
-	public String createTest(String category, String category1, String level_num, String personId, 
-			String personName, String personSurname,String personEmail, String selectCountQuestions, String questionsId,
-			Model model, HttpServletRequest request) {	
-		
-		String url = request.getRequestURL().toString();
-		PATH_ADDRESS_TO_SERVICE = url.replace("add_test", "jobSeeker_test_preparing_click_event");
-		////			
-		System.out.println("level_num--"+level_num);//-------------------------------sysout
-		System.out.println("category--"+category);//-------------------------------sysout
-		if(category1!=null)
-			System.out.println("language -- " + category1);		
-		List<Long> questionsIdList = null;
-		if(questionsId!=null) {
-			questionsIdList = new LinkedList<Long>();
-			String[] qIds = questionsId.split(",");
-			for(String q : qIds) {
-				questionsIdList.add(Long.parseLong(q));
-			}
-		}
-		
-		String password = getRandomPassword();
-		int result = ((ICompanyActionsService)adminService).createTestForPersonFullWithQuestions(questionsIdList, category,
-				category1, level_num, selectCountQuestions, Integer.parseInt(personId), personName, personSurname, personEmail, password);				
-		String link = null;
-		
-		if(result==0) {
-			link = PATH_ADDRESS_TO_SERVICE + "?" + password; // -------------------------------------------------------------------------------------TO DO real address NOT text in string !!!
-			if(!sendEmail(link,personEmail))
-				result = 5;
-		}
-		
-//		List<Long> listIdQuestions = companyService.createSetQuestions(metaCategory, category1, level_num, counterOfQuestions);
-//		int personID = companyService.createPerson(Integer.parseInt(personId), personName, personSurname,personEmail);
-//		boolean isCreated = companyService.CreateTest(listIdQuestions, personID, password, metaCategory, level_num);	//------------ TO DO levels change !!	add company name for
-		////
-				
-			String messageText;
-			switch(result) {			
-				case 0 : 
-					messageText = "<a href='" + link + "'><h2><b>Test link</b></h2></a><br>" + "<H1>" + 
-							IPublicStrings.CREATE_TEST_ERROR[0] + "</H1>";
-					break;
-				case 1 :
-				case 2 :
-				case 3 :
-					messageText = "<H1>" + IPublicStrings.CREATE_TEST_ERROR[result] + "</H1>";
-					break;
-				case 5 :					
-					messageText = "<a href='" + link + "'><h2><b>Test link</b></h2></a><br>" + "<H1>" + 
-							IPublicStrings.CREATE_TEST_ERROR[result] + "</H1>";
-					break;
-				default :
-					messageText = "<H1>" + IPublicStrings.CREATE_TEST_ERROR[4] + "</H1>";			
-			}
-			
-		model.addAttribute("myResult", messageText);	
-			
-		return "company/Company_TestLink";
-	}
 
-	private String getRandomPassword() {
-		String uuid = UUID.randomUUID().toString();		
-		return uuid	;
-	}	 
-	//------------END  Use case Ordering Test 3.1.3-------------
-	private boolean sendEmail(String link, String personEmail) {
-		boolean result = false;
-		final String username = "senderurltest@gmail.com";
-		final String password = "sender54321.com";
-		String subject = "Email from HR";
-		String text = "\nPress for this link :  "+ link + "\n";
 
-		try {
+	 
 
-			Properties props = new Properties();
-			props.put("mail.smtp.host", "smtp.gmail.com");
-			props.put("mail.smtp.socketFactory.port", "465");
-			props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-			props.put("mail.smtp.auth", "true");
-			props.put("mail.smtp.port", "465");
-
-			Session session = Session.getDefaultInstance(props, new Authenticator() {
-				protected PasswordAuthentication getPasswordAuthentication() {
-					return new PasswordAuthentication(username, password);
-				}
-			});
-
-			Message message = new MimeMessage(session);		            
-			message.setFrom(new InternetAddress(username));		            
-			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(personEmail));		            
-			message.setSubject(subject);		            
-			message.setText(text);
-			session.setDebug(true);
-
-			Transport.send(message);
-			result = true;
-
-		}  catch (AddressException e) {
-			e.printStackTrace();
-		} catch (MessagingException e) {
-			e.printStackTrace();
-
-		}
-		return result;
-	}
 	/*-------------Use case Viewing test results----------------
 3.1.4.	Viewing test results
 Pre-Conditions:
@@ -299,10 +155,10 @@ f)	5 photos made during the test	------ IGOR ------*/
 	
 	
 	
-	protected void AutoInformationTextHTML(String string) {
-		autoGeneratedInformationTextHTML.append(string);
-	}
-	
+//	protected void AutoInformationTextHTML(String string) {
+//		autoGeneratedInformationTextHTML.append(string);
+//	}
+//	
 	
 	
 	

@@ -182,7 +182,7 @@ public abstract class AbstractAdminActions {
 		String result;
 		List<String> categoryList;
 		try {
-			categoryList = adminService.getAllMetaCategoriesFromDataBase();
+			categoryList = adminService.getAllMetaCategoriesFromDataBase("");
 			for(int i = 0; i < ICommonData.USER_CATEGORY.length; i++) {
 				categoryList.add(ICommonData.USER_CATEGORY[i]);
 			}

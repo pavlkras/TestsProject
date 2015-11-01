@@ -1,13 +1,16 @@
 package handlers;
 
 import java.util.List;
+import java.util.UUID;
 
 import tel_ran.tests.services.common.ICommonData;
 import tel_ran.tests.services.interfaces.ICommonAdminService;
+import tel_ran.tests.services.interfaces.ICompanyActionsService;
 
 public abstract class Registred extends AbstractHandler {
 
 	protected ICommonAdminService commonService;
+	
 
 	public void setCommonService(ICommonAdminService commonService) {
 		this.commonService = commonService;
@@ -69,11 +72,44 @@ public abstract class Registred extends AbstractHandler {
 		return res;
 	}
 
-
+	@Override
+	public List<String> getMetaCategoriesFromDB() {		
+		return commonService.getAllMetaCategoriesFromDataBase(token);
+	}
+	
+	@Override
+	public String[] createNewTest(List<Long> questionsIdList, String category,
+			String category1, String level_num, String selectCountQuestions,
+			long personId, String personName, String personSurname,
+			String personEmail) {
+		
+		String password = getRandomPassword();
+		int result = commonService.createTestForPersonFullWithQuestions(token, questionsIdList, category,
+				category1, level_num, selectCountQuestions, personId, personName, personSurname, personEmail, password);	
+		String link = null;
+		if(result==0) {
+			link = PATH_ADDRESS_TO_SERVICE + "?" + password; // -------------------------------------------------------------------------------------TO DO real address NOT text in string !!!
+			if(!sendEmail(link,personEmail))
+				result = 5;
+		}
+		String[] answer = new String[2];
+		answer[0] = Integer.toString(result);
+		answer[1] = link;
+		
+		return answer;
+	}
+	
+	private String getRandomPassword() {
+		String uuid = UUID.randomUUID().toString();		
+		return uuid	;
+	}	
+	
 	@Override
 	public String getQuestionById(long questId) {
 	// TO DO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		return commonService.getJsonQuestionById(questId);
 	}
+	
+	
 	
 }

@@ -50,5 +50,19 @@ public class Guest extends AbstractHandler {
 	// TO DO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		return null;
 	}
+	
+	public List<String> getMetaCategoriesFromDB() {		
+		return null;
+	}
+	
+	@Override
+	public String[] createNewTest(List<Long> questionsIdList, String category,
+			String category1, String level_num, String selectCountQuestions,
+			long parseInt, String personName, String personSurname,
+			String personEmail) {
+				
+		return null;
+	}
 
+	
 }

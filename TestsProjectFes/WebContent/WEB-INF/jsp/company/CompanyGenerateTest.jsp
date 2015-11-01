@@ -5,9 +5,9 @@
 <!DOCTYPE html">
 <html>
 <head>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<script src="static/js_folder/header&&rightmenu_company.js"></script>	
-<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>	
+<script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+<script src="static/js_folder/header&&rightmenu.js"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <link
 	href='<c:url value="/static/css_folder/company_styles/company.css"></c:url>'
@@ -76,7 +76,7 @@
 
 <body>
 	<div id="container">
-		<div id="right_side_company">
+		<div id="right_side">
 		
 			<div>
 				<form action="add_test" id="adding_form_company" width="100%">
@@ -227,7 +227,7 @@
 	
 	<script>
 	
-	
+	var roleNumber = ${role}; getMenu(roleNumber);	
 	
 	function showUserQuestions() {		
 		document.getElementById("showManualSelection").style.display = "inline";

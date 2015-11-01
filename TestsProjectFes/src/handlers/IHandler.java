@@ -36,6 +36,11 @@ public interface IHandler {
 			String repCategory);
 	String getAllQuestionsList(String view_mode);
 	String getQuestionById(long questId);
+	List<String> getMetaCategoriesFromDB();
+	String[] createNewTest(List<Long> questionsIdList, String category,
+			String category1, String level_num, String selectCountQuestions,
+			long personId, String personName, String personSurname,
+			String personEmail);
 	
 }
 

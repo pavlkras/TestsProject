@@ -43,7 +43,7 @@ public class UserActions implements Serializable{
 	////------------------ Filling test parameters  ------------------// BEGIN //
 	@RequestMapping(value = "/createTestForUser")
 	public String allCategoriesAndLevelsSelection(Model model){
-		List<String> allCategories = userService.getAllMetaCategoriesFromDataBase();
+		List<String> allCategories = userService.getAllMetaCategoriesFromDataBase("");
 		List<String> allLevels = userService.getComplexityLevelList();
 		model.addAttribute("categoryNames", allCategories);
 		model.addAttribute("cLevels", allLevels);

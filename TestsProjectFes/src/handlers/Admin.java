@@ -31,6 +31,10 @@ public class Admin extends Registred {
 		return result;
 	}
 
+	
+
+	
+
 
 	
 

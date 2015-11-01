@@ -18,9 +18,8 @@
 	rel="stylesheet">
 
 
-<script src="static/js_folder/header&&rightmenu.js">
-	
-</script>
+<script src="static/js_folder/header&&rightmenu.js"></script>
+
 <title>Company Home Page</title>
 </head>
 
