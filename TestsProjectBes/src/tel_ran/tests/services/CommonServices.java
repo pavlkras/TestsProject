@@ -4,9 +4,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import org.json.JSONArray;
@@ -18,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import tel_ran.tests.data_loader.IDataTestsQuestions;
 import tel_ran.tests.data_loader.TestsPersistence;
+import tel_ran.tests.entitys.EntityCompany;
+import tel_ran.tests.entitys.EntityPerson;
 import tel_ran.tests.entitys.EntityTexts;
 import tel_ran.tests.entitys.EntityQuestionAttributes;
 import tel_ran.tests.entitys.EntityTest;
@@ -87,14 +93,15 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 		return getQuery(query);
 	}
 	
-	public List<String> getAllMetaCategoriesFromDataBase() {
+	@Override
+	public List<String> getAllMetaCategoriesFromDataBase(String token) {
+		User user = tokenProcessor.decodeRoleToken(token);
+		List<String> result = null;
+		if(user.isAutorized()) {
+			result = testQuestsionsData.getUserMetaCategories(user.getId(), user.getRole());			
+		}
 		
-		StringBuilder query = new StringBuilder("Select DISTINCT cat.metaCategory FROM EntityQuestionAttributes cat WHERE cat.metaCategory is not null");	
-		String qry = getLimitsForQuery();
-		if(qry!=null)
-			query.append(" AND cat.").append(qry);
-		query.append(" ORDER BY cat.metaCategory");
-		return getQuery(query.toString());
+		return result;
 	}	
 	
 	protected String getQuestionWithDelimeters(EntityQuestionAttributes eqa) {
@@ -609,14 +616,187 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 	return -1;
 	}
 	
-//	protected ITestQuestionHandler getHandler(EntityTestQuestions etq) {
-//		ITestQuestionHandler handler = SingleTestQuestionHandlerFactory.getInstance(etq);
-//		handler.setEntityQuestionAttributes(etq.getEntityQuestionAttributes());
-//		handler.setCompanyId(etq.getEntityTest().getEntityCompany().getId());
-//		handler.setEtqId(etq.getId());
-//		handler.setTestId(etq.getEntityTest().getTestId());
-//		return handler;
-//	}
+	
+	@Override
+	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
+	public int createTestForPersonFullWithQuestions(String token, List<Long> questionIdList, String metaCategories, 
+			String categories1, String difLevel, String nQuestion, long personPassport,
+			String personName, String personSurname, String personEmail, String pass) {
+		
+		int result = -1;
+		User user = tokenProcessor.decodeRoleToken(token);
+		if(user.isAutorized()) {
+			//create person
+			long personId = testQuestsionsData.createPerson(personPassport, personName, personSurname, personEmail);
+			
+			//create questionsList			
+			int numberQuestions = Integer.parseInt(nQuestion);
+			
+			int listSize;
+			List<Long> questionSet = new ArrayList<Long>();
+			
+			if(questionIdList==null) {
+				listSize = 0;				
+			} else {
+				listSize = questionIdList.size();
+				questionSet.addAll(questionIdList);
+			}
+			System.out.println(questionSet.size());
+			int numberQuestionsToAutoGenerate = numberQuestions - listSize;
+			
+			if (numberQuestionsToAutoGenerate > 0) {
+				List<Long> autoQuestions = this.createSetQuestions(user, metaCategories, categories1, 
+						difLevel, numberQuestionsToAutoGenerate, questionIdList);
+				questionSet.addAll(autoQuestions);							
+			} 
+			System.out.println(questionSet.size());
+			
+			//create test
+			if(questionSet.size() < numberQuestions)
+				result = 1;
+			else {			
+				if(!this.createTest(questionSet, personId, pass, user) && result!=1)
+					result = 1;
+				else
+					result = 0; 
+			}	
+		}		
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private List<Long> createSetQuestions(User user, String metaCategory, String categories1, String levelsOfDifficulty, int nQuestion, 
+			List<Long> preparedList) {		
+		
+		if(nQuestion > 0 && metaCategory != null && levelsOfDifficulty!=null){
+			int size = 0;
+			int newSize = 0;
+			HashSet<Long> allQuestId = new HashSet<Long>();
+			if(preparedList!=null) {				 
+				size = preparedList.size(); 				
+				allQuestId.addAll(preparedList);
+				newSize = allQuestId.size();
+				if(size > newSize) 
+					nQuestion += newSize = size;
+			}
+			
+			String[] categoryArray = metaCategory.split(",");				
+			String[] levelsArray = levelsOfDifficulty.split(",");
+
+			String[] categories1Array;
+			if(categories1!=null) {
+				categories1Array = categories1.split(",");
+			} else {
+				categories1Array = new String[categoryArray.length];
+				Arrays.fill(categories1Array, ICommonData.NO_CATEGORY1);
+			}
+
+						
+			StringBuilder condition;
+			Query query;
+//			EntityCompany ec = getCompany();
+			List<Long> allAttributeQuestionsId;
+						
+			int typeNumbers = categoryArray.length;			
+//			System.out.println("Number of categories " + typeNumbers);
+			long step = nQuestion/typeNumbers;
+//			System.out.println("Step " + step);
+			long r = nQuestion % typeNumbers;
+//			System.out.println("Rest " + r);
+			long nGeneratedQuestion = 0L;
+			int count = typeNumbers;
+			
+			
+			for (int i = 0; i < typeNumbers; i++ ) {
+				allAttributeQuestionsId = testQuestsionsData.getQuestionIdByParams(user.getId(), user.getRole(), categoryArray[i],
+						categories1Array[i], Integer.parseInt(levelsArray[i]));
+				
+				if(i == typeNumbers-1) 
+					step = step +r;								
+				count = count--;
+				
+				if(allAttributeQuestionsId == null) {
+					if(count-i-1>0) {
+						step = (nQuestion - nGeneratedQuestion) / (count-i-1);
+						r = (nQuestion - nGeneratedQuestion) % (count-i-1);
+					} 					
+				} else if (allAttributeQuestionsId.size() < step) {					
+					long resultSize = (long) allAttributeQuestionsId.size();
+					int resPlus = randomAttributeQuestionsId(allAttributeQuestionsId, resultSize, allQuestId);
+					nGeneratedQuestion += resultSize;
+					
+					if(count-i-1>0) {
+						step = (nQuestion - nGeneratedQuestion) / (count-i-1);
+						r = (nQuestion - nGeneratedQuestion) % (count-i-1);
+//						System.out.println("New step = " + step + "; New rest = " + r);
+					}
+					
+				} else {					
+					
+					int resPlus = randomAttributeQuestionsId(allAttributeQuestionsId, step, allQuestId);
+					nGeneratedQuestion += step;
+				}			
+				
+//				System.out.println("Generated questions = " + nGeneratedQuestion);
+//				System.out.println("Count = " + count);
+//				System.out.println("Index i = " + i);
+			}	
+			List<Long> result = new ArrayList<Long>();
+			result.addAll(allQuestId);
+			return result;
+		}
+		
+		return null;
+		
+	}
+	
+	private static int randomAttributeQuestionsId(List<Long> allAttributeQuestionsId, Long nQuestion, 
+			HashSet<Long> listOfId){
+		
+		int startSize = listOfId.size();
+		int listSize = allAttributeQuestionsId.size();
+				
+		if(allAttributeQuestionsId.size() > 0){			
+			for(int i=0; i<nQuestion;){	
+				Random rnd = new Random();
+				int rand =  rnd.nextInt(listSize);							
+				long questionAttributeId = allAttributeQuestionsId.get(rand);
+				if(listOfId.add(questionAttributeId)) {
+					i++;
+				} else {
+					listSize--;
+					if(listSize < nQuestion-i){
+						listOfId.addAll(allAttributeQuestionsId);
+						break;
+					}
+				}					
+								
+			}
+		}
+		
+		return listOfId.size() - startSize;
+		
+	}
+
+
+	@Transactional(readOnly=false, propagation=Propagation.REQUIRED)
+	private boolean createTest(List<Long> questionIdList, long personId, String pass, User user) {		
+		boolean result = false;
+		
+		if(questionIdList!=null && questionIdList.size()>0) {
+			long testId = testQuestsionsData.createTest(pass, personId, 0L, 0L, questionIdList, user.getId(), user.getRole());
+			if(testId>=0) {
+				FileManagerService.initializeTestFileStructure(user.getId(), testId);
+				result=true;
+			}
+			
+		}	
+		
+		return result;
+		
+	}
+	
+	
 	
 
 }

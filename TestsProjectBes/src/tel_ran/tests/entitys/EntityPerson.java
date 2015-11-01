@@ -1,16 +1,17 @@
 package tel_ran.tests.entitys;
 import java.util.List;
 
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-@Entity
 
+@Entity
 public class EntityPerson {
     @Id
 	@Column(name="personId",unique = true, nullable = false, length = 25)
-    private int personId;
+    private long personId;
   
     @OneToMany(mappedBy = "entityPerson")
     private List<EntityTest> enTest;
@@ -31,10 +32,10 @@ public class EntityPerson {
 	public void setPersonEmail(String personEmail) {
 		this.personEmail = personEmail;
 	}
-	public int getPersonId() {
+	public long getPersonId() {
 		return personId;
 	}
-	public void setPersonId(int personId) {
+	public void setPersonId(long personId) {
 		this.personId = personId;
 	}
 	public String getPersonName() {

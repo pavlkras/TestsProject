@@ -16,7 +16,10 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import tel_ran.tests.entitys.EntityCompany;
+import tel_ran.tests.entitys.EntityPerson;
 import tel_ran.tests.entitys.EntityQuestionAttributes;
+import tel_ran.tests.entitys.EntityTest;
+import tel_ran.tests.entitys.EntityTestQuestions;
 import tel_ran.tests.entitys.EntityTexts;
 import tel_ran.tests.entitys.EntityTitleQuestion;
 import tel_ran.tests.processor.TestProcessor;
@@ -245,6 +248,120 @@ public class TestQuestionsData extends TestsPersistence implements
 	}
 			
 	
+
+	@Override
+	public List<String> getUserMetaCategories(long id, Role role) {	
+		
+		StringBuilder query = new StringBuilder("Select DISTINCT cat.metaCategory FROM EntityQuestionAttributes cat WHERE cat.metaCategory is not null");
+		switch(role) {
+			case COMPANY :
+				query.append(" AND cat.").append(getLimitsForCompanyQuery(id)); break;
+			case ADMINISTRATOR :
+			case USER :
+				query.append(" AND cat.").append(getLimitsForNotCompanyQuery()); break;
+			default:				
+		}
+		query.append(" ORDER BY cat.metaCategory");		
+		
+		return em.createQuery(query.toString()).getResultList();
+	}
+	
+	@Override
+	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW) 
+	public long createPerson(long personPassport, String personName,
+			String personSurname, String personEmail) {		
+		
+		EntityPerson person = em.find(EntityPerson.class, personPassport);
+		if(person==null) {
+			person = new EntityPerson();			
+		}		
+		if(personName!=null) {
+			person.setPersonName(personName);
+		}		
+		if(personSurname!=null) {
+			person.setPersonSurname(personSurname);
+		}		
+		person.setPersonEmail(personEmail);		
+		em.persist(person);	
+		
+		return person.getPersonId();		
+	}
+	
+
+	@Override
+	public List<Long> getQuestionIdByParams(long id, Role role, String metaCategory,
+			String category1, int level) {
+		
+			StringBuilder condition = new StringBuilder("SELECT c.id FROM EntityQuestionAttributes c WHERE ");
+			condition.append("c.metaCategory=?1 AND c.levelOfDifficulty=?2");
+			
+			if(role.equals(Role.COMPANY)) {
+				condition.append(" AND c.").append(getLimitsForCompanyQuery(id));
+			} else {
+				condition.append(" AND c.").append(getLimitsForNotCompanyQuery());
+			}
+			
+			boolean c1 = false;
+			if(category1!=null && !category1.equals(ICommonData.NO_CATEGORY1)) {
+				condition.append(" AND c.category1=?3");
+				c1 = true;
+			}
+			
+			Query query = em.createQuery(condition.toString());
+			query.setParameter(1, metaCategory);
+			query.setParameter(2, level);
+			if(c1) {			
+				query.setParameter(3, category1);
+			}
+			
+		return query.getResultList();	
+	}
+
+	
+	@Override
+	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW) 
+	public long createTest(String pass, long personId, long startTime,
+			long stopTime, List<Long> questionIdList, long id, Role role) {
+		long result = -1;
+				
+		EntityTest test = new EntityTest();		
+		test.setPassword(pass); 
+		test.setStartTestDate(startTime);// setting parameter for wotchig method in FES
+		test.setEndTestDate(stopTime);// setting parameter for wotchig method in FES		
+			
+		EntityCompany ec = null;
+		if(role.equals(Role.COMPANY)) {
+			ec = em.find(EntityCompany.class, id);
+		}
+		test.setEntityCompany(ec);
+		
+		EntityPerson ePerson = em.find(EntityPerson.class, personId);
+		test.setEntityPerson(ePerson);	
+		test.setAmountOfQuestions(questionIdList.size());
+		test.setPassed(false);
+		test.setChecked(false);
+		em.persist(test);
+		
+		result = test.getId();
+		
+		
+		for(Long qId : questionIdList) {
+			EntityQuestionAttributes eqa = em.find(EntityQuestionAttributes.class, qId);
+			EntityTestQuestions etq = new EntityTestQuestions();
+			etq.setEntityQuestionAttributes(eqa);
+			etq.setEntityTest(test);
+			etq.setStatus(ICommonData.STATUS_NO_ANSWER);
+			em.persist(etq);
+			test.addEntityTestQuestions(etq);
+		}
+		
+		em.merge(test);		
+
+		return result;
+		
+	}
+
+	
 	//------------------------------------ INNER METHODS ------------------------------------------------//
 	private String getLimitsForCompanyQuery(long id) {	
 //		EntityCompany ec = em.find(EntityCompany.class, id);
@@ -254,6 +371,14 @@ public class TestQuestionsData extends TestsPersistence implements
 	private String getLimitsForNotCompanyQuery() {	
 		return "entityCompany is null";
 	}
+
+
+
+
+
+
+
+
 
 
 	

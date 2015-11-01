@@ -95,12 +95,13 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
 	public int createPerson(int personId,String personName, String personSurname, String personEmail) {
 
-		EntityPerson person = this.createEntityPerson(personId, personName, personSurname, personEmail);
+//		EntityPerson person = this.createEntityPerson(personId, personName, personSurname, personEmail);
 		
-		if(person==null)
-			return 0;
+//		if(person==null)
+//			return 0;
 
-		return person.getPersonId();
+		return -1;
+//		return person.getPersonId();
 	}
 	
 
@@ -345,33 +346,6 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 		//------------- Viewing test results  3.1.4.----------- // END ////	
 		
 		
-		// ------------ Creating tests -------------------------// BEGIN ////
-			
-			
-		// old version
-	//	@Override
-	//	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
-	//	public int createTestForPersonFull(String metaCategories, String categories1, String difLevel, String nQuestion, int personPassport,
-	//			String personName, String personSurname, String personEmail, String pass) {		
-	//		return this.createTestForPersonFullWithQuestions(null, metaCategories, categories1, difLevel, nQuestion, 
-	//				personPassport, personName, personSurname, personEmail, pass);
-	//	}
-	
-			
-			
-		// gate for create test	with creation person
-		@Override
-		@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
-		public int createTestForPersonFullWithQuestions(List<Long> questionIdList, String metaCategories, String categories1, String difLevel, String nQuestion, int personPassport,
-				String personName, String personSurname, String personEmail, String pass) {
-			
-			EntityPerson ePerson = this.createEntityPerson(personPassport, personName, personSurname, personEmail);
-			if(ePerson==null)
-				return 2;
-			
-			return this.testFromQuestionList(questionIdList, ePerson, pass, metaCategories, categories1, difLevel, nQuestion);
-	
-		}
 
 	@Override
 	public String encodeIntoToken(long companyId) {
@@ -440,187 +414,26 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 		
 		EntityPerson temp = em.find(EntityPerson.class, personId);	
 		
-		return testFromQuestionList(null, temp, pass, metaCategory, category1, level_num, nQuestion);
+//		return testFromQuestionList(null, temp, pass, metaCategory, category1, level_num, nQuestion);
+		return -1;
 	}
 
 	@Override  
 	public List<Long> createSetQuestions(String metaCategory, String categories1, String levelsOfDifficulty, int nQuestion) 
 		{				
 			List<Long> result = null; 			
-			return createSetQuestions(metaCategory, categories1, levelsOfDifficulty, nQuestion, result);
+//			return createSetQuestions(metaCategory, categories1, levelsOfDifficulty, nQuestion, result);
+			return null;
 		}
 
 
-	// gate for create test	for given Person 
-	@Override
-	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
-	public int createTestFromQuestionList(List<Long> questionIdList, int personId, String pass, String metaCategories, String categories1, 
-			String complexityLevel, String nQuestions) {		
-						
-		EntityPerson temp = em.find(EntityPerson.class, personId);		
-		return this.testFromQuestionList(questionIdList, temp, pass, metaCategories, categories1, complexityLevel, nQuestions);
-	}
 
 	
 	// PRIVATE METHODS FOR TEST CREATION ---------------------- // BEGIN -----------
 
-	@SuppressWarnings("unchecked")
-	private List<Long> createSetQuestions(String metaCategory, String categories1, String levelsOfDifficulty, int nQuestion, 
-			List<Long> preparedList) {		
-		
-		if(nQuestion > 0 && metaCategory != null && levelsOfDifficulty!=null){
-			int size = 0;
-			int newSize = 0;
-			HashSet<Long> allQuestId = new HashSet<Long>();
-			if(preparedList!=null) {				 
-				size = preparedList.size(); 				
-				allQuestId.addAll(preparedList);
-				newSize = allQuestId.size();
-				if(size > newSize) 
-					nQuestion += newSize = size;
-			}
-			
-			String[] categoryArray = metaCategory.split(",");	
-//			System.out.println("Category: " + Arrays.toString(categoryArray));
-			
-			String[] levelsArray = levelsOfDifficulty.split(",");
-//			System.out.println("Levels: " + Arrays.toString(levelsArray));
-			String[] categories1Array;
-			if(categories1!=null) {
-				categories1Array = categories1.split(",");
-			} else {
-				categories1Array = new String[categoryArray.length];
-				Arrays.fill(categories1Array, ICommonData.NO_CATEGORY1);
-			}
-//			System.out.println("Categories1: " + Arrays.toString(categories1Array));
-			
-			StringBuilder condition;
-			Query query;
-			EntityCompany ec = getCompany();
-			List<Long> allAttributeQuestionsId;
-						
-			int typeNumbers = categoryArray.length;			
-//			System.out.println("Number of categories " + typeNumbers);
-			long step = nQuestion/typeNumbers;
-//			System.out.println("Step " + step);
-			long r = nQuestion % typeNumbers;
-//			System.out.println("Rest " + r);
-			long nGeneratedQuestion = 0L;
-			int count = typeNumbers;
-			
-			
-			for (int i = 0; i < typeNumbers; i++ ) {
-				
-				condition = new StringBuilder("SELECT c.id FROM EntityQuestionAttributes c WHERE ");
-				condition.append("c.metaCategory=?1 AND c.levelOfDifficulty=?2");
-												
-				if(ec==null) {
-					condition.append(" AND c.companyId IS NULL");
-				} else {
-					condition.append(" AND c.companyId=?3");						
-				}
-				
-				// if category is specified
-				if(!categories1Array[i].equals(ICommonData.NO_CATEGORY1)) {
-					condition.append(" AND c.category1=?4");
-				}
-				
-				query = em.createQuery(condition.toString());
-				
-				query.setParameter(1, categoryArray[i]);
-									
-				query.setParameter(2, Integer.parseInt(levelsArray[i]));	
-				
-				if(ec!=null) {					
-					query.setParameter(3, ec);
-				}
-
-				// if category is specified
-				if(!categories1Array[i].endsWith(ICommonData.NO_CATEGORY1)) {
-					query.setParameter(4, categories1Array[i]);
-				}
-				
-//				System.out.println("Query : " + query.toString());
-				
-				if(i == typeNumbers-1) 
-					step = step +r;
-				
-				allAttributeQuestionsId = query.getResultList();
-				count = count--;
-				
-				if(allAttributeQuestionsId == null) {
-//					System.out.println("Query is empty");
-					if(count-i-1>0) {
-						step = (nQuestion - nGeneratedQuestion) / (count-i-1);
-						r = (nQuestion - nGeneratedQuestion) % (count-i-1);
-//						System.out.println("New step = " + step + "; New rest = " + r);
-					} 
-					
-				} else if (allAttributeQuestionsId.size() < step) {
-					
-					long resultSize = (long) allAttributeQuestionsId.size();
-//					System.out.println("Query is too small. There're only " + resultSize + "questions");
-					int resPlus = randomAttributeQuestionsId(allAttributeQuestionsId, resultSize, allQuestId);
-					nGeneratedQuestion += resultSize;
-					
-					if(count-i-1>0) {
-						step = (nQuestion - nGeneratedQuestion) / (count-i-1);
-						r = (nQuestion - nGeneratedQuestion) % (count-i-1);
-//						System.out.println("New step = " + step + "; New rest = " + r);
-					}
-					
-				} else {					
-					
-					int resPlus = randomAttributeQuestionsId(allAttributeQuestionsId, step, allQuestId);
-					nGeneratedQuestion += step;
-				}			
-				
-//				System.out.println("Generated questions = " + nGeneratedQuestion);
-//				System.out.println("Count = " + count);
-//				System.out.println("Index i = " + i);
-			}	
-			List<Long> result = new ArrayList<Long>();
-			result.addAll(allQuestId);
-			return result;
-		}
-		
-		return null;
-		
-	}
 	
-	@Transactional(readOnly=false, propagation=Propagation.REQUIRED)
-	private int testFromQuestionList(List<Long> questionIdList, EntityPerson ePerson, String pass, String metaCategories, String categories1, 
-			String complexityLevel, String nQuestions) {
-		int result = -1;
-		int numberQuestions = Integer.parseInt(nQuestions);
-		int listSize;
-		
-		if(questionIdList==null) {
-			listSize = 0;
-			questionIdList = new ArrayList<Long>();
-		} else
-			listSize = questionIdList.size();		
-		
-		int numberQuestionsToAutoGenerate = numberQuestions - listSize;
-		
-		if (numberQuestionsToAutoGenerate > 0) {
-			List<Long> autoQuestions = this.createSetQuestions(metaCategories, categories1, complexityLevel, numberQuestionsToAutoGenerate, questionIdList);
-			questionIdList = autoQuestions;							
-		} 
-		
-		if(questionIdList.size() < numberQuestions)
-			result = 1;
-		else {
-		
-			if(!this.createTest(questionIdList, ePerson, pass) && result!=1)
-				result = 1;
-			else
-				result = 0; 
-		}
-		
-		return result;
-		
-	}
+	
+
 	
 //	private boolean checkCategory1 (String metaCategory, String category1) {
 //		boolean result = false;
@@ -632,99 +445,10 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 //		return result;
 //	}
 		
-	private static int randomAttributeQuestionsId(List<Long> allAttributeQuestionsId, Long nQuestion, 
-			HashSet<Long> listOfId){
-		
-		int startSize = listOfId.size();
-		int listSize = allAttributeQuestionsId.size();
-				
-		if(allAttributeQuestionsId.size() > 0){			
-			for(int i=0; i<nQuestion;){	
-				Random rnd = new Random();
-				int rand =  rnd.nextInt(listSize);							
-				long questionAttributeId = allAttributeQuestionsId.get(rand);
-				if(listOfId.add(questionAttributeId)) {
-					i++;
-				} else {
-					listSize--;
-					if(listSize < nQuestion-i){
-						listOfId.addAll(allAttributeQuestionsId);
-						break;
-					}
-				}					
-								
-			}
-		}
-		
-		return listOfId.size() - startSize;
-		
-	}
+	
 
-	@Transactional(readOnly=false, propagation=Propagation.REQUIRED)
-	private boolean createTest(List<Long> questionIdList, EntityPerson ePerson, String pass) {		
-		boolean result = false;
 		
-		EntityTest test = new EntityTest();		
-		test.setPassword(pass); 
-		test.setStartTestDate(0L);// setting parameter for wotchig method in FES
-		test.setEndTestDate(0L);// setting parameter for wotchig method in FES		
-		
-		EntityCompany ec = this.getCompany();
-		if(ec!=null)
-				test.setEntityCompany(entityCompany);
-		test.setEntityPerson(ePerson);
-		em.persist(test);
-		long testId = test.getId();
-		
-		if( questionIdList.size() > 0 ){
-			long companyId = entityCompany.getId();
-			////  creating folder tree for test
-			FileManagerService.initializeTestFileStructure(companyId, testId);
-			////
-			
-			for(Long id : questionIdList) {
-				EntityQuestionAttributes eqa = em.find(EntityQuestionAttributes.class, id);
-				EntityTestQuestions etq = new EntityTestQuestions();
-				etq.setEntityQuestionAttributes(eqa);
-				etq.setEntityTest(test);
-				etq.setStatus(ICommonData.STATUS_NO_ANSWER);
-				em.persist(etq);
-				test.addEntityTestQuestions(etq);
-			}
-			
-//			IPersonTestHandler testResultsJsonHandler = new PersonTestHandler(companyId, testId, em);			
-//			testResultsJsonHandler.addQuestions(questionIdList);			
-			test.setAmountOfQuestions(questionIdList.size());
-			test.setPassed(false);
-			test.setChecked(false);
-			em.merge(test);
-			result = true;;
-		}
-		
-		return result;
-		
-	}
-		
-	@Transactional(readOnly=false, propagation=Propagation.REQUIRED)
-	private EntityPerson createEntityPerson(int personId, String personName, String personSurname, String personEmail) {
-		
-		if(personEmail==null || personEmail.length()<5)
-			return null;
-		
-			
-		EntityPerson person = em.find(EntityPerson.class, personId);
-		if(person==null){			
-			person = new EntityPerson();
-			person.setPersonId(personId);
-			person.setPersonName(personName);
-			person.setPersonSurname(personSurname);	
-			person.setPersonEmail(personEmail);
-			em.persist(person);      
-			
-		} 
-		
-		return person;
-	}
+
 	
 	// ------------------------- creating TEST ---------------- // END
 
