@@ -25,7 +25,7 @@ public interface ICommonService extends ApplicationFinalFields {
 	 * The user will get the list of metaCategory from maintenance part (where CompanyId = null)	
 	 * The maintenance - the list of metaCategory from whole table without any restrictions.	 
 	 */
-	List<String> getAllMetaCategoriesFromDataBase();
+	List<String> getAllMetaCategoriesFromDataBase(String token);
 	
 	/**
 	 * List of Categories-1 that exist in Data Base	 
@@ -85,4 +85,26 @@ public interface ICommonService extends ApplicationFinalFields {
 	 * @return
 	 */
 	String getUserInformation(String token);
+	
+	/**
+	 * FULL CREATE TEST FOR PERSON with LIST
+	 * This function create a new person and a new test for this person. It also forms and sends e-mail to the person
+	 * This method can be used if the user (company) have chosen some questions from the list
+	 * @param questionIdList - list of question IDs. If the size of the list is less than nQuestions, could be added questions be metaCategory 
+	 * @param metaCategories - list of Meta Categories in one String, separated by a comma ("Abstract Reasoning, Attention, ...")
+	 * @param categories1 - list of Categories1 in one String, separated by a comma (for Program.Language)
+	 * @param difLevel - list of levels of difficulty, separated by a comma 
+	 * @param nQuestion - total number of question
+	 * @param personPassport - person id, passport
+	 * @param personName 
+	 * @param personSurname
+	 * @param personEmail - required field
+	 * @param pass - password for the generated test
+	 * @return 0 if the Test was created successfully or the number of possible problems
+	 * 1 - not enough questions in the database to generate the test
+	 * 2 - invalid value in the field personEmail
+	 * 3 - not enough data to generate the text. Categories1 should be specified, but the field is null	 * 
+	 */
+	public int createTestForPersonFullWithQuestions(String token, List<Long> questionIdList, String metaCategories, String categories1, String difLevel, String nQuestion, long personId,
+			String personName, String personSurname, String personEmail, String pass);
 }
