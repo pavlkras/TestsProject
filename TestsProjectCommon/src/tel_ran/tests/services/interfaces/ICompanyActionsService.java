@@ -1,6 +1,7 @@
 package tel_ran.tests.services.interfaces;
 
 import java.util.List;
+import java.util.Map;
 
 
 
@@ -81,5 +82,16 @@ public interface ICompanyActionsService extends ICommonAdminService {
 	 * @return 
 	 */
 	public String checkAnswer(long companyId, String mark);
+	
+
+	/**
+	 * The method returns a list of all custom categories (category1 and category2) that were created by the company
+	 * Key of the map is names of 1st level categories (category1) and values - list of sub-categories (category2) that were created
+	 * within this category. If no category2 were created, the list will be empty 	 
+	 * @param token
+	 * @return 
+	 */
+	Map<String, List<String>> getCompanyCustomCategories(String token);
+	
 	
 }

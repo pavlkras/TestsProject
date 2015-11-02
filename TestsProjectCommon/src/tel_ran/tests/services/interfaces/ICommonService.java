@@ -1,6 +1,7 @@
 package tel_ran.tests.services.interfaces;
 
 import java.util.List;
+import java.util.Map;
 
 import tel_ran.tests.services.fields.ApplicationFinalFields;
 
@@ -85,6 +86,26 @@ public interface ICommonService extends ApplicationFinalFields {
 	 * @return
 	 */
 	String getUserInformation(String token);
+	
+	
+	
+	/**
+	 * The method returns a list of all MetaCategories and Categories1 for auto-generated questions that exist in DB	 * 
+	 * Key of the map is names of MetaCategories and values - list of sub-categories (category1) that were created
+	 * within this meta-category. If no category1 were created, the list will be empty 	 
+	 * @param token
+	 * @return 
+	 */
+	Map<String, List<String>> getAdminAutoCategories();
+	
+	/**
+	 * The method returns a list of all custom categories that were created by the Administrator 
+	 * Key of the map is names of Categories (Category1) and values - list of sub-categories (category2) that were created
+	 * within this category. If no category2 were created, the list will be empty 	 
+	 * @param token
+	 * @return 
+	 */
+	Map<String, List<String>> getAdminCustomAutoCategories();
 	
 	/**
 	 * FULL CREATE TEST FOR PERSON with LIST
