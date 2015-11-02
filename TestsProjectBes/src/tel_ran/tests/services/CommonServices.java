@@ -7,7 +7,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import javax.persistence.Query;
@@ -31,6 +33,7 @@ import tel_ran.tests.entitys.EntityTestQuestions;
 import tel_ran.tests.processor.TestProcessor;
 import tel_ran.tests.services.common.ICommonData;
 import tel_ran.tests.services.common.IPublicStrings;
+import tel_ran.tests.services.fields.Role;
 import tel_ran.tests.services.interfaces.ICommonService;
 import tel_ran.tests.services.utils.FileManagerService;
 import tel_ran.tests.token_cipher.TokenProcessor;
@@ -795,6 +798,45 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 		return result;
 		
 	}
+	
+	@Override
+	public Map<String, List<String>> getAdminAutoCategories() {
+		Map<String, List<String>> result = new LinkedHashMap<>();
+		List<String> mcategories = TestProcessor.getMetaCategory();
+		
+		for(String str : mcategories) {
+			List<String> subs = testQuestsionsData.getCategories(-1, 1, str, 0);
+			if(subs==null)
+				subs = new ArrayList<>();
+			result.put(str, subs);
+		}
+						
+		return result;	
+	}
+
+	
+	@Override
+	public Map<String, List<String>> getAdminCustomAutoCategories() {
+		Map<String, List<String>> result = new LinkedHashMap<>();
+		
+		List<String> autoMc = TestProcessor.getMetaCategory();
+		List<String> customMc = testQuestsionsData.getCategories(-1, 0, null, -1);
+		if(customMc!=null && !customMc.isEmpty()) {
+			for(String str : customMc) {
+				if(!autoMc.contains(str)) {
+					List<String> subs = testQuestsionsData.getCategories(-1, 1, str, 0);
+					if(subs==null)
+						subs = new ArrayList<>();
+					result.put(str, subs);			
+					
+				}
+			}			
+		}		
+		
+		
+		return result;
+	}
+
 	
 	
 	

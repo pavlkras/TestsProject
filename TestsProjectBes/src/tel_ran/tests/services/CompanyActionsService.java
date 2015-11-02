@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.TimeZone;
 
@@ -25,6 +27,7 @@ import tel_ran.tests.entitys.EntityTest;
 import tel_ran.tests.entitys.EntityTestQuestions;
 import tel_ran.tests.services.common.ICommonData;
 import tel_ran.tests.services.common.IPublicStrings;
+import tel_ran.tests.services.fields.Role;
 import tel_ran.tests.services.interfaces.ICompanyActionsService;
 import tel_ran.tests.services.subtype_handlers.ITestQuestionHandler;
 import tel_ran.tests.services.subtype_handlers.SingleTestQuestionHandlerFactory;
@@ -556,6 +559,30 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 			}		
 		}
 		return res;
+	}
+
+	
+	@Override
+	public Map<String, List<String>> getCompanyCustomCategories(String token) {
+		Map<String, List<String>> result = null;
+		User user = tokenProcessor.decodeRoleToken(token);
+		long id = user.getId();
+		if(user.isAutorized() && user.getRole().equals(Role.COMPANY)) {
+			List<String> categories1 = testQuestsionsData.getCategories(id, 1, null, -1);
+			
+			if(categories1.size()>0){
+				result = new LinkedHashMap<String, List<String>>();
+				
+				for(String str : categories1) {
+					List<String> subs = testQuestsionsData.getCategories(id, 2, str, 1);
+					if(subs == null) {
+						subs = new ArrayList<String>();
+					}
+					result.put(str, subs);
+				}							
+			}			
+		}			
+		return result;
 	}
 
 

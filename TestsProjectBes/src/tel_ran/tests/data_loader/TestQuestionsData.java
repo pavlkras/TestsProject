@@ -361,6 +361,54 @@ public class TestQuestionsData extends TestsPersistence implements
 		
 	}
 
+
+	@Override
+	public List<String> getCategories(long companyId, int categoryLevel,
+			String parent, int levelOfParent) {
+		List<String> result = null;
+		String categoryType;
+		String parentType = null;
+		StringBuilder textQuery = new StringBuilder("SELECT DISTINCT c.");
+		switch(categoryLevel) {
+			case 0 : categoryType = "metaCategory"; break;
+			case 1 : categoryType = "category1"; break;
+			case 2 : categoryType = "category2"; break;
+			default: return result;
+		}		
+		textQuery.append(categoryType);
+		
+		textQuery.append(" FROM EntityQuestionAttributes c WHERE");
+		
+		if(levelOfParent>=0) {
+			switch(levelOfParent) {
+				case 0 : parentType = "metaCategory"; break;
+				case 1 : parentType = "category1"; break;			
+			}
+			textQuery.append(" c.").append(parentType);
+			if(parent==null) {
+				textQuery.append(" is null");
+			} else {
+				textQuery.append("='").append(parent).append("'");
+			}
+		}
+		
+		
+		textQuery.append(" AND c.");		
+		if(companyId<0) {
+			textQuery.append(getLimitsForNotCompanyQuery());			
+		} else {
+			textQuery.append(getLimitsForCompanyQuery(companyId));
+		}
+		
+		textQuery.append(" ORDER BY c.").append(categoryType);
+			
+		result = em.createQuery(textQuery.toString()).getResultList();		
+		
+		return result;
+	}
+
+	
+	
 	
 	//------------------------------------ INNER METHODS ------------------------------------------------//
 	private String getLimitsForCompanyQuery(long id) {	
@@ -371,6 +419,7 @@ public class TestQuestionsData extends TestsPersistence implements
 	private String getLimitsForNotCompanyQuery() {	
 		return "entityCompany is null";
 	}
+
 
 
 
