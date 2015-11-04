@@ -268,20 +268,29 @@ public class TestQuestionsData extends TestsPersistence implements
 	
 	@Override
 	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW) 
-	public long createPerson(long personPassport, String personName,
+	public long createPerson(String personPassport, String personName,
 			String personSurname, String personEmail) {		
 		
-		EntityPerson person = em.find(EntityPerson.class, personPassport);
-		if(person==null) {
-			person = new EntityPerson();			
-		}		
-		if(personName!=null) {
+		EntityPerson person;
+		String query = "Select p FROM EntityPerson p WHERE p.identify='" + personPassport + "'";
+		
+		System.out.println("I'm here + " + query);
+		
+		List<EntityPerson> result = em.createQuery(query).getResultList();
+		if(result!=null && !result.isEmpty()) {
+			person = result.get(0);
+			
+		} else {
+			person = new EntityPerson();
+			person.setIdentify(personPassport);
+		}
+		if(personEmail!=null && personEmail.length()>1)
+			person.setPersonEmail(personEmail);
+		if(personName!=null && personEmail.length()>1)
 			person.setPersonName(personName);
-		}		
-		if(personSurname!=null) {
+		if(personSurname!=null && personEmail.length()>1)
 			person.setPersonSurname(personSurname);
-		}		
-		person.setPersonEmail(personEmail);		
+			
 		em.persist(person);	
 		
 		return person.getPersonId();		

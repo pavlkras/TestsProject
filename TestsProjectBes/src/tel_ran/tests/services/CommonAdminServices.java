@@ -64,8 +64,10 @@ public abstract class CommonAdminServices extends CommonServices implements
 		
 		if(user.isAutorized()) {
 			List<IJsonModels> list = testQuestsionsData.getQuesionsList(typeOfQuestion, metaCategory, category1, user.getId(), user.getRole());
-			SimpleArray array = new SimpleArray();			
-			array.addAll(list);
+			
+			SimpleArray array = new SimpleArray();	
+			if(list!=null)
+				array.addAll(list);
 			try {
 				result = array.getString();
 			} catch (JSONException e) {

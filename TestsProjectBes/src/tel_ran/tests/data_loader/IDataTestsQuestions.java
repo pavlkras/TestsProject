@@ -16,7 +16,7 @@ public interface IDataTestsQuestions {
 	List<IJsonModels> getQuesionsList(Boolean typeOfQuestion, String metaCategory,
 			String category1, long id, Role role);
 	List<String> getUserMetaCategories(long id, Role role);
-	long createPerson(long personPassport, String personName,
+	long createPerson(String personPassport, String personName,
 			String personSurname, String personEmail);
 	List<Long> getQuestionIdByParams(long id, Role role, String string,
 			String string2, int parseInt);

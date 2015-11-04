@@ -621,15 +621,17 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 	
 	
 	@Override
-	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
+//	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
 	public int createTestForPersonFullWithQuestions(String token, List<Long> questionIdList, String metaCategories, 
-			String categories1, String difLevel, String nQuestion, long personPassport,
+			String categories1, String difLevel, String nQuestion, String personPassport,
 			String personName, String personSurname, String personEmail, String pass) {
 		
 		int result = -1;
 		User user = tokenProcessor.decodeRoleToken(token);
 		if(user.isAutorized()) {
 			//create person
+			
+		
 			long personId = testQuestsionsData.createPerson(personPassport, personName, personSurname, personEmail);
 			
 			//create questionsList			
