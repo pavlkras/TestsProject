@@ -126,6 +126,6 @@ public interface ICommonService extends ApplicationFinalFields {
 	 * 2 - invalid value in the field personEmail
 	 * 3 - not enough data to generate the text. Categories1 should be specified, but the field is null	 * 
 	 */
-	public int createTestForPersonFullWithQuestions(String token, List<Long> questionIdList, String metaCategories, String categories1, String difLevel, String nQuestion, long personId,
+	public int createTestForPersonFullWithQuestions(String token, List<Long> questionIdList, String metaCategories, String categories1, String difLevel, String nQuestion, String personId,
 			String personName, String personSurname, String personEmail, String pass);
 }
