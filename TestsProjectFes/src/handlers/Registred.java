@@ -80,15 +80,15 @@ public abstract class Registred extends AbstractHandler {
 	@Override
 	public String[] createNewTest(List<Long> questionsIdList, String category,
 			String category1, String level_num, String selectCountQuestions,
-			long personId, String personName, String personSurname,
-			String personEmail) {
-		
+			String personId, String personName, String personSurname,
+			String personEmail, String pathToServer) {
+							
 		String password = getRandomPassword();
 		int result = commonService.createTestForPersonFullWithQuestions(token, questionsIdList, category,
 				category1, level_num, selectCountQuestions, personId, personName, personSurname, personEmail, password);	
 		String link = null;
 		if(result==0) {
-			link = PATH_ADDRESS_TO_SERVICE + "?" + password; // -------------------------------------------------------------------------------------TO DO real address NOT text in string !!!
+			link = pathToServer + "?" + password; // -------------------------------------------------------------------------------------TO DO real address NOT text in string !!!
 			if(!sendEmail(link,personEmail))
 				result = 5;
 		}

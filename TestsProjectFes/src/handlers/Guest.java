@@ -58,8 +58,8 @@ public class Guest extends AbstractHandler {
 	@Override
 	public String[] createNewTest(List<Long> questionsIdList, String category,
 			String category1, String level_num, String selectCountQuestions,
-			long parseInt, String personName, String personSurname,
-			String personEmail) {
+			String parseInt, String personName, String personSurname,
+			String personEmail, String pathToServer) {
 				
 		return null;
 	}

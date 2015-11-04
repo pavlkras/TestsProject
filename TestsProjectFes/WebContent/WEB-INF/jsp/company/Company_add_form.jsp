@@ -28,7 +28,7 @@
 </head>
 <body>
 	<div id="container">
-		<div id="right_side">
+		<div id="right_side" class="centerBlock">
 
 				<div id="formDiv">
 					<h2>Company Registration</h2>

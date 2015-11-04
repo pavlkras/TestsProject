@@ -39,8 +39,8 @@ public interface IHandler {
 	List<String> getMetaCategoriesFromDB();
 	String[] createNewTest(List<Long> questionsIdList, String category,
 			String category1, String level_num, String selectCountQuestions,
-			long personId, String personName, String personSurname,
-			String personEmail);
+			String personId, String personName, String personSurname,
+			String personEmail, String pathToServer);
 	
 }
 

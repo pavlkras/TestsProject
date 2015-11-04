@@ -69,8 +69,9 @@ public class TestManagement extends AController {
 			Model model, HttpServletRequest request) {	
 		
 		String url = request.getRequestURL().toString();
-		String PATH_ADDRESS_TO_SERVICE = url.replace("add_test", "jobSeeker_test_preparing_click_event");
-		////			
+		String pathToServer = url.replace("add_test", "jobSeeker_test_preparing_click_event");
+		////
+		System.out.println("personId--" + personId);
 		System.out.println("level_num--"+level_num);//-------------------------------sysout
 		System.out.println("category--"+category);//-------------------------------sysout
 		if(category1!=null)
@@ -85,7 +86,7 @@ public class TestManagement extends AController {
 		}
 		
 		String[] answer = visitor.handler.createNewTest(questionsIdList, category, category1, level_num, selectCountQuestions, 
-				Long.parseLong(personId), personName, personSurname, personEmail);
+				personId, personName, personSurname, personEmail, pathToServer);
 		
 		
 		
