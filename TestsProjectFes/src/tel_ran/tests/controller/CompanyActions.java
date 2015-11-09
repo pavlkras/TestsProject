@@ -1,38 +1,14 @@
 package tel_ran.tests.controller;
 import java.io.Serializable;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Properties;
-import java.util.UUID;
-
-import javax.mail.Authenticator;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-import javax.servlet.http.HttpServletRequest;
-
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
-import tel_ran.tests.services.common.IPublicStrings;
 import tel_ran.tests.services.interfaces.ICommonAdminService;
-import tel_ran.tests.services.interfaces.ICompanyActionsService;
-import tel_ran.tests.users.Visitor;
 
 
 @Controller
@@ -45,7 +21,7 @@ public class CompanyActions extends AbstractAdminActions implements Serializable
 	private static final long serialVersionUID = 2L;
 	// --- private fields 
 	private	String companyName;
-	private long companyId = -1;
+//	private long companyId = -1;
 	
 	RestTemplate restTemplate =  new RestTemplate();
 
@@ -118,18 +94,18 @@ d)	Number of the right answers with the percentage
 e)	Number of the wrong answers with the percentage
 f)	5 photos made during the test	------ IGOR ------*/
 
-	@RequestMapping({"/view_results"})
-	public String viewResults(Model model){
-		//Code for testing
-		//		companyId = 8;
-		String page = "company/ErrorPage";
-		if(companyId != -1){
-			String token = ((ICompanyActionsService)adminService).encodeIntoToken(companyId);
-			model.addAttribute("token", token);
-			page = "company/CompanyViewTestsResults";
-		}
-		return page;
-	}	
+//	@RequestMapping({"/view_results"})
+//	public String viewResults(Model model){
+//		//Code for testing
+//		//		companyId = 8;
+//		String page = "company/ErrorPage";
+//		if(companyId != -1){
+//			String token = ((ICompanyActionsService)adminService).encodeIntoToken(companyId);
+//			model.addAttribute("token", token);
+//			page = "company/CompanyViewTestsResults";
+//		}
+//		return page;
+//	}	
 	// -----------------END  Use case Viewing test results-----------------	
 	
 

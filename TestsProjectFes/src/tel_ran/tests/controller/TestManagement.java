@@ -119,4 +119,14 @@ public class TestManagement extends AController {
 			
 		return "company/Company_TestLink";
 	}
+	
+	
+	/*-------------Viewing test results----------------*/
+	@RequestMapping({"/view_results"})
+	public String viewResults(@ModelAttribute Visitor visitor, Model model){
+			model.addAttribute("token", visitor.getToken());
+		return "company/CompanyViewTestsResults";
+	}	
+	/*------------END Viewing test results-------------*/
+	
 }
