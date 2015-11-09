@@ -39,9 +39,8 @@ public class TestsResultsRestController {
 	@ResponseBody @JsonRawValue
 	String all(@RequestHeader(value="TimeZone") String timeZone, @RequestHeader(value="Authorization") String token){		
 		
-		if(companyId==0)
-			companyId = tokenProcessor.decodeAndCheckToken(token);
-		String res = "";		
+		companyId = tokenProcessor.decodeRoleToken(token).getId();
+		String res = "";
 		if(companyId != -1){				
 			res = company.getTestsResultsAll(companyId, timeZone);			
 		} else {
@@ -53,7 +52,7 @@ public class TestsResultsRestController {
 	@RequestMapping(value=ICommonData.TESTS_RESULTS_BY_PERSON_ID + "/{personId}", method=RequestMethod.GET)
 	@ResponseBody @JsonRawValue 
 	String byPersonId(@PathVariable int personId, @RequestHeader(value="TimeZone") String timeZone, @RequestHeader(value="Authorization") String token){  
-		long companyId = tokenProcessor.decodeAndCheckToken(token);
+		long companyId = tokenProcessor.decodeRoleToken(token).getId();
 		String res = "";
 		if(companyId != -1){
 			res = company.getTestsResultsForPersonID(companyId, personId, timeZone);
@@ -67,7 +66,7 @@ public class TestsResultsRestController {
 	@ResponseBody @JsonRawValue
 	String byDates(@PathVariable String date1, @PathVariable String date2, @RequestHeader(value="TimeZone") String timeZone,
 			@RequestHeader(value="Authorization") String token){ 
-		long companyId = tokenProcessor.decodeAndCheckToken(token);
+		companyId = tokenProcessor.decodeRoleToken(token).getId();
 		String res = "";
 		if(companyId != -1){
 			SimpleDateFormat dateFormat = new SimpleDateFormat(ICommonData.DATE_FORMAT);
@@ -99,7 +98,7 @@ public class TestsResultsRestController {
 	@RequestMapping(value=ICommonData.TEST_RESULT_DETAILS + "/{testId}", method=RequestMethod.GET)
 	@ResponseBody @JsonRawValue
 	String testDetails(@PathVariable long testId, @RequestHeader(value="Authorization") String token){
-		long companyId = tokenProcessor.decodeAndCheckToken(token);
+		companyId = tokenProcessor.decodeRoleToken(token).getId();
 		String res = "";
 		if(companyId != -1){
 			res = company.getTestResultDetails(companyId, testId);
@@ -119,7 +118,7 @@ public class TestsResultsRestController {
 	@RequestMapping(value=ICommonData.TEST_QUESTION_DETAILS + "/{questId}", method=RequestMethod.GET)
 	@ResponseBody @JsonRawValue
 	String questionDetails(@PathVariable long questId, @RequestHeader(value="Authorization") String token){
-		long companyId = tokenProcessor.decodeAndCheckToken(token);
+		long companyId = tokenProcessor.decodeRoleToken(token).getId();
 		String res = "";
 		if(companyId != -1){
 			res = company.getQuestionDetails(companyId, questId);
@@ -137,7 +136,7 @@ public class TestsResultsRestController {
 	@RequestMapping(value=ICommonData.TEST_RESULTS_UNCHECKED_LIST + "/{testId}", method=RequestMethod.GET)
 	@ResponseBody @JsonRawValue
 	String uncheckedQuestions(@PathVariable long testId, @RequestHeader(value="Authorization") String token) {
-		long companyId = tokenProcessor.decodeAndCheckToken(token);
+		long companyId = tokenProcessor.decodeRoleToken(token).getId();
 		String res = "";
 		if(companyId != -1) 
 			res = company.getListOfUncheckedQuestions(companyId, testId);
@@ -162,7 +161,7 @@ public class TestsResultsRestController {
 	@RequestMapping(value="/check_answer", method=RequestMethod.POST)
 	@ResponseBody @JsonRawValue
 	String checkAnswer(@RequestHeader(value="Authorization") String token, @RequestBody String mark) {
-		long companyId = tokenProcessor.decodeAndCheckToken(token);
+		long companyId = tokenProcessor.decodeRoleToken(token).getId();
 		String res = "";
 		if(companyId!=-1) {
 			res = company.checkAnswer(companyId, mark);
