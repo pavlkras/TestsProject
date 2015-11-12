@@ -2,7 +2,6 @@ package tel_ran.tests.entitys;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,24 +16,24 @@ public class EntityTestQuestions {
 	private long id;
 	
 	@ManyToOne
-	private EntityQuestionAttributes eqaId;
+	private EntityQuestionAttributes question;
 	
 	@ManyToOne
 	@JoinColumn(name="TEST_ID", nullable=false)
-	private EntityTest entityTest;
+	private EntityTest test;
 	
 	@Column(name="answer", length = 10000)
 	private String answer;	
-	
-	private String linkToAnswer;
-		
+			
 	private int status;	
 	
+
+	
 	public EntityTest getEntityTest() {
-		return entityTest;
+		return test;
 	}
 	public void setEntityTest(EntityTest entityTest) {
-		this.entityTest = entityTest;
+		this.test = entityTest;
 	}
 	public long getId() {
 		return id;
@@ -43,11 +42,11 @@ public class EntityTestQuestions {
 		this.id = id;
 	}
 	public EntityQuestionAttributes getEntityQuestionAttributes() {
-		return eqaId;
+		return question;
 	}
 	public void setEntityQuestionAttributes(
 			EntityQuestionAttributes entityQuestionAttributes) {
-		this.eqaId = entityQuestionAttributes;
+		this.question = entityQuestionAttributes;
 	}
 	public String getAnswer() {
 		return answer;
@@ -55,12 +54,7 @@ public class EntityTestQuestions {
 	public void setAnswer(String answer) {
 		this.answer = answer;
 	}
-	public String getLinkToAnswer() {
-		return linkToAnswer;
-	}
-	public void setLinkToAnswer(String linkToAnswer) {
-		this.linkToAnswer = linkToAnswer;
-	}
+	
 	public int getStatus() {
 		return status;
 	}

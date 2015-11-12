@@ -23,7 +23,7 @@ public class EntityTexts implements Serializable {
 	private long id;
 	////
 	@Column(name="answerText", length = 3000)
-	private String answerText;
+	private String text;
 	////
 	@ManyToOne
 	private EntityQuestionAttributes entityQuestionAttributes;
@@ -34,10 +34,10 @@ public class EntityTexts implements Serializable {
 	}
 	////
 	public String getAnswerText() {
-		return answerText;
+		return text;
 	}
 	public void setAnswerText(String answerText) {
-		this.answerText = answerText;
+		this.text = answerText;
 	}
 	////
 	public EntityQuestionAttributes getEntityQuestionAttributes() {
@@ -49,6 +49,6 @@ public class EntityTexts implements Serializable {
 	////
 	@Override
 	public String toString() {
-		return answerText;
+		return text;
 	}
 }

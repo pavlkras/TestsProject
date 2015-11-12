@@ -29,7 +29,7 @@ public class EntityQuestionAttributes implements Serializable {
 	
 	////codeQuestionTable
 	@ManyToOne
-	private EntityTitleQuestion entityTitleQuestion;
+	private EntityTitleQuestion titleQuestion;
 	
 	////link to the company that has created this question (EntityCompany)
 	@ManyToOne	
@@ -61,7 +61,7 @@ public class EntityQuestionAttributes implements Serializable {
 	
 	////links to some text fields that can be used for American Tests and Programming Tasks (EntityAnswersText) 
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "entityQuestionAttributes")
-	List<EntityTexts> questionAnswersList;
+	List<EntityTexts> textsList;
 		
 	////letter of the correct answer (for American Tests)
 	@Column(name = "correctAnswer")
@@ -88,10 +88,10 @@ public class EntityQuestionAttributes implements Serializable {
 	}
 
 	public EntityTitleQuestion getEntityTitleQuestion() {
-		return entityTitleQuestion;
+		return titleQuestion;
 	}
 	public void setEntityTitleQuestion(EntityTitleQuestion titleQuestion) {
-		this.entityTitleQuestion = titleQuestion;
+		this.titleQuestion = titleQuestion;
 	}
 	public String getFileLocationLink() {
 		return fileLocationLink;
@@ -129,10 +129,10 @@ public class EntityQuestionAttributes implements Serializable {
 		this.correctAnswer = correctAnswer;
 	}
 	public List<EntityTexts> getQuestionAnswersList() {
-		return questionAnswersList;
+		return textsList;
 	}
 	public void setQuestionAnswersList(List<EntityTexts> questionAnswers) {
-		this.questionAnswersList = questionAnswers;
+		this.textsList = questionAnswers;
 	}
 	public int getNumberOfResponsesInThePicture() {
 		return numberOfResponsesInThePicture;
@@ -151,10 +151,10 @@ public class EntityQuestionAttributes implements Serializable {
 	}
 
 	public List<String> getAnswers() {
-		if(questionAnswersList!=null) {
+		if(textsList!=null) {
 			List<String> result = new ArrayList<String>();
 		
-			for(EntityTexts eat : questionAnswersList) {
+			for(EntityTexts eat : textsList) {
 				result.add(eat.getAnswerText());
 			}
 		
@@ -166,7 +166,7 @@ public class EntityQuestionAttributes implements Serializable {
 	////
 	@Override
 	public String toString() {
-		return entityTitleQuestion.getId()
+		return titleQuestion.getId()
 				+ ApplicationFinalFields.DELIMITER + metaCategory
 				+ ApplicationFinalFields.DELIMITER + category1
 				+ ApplicationFinalFields.DELIMITER + category2			

@@ -2,6 +2,7 @@ package tel_ran.tests.entitys;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,7 +21,7 @@ public class EntityCompany implements Serializable {
 	private List<EntityTest> personsTests; 
 	///
 	@OneToMany(mappedBy = "entityCompany", fetch = FetchType.LAZY)
-	List<EntityQuestionAttributes> questionAttributes;
+	List<EntityQuestionAttributes> questions;
 	///
 	
 	private String C_Name;
@@ -29,6 +30,12 @@ public class EntityCompany implements Serializable {
 	private String C_AmountEmployes;
 	private String C_Password;
 	private String C_email;	
+	
+	@OneToMany(mappedBy = "entityCompany", fetch = FetchType.LAZY)
+	List<EntityTestTemplate> testTemplates;
+	
+	@OneToMany(mappedBy = "byCompany")
+	Set<EntityPerson> addedPersons;
 	
 	public String getC_Password() {
 		return C_Password;
@@ -78,11 +85,11 @@ public class EntityCompany implements Serializable {
 		this.personsTests = personsTests;
 	}	
 	public List<EntityQuestionAttributes> getQuestionAttributes() {
-		return questionAttributes;
+		return questions;
 	}
 	public void setQuestionAttributes(
 			List<EntityQuestionAttributes> questionAttributes) {
-		this.questionAttributes = questionAttributes;
+		this.questions = questionAttributes;
 	}
 	@Override
 	public String toString() {
@@ -93,13 +100,19 @@ public class EntityCompany implements Serializable {
 	}
 	public void addQuestionAttributes(
 			EntityQuestionAttributes questionAttributes) {
-		if(this.questionAttributes==null)
-			this.questionAttributes = new ArrayList<EntityQuestionAttributes>();
-		this.questionAttributes.add(questionAttributes);		
+		if(this.questions==null)
+			this.questions = new ArrayList<EntityQuestionAttributes>();
+		this.questions.add(questionAttributes);		
 	}
 	
 	public void deleteQuestionAttributes(EntityQuestionAttributes eqa) {
-		this.questionAttributes.remove(eqa);
+		this.questions.remove(eqa);
+	}
+	public List<EntityTestTemplate> getTestTemplates() {
+		return testTemplates;
+	}
+	public void setTestTemplates(List<EntityTestTemplate> testTemplates) {
+		this.testTemplates = testTemplates;
 	}
 }
 

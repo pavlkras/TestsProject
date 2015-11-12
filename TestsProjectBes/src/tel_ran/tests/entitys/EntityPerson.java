@@ -4,10 +4,12 @@ import java.util.List;
 
 
 
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -22,10 +24,13 @@ public class EntityPerson {
 	@GeneratedValue
 	@Column(name="personId",unique = true, nullable = false, length = 25)	
     private long personId;
+	private String personName;
+    private String personSurname;
+    private String personEmail;
     
     @Column(name="identify")
     private String identify;
-  
+   
     @OneToMany(mappedBy = "entityPerson")
     private List<EntityTest> enTest;
  
@@ -40,10 +45,8 @@ public class EntityPerson {
 	}
 	public void setIdentify(String identify) {
 		this.identify = identify;
-	}
-	private String personName;
-    private String personSurname;
-    private String personEmail;
+	}	
+  
     
 	public String getPersonEmail() {
 		return personEmail;

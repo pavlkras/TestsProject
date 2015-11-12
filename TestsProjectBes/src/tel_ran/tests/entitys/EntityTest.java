@@ -49,12 +49,22 @@ public class EntityTest {
 	private long endTestDate = 0L;
 	//
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "entityTest")
-	private List<EntityTestQuestions> entityTestQuestions;
+	private List<EntityTestQuestions> questions;
 	
 	@ManyToOne
 	private EntityCompany entityCompany;
 	@ManyToOne
-	private EntityPerson entityPerson;
+	private EntityPerson person;
+	
+	@ManyToOne
+	private EntityUser user;
+	
+	/**
+	 * If the test was created by some Test Template here we have
+	 * a link to this Template 
+	 */
+	@ManyToOne
+	private EntityTestTemplate baseTemplate;
 		
 	public EntityTest() {}
 
@@ -111,11 +121,11 @@ public class EntityTest {
 	}
 
 	public EntityPerson getEntityPerson() {
-		return entityPerson;
+		return person;
 	}
 
 	public void setEntityPerson(EntityPerson entityPerson) {
-		this.entityPerson = entityPerson;
+		this.person = entityPerson;
 	}
 
 	public EntityCompany getEntityCompany() {
@@ -148,17 +158,17 @@ public class EntityTest {
 	}
 
 	public List<EntityTestQuestions> getEntityTestQuestions() {
-		return entityTestQuestions;
+		return questions;
 	}
 
 	public void setEntityTestQuestions(List<EntityTestQuestions> entityTestQuestions) {
-		this.entityTestQuestions = entityTestQuestions;
+		this.questions = entityTestQuestions;
 	}
 	
 	public void addEntityTestQuestions(EntityTestQuestions entityTestQuestions) {
-		if(this.entityTestQuestions==null) 
-			this.entityTestQuestions = new ArrayList<EntityTestQuestions>();
-		this.entityTestQuestions.add(entityTestQuestions);		
+		if(this.questions==null) 
+			this.questions = new ArrayList<EntityTestQuestions>();
+		this.questions.add(entityTestQuestions);		
 	}
 	
 	
