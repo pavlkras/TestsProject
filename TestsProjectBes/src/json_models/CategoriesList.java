@@ -11,7 +11,14 @@ import org.json.JSONObject;
 public class CategoriesList implements IJsonModels {
 	
 	private Map<String, List<String>> categories;
+	private Map<String, Map<String, String>> categoriesWithData;
 	
+		
+	public void setCategoriesWithData(
+			Map<String, Map<String, String>> categoriesWithData) {
+		this.categoriesWithData = categoriesWithData;
+	}
+
 	public void setCategories(Map<String, List<String>> categories) {
 		this.categories = categories;
 	}
@@ -29,6 +36,12 @@ public class CategoriesList implements IJsonModels {
 
 	@Override
 	public JSONArray getJSONArray() throws JSONException {
+		if(categories!=null) return getFromCategories();
+		
+		return null;
+	}
+	
+	private JSONArray getFromCategories() throws JSONException {
 		JSONArray result = new JSONArray();
 		
 		Set<Map.Entry<String, List<String>>> set = categories.entrySet();
@@ -45,7 +58,6 @@ public class CategoriesList implements IJsonModels {
 			jsn.put(JSONKeys.CATEGORY_CHILDREN, array);
 			result.put(jsn);		
 		}
-		
 		return result;
 	}
 	
