@@ -49,6 +49,26 @@ public class TestManagement extends AController {
 	}
 	
 	/**
+	 * TEST TEMPLATES VIEW
+	 */
+	@RequestMapping({"/test_templates"})
+	public String testTemplatesView(@ModelAttribute Visitor visitor, Model model) {
+		model.addAttribute("token", visitor.getToken());
+		
+		//list of custom categories of the company
+		model.addAttribute("companyCategories", visitor.handler.getUsersCategories());
+		
+		// list of auto generated categories (metaCategory + category1) in JSON format 
+		// see IHandler for details
+		model.addAttribute("autoCategories", visitor.handler.getPossibleAutoCaterories());
+		
+		// list of custom categories created by Admin (category1 + category2 + metaCategory) in JSON format		
+		model.addAttribute("commonCategories", visitor.handler.getCommonCustomCategories());	
+		
+		return "tests/templates";
+	}
+	
+	/**
 	 * CREATE NEW TEST for person
 	 * 
 	 * @param metaCategory 

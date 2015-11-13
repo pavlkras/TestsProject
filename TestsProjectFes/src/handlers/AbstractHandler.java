@@ -3,8 +3,10 @@ package handlers;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -22,9 +24,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.ui.Model;
 import org.springframework.web.client.RestTemplate;
 
+import tel_ran.tests.controller.HeaderRequestInterceptor;
 import tel_ran.tests.controller.MainController;
 import tel_ran.tests.services.fields.Role;
 import tel_ran.tests.services.interfaces.ICommonAdminService;
@@ -51,6 +55,42 @@ public abstract class AbstractHandler implements IHandler {
 	protected ICommonService service;
 	
 
+	public String getPossibleAutoCaterories() {
+		String result = "{}";
+		
+		//1 - query preparing
+		RestTemplate restTemplate = new RestTemplate();
+		HeaderRequestInterceptor interceptor = new HeaderRequestInterceptor("Authorization", token);		
+		List<ClientHttpRequestInterceptor> interceptors = new ArrayList<>();
+		interceptors.add(interceptor);			
+		restTemplate.setInterceptors(interceptors);
+			
+		//2 - get info
+		try {
+			result = restTemplate.getForObject(this.hostname+"/tests/autoList", String.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+				
+		return result;
+	}
+	
+	@Override
+	public String getCommonCustomCategories() {
+		String result = "{}";
+		
+		//1 - query preparing
+		RestTemplate restTemplate = new RestTemplate();
+				
+		//2 - get info
+		try {
+			result = restTemplate.getForObject(this.hostname+"/tests/adminCustomList", String.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
 	
 	
 	public void setHostname(String hostname) {

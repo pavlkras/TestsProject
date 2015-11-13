@@ -21,10 +21,10 @@ public final class JSONKeys {
 	public static final String AUTO_COMPANY_NAME = "company";	
 		
 	public static final String ERROR = "error";
-		
+	
 	public static final String SIGNUP_USER_EXIST = "userExist";
 	public static final String SIGNUP_SUCCESS = "success";
-
+	
 	// COMMON
 	
 	static final String ARRAY_OF_RESULT = "results"; // array
@@ -49,5 +49,11 @@ public final class JSONKeys {
 	public static final String QUESTION_HAS_IMAGE = "is_image"; // = boolean	
 	public static final String QUESTION_SHORT_DESCRIPTION = "shortText"; // String
 	public static final String QUESTION_DIFFICULTY_LVL = "level"; //int
+	
+	// CATEGORIES LISTS
+	
+	public static final String CATEGORY_PARENT = "cat_parent"; // String - name of MetaCategory or Category1
+	public static final String CATEGORY_CHILDREN = "cat_children"; //String - name of JSONArray
+	public static final String CATEGORY_CHILD = "cat_child"; //String - name of sub-category
 
 }
