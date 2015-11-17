@@ -20,7 +20,8 @@ public class AutorizationService {
 	private IDataLoader autoData;	
 	private static AutorizationService service;		
 	private TokenProcessor tokenProcessor;
-	private static final int TOKEN_VALID_IN_SECOND = 86400; // 24h 
+	private static final int TOKEN_VALID_IN_SECOND = 86400; // 24h
+	private static String monitor = "Monitor";
 	
 	private AutorizationService() {	
 		autoData = (IDataLoader) SpringApplicationContext.getBean("autoData");
@@ -29,7 +30,11 @@ public class AutorizationService {
 	
 	public static AutorizationService getInstance() {
 		if(service==null) {
-			service = new AutorizationService();
+			synchronized (monitor) {
+				if(service==null)
+					service = new AutorizationService();
+			}
+			
 		}
 		return service;
 	}
