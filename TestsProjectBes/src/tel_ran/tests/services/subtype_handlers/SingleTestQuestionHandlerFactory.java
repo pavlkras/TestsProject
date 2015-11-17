@@ -57,7 +57,7 @@ public class SingleTestQuestionHandlerFactory {
 		ITestQuestionHandler result;
 		if(metaCategory!=null) {			
 			if(metaCategory.equals(TestProcessor.MC_PROGRAMMING)) {			
-				result = getTestQuestionHandler(metaCategory+"_"+category1); 
+				result = getTestQuestionHandler(metaCategory, category1); 
 			} else {
 				result = getTestQuestionHandler(metaCategory);
 			}			
@@ -69,6 +69,12 @@ public class SingleTestQuestionHandlerFactory {
 		}				
 		return null;
 				
+	}
+	
+	private static ITestQuestionHandler getTestQuestionHandler(String metaCategory, String category) {
+		metaCategory = TestProcessor.getMetaCategoryKeyByPublicName(metaCategory);
+		String beanName = metaCategory+"_"+category;
+		return(ITestQuestionHandler) SpringApplicationContext.getBean(beanName);
 	}
 	
 	private static ITestQuestionHandler getTestQuestionHandler(String metaCategory) {
