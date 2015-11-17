@@ -7,6 +7,7 @@ import tel_ran.tests.entitys.EntityQuestionAttributes;
 import tel_ran.tests.entitys.EntityTest;
 import tel_ran.tests.entitys.EntityTestQuestions;
 import tel_ran.tests.processor.TestProcessor;
+import tel_ran.tests.services.common.ICommonData;
 import tel_ran.tests.services.common.IPublicStrings;
 import tel_ran.tests.services.inner_result.dataobjects.InnerResultDataObject;
 import tel_ran.tests.services.testhandler.ICompanyTestHandler;
@@ -52,9 +53,14 @@ public class SingleTestQuestionHandlerFactory {
 		EntityQuestionAttributes eqa = etq.getEntityQuestionAttributes();
 		EntityTest test = etq.getEntityTest();
 		String metaCategory = eqa.getMetaCategory();
-		if(metaCategory!=null) {
-			ITestQuestionHandler result = getTestQuestionHandler(metaCategory);
-			
+		String category1 = eqa.getCategory1();
+		ITestQuestionHandler result;
+		if(metaCategory!=null) {			
+			if(metaCategory.equals(TestProcessor.MC_PROGRAMMING)) {			
+				result = getTestQuestionHandler(metaCategory+"_"+category1); 
+			} else {
+				result = getTestQuestionHandler(metaCategory);
+			}			
 			result.setEntityQuestionAttributes(eqa);
 			result.setCompanyId(eqa.getEntityCompany().getId());
 			result.setEtqId(etq.getId());
