@@ -50,5 +50,10 @@ public final class JSONKeys {
 	public static final String QUESTION_SHORT_DESCRIPTION = "shortText"; // String
 	public static final String QUESTION_DIFFICULTY_LVL = "level"; //int
 	
+	// CATEGORIES LISTS
+	
+	public static final String CATEGORY_PARENT = "cat_parent"; // String - name of MetaCategory or Category1
+	public static final String CATEGORY_CHILDREN = "cat_children"; //String - name of JSONArray
+	public static final String CATEGORY_CHILD = "cat_child"; //String - name of sub-category
 
 }
