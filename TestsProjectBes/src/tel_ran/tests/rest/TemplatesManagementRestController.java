@@ -56,11 +56,31 @@ public class TemplatesManagementRestController {
 	public String getAutoList(@RequestHeader(value="Authorization") String token) {
 		String result = "{}";
 		User user = tokenProcessor.decodeRoleToken(token);
-		if(user.isAutorized() && (user.getRole().equals(Role.ADMINISTRATOR) || user.getRole().equals(Role.COMPANY))) {
+		if(user.isAutorized()) {
 			result = TestTemplateService.getAutoCategories();
 		}		
 		
 		return result;		
+	}
+	
+	/**
+	 * Returns list of categories that were created by Admin
+	 * Result doesn't depend on the user. But only registred users can get information
+	 * List is in JSON format:
+	 * [{cat_parent : 'category1name', cat_children : [{cat_child : 'category2name', metaType : 'MCname'}] }]
+	 * @param token
+	 * @return
+	 */
+	@RequestMapping(value="/adminList", method=RequestMethod.GET)
+	@ResponseBody @JsonRawValue
+	public String getAdminCategoryList(@RequestHeader(value="Authorixation") String token) {
+		String result = "{}";
+		User user = tokenProcessor.decodeRoleToken(token);
+		if(user.isAutorized()) {
+			result = getService().getAdminCategories();
+		}
+		return result;
+		
 	}
 	
 	private TestTemplateService getService() {

@@ -2,6 +2,8 @@ package tel_ran.tests.services;
 import java.io.IOException;
 import java.util.List;
 
+import javax.persistence.Query;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -112,14 +114,9 @@ public class PersonalActionsService extends CommonServices implements IPersonalA
 	@Transactional(readOnly=false)
 	public String saveAndGetNextQuestion(long testId, String answer) {
 		
-		if(this.entityTest==null || this.testID != testId) {
-			entityTest = em.find(EntityTest.class, testId);
-			this.testID = testId;
-		}
+		EntityTest entityTest = em.find(EntityTest.class, testId);			
 		String result = null;
-		
-		
-		
+						
 		// check if the test is passed
 		if(!entityTest.isPassed()) {
 			long gotAnswer = -1;
@@ -141,9 +138,12 @@ public class PersonalActionsService extends CommonServices implements IPersonalA
 			
 			
 			// get list of test-questions (from EntityTestQuestions)				
-			String query = "SELECT c FROM EntityTestQuestions c WHERE c.entityTest=?1 AND c.id!=?2 AND c.status=?3 ORDER by c.id";
-			List<EntityTestQuestions> questions = em.createQuery(query).setParameter(1, entityTest)
-					.setParameter(2, gotAnswer).setParameter(3, ICommonData.STATUS_NO_ANSWER).getResultList();
+			String query = "SELECT c FROM EntityTestQuestions c WHERE c.test=?1 AND c.id!=?2 AND c.status=?3 ORDER by c.id";
+			Query q = em.createQuery(query);
+			q.setParameter(1, entityTest);
+			q.setParameter(2, gotAnswer);
+			q.setParameter(3, ICommonData.STATUS_NO_ANSWER);
+			List<EntityTestQuestions> questions = q.getResultList();
 			
 				
 			if(questions!=null && questions.size()>0) {							
