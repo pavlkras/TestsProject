@@ -30,7 +30,7 @@ public class TestTemplateService {
 	
 	
 	public String getCategories(User user) {
-		
+		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -41,7 +41,7 @@ public class TestTemplateService {
 	
 	private static void renewAutoCategories() {
 		List<String> metaCategories = TestProcessor.getMetaCategory();
-		AUTO_CATEGORIES = new HashMap<String, List<String>>();
+		AUTO_CATEGORIES = new HashMap();
 		for(String s : metaCategories) {
 			List<String> categories = TestProcessor.getCategoriesList(s);
 			AUTO_CATEGORIES.put(s, categories);			
@@ -49,7 +49,6 @@ public class TestTemplateService {
 	}
 	
 	private static String getCategoriesJson(Map<String, List<String>> map) throws JSONException{
-		if(map==null) System.out.println("NULL");
 		CategoriesList jsonModel = new CategoriesList();
 		jsonModel.setCategories(map);
 		return jsonModel.getString();

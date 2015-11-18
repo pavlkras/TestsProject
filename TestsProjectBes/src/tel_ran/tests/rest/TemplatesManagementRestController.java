@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.annotation.JsonRawValue;
 
+import tel_ran.tests.data_loader.IDataLoader;
+import tel_ran.tests.services.AutorizationService;
 import tel_ran.tests.services.TestTemplateService;
 import tel_ran.tests.services.fields.Role;
 import tel_ran.tests.services.utils.SpringApplicationContext;
@@ -50,7 +52,7 @@ public class TemplatesManagementRestController {
 	 * [{cat_parent : 'nameMC', cat_children : [{cat_child : 'nameC'}] 	 * 
 	 */
 	@RequestMapping(value="/autoList", method=RequestMethod.GET)
-	@ResponseBody @JsonRawValue	
+	@ResponseBody @JsonRawValue
 	public String getAutoList(@RequestHeader(value="Authorization") String token) {
 		String result = "{}";
 		User user = tokenProcessor.decodeRoleToken(token);

@@ -49,15 +49,11 @@ public class CategoriesList implements IJsonModels {
 			JSONObject jsn = new JSONObject();
 			jsn.put(JSONKeys.CATEGORY_PARENT, e.getKey());
 			List<String> subCategories = e.getValue();
-			
 			JSONArray array = new JSONArray();
-			if(subCategories!=null) {				
-			
 			for(String s : subCategories) {
 				JSONObject jsn2 = new JSONObject();
 				jsn2.put(JSONKeys.CATEGORY_CHILD, s);
 				array.put(jsn2);
-			}
 			}
 			jsn.put(JSONKeys.CATEGORY_CHILDREN, array);
 			result.put(jsn);		
