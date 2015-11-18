@@ -28,7 +28,7 @@ import tel_ran.tests.services.common.IPublicStrings;
 import tel_ran.tests.services.fields.Role;
 
 public class TestQuestionsData extends TestsPersistence implements
-		IDataTestsQuestions {
+		IDataTestsQuestions, ITestData {
 
 	@Override
 	public int getNumberQuestions(long id, Role role) {
@@ -427,6 +427,15 @@ public class TestQuestionsData extends TestsPersistence implements
 	
 	private String getLimitsForNotCompanyQuery() {	
 		return "entityCompany is null";
+	}
+
+
+	@Override
+	public List<String> getCategories1(long companyId) {
+		// TODO Auto-generated method stub
+		
+		
+		return null;
 	}
 
 
