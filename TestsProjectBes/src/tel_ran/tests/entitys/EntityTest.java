@@ -48,7 +48,7 @@ public class EntityTest {
 	private long startTestDate = 0L;
 	private long endTestDate = 0L;
 	//
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "entityTest")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "test")
 	private List<EntityTestQuestions> questions;
 	
 	@ManyToOne
