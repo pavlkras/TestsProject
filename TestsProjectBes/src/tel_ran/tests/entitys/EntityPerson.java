@@ -28,17 +28,20 @@ public class EntityPerson {
     private String personSurname;
     private String personEmail;
     
+    @ManyToOne
+    private EntityCompany byCompany;
+    
     @Column(name="identify")
     private String identify;
    
-    @OneToMany(mappedBy = "entityPerson")
-    private List<EntityTest> enTest;
+    @OneToMany(mappedBy = "person")
+    private List<EntityTest> test;
  
 	public List<EntityTest> getEnTest() {
-		return enTest;
+		return test;
 	}
 	public void setEnTest(List<EntityTest> enTest) {
-		this.enTest = enTest;
+		this.test = enTest;
 	}
 	public String getIdentify() {
 		return identify;
