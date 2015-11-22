@@ -6,6 +6,8 @@ import javax.persistence.PersistenceContextType;
 
 public abstract class TestsPersistence {
 	
+	static protected final int ADMIN_C_ID = 1;
+	
 	@PersistenceContext(unitName="springHibernate",
 	type=PersistenceContextType.TRANSACTION)
 	

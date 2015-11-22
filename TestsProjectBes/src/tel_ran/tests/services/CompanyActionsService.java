@@ -566,7 +566,7 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 	public Map<String, List<String>> getCompanyCustomCategories(String token) {
 		Map<String, List<String>> result = null;
 		User user = tokenProcessor.decodeRoleToken(token);
-		long id = user.getId();
+		int id = (int)user.getId();
 		if(user.isAutorized() && user.getRole().equals(Role.COMPANY)) {
 			List<String> categories1 = testQuestsionsData.getCategories(id, 1, null, -1);
 			

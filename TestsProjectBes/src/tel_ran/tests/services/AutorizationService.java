@@ -105,12 +105,7 @@ public class AutorizationService {
 		model.setUserExist(emailIsInDb);
 		
 		//3 - registration
-		if(!emailIsInDb) {
-			//3a - check id Admin is created
-			boolean isAdmin = autoData.checkRootUser();
-			if(!isAdmin) {
-				adminCreation();
-			}
+		if(!emailIsInDb) {				
 			
 			//3b - registration
 			boolean registrated = autoData.userRegistration(model.getLogin(), model.getPassword(),
@@ -131,13 +126,6 @@ public class AutorizationService {
 		return result;
 	}
 	
-	private void adminCreation() {
-		String email = "admin@com";
-		String password = "12345.com";
-		boolean isAdmin = true;
-		autoData.userRegistration(email, password, isAdmin);
-		
-	}
 	
 	private String encodeToken(long id, int role) {
 		String token = tokenProcessor.encodeRoleToken(id, role, TOKEN_VALID_IN_SECOND);
@@ -166,7 +154,7 @@ public class AutorizationService {
 		if(id>=0) {
 			model.setRoleNumber(Role.COMPANY.ordinal());			
 			model.setToken(this.encodeToken(id, model.getRoleNumber()));	
-			autoData.fillInfoAboutCompany(model, id);
+			autoData.fillInfoAboutCompany(model, (int)id);
 		}		
 		
 		//4 - preparing result

@@ -58,7 +58,7 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 		User user = tokenProcessor.decodeRoleToken(token);
 		List<String> result = null;
 		if(user.isAutorized()) {
-			result = testQuestsionsData.getUserCategories(user.getId(), user.getRole());
+			result = testQuestsionsData.getUserCategories((int)user.getId(), user.getRole());
 		}
 				
 		return result;
@@ -101,7 +101,7 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 		User user = tokenProcessor.decodeRoleToken(token);
 		List<String> result = null;
 		if(user.isAutorized()) {
-			result = testQuestsionsData.getUserMetaCategories(user.getId(), user.getRole());			
+			result = testQuestsionsData.getUserMetaCategories((int)user.getId(), user.getRole());			
 		}
 		
 		return result;
@@ -713,7 +713,7 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 			
 			
 			for (int i = 0; i < typeNumbers; i++ ) {
-				allAttributeQuestionsId = testQuestsionsData.getQuestionIdByParams(user.getId(), user.getRole(), categoryArray[i],
+				allAttributeQuestionsId = testQuestsionsData.getQuestionIdByParams((int)user.getId(), user.getRole(), categoryArray[i],
 						categories1Array[i], Integer.parseInt(levelsArray[i]));
 				
 				if(i == typeNumbers-1) 
@@ -789,7 +789,7 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 		boolean result = false;
 		
 		if(questionIdList!=null && questionIdList.size()>0) {
-			long testId = testQuestsionsData.createTest(pass, personId, 0L, 0L, questionIdList, user.getId(), user.getRole());
+			long testId = testQuestsionsData.createTest(pass, personId, 0L, 0L, questionIdList, (int)user.getId(), user.getRole());
 			if(testId>=0) {
 				FileManagerService.initializeTestFileStructure(user.getId(), testId);
 				result=true;

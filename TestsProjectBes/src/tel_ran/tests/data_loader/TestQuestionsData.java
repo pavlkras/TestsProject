@@ -7,11 +7,6 @@ import javax.persistence.Query;
 
 import json_models.IJsonModels;
 import json_models.QuestionModel;
-import json_models.SimpleArray;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,14 +25,27 @@ import tel_ran.tests.services.fields.Role;
 public class TestQuestionsData extends TestsPersistence implements
 		IDataTestsQuestions, ITestData {
 
+	// ------------------------ STATUS OF DB ---------------------------------------------------------------------- //
 	@Override
-	public int getNumberQuestions(long id, Role role) {
+	public boolean isNoQuestions() {
+		int count = getNumberQuestions(-1, Role.ADMINISTRATOR);
+		if(count>0) return false;
+		return true;
+	}
+	
+	
+	// ----------------------------------------------------------------------------------------------------------- //
+	
+	@Override
+	public int getNumberQuestions(int id, Role role) {
 		
 		StringBuilder query = new StringBuilder("SELECT COUNT(eqa) from EntityQuestionAttributes eqa");
 		
 		switch(role) {
 			case COMPANY :
 				query.append(" WHERE eqa.").append(getLimitsForCompanyQuery(id)); break;
+			case ADMINISTRATOR :
+				query.append(" WHERE eqa.").append(getLimitsForCompanyQuery(ADMIN_C_ID)); break;
 			default:
 				break;				
 		}		
@@ -47,7 +55,7 @@ public class TestQuestionsData extends TestsPersistence implements
 		
 
 	@Override
-	public int getNumberTests(long id, Role role) {
+	public int getNumberTests(int id, Role role) {
 		StringBuilder query = new StringBuilder("SELECT COUNT(et) from EntityTest et");
 		
 		switch(role) {
@@ -91,7 +99,7 @@ public class TestQuestionsData extends TestsPersistence implements
 	public boolean saveNewQuestion(String fileLocationLink, String metaCategory,
 			String category1, String category2, int levelOfDifficulty,
 			List<String> answers, String correctAnswerChar, int answerOptionsNumber, String description,
-			String questionText, long id, Role role) {
+			String questionText, int id, Role role) {
 		boolean result = false;
 		
 		EntityTitleQuestion etq = createQuestion(questionText);
@@ -102,7 +110,10 @@ public class TestQuestionsData extends TestsPersistence implements
 		if(role.equals(Role.COMPANY)) {	
 			EntityCompany ec = em.find(EntityCompany.class, id);
 			questionAttributesList.setCompanyId(ec);
-		}				
+		} else if(role.equals(Role.ADMINISTRATOR)) {
+			EntityCompany ec = em.find(EntityCompany.class, ADMIN_C_ID);
+			questionAttributesList.setCompanyId(ec);
+		}
 		questionAttributesList.setEntityTitleQuestion(etq);	
 		questionAttributesList.setFileLocationLink(fileLocationLink);	
 		questionAttributesList.setMetaCategory(metaCategory);
@@ -143,7 +154,7 @@ public class TestQuestionsData extends TestsPersistence implements
 	
 	@Override
 	@Transactional
-	public List<String> getUserCategories(long id, Role role) {		
+	public List<String> getUserCategories(int id, Role role) {		
 
 		StringBuilder query = new StringBuilder("Select DISTINCT q.category1 FROM EntityQuestionAttributes q WHERE (q.metaCategory='");
 		query.append(IPublicStrings.COMPANY_AMERICAN_TEST).append("' OR q.metaCategory='").append(IPublicStrings.COMPANY_QUESTION).
@@ -169,7 +180,7 @@ public class TestQuestionsData extends TestsPersistence implements
 	@Override
 	@Transactional
 	public List<IJsonModels> getQuesionsList(Boolean typeOfQuestion, String metaCategory,
-			String category1, long id, Role role) {
+			String category1, int id, Role role) {
 		
 		//1 - start query 
 		StringBuilder query = new StringBuilder("SELECT c FROM EntityQuestionAttributes c WHERE ");
@@ -250,7 +261,7 @@ public class TestQuestionsData extends TestsPersistence implements
 	
 
 	@Override
-	public List<String> getUserMetaCategories(long id, Role role) {	
+	public List<String> getUserMetaCategories(int id, Role role) {	
 		
 		StringBuilder query = new StringBuilder("Select DISTINCT cat.metaCategory FROM EntityQuestionAttributes cat WHERE cat.metaCategory is not null");
 		switch(role) {
@@ -298,7 +309,7 @@ public class TestQuestionsData extends TestsPersistence implements
 	
 
 	@Override
-	public List<Long> getQuestionIdByParams(long id, Role role, String metaCategory,
+	public List<Long> getQuestionIdByParams(int id, Role role, String metaCategory,
 			String category1, int level) {
 		
 			StringBuilder condition = new StringBuilder("SELECT c.id FROM EntityQuestionAttributes c WHERE ");
@@ -330,7 +341,7 @@ public class TestQuestionsData extends TestsPersistence implements
 	@Override
 	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW) 
 	public long createTest(String pass, long personId, long startTime,
-			long stopTime, List<Long> questionIdList, long id, Role role) {
+			long stopTime, List<Long> questionIdList, int id, Role role) {
 		long result = -1;
 				
 		EntityTest test = new EntityTest();		
@@ -372,7 +383,7 @@ public class TestQuestionsData extends TestsPersistence implements
 
 
 	@Override
-	public List<String> getCategories(long companyId, int categoryLevel,
+	public List<String> getCategories(int companyId, int categoryLevel,
 			String parent, int levelOfParent) {
 		List<String> result = null;
 		String categoryType;
@@ -420,23 +431,26 @@ public class TestQuestionsData extends TestsPersistence implements
 	
 	
 	//------------------------------------ INNER METHODS ------------------------------------------------//
-	private String getLimitsForCompanyQuery(long id) {	
+	private String getLimitsForCompanyQuery(int id) {	
 //		EntityCompany ec = em.find(EntityCompany.class, id);
 		return "entityCompany='" + id + "'";
 	}
 	
 	private String getLimitsForNotCompanyQuery() {	
-		return "entityCompany is null";
+		return getLimitsForCompanyQuery(ADMIN_C_ID);
 	}
 
 
 	@Override
-	public List<String> getCategories1(long companyId) {
+	public List<String> getCategories1(int companyId) {
 		// TODO Auto-generated method stub
 		
 		
 		return null;
 	}
+
+
+	
 
 
 

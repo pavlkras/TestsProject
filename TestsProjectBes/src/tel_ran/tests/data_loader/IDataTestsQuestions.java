@@ -7,21 +7,27 @@ import json_models.QuestionModel;
 import tel_ran.tests.entitys.EntityPerson;
 import tel_ran.tests.services.fields.Role;
 
-public interface IDataTestsQuestions {
-	int getNumberQuestions(long id, Role role);
-	int getNumberTests(long id, Role role);	
+public interface IDataTestsQuestions extends IData {
+	int getNumberQuestions(int id, Role role);
+	int getNumberTests(int id, Role role);	
 	boolean saveNewQuestion(String fileLocationLink, String metaCategory, String category1, String category2, int levelOfDifficulty,
-			List<String> answers, String correctAnswerChar, int answerOptionsNumber, String description, String questionText, long id, Role role);
-	List<String> getUserCategories(long id, Role role);
+			List<String> answers, String correctAnswerChar, int answerOptionsNumber, String description, String questionText, int id, Role role);
+	List<String> getUserCategories(int id, Role role);
 	List<IJsonModels> getQuesionsList(Boolean typeOfQuestion, String metaCategory,
-			String category1, long id, Role role);
-	List<String> getUserMetaCategories(long id, Role role);
+			String category1, int id, Role role);
+	List<String> getUserMetaCategories(int id, Role role);
 	long createPerson(String personPassport, String personName,
 			String personSurname, String personEmail);
-	List<Long> getQuestionIdByParams(long id, Role role, String string,
+	List<Long> getQuestionIdByParams(int id, Role role, String string,
 			String string2, int parseInt);
 	long createTest(String pass, long personId, long startTime, long stopTime,
-			List<Long> questionIdList, long id, Role role);
+			List<Long> questionIdList, int companyId, Role role);
+	
+	/**
+	 * returns true if the table with EntityQuestionAttributes is empty.
+	 * This method is used for auto-generation of questions whild starting the application	 * 
+	 */
+	boolean isNoQuestions();
 	
 	/**
 	 * Returns list of category that exist in DB. The method can be used for getting categories of any level 
@@ -35,6 +41,6 @@ public interface IDataTestsQuestions {
 	 * @param levelOfParent - 0-1. Or "-1" if you don't need to search by parent. This allows to search by parent and also by parent of parent. 
 	 * @return
 	 */
-	List<String> getCategories(long companyId, int catgeryLevel, String parent, int levelOfParent);
+	List<String> getCategories(int companyId, int catgeryLevel, String parent, int levelOfParent);
 	
 }

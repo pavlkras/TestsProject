@@ -15,7 +15,7 @@ public class EntityCompany implements Serializable {
 	@Id
 	@GeneratedValue
 	@Column(name = "id")
-	private long id;
+	private int id;
 	/// 
 	@OneToMany (mappedBy = "entityCompany")
 	private List<EntityTest> personsTests; 
@@ -50,7 +50,7 @@ public class EntityCompany implements Serializable {
 		C_email = c_email;
 	}
 	
-	public long getId() {
+	public int getId() {
 		return id;
 	}
 

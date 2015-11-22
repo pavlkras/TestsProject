@@ -153,7 +153,7 @@ public class AutorizationData extends TestsPersistence implements IDataLoader {
 
 	@Override
 	@Transactional
-	public void fillInfoAboutCompany(AutorizationModel model, long id) {
+	public void fillInfoAboutCompany(AutorizationModel model, int id) {
 		EntityCompany company = em.find(EntityCompany.class, id);
 		model.setEmail(company.getC_email());
 		model.setWebSite(company.getC_Site());
@@ -177,6 +177,13 @@ public class AutorizationData extends TestsPersistence implements IDataLoader {
 			company.setC_Specialization(spec);
 	
 		em.persist(company);				
+		return true;
+	}
+
+	@Override
+	public boolean checkFirstCompany() {
+		EntityCompany ec = em.find(EntityCompany.class, 1);
+		if(ec==null) return false;
 		return true;
 	}
 
