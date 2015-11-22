@@ -55,5 +55,7 @@ public final class JSONKeys {
 	public static final String CATEGORY_PARENT = "cat_parent"; // String - name of MetaCategory or Category1
 	public static final String CATEGORY_CHILDREN = "cat_children"; //String - name of JSONArray
 	public static final String CATEGORY_CHILD = "cat_child"; //String - name of sub-category
+	public static final String CATEGORY_MC = "cat_mc"; //String - meta category for custom questions (=type of question)
+	public static final String CATEGORY_MC_LIST = "cat_mc_array"; //JSONArray with mc
 
 }

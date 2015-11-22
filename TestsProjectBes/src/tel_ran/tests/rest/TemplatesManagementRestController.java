@@ -34,8 +34,7 @@ public class TemplatesManagementRestController {
 	 */
 	@RequestMapping(value="/categoriesList", method=RequestMethod.GET)
 	@ResponseBody @JsonRawValue
-	public String getCategories(@RequestHeader(value="Authorization") String token){
-		// TO DO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	public String getCategories(@RequestHeader(value="Authorization") String token){		
 		String result = "{}";
 		User user = tokenProcessor.decodeRoleToken(token);
 		if(user.isAutorized()) {
@@ -73,7 +72,7 @@ public class TemplatesManagementRestController {
 	 */
 	@RequestMapping(value="/adminList", method=RequestMethod.GET)
 	@ResponseBody @JsonRawValue
-	public String getAdminCategoryList(@RequestHeader(value="Authorixation") String token) {
+	public String getAdminCategoryList(@RequestHeader(value="Authorization") String token) {
 		String result = "{}";
 		User user = tokenProcessor.decodeRoleToken(token);
 		if(user.isAutorized()) {
@@ -82,6 +81,8 @@ public class TemplatesManagementRestController {
 		return result;
 		
 	}
+	
+	
 	
 	private TestTemplateService getService() {
 		return (TestTemplateService) SpringApplicationContext.getBean("templateService");

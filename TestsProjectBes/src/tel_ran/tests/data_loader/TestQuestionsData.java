@@ -1,12 +1,15 @@
 package tel_ran.tests.data_loader;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.Query;
 
 import json_models.IJsonModels;
 import json_models.QuestionModel;
+
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +26,7 @@ import tel_ran.tests.services.common.IPublicStrings;
 import tel_ran.tests.services.fields.Role;
 
 public class TestQuestionsData extends TestsPersistence implements
-		IDataTestsQuestions, ITestData {
+		IDataTestsQuestions {
 
 	// ------------------------ STATUS OF DB ---------------------------------------------------------------------- //
 	@Override
@@ -428,6 +431,64 @@ public class TestQuestionsData extends TestsPersistence implements
 	}
 
 	
+		
+	@Override
+	public Map<String,List<String>> getCustomCategories2WithMetaCategory(
+			String category1, int companyId, Role role) {
+				
+		int id = companyId;
+		if(role.equals(Role.ADMINISTRATOR)) id = ADMIN_C_ID;		
+		
+		StringBuilder queryBuilder = new StringBuilder("SELECT c.metaCategory FROM EntityQuestionAttributes c WHERE c.");
+		if(role.equals(Role.ADMINISTRATOR)) queryBuilder.append(getLimitsForNotCompanyQuery());
+		else queryBuilder.append(getLimitsForCompanyQuery(companyId));
+		queryBuilder.append(" AND c.category1=?1 AND c.category2 is null");
+		Query query = em.createQuery(queryBuilder.toString());
+		query.setParameter(1, category1);
+		List<String> resultsQuery = query.getResultList();
+		Map<String,List<String>> map = new HashMap<>();
+		List<String> mc;
+		if(resultsQuery!=null) {			 
+			mc = new ArrayList<String>();
+			if(resultsQuery.contains(IPublicStrings.COMPANY_AMERICAN_TEST)) {
+				mc.add(IPublicStrings.COMPANY_AMERICAN_TEST);
+			}
+			if(resultsQuery.contains(IPublicStrings.COMPANY_QUESTION)) {
+				mc.add(IPublicStrings.COMPANY_QUESTION);
+			}			
+			map.put(null, mc);				
+		}
+		
+		List<String> listCategories2 = getCategories(id, 2, category1, 1);	
+		
+		if(listCategories2!=null) {
+			queryBuilder = new StringBuilder("SELECT c.metaCategory FROM EntityQuestionAttributes c WHERE c.");			
+			if(role.equals(Role.ADMINISTRATOR)) queryBuilder.append(getLimitsForNotCompanyQuery());
+			else queryBuilder.append(getLimitsForCompanyQuery(companyId));
+			queryBuilder.append(" AND c.category2=?1 AND c.category1=?2");			
+			
+						
+			for(String category2 : listCategories2) {				
+				mc = new ArrayList<>();
+				query = em.createQuery(queryBuilder.toString());
+				query.setParameter(2, category1);
+				query.setParameter(1, category2);				
+				List<String> mcQuery = query.getResultList();
+				if(mcQuery!=null) {
+					if (mcQuery.contains(IPublicStrings.COMPANY_AMERICAN_TEST)) {
+						mc.add(IPublicStrings.COMPANY_AMERICAN_TEST);						
+					} 
+					if(mcQuery.contains(IPublicStrings.COMPANY_QUESTION)) {
+						mc.add(IPublicStrings.COMPANY_QUESTION);						
+					}	
+					map.put(category2, mc);					
+				}					
+			}			
+		}
+					
+		return map;
+	}
+
 	
 	
 	//------------------------------------ INNER METHODS ------------------------------------------------//
@@ -439,34 +500,5 @@ public class TestQuestionsData extends TestsPersistence implements
 	private String getLimitsForNotCompanyQuery() {	
 		return getLimitsForCompanyQuery(ADMIN_C_ID);
 	}
-
-
-	@Override
-	public List<String> getCategories1(int companyId) {
-		// TODO Auto-generated method stub
-		
-		
-		return null;
-	}
-
-
-	
-
-
-
-
-
-
-
-
-
-
-
-	
-	
-
-
-
-
 	
 }

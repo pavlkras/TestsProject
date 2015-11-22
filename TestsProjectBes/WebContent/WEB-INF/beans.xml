@@ -23,7 +23,6 @@
 
 <bean id="autoData" class="tel_ran.tests.data_loader.AutorizationData"></bean>
 <bean id="testQuestsionsData" class="tel_ran.tests.data_loader.TestQuestionsData"></bean>
-<bean id="testData" class="tel_ran.tests.data_loader.TestQuestionsData"></bean>
 <bean id="dataInitialize" class="tel_ran.tests.initiate.DataInitialization"></bean>
 
 <bean id="personal_actions" class="tel_ran.tests.services.PersonalActionsService" scope="prototype"/> 

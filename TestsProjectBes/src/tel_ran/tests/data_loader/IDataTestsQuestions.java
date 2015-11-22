@@ -1,6 +1,7 @@
 package tel_ran.tests.data_loader;
 
 import java.util.List;
+import java.util.Map;
 
 import json_models.IJsonModels;
 import json_models.QuestionModel;
@@ -42,5 +43,17 @@ public interface IDataTestsQuestions extends IData {
 	 * @return
 	 */
 	List<String> getCategories(int companyId, int catgeryLevel, String parent, int levelOfParent);
+	
+	/**
+	 * Returns list of CUSTOM category2 that exist in DB for given Category1 and Company ID (or for Admin)
+	 * 
+	 * @param category1 - name of category1
+	 * @param companyId - id of company. This parameter is not important, if the role = Role.Administrator and can be -1 
+	 * @param role - Company or Administrator (value of ENUM Role)
+	 * @return List of String array where [0] = name of category2, [1] = name of metaCategory. [0] can be null if
+	 * this category1 has some questions without any sub-categories 
+	 */
+	Map<String, List<String>> getCustomCategories2WithMetaCategory(String category1, int companyId,
+			Role role);
 	
 }
