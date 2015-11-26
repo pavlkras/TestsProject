@@ -90,23 +90,7 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 	}
 	
 
-	
-	//------------- 	Use case Ordering Test 3.1.3 -------------/// BEGIN ////
-	
-		
-	@Override
-	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
-	public int createPerson(int personId,String personName, String personSurname, String personEmail) {
 
-//		EntityPerson person = this.createEntityPerson(personId, personName, personSurname, personEmail);
-		
-//		if(person==null)
-//			return 0;
-
-		return -1;
-//		return person.getPersonId();
-	}
-	
 
 	//------------- 	Use case Ordering Test 3.1.3 -------------/// END  ////	
 	
@@ -336,15 +320,7 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 		
 		return response;
 	}
-
 	
-	// Person handler	
-	//		private IPersonTestHandler getTestResultsHandler(long companyId, long testId){
-	//			return new PersonTestHandler(companyId, testId, em);
-	//		}
-	//		
-		
-			
 			
 		//------------- Viewing test results  3.1.4.----------- // END ////	
 		
@@ -386,68 +362,8 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 		return result.toString();
 	}
 	
-	// Person handler	
-//		private IPersonTestHandler getTestResultsHandler(long companyId, long testId){
-//			return new PersonTestHandler(companyId, testId, em);
-//		}
-//		
-	
-		
-		
-	//------------- Viewing test results  3.1.4.----------- // END ////	
-	
-	
-	// ------------ Creating tests -------------------------// BEGIN ////
-		
-		
-	// old version
-//	@Override
-//	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
-//	public int createTestForPersonFull(String metaCategories, String categories1, String difLevel, String nQuestion, int personPassport,
-//			String personName, String personSurname, String personEmail, String pass) {		
-//		return this.createTestForPersonFullWithQuestions(null, metaCategories, categories1, difLevel, nQuestion, 
-//				personPassport, personName, personSurname, personEmail, pass);
-//	}
-
-		
-		
-	@Override
-	public int createSetQuestiosnAndTest(String metaCategory, String category1, String level_num, String nQuestion, 
-			int personId, String pass) {
-		
-		EntityPerson temp = em.find(EntityPerson.class, personId);	
-		
-//		return testFromQuestionList(null, temp, pass, metaCategory, category1, level_num, nQuestion);
-		return -1;
-	}
-
-	@Override  
-	public List<Long> createSetQuestions(String metaCategory, String categories1, String levelsOfDifficulty, int nQuestion) 
-		{				
-			List<Long> result = null; 			
-//			return createSetQuestions(metaCategory, categories1, levelsOfDifficulty, nQuestion, result);
-			return null;
-		}
-
-
-
-	
 	// PRIVATE METHODS FOR TEST CREATION ---------------------- // BEGIN -----------
 
-	
-	
-
-	
-//	private boolean checkCategory1 (String metaCategory, String category1) {
-//		boolean result = false;
-//		
-//		List<String> categories1InDb = this.getCategories1ByMetaCategory(metaCategory);
-//		if(categories1InDb.contains(category1))
-//			result = true;
-//		
-//		return result;
-//	}
-		
 	
 
 		
