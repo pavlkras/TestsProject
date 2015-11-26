@@ -3,10 +3,16 @@ package tel_ran.tests.data_loader;
 import java.util.List;
 import java.util.Map;
 
+import json_models.CategoriesList;
 import json_models.IJsonModels;
 import json_models.QuestionModel;
 import tel_ran.tests.entitys.EntityPerson;
+import tel_ran.tests.entitys.EntityQuestionAttributes;
+import tel_ran.tests.entitys.EntityTest;
+import tel_ran.tests.entitys.EntityTestQuestions;
+import tel_ran.tests.entitys.EntityTestTemplate;
 import tel_ran.tests.services.fields.Role;
+import tel_ran.tests.token_cipher.User;
 
 public interface IDataTestsQuestions extends IData {
 	int getNumberQuestions(int id, Role role);
@@ -44,16 +50,54 @@ public interface IDataTestsQuestions extends IData {
 	 */
 	List<String> getCategories(int companyId, int catgeryLevel, String parent, int levelOfParent);
 	
+		
 	/**
-	 * Returns list of CUSTOM category2 that exist in DB for given Category1 and Company ID (or for Admin)
-	 * 
-	 * @param category1 - name of category1
-	 * @param companyId - id of company. This parameter is not important, if the role = Role.Administrator and can be -1 
-	 * @param role - Company or Administrator (value of ENUM Role)
-	 * @return List of String array where [0] = name of category2, [1] = name of metaCategory. [0] can be null if
-	 * this category1 has some questions without any sub-categories 
+	 * Return list of ALL CUSTOM categories of the given Company or Admin
+	 * @param role. Can be equals COMPANY or ADMIN
+	 * @param companyId - id of company. For ADMNI can be = -1 or any other number
+	 * @return
 	 */
-	Map<String, List<String>> getCustomCategories2WithMetaCategory(String category1, int companyId,
-			Role role);
+	CategoriesList getCategoriesList(Role role, int companyId);
+	
+	/**
+	 * Save new Template
+	 * @param entity
+	 * @param user 
+	 */
+	void createTemplate(EntityTestTemplate entity, Role role, long companyId);
+	
+	/**
+	 * Return full list of questions by params
+	 * @param metaCategory
+	 * @param category1
+	 * @param category2
+	 * @param difficulty
+	 * @param role
+	 * @param id
+	 * @return
+	 */
+	List<EntityQuestionAttributes> getQuestionListByParams(String metaCategory,
+			String category1, String category2, int difficulty, Role role,
+			long id);
+	
+	/**
+	 * Return EntityQuestionAttributes with given ID
+	 * @param id
+	 * @return
+	 */
+	EntityQuestionAttributes findQuestionById(Long id);
+	
+	
+	/**
+	 * Create new Person 
+	 * @param entity
+	 * @return id of new element
+	 */
+	long createPerson(EntityPerson entity);
+	long createTest(EntityTest test, List<EntityTestQuestions> questions,
+			long personId, Role role, long id);
+	EntityTest findTestById(long testId);
+	
+	
 	
 }

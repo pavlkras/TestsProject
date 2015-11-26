@@ -1,10 +1,19 @@
 package tel_ran.tests.entitys;
 
+import java.util.List;
+import java.util.Map;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+
+import json_models.JSONKeys;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * EntityTestTemplate - entity for templates of tests.
@@ -87,6 +96,40 @@ public class EntityTestTemplate {
 
 	public long getId() {
 		return id;
+	}
+	
+	public void setTemplate(List<Long> questionsId, List<Map<String,Object>> templates) {
+		JSONObject jsn = new JSONObject();	
+		try{
+		if(questionsId!=null) {
+			JSONArray array = new JSONArray();
+			for(long id : questionsId) {
+				if(id<0) continue;
+				JSONObject jsnOb = new JSONObject();				
+				jsnOb.put(JSONKeys.TEMPLATE_QUESTION_ID, id);				
+			}
+			jsn.put(JSONKeys.TEMPLATE_QUESTIONS, array);			
+		}
+		
+		if(templates!=null) {
+			JSONArray array2 = new JSONArray();
+			for(Map<String, Object> template : templates) {
+				if(template==null) continue;
+				JSONObject jsnTemp = new JSONObject();
+				jsnTemp.put(JSONKeys.TEMPLATE_META_CATEGORY, template.get(JSONKeys.TEMPLATE_META_CATEGORY));
+				jsnTemp.put(JSONKeys.TEMPLATE_QUANTITY, template.get(JSONKeys.TEMPLATE_QUANTITY));
+				jsnTemp.put(JSONKeys.TEMPLATE_CATEGORY1, template.get(JSONKeys.TEMPLATE_CATEGORY1));
+				jsnTemp.put(JSONKeys.TEMPLATE_CATEGORY2, template.get(JSONKeys.TEMPLATE_CATEGORY2));
+				jsnTemp.put(JSONKeys.TEMPLATE_DIFFICULTY, template.get(JSONKeys.TEMPLATE_DIFFICULTY));
+			}
+			jsn.put(JSONKeys.TEMPLATE_CATEGORIES, array2);			
+		}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+		this.template = jsn.toString();
+		
 	}
 	
 	

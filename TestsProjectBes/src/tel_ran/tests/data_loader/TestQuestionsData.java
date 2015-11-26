@@ -2,11 +2,13 @@ package tel_ran.tests.data_loader;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.persistence.Query;
 
+import json_models.CategoriesList;
 import json_models.IJsonModels;
 import json_models.QuestionModel;
 
@@ -18,6 +20,7 @@ import tel_ran.tests.entitys.EntityPerson;
 import tel_ran.tests.entitys.EntityQuestionAttributes;
 import tel_ran.tests.entitys.EntityTest;
 import tel_ran.tests.entitys.EntityTestQuestions;
+import tel_ran.tests.entitys.EntityTestTemplate;
 import tel_ran.tests.entitys.EntityTexts;
 import tel_ran.tests.entitys.EntityTitleQuestion;
 import tel_ran.tests.processor.TestProcessor;
@@ -384,6 +387,33 @@ public class TestQuestionsData extends TestsPersistence implements
 		
 	}
 
+	// ------------------------- LISTS OF CATEGORIES ------------------------------------- //
+	
+	// LIST OF CUSTOM CATEGORIES
+	@Override
+	public CategoriesList getCategoriesList(Role role, int companyId) {
+		
+		//1 - check role. If it's an ADMIN companyId = 1			
+		if (role.equals(Role.ADMINISTRATOR)) companyId = ADMIN_C_ID;
+		if(companyId<0) return null;
+				
+		//2 - get List of categories1
+		List<String> categories1 = getCategories(companyId, 1, null, -1);
+		
+		//3 - get Map for each value in the list
+		Map<String, Map<String,List<String>>> map = new LinkedHashMap<>();
+		
+		for(String s : categories1) {
+			Map<String, List<String>> innerMap = getCustomCategories2WithMetaCategory(s, companyId);
+			map.put(s, innerMap);			
+		}
+						
+		//4 - create object of CategoryMaps
+		CategoriesList result = new CategoriesList();
+		result.setCategoriesWithData(map);
+		
+		return result;
+	}
 
 	@Override
 	public List<String> getCategories(int companyId, int categoryLevel,
@@ -429,19 +459,13 @@ public class TestQuestionsData extends TestsPersistence implements
 		
 		return result;
 	}
-
 	
+	private Map<String,List<String>> getCustomCategories2WithMetaCategory(
+			String category1, int companyId) {
 		
-	@Override
-	public Map<String,List<String>> getCustomCategories2WithMetaCategory(
-			String category1, int companyId, Role role) {
-				
-		int id = companyId;
-		if(role.equals(Role.ADMINISTRATOR)) id = ADMIN_C_ID;		
 		
 		StringBuilder queryBuilder = new StringBuilder("SELECT c.metaCategory FROM EntityQuestionAttributes c WHERE c.");
-		if(role.equals(Role.ADMINISTRATOR)) queryBuilder.append(getLimitsForNotCompanyQuery());
-		else queryBuilder.append(getLimitsForCompanyQuery(companyId));
+		queryBuilder.append(getLimitsForCompanyQuery(companyId));
 		queryBuilder.append(" AND c.category1=?1 AND c.category2 is null");
 		Query query = em.createQuery(queryBuilder.toString());
 		query.setParameter(1, category1);
@@ -459,12 +483,11 @@ public class TestQuestionsData extends TestsPersistence implements
 			map.put(null, mc);				
 		}
 		
-		List<String> listCategories2 = getCategories(id, 2, category1, 1);	
+		List<String> listCategories2 = getCategories(companyId, 2, category1, 1);	
 		
 		if(listCategories2!=null) {
 			queryBuilder = new StringBuilder("SELECT c.metaCategory FROM EntityQuestionAttributes c WHERE c.");			
-			if(role.equals(Role.ADMINISTRATOR)) queryBuilder.append(getLimitsForNotCompanyQuery());
-			else queryBuilder.append(getLimitsForCompanyQuery(companyId));
+			queryBuilder.append(getLimitsForCompanyQuery(companyId));
 			queryBuilder.append(" AND c.category2=?1 AND c.category1=?2");			
 			
 						
@@ -488,8 +511,93 @@ public class TestQuestionsData extends TestsPersistence implements
 					
 		return map;
 	}
+	
 
 	
+	// -------------------------------------- TEST TEMPLATES --------------------------------------------- //
+	
+	@Override
+	@Transactional(readOnly=false)
+	public void createTemplate(EntityTestTemplate entity, Role role, long companyId) {
+		EntityCompany company = em.find(EntityCompany.class, getCompanyId(role, companyId));
+		entity.setEntityCompany(company);
+		em.persist(entity);
+				
+		String templateName = entity.getTemplateName();
+		if(templateName==null) {
+			templateName = "Template_" + entity.getId();
+			entity.setTemplateName(templateName);
+			em.merge(entity);
+		}		
+	}
+
+
+	@Override
+	public List<EntityQuestionAttributes> getQuestionListByParams(
+			String metaCategory, String category1, String category2,
+			int difficulty, Role role, long id) {	
+		
+		StringBuilder queryString = new StringBuilder("SELECT c FROM EntityQuestionAttributes c WHERE c.");
+		queryString.append(getLimitsForCompanyQuery(getCompanyId(role, id)));
+		
+		if(metaCategory!=null && !metaCategory.isEmpty()) {
+			queryString.append(" AND c.metaCategory='").append(metaCategory).append("'");
+		}
+		
+		if(category1!=null && !category1.isEmpty()) {
+			queryString.append(" AND c.category1='").append(category1).append("'");
+		}
+		
+		if(category2!=null && !category2.isEmpty()) {
+			queryString.append(" AND c.category2='").append(category2).append("'");
+		}
+		
+		if(difficulty>0) {
+			queryString.append(" AND c.levelOfDifficulty='").append(difficulty).append("'");
+		}
+		
+		List<EntityQuestionAttributes> result = (List<EntityQuestionAttributes>) em.createQuery(queryString.toString());
+				
+		return result;
+	}
+	
+	
+	@Override
+	public EntityQuestionAttributes findQuestionById(Long id) {		
+		return (EntityQuestionAttributes) em.find(EntityQuestionAttributes.class, id);
+	}
+
+	@Override
+	@Transactional(readOnly=false)
+	public long createPerson(EntityPerson entity) {
+		em.persist(entity);		 
+		return entity.getPersonId();
+		
+	}
+
+	@Override
+	@Transactional(readOnly=false)
+	public long createTest(EntityTest test,
+			List<EntityTestQuestions> questions, long personId, Role role, long id) {
+		
+		EntityPerson person = em.find(EntityPerson.class, personId);
+		test.setEntityCompany(em.find(EntityCompany.class, getCompanyId(role, id)));
+		test.setEntityPerson(person);
+		em.persist(test);				
+		for(EntityTestQuestions etq : questions) {
+			etq.setEntityTest(test);
+			em.persist(etq);
+		}
+		return test.getId();
+		
+	}
+	
+	@Override
+	public EntityTest findTestById(long testId) {		
+		return em.find(EntityTest.class, testId);
+	}
+
+
 	
 	//------------------------------------ INNER METHODS ------------------------------------------------//
 	private String getLimitsForCompanyQuery(int id) {	
@@ -500,5 +608,20 @@ public class TestQuestionsData extends TestsPersistence implements
 	private String getLimitsForNotCompanyQuery() {	
 		return getLimitsForCompanyQuery(ADMIN_C_ID);
 	}
+	
+	private int getCompanyId(Role role, long companyId) {
+		if(role.equals(Role.ADMINISTRATOR)) return ADMIN_C_ID;
+		return (int)companyId;
+	}
+
+
+	
+
+	
+
+
+	
+
+
 	
 }
