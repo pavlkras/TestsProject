@@ -21,6 +21,9 @@ public final class JSONKeys {
 	public static final String AUTO_COMPANY_NAME = "company";	
 		
 	public static final String ERROR = "error";
+	public static final String ERROR_CODE = "code";
+	public static final String RESPONSE_TEXT = "response";
+	public static final String RESPONSE_CODE = ERROR_CODE;
 	
 	public static final String SIGNUP_USER_EXIST = "userExist";
 	public static final String SIGNUP_SUCCESS = "success";
@@ -58,4 +61,32 @@ public final class JSONKeys {
 	public static final String CATEGORY_MC = "cat_mc"; //String - meta category for custom questions (=type of question)
 	public static final String CATEGORY_MC_LIST = "cat_mc_array"; //JSONArray with mc
 
+	// PERSON INFO
+	
+	public static final String PERSON_ID = "per_id"; // id in EntityPerson = long
+	public static final String PERSON_MAIL = "per_mail"; // e-mail of Person = String
+	public static final String PERSON_FNAME = "per_fname"; // name of Person = String
+	public static final String PERSON_LNAME = "per_lname"; // lastname of Person = String
+	public static final String PERSON_PASSPORT = "per_passport"; // number pf person's passport = String
+	
+	
+	// TEST TEMPLATE
+	
+	public static final String TEMPLATE_ID = "template_id"; //id in EntityTestTemmplate = int
+	public static final String TEMPLATE_NAME = "template_name"; //name of Template = String
+	public static final String TEMPLATE_SAVE = "template_save"; //true if the template should be saved
+	public static final String TEMPLATE_QUESTIONS = "template_by_questions"; //array of id of questions
+	public static final String TEMPLATE_QUESTION_ID = "template_quest_id"; //id of question
+	public static final String TEMPLATE_CATEGORIES = "template_by_categories"; //array of categories with params
+	public static final String TEMPLATE_META_CATEGORY = QUESTION_META_CATEGORY;
+	public static final String TEMPLATE_CATEGORY1 = QUESTION_CATEGORY1;
+	public static final String TEMPLATE_CATEGORY2 = QUESTION_CATEGORY2;
+	public static final String TEMPLATE_DIFFICULTY = QUESTION_DIFFICULTY_LVL;
+	public static final String TEMPLATE_QUANTITY = "quantity";  
+	
+	//TEST
+	
+	public static final String TEST_ID = "test_id"; //id in EntityTest = long
+	public static final String TEST_PASSWORD = "test_password"; // String
+	public static final String TEST_LINK_TO_SEND = "test_link"; // String
 }

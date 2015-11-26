@@ -1,7 +1,7 @@
 package tel_ran.tests.services;
 
 import json_models.AutorizationModel;
-import json_models.ErrorModel;
+import json_models.ResultAndErrorModel;
 import json_models.RegistrationModel;
 
 import org.json.JSONException;
@@ -48,7 +48,7 @@ public class AutorizationService {
 		} catch (JSONException e) {			
 			e.printStackTrace();
 			try {
-				return ErrorModel.getJson("Incorrect JSON");
+				return ResultAndErrorModel.getJson("Incorrect JSON");
 			} catch (JSONException e1) {				
 				e1.printStackTrace();			
 			}
@@ -93,7 +93,7 @@ public class AutorizationService {
 		} catch (JSONException e) {			
 			e.printStackTrace();
 			try {
-				return ErrorModel.getJson("Incorrect JSON");
+				return ResultAndErrorModel.getJson("Incorrect JSON");
 			} catch (JSONException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -141,7 +141,7 @@ public class AutorizationService {
 		} catch (JSONException e) {			
 			e.printStackTrace();
 			try {
-				return ErrorModel.getJson("Incorrect JSON");
+				return ResultAndErrorModel.getJson("Incorrect JSON");
 			} catch (JSONException e1) {				
 				e1.printStackTrace();			
 			}
@@ -176,7 +176,7 @@ public class AutorizationService {
 		} catch (JSONException e) {			
 			e.printStackTrace();
 			try {
-				return ErrorModel.getJson("Incorrect JSON");
+				return ResultAndErrorModel.getJson("Incorrect JSON");
 			} catch (JSONException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
