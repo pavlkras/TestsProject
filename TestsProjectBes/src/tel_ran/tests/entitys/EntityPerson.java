@@ -15,9 +15,6 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table (name = "EntityPerson", uniqueConstraints = {
-			@UniqueConstraint(columnNames = "identify")
-	})
 public class EntityPerson {
     
 	@Id
@@ -80,5 +77,7 @@ public class EntityPerson {
 		return "EntityPerson [personId=" + personId + ", personName=" + personName + ", personSurname="
 				+ personSurname + ", personEmail=" + personEmail + "]";
 	}
+	
+	
 	
 }
