@@ -69,7 +69,7 @@ public class TestManagement extends AController {
 			Model model, HttpServletRequest request) {	
 		
 		String url = request.getRequestURL().toString();
-		String pathToServer = url.replace("add_test", "jobSeeker_test_preparing_click_event");
+		String pathToServer = url.replace("add_test", "jobSeeker_test_preparing_click_event") + "?";
 		////
 		System.out.println("personId--" + personId);
 		System.out.println("level_num--"+level_num);//-------------------------------sysout
@@ -116,6 +116,7 @@ public class TestManagement extends AController {
 		}
 			
 		model.addAttribute("myResult", messageText);	
+		model.addAttribute("pathForTest", pathToServer);
 			
 		return "company/Company_TestLink";
 	}
