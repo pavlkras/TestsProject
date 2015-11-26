@@ -42,6 +42,15 @@ public interface IHandler {
 			String personId, String personName, String personSurname,
 			String personEmail, String pathToServer);
 	
+	/**
+	 * Returns lists of categories that are available for test-template generation.
+	 * Result doesn't depend from the user-access, but only registred companies and admins can get this information 
+	 * Lists are in JSON format.
+	 * [{cat_parent : 'nameMC', cat_children : [{cat_child : 'nameC'}] 	  
+	 */
+	String getPossibleAutoCaterories();
+	String getCommonCustomCategories();
+	
 }
 
 
