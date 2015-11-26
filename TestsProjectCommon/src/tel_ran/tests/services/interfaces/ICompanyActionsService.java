@@ -17,32 +17,6 @@ public interface ICompanyActionsService extends ICommonAdminService {
 	 */
 		
 	/**
-	 * CREATE TEST FOR PERSON = CREATE PERSON
-	 * return personId
-	 */
-	int createPerson(int personId,String personName,String personSurname,String personEmail); 
-	
-			
-	/**
-	 * CREATE TEST FOR PERSON = CREATE LIST OF QUESTIONS (Prog.Task)
-	 * @param metaCategory - name of the MetaCategory 
-	 * @param category1 - name of Category (Prog.Lang or User's categories)
-	 */
-	public List<Long> createSetQuestions(String metaCategory, String category1, String level_num, int nQuestion);
-	
-	/**
-	 * CREATE TEST FOR PERSON = CREATE LIST OF QUESTIONS AND TEST
-	 * @return 0 if the Test was created successfully or the number of possible problems
-	 * 1 - not enough questions in the database to generate the test
-	 * 2 - invalid value in the field personEmail
-	 * 3 - not enough data to generate the text. Categories1 should be specified, but the field is null	 * 
-	 */
-	public int createSetQuestiosnAndTest(String metaCategory, String category1, String level_num, String nQuestion, int personId, String pass);
-	
-
-	
-	
-	/**
 	 * Return list of all tests created by the company
 	 * @return list of JSON-files
 	 */
