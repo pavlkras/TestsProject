@@ -38,7 +38,7 @@
 </bean>
 
 <!--  Services -->
-	<bean id="templateService" class="tel_ran.tests.services.TestTemplateService" scope="prototype"/>
+	<bean id="templateService" class="tel_ran.tests.services.TestService" scope="prototype"/>
 
 <!-- Utils -->
 	<bean id="springApplicationContext" class="tel_ran.tests.services.utils.SpringApplicationContext"/>
