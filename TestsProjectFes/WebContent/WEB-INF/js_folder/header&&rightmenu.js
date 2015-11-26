@@ -14,8 +14,7 @@
     				'<a href="#">Question Maintance <span class="arrow">&#9660;</span></a>'+
     				'<ul class="sub-menu">'+
     					'<li><a href="add_question">Creating questions</a></li>'+
-    					'<li><a href="questions_update">Update/delete questions</a></li>'+
-    					'<li><a href="autoGeneration">Auto generation</a></li>'+
+    					'<li><a href="questions_update">Update/delete questions</a></li>'+    					
     				'</ul>'+
     				'</li>'+
     				'<li><a href="testGeneration">Test generation</a></li>'+

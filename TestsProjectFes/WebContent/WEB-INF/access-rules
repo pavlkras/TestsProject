@@ -14,7 +14,7 @@
 /CompanyLogin~~*
 /company_main~~3
 /query_processing~~4
-/autoGeneration~~3,4
+/autoGeneration~~4
 /add_question~~3,4
 /questions_update~~3,4
 /testGeneration~~3
