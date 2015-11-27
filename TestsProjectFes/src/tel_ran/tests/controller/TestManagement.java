@@ -43,7 +43,7 @@ public class TestManagement extends AController {
 		model.addAttribute("categoryFill", categoryHtmlText.toString());
 		String userQuestions = visitor.handler.getAllQuestionsList("user");
 		model.addAttribute("userQuestions", userQuestions);
-		
+		model.addAttribute("token", visitor.getToken());
 	
 		return "company/CompanyGenerateTest";
 	}

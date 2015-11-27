@@ -228,6 +228,10 @@
 	<script>
 	
 	var roleNumber = ${role}; getMenu(roleNumber);	
+	var token = ${token};
+	
+	
+	
 	
 	function showUserQuestions() {		
 		document.getElementById("showManualSelection").style.display = "inline";
