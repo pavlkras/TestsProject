@@ -8,30 +8,52 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.task.TaskExecutor;
+
 import tel_ran.tests.data_loader.IDataTestsQuestions;
 import tel_ran.tests.processor.TestProcessor;
 import tel_ran.tests.services.CommonAdminServices;
 import tel_ran.tests.services.MaintenanceService;
 import tel_ran.tests.services.fields.Role;
 import tel_ran.tests.services.utils.FileManagerService;
+import tel_ran.tests.services.utils.SpringApplicationContext;
 
 
-public class QuestionsCreation extends DataCreation {
+public class QuestionsCreation extends DataCreation implements Runnable {
 	
 	int numberOfQuestions;
 	int level;
 	public static final String NAME = "QUESTIONS";
 
-	
+//	@Autowired
+//	TaskExecutor taskExecutor;
 	
 	public QuestionsCreation(IDataTestsQuestions tp) {
-		this.persistence = tp;		
+		this.persistence = tp;	
+//		this.taskExecutor = (TaskExecutor) SpringApplicationContext.getBean("taskExecutor");
 	}
 
+	
+	
 
 	@Override
 	void fill() {
+//		taskExecutor.execute(this);	
+		System.out.println("I am HERE");
+		Thread td = new Thread(this);
+		td.start();
+	}
+	
+	@Override
+	public void run() {	
 		
+		try {
+			Thread.sleep(30000);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		List<String> mCategories = TestProcessor.getMetaCategory();
 		int count = mCategories.size();
 	
@@ -148,5 +170,8 @@ public class QuestionsCreation extends DataCreation {
 	public String getName() {		
 		return NAME;
 	}
+
+
+	
 
 }

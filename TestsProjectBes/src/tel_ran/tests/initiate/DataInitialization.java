@@ -29,7 +29,7 @@ import tel_ran.tests.data_loader.IDataTestsQuestions;
  */
 public class DataInitialization implements BeanPostProcessor {
 	
-	GetData getData;
+	volatile GetData getData;
 	
 	
 	private static final String FILE_PROPERTIES = "data.properties";
