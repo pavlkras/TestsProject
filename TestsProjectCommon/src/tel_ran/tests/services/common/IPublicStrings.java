@@ -49,23 +49,25 @@ public final class IPublicStrings {
 	public static final int TEST_NOT_SENDED = 5;
 	public static final int TEST_NOT_CORRECT_PERSON_INFO = 6;
 	public static final int TEST_NO_RIGHT_TO_SEND = 7;
+	public static final int ERROR_NO_ACCESS = 8;
 	
 	/**
 	 * Messages about errors that can be during test creation
 	 */
-	public static final String[] CREATE_TEST_ERROR;
+	public static final String[] ERRORS_TEXT;
 	
 	static {
-		CREATE_TEST_ERROR = new String[8];
-		CREATE_TEST_ERROR[TEST_SUCCESS] = "The test was successfully created and sended by e-mail"; // 0
-		CREATE_TEST_ERROR[TEST_NOT_ENOUGH_QUESTIONS] = "Not enough questions in the database to generate the test." 
+		ERRORS_TEXT = new String[8];
+		ERRORS_TEXT[TEST_SUCCESS] = "The test was successfully created and sended by e-mail"; // 0
+		ERRORS_TEXT[TEST_NOT_ENOUGH_QUESTIONS] = "Not enough questions in the database to generate the test." 
 				+ "Please fill in the database or create one another test with fewer number of questions";
-		CREATE_TEST_ERROR[TEST_INVALID_EMAIL] = "Invalid value in the E-mail box";  // - 2
-		CREATE_TEST_ERROR[TEST_NOT_ENOUGH_INFO] = "Not enough data to generate the text./n For category * should be specified sub-category"; // - 3
-		CREATE_TEST_ERROR[TEST_SOME_TROUBLE] = "The test was not created. There're some problem. Please contact your support"; // - 4
-		CREATE_TEST_ERROR[TEST_NOT_SENDED] = "The message wasn't sended"; // - 5
-		CREATE_TEST_ERROR[TEST_NOT_CORRECT_PERSON_INFO] = "The information about the Person is not correct. The test was not created"; //6
-		CREATE_TEST_ERROR[TEST_NO_RIGHT_TO_SEND] = "You are not allowed to send this test"; // 7
+		ERRORS_TEXT[TEST_INVALID_EMAIL] = "Invalid value in the E-mail box";  // - 2
+		ERRORS_TEXT[TEST_NOT_ENOUGH_INFO] = "Not enough data to generate the text./n For category * should be specified sub-category"; // - 3
+		ERRORS_TEXT[TEST_SOME_TROUBLE] = "The test was not created. There're some problem. Please contact your support"; // - 4
+		ERRORS_TEXT[TEST_NOT_SENDED] = "The message wasn't sended"; // - 5
+		ERRORS_TEXT[TEST_NOT_CORRECT_PERSON_INFO] = "The information about the Person is not correct. The test was not created"; //6
+		ERRORS_TEXT[TEST_NO_RIGHT_TO_SEND] = "You are not allowed to send this test"; // 7
+		ERRORS_TEXT[ERROR_NO_ACCESS] = "You are not allowed to execute this action"; //8
 	}	
 	
 	
