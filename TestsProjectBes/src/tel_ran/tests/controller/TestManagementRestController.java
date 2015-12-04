@@ -11,13 +11,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.annotation.JsonRawValue;
 
-import tel_ran.tests.data_loader.IDataLoader;
+import tel_ran.tests.dao.IDataLoader;
+import tel_ran.tests.services.AbstractServiceGetter;
 import tel_ran.tests.services.AutorizationService;
+import tel_ran.tests.services.IService;
 import tel_ran.tests.services.TestService;
 import tel_ran.tests.services.fields.Role;
 import tel_ran.tests.services.utils.SpringApplicationContext;
 import tel_ran.tests.token_cipher.TokenProcessor;
 import tel_ran.tests.token_cipher.User;
+import tel_ran.tests.utils.errors.AccessException;
 
 @Controller
 @RequestMapping({"/tests"})
@@ -25,6 +28,7 @@ public class TestManagementRestController {
 
 	@Autowired
 	TokenProcessor tokenProcessor;
+	
 	
 	/**
 	 * LIST of COMPANY CUSTOM categories
@@ -181,6 +185,36 @@ public class TestManagementRestController {
 		
 		return result;		
 	}
+	
+	/**
+	 * LIST of all questions by ID of company. For Administrator returns list of admin questions
+	 * Return JSONArray with json objects:
+	 * id = id of question (long)
+	 * metaCategory (String)
+	 * category1 (String)
+	 * category2 (String)
+	 * is_image = true if the question has image (boolean)
+	 * shortText = short version of question text (String)
+	 * level = level of difficulty (int) 
+	 * 
+	 * If the token is incorrect - returns error message:
+	 * code = number of error = 8
+	 * error = description of error
+	 * @param token
+	 */
+	@RequestMapping(value="/questionList", method=RequestMethod.GET)
+	@ResponseBody
+	public String getQuestionsByCompany(@RequestHeader(value="Authorization") String token) {
+		
+		try {
+			TestService service = (TestService) AbstractServiceGetter.getService(token, "templateService");
+			return service.getQuestionsByCompany();
+		} catch (AccessException e) {
+			e.printStackTrace();
+			return e.getString();			
+		}		
+	}
+	
 	
 	
 	private TestService getService() {

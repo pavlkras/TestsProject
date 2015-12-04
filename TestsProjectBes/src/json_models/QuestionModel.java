@@ -17,6 +17,16 @@ public class QuestionModel implements IJsonModels {
 	private boolean containsImage;
 	private String shortDescription;
 	
+	public QuestionModel(EntityQuestionAttributes entityQuestion) {
+		this.questionId = entityQuestion.getId();
+		this.metaCategory = entityQuestion.getMetaCategory();
+		this.category1 = entityQuestion.getCategory1();
+		this.category2 = entityQuestion.getCategory2();
+		this.difLevel = entityQuestion.getLevelOfDifficulty();
+		if(entityQuestion.getFileLocationLink()!=null) this.containsImage = true;
+		this.addShortDescription(entityQuestion.getDescription());
+		
+	}
 	
 	public QuestionModel (long questionId, String metaCategory, String category1, String category2, int difLevel, boolean isImage) {
 		this.questionId = questionId;
