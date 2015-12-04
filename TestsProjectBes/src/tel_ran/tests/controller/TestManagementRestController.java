@@ -1,6 +1,5 @@
 package tel_ran.tests.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,23 +10,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.annotation.JsonRawValue;
 
-import tel_ran.tests.dao.IDataLoader;
 import tel_ran.tests.services.AbstractServiceGetter;
-import tel_ran.tests.services.AutorizationService;
-import tel_ran.tests.services.IService;
 import tel_ran.tests.services.TestService;
-import tel_ran.tests.services.fields.Role;
-import tel_ran.tests.services.utils.SpringApplicationContext;
-import tel_ran.tests.token_cipher.TokenProcessor;
-import tel_ran.tests.token_cipher.User;
 import tel_ran.tests.utils.errors.AccessException;
 
 @Controller
 @RequestMapping({"/tests"})
 public class TestManagementRestController {
 
-	@Autowired
-	TokenProcessor tokenProcessor;
 	
 	
 	/**
@@ -47,12 +37,15 @@ public class TestManagementRestController {
 	@RequestMapping(value="/categoriesList", method=RequestMethod.GET)
 	@ResponseBody @JsonRawValue
 	public String getCategories(@RequestHeader(value="Authorization") String token){		
-		String result = "{}";
-		User user = tokenProcessor.decodeRoleToken(token);
-		if(user.isAutorized()) {
-			result = getService().getCategories(user);			
-		}		
-		return result;
+		
+		
+		try {
+			TestService service = (TestService) AbstractServiceGetter.getService(token, "templateService");
+			return service.getCategories();	
+		} catch (AccessException e) {
+			e.printStackTrace();
+			return e.getString();			
+		}	
 	}
 	
 	
@@ -65,13 +58,14 @@ public class TestManagementRestController {
 	@RequestMapping(value="/autoList", method=RequestMethod.GET)
 	@ResponseBody @JsonRawValue
 	public String getAutoList(@RequestHeader(value="Authorization") String token) {
-		String result = "{}";
-		User user = tokenProcessor.decodeRoleToken(token);
-		if(user.isAutorized()) {
-			result = TestService.getAutoCategories();
-		}		
-		
-		return result;		
+				
+		try {
+			TestService service = (TestService) AbstractServiceGetter.getService(token, "templateService");
+			return TestService.getAutoCategories();
+		} catch (AccessException e) {
+			e.printStackTrace();
+			return e.getString();			
+		}	
 	}
 	
 	/**
@@ -91,12 +85,14 @@ public class TestManagementRestController {
 	@RequestMapping(value="/adminList", method=RequestMethod.GET)
 	@ResponseBody @JsonRawValue
 	public String getAdminCategoryList(@RequestHeader(value="Authorization") String token) {
-		String result = "{}";
-		User user = tokenProcessor.decodeRoleToken(token);
-		if(user.isAutorized()) {
-			result = getService().getAdminCategories();
-		}
-		return result;
+				
+		try {
+			TestService service = (TestService) AbstractServiceGetter.getService(token, "templateService");
+			return service.getAdminCategories();
+		} catch (AccessException e) {
+			e.printStackTrace();
+			return e.getString();			
+		}	
 		
 	}
 
@@ -143,15 +139,14 @@ public class TestManagementRestController {
 	@RequestMapping(value="/createTest", method=RequestMethod.POST)
 	@ResponseBody
 	public String createTestAndPerson(@RequestHeader(value="Authorization") String token, @RequestBody String testInfo) {
-		String result = "{}";
-		User user = tokenProcessor.decodeRoleToken(token);
-		if(user.isAutorized() && testInfo!=null) {
-			TestService service = getService();
-			service.setUser(user);
-			result = service.createTestAndPerson(testInfo);
-		}
-		
-		return result;
+				
+		try {
+			TestService service = (TestService) AbstractServiceGetter.getService(token, "templateService");
+			return service.createTestAndPerson(testInfo);
+		} catch (AccessException e) {
+			e.printStackTrace();
+			return e.getString();			
+		}		
 	}
 		
 	/**
@@ -174,16 +169,15 @@ public class TestManagementRestController {
 	@RequestMapping(value="/sendTestByMail" + "/{testId}", method=RequestMethod.POST)
 	@ResponseBody
 	public String sendTestToEmail(@RequestHeader(value="Authorization") String token, @PathVariable long testId, @RequestBody String link) {
-		String result = "";
-		User user = tokenProcessor.decodeRoleToken(token);
-		if(user.isAutorized() && link!=null) {
-			TestService service = getService();
-			service.setUser(user);
-			result = service.sendTestByMail(link, testId);
+				
+		try {
+			TestService service = (TestService) AbstractServiceGetter.getService(token, "templateService");
+			return service.sendTestByMail(link, testId);
+		} catch (AccessException e) {
+			e.printStackTrace();
+			return e.getString();			
 		}
 		
-		
-		return result;		
 	}
 	
 	/**
@@ -215,10 +209,5 @@ public class TestManagementRestController {
 		}		
 	}
 	
-	
-	
-	private TestService getService() {
-		return (TestService) SpringApplicationContext.getBean("templateService");
-	}
-	
+		
 }

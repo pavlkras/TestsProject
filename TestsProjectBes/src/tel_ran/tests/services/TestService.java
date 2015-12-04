@@ -39,7 +39,7 @@ public class TestService implements IService {
 	
 	
 			
-	public String getCategories(User user) {
+	public String getCategories() {
 		CategoriesList catList = testQuestsionsData.getCategoriesList(user.getRole(), user.getRoleNumber());
 		String result = "";
 		
