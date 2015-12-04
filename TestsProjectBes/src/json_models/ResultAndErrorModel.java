@@ -25,7 +25,7 @@ public class ResultAndErrorModel {
 	
 	public static String getJson(int errorcode) throws JSONException {
 		JSONObject obj = new JSONObject();
-		obj.put(JSONKeys.ERROR, IPublicStrings.CREATE_TEST_ERROR[errorcode]);
+		obj.put(JSONKeys.ERROR, IPublicStrings.ERRORS_TEXT[errorcode]);
 		obj.put(JSONKeys.ERROR_CODE, errorcode);
 		return obj.toString();
 	}
