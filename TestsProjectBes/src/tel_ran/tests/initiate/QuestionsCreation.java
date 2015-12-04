@@ -11,7 +11,7 @@ import java.util.Properties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.TaskExecutor;
 
-import tel_ran.tests.data_loader.IDataTestsQuestions;
+import tel_ran.tests.dao.IDataTestsQuestions;
 import tel_ran.tests.processor.TestProcessor;
 import tel_ran.tests.services.CommonAdminServices;
 import tel_ran.tests.services.MaintenanceService;

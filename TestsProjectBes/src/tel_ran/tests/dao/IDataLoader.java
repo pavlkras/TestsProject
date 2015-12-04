@@ -1,4 +1,4 @@
-package tel_ran.tests.data_loader;
+package tel_ran.tests.dao;
 
 import json_models.AutorizationModel;
 

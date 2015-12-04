@@ -2,7 +2,7 @@ package tel_ran.tests.initiate;
 
 import java.util.Properties;
 
-import tel_ran.tests.data_loader.IDataLoader;
+import tel_ran.tests.dao.IDataLoader;
 
 
 public class CompanyCreation extends DataCreation {

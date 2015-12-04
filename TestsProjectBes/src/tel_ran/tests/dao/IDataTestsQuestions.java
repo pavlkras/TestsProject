@@ -1,4 +1,4 @@
-package tel_ran.tests.data_loader;
+package tel_ran.tests.dao;
 
 import java.util.List;
 import java.util.Map;
@@ -97,6 +97,7 @@ public interface IDataTestsQuestions extends IData {
 	long createTest(EntityTest test, List<EntityTestQuestions> questions,
 			long personId, Role role, long id);
 	EntityTest findTestById(long testId);
+	List<EntityQuestionAttributes> getQuestionListByParams(Role role, long id);
 	
 	
 	

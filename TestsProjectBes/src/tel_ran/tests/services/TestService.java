@@ -2,35 +2,28 @@ package tel_ran.tests.services;
 
 
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-
-import javax.persistence.Query;
 
 import json_models.CategoriesList;
 import json_models.JSONKeys;
 import json_models.ResultAndErrorModel;
 import json_models.PersonModel;
+import json_models.QuestionModel;
 import json_models.TemplateModel;
 import json_models.TestModel;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import tel_ran.tests.data_loader.CategoryMaps;
-import tel_ran.tests.data_loader.IDataTestsQuestions;
-import tel_ran.tests.data_loader.TestQuestionsData;
+import tel_ran.tests.dao.CategoryMaps;
+import tel_ran.tests.dao.IDataTestsQuestions;
 import tel_ran.tests.entitys.EntityQuestionAttributes;
-import tel_ran.tests.entitys.EntityTestQuestions;
-import tel_ran.tests.services.common.ICommonData;
 import tel_ran.tests.services.common.IPublicStrings;
 import tel_ran.tests.services.fields.Role;
 import tel_ran.tests.token_cipher.User;
 
-public class TestService  {
+public class TestService implements IService {
 	
 	@Autowired
 	IDataTestsQuestions testQuestsionsData;	
@@ -39,6 +32,7 @@ public class TestService  {
 	
 	public TestService() {}
 	
+	@Override
 	public void setUser(User user) {
 		this.user = user;
 	}
@@ -210,6 +204,29 @@ public class TestService  {
 			return "";
 		}				
 		
+	}
+
+	public String getQuestionsByCompany() {
+		
+		List<EntityQuestionAttributes> questions = this.testQuestsionsData.getQuestionListByParams(this.user.getRole(),
+				this.user.getId());
+		
+		return getStringFromQuestionList(questions);
+	}
+
+	private String getStringFromQuestionList(List<EntityQuestionAttributes> questions) {
+		JSONArray jsonArray = new JSONArray();
+		for(EntityQuestionAttributes question : questions) {
+			try {
+				jsonArray.put(new QuestionModel(question).getJSON());
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		
+		return jsonArray.toString();
 	}
 	
 

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import tel_ran.tests.data_loader.TestsPersistence;
+import tel_ran.tests.dao.TestsPersistence;
 import tel_ran.tests.entitys.EntityTest;
 import tel_ran.tests.entitys.EntityTestQuestions;
 import tel_ran.tests.services.common.ICommonData;

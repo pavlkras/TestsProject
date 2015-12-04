@@ -9,7 +9,7 @@ import org.json.JSONException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import tel_ran.tests.data_loader.IDataLoader;
+import tel_ran.tests.dao.IDataLoader;
 import tel_ran.tests.services.common.ICommonData;
 import tel_ran.tests.services.fields.Role;
 import tel_ran.tests.services.utils.SpringApplicationContext;

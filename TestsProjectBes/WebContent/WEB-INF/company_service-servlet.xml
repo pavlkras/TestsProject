@@ -12,7 +12,7 @@
 <!-- components of the application service getting result of any query -->
 
 <bean id="company" class="tel_ran.tests.services.CompanyActionsService" scope="prototype"/> <!-- class for application model -->
-<context:component-scan base-package="tel_ran.tests.rest"/>
+<context:component-scan base-package="tel_ran.tests.controller"/>
 
 <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 <property value="/WEB-INF/jsp/" name="prefix"/>

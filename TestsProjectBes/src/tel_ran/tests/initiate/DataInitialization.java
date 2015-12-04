@@ -11,10 +11,10 @@ import java.util.Properties;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 
-import tel_ran.tests.data_loader.AutorizationData;
-import tel_ran.tests.data_loader.IData;
-import tel_ran.tests.data_loader.IDataLoader;
-import tel_ran.tests.data_loader.IDataTestsQuestions;
+import tel_ran.tests.dao.AutorizationData;
+import tel_ran.tests.dao.IData;
+import tel_ran.tests.dao.IDataLoader;
+import tel_ran.tests.dao.IDataTestsQuestions;
 
 
 

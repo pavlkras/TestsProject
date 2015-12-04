@@ -1,4 +1,4 @@
-package tel_ran.tests.data_loader;
+package tel_ran.tests.dao;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -556,7 +556,7 @@ public class TestQuestionsData extends TestsPersistence implements
 			queryString.append(" AND c.levelOfDifficulty='").append(difficulty).append("'");
 		}
 		
-		List<EntityQuestionAttributes> result = (List<EntityQuestionAttributes>) em.createQuery(queryString.toString());
+		List<EntityQuestionAttributes> result = em.createQuery(queryString.toString()).getResultList();
 				
 		return result;
 	}
@@ -612,6 +612,13 @@ public class TestQuestionsData extends TestsPersistence implements
 	private int getCompanyId(Role role, long companyId) {
 		if(role.equals(Role.ADMINISTRATOR)) return ADMIN_C_ID;
 		return (int)companyId;
+	}
+
+
+	@Override
+	public List<EntityQuestionAttributes> getQuestionListByParams(Role role, long id) {
+		
+		return this.getQuestionListByParams(null, null, null, 0, role, id);
 	}
 
 

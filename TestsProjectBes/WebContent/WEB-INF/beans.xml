@@ -21,8 +21,8 @@
 
 <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor" />
 
-<bean id="autoData" class="tel_ran.tests.data_loader.AutorizationData"></bean>
-<bean id="testQuestsionsData" class="tel_ran.tests.data_loader.TestQuestionsData"></bean>
+<bean id="autoData" class="tel_ran.tests.dao.AutorizationData"></bean>
+<bean id="testQuestsionsData" class="tel_ran.tests.dao.TestQuestionsData"></bean>
 <bean id="dataInitialize" class="tel_ran.tests.initiate.DataInitialization"></bean>
 
 <bean id="personal_actions" class="tel_ran.tests.services.PersonalActionsService" scope="prototype"/> 
@@ -54,6 +54,8 @@
 	<bean id="Open Question" class="tel_ran.tests.services.subtype_handlers.OpenQuestionHandler" scope="prototype"></bean>
 <!-- <bean id="Text" class="tel_ran.tests.services.subtype_handlers.TextTestQuestionHandler" scope="prototype"></bean>  -->
 <!-- EOF TestHandlers -->
+
+
 
 <!-- Token processing -->
 	<bean id="cipher" class="tel_ran.tests.token_cipher.AESCipher" scope="singleton"/>

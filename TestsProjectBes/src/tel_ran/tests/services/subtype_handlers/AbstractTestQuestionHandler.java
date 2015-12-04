@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.google.gson.Gson;
 
-import tel_ran.tests.data_loader.TestsPersistence;
+import tel_ran.tests.dao.TestsPersistence;
 import tel_ran.tests.entitys.EntityQuestionAttributes;
 import tel_ran.tests.entitys.EntityTestQuestions;
 import tel_ran.tests.services.common.ICommonData;
