@@ -1,7 +1,7 @@
 
 <form name="questionForm" novalidate ng-submit="getQuestion(answer.name);">
             <table>
-                <tr><th colspan="2"><label>Question&nbsp;</label>{{numberQuestion+1}}</th></tr><br>
+                <tr><th colspan="2"><label>Question&nbsp;</label>{{numberQuestion+1}}</th></tr>
                 <tr ng-show="mySwitchText"><td colspan="2">{{text}}</td></tr>
                 <tr ng-show="mySwitchDescription"><td colspan="2">
                 	<table ng-repeat="l in description">

@@ -32,7 +32,7 @@
 					<h3>{{company}}</h3>
 					<div class="site">{{web}}</div>
 					<div class="us_info">Questions in DB: {{num_question}}<br/>
-					Sended tests: {{num_tests}}</p></div>
+					Sended tests: {{num_tests}}</div>
 				
 			
 				
