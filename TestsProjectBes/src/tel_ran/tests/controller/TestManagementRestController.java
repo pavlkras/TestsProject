@@ -58,14 +58,17 @@ public class TestManagementRestController {
 	@RequestMapping(value="/autoList", method=RequestMethod.GET)
 	@ResponseBody @JsonRawValue
 	public String getAutoList(@RequestHeader(value="Authorization") String token) {
-				
+		
 		try {
 			TestService service = (TestService) AbstractServiceGetter.getService(token, "templateService");
 			return TestService.getAutoCategories();
 		} catch (AccessException e) {
 			e.printStackTrace();
 			return e.getString();			
-		}	
+		} catch (NullPointerException ne) {
+			ne.printStackTrace();
+			return null;
+		}
 	}
 	
 	/**

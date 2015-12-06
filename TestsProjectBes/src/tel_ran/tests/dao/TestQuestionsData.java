@@ -443,10 +443,11 @@ public class TestQuestionsData extends TestsPersistence implements
 			} else {
 				textQuery.append("='").append(parent).append("'");
 			}
+			textQuery.append(" AND");
 		}
 		
 		
-		textQuery.append(" AND c.");		
+		textQuery.append(" c.");		
 		if(companyId<0) {
 			textQuery.append(getLimitsForNotCompanyQuery());			
 		} else {
@@ -455,6 +456,7 @@ public class TestQuestionsData extends TestsPersistence implements
 		
 		textQuery.append(" ORDER BY c.").append(categoryType);
 			
+		System.out.println(textQuery.toString());
 		result = em.createQuery(textQuery.toString()).getResultList();		
 		
 		return result;

@@ -13,8 +13,12 @@ import tel_ran.tests.utils.errors.AccessException;
 @Component
 public class AbstractServiceGetter {
 
-	@Autowired
+	
 	private static TokenProcessor tokenProcessor;
+	
+	static {
+		tokenProcessor = (TokenProcessor) SpringApplicationContext.getBean("tokenProc");
+	}
 		
 	public static IService getService(String token, String beanName) throws AccessException {
 		User user = encodeToken(token);
