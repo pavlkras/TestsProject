@@ -17,7 +17,12 @@
     					'<li><a href="questions_update">Update/delete questions</a></li>'+    					
     				'</ul>'+
     				'</li>'+
-    				'<li><a href="testGeneration">Test generation</a></li>'+
+    				'<li>' +
+    				'<a href="#">Tests management<span class="arrow">&#9660;</span></a>'+
+    				'<ul class="sub-menu">'+
+    					'<li><a href="testGeneration">Test generation</a></li>'+
+    					'<li><a href="create_template">Create test template</a></li>'+
+    				'</ul></li>'+
     				'<li><a href="view_results">View test results</a></li>'+
     				'<li><a href=".">FAQ</a></li>'+
     				'<li><a href=".">Contacn us</a></li>'+
@@ -31,6 +36,12 @@
     					'<li><a href="autoGeneration">Auto generation</a></li>'+
     				'</ul>'+
     				'</li>'+
+    				'<li>' +
+    				'<a href="#">Tests management<span class="arrow">&#9660;</span></a>'+
+    				'<ul class="sub-menu">'+
+    					'<li><a href="testGeneration">Test generation</a></li>'+
+    					'<li><a href="create_template">Create test template</a></li>'+
+    				'</ul></li>'+
     				'<li><a href=".">FAQ</a></li>'+
     				'<li><a href=".">Contacn us</a></li>'+
     				'<li><a href="logout">LogOut</a></li>';

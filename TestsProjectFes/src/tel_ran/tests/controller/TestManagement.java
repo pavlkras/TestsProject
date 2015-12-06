@@ -150,4 +150,10 @@ public class TestManagement extends AController {
 	}	
 	/*------------END Viewing test results-------------*/
 	
+	@RequestMapping(value="/create_template")
+	public String createTemplate(@ModelAttribute Visitor visitor, Model model){
+		model.addAttribute("token", visitor.getToken());
+		return "tests/create_template";
+	}
+	
 }
