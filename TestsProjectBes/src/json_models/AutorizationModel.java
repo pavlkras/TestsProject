@@ -71,8 +71,10 @@ public class AutorizationModel implements IJsonModels {
 	}
 
 	public void setBirthDate(Date date) {
-		SimpleDateFormat format = new SimpleDateFormat(JSONKeys.DATE_TEMPLATE);
-		this.birthdate = format.format(date);
+		if(date!=null) {
+			SimpleDateFormat format = new SimpleDateFormat(JSONKeys.DATE_TEMPLATE);
+			this.birthdate = format.format(date);
+		}
 	}
 	
 	public void setAddress(String address) {
