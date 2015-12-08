@@ -48,7 +48,7 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 	
 	public static final String LOG = CompanyActionsService.class.getSimpleName();
 	
-	long id=-1;
+	int id=-1;
 	
 	
 	//-------------Override super class methods ----------- // BEGIN ////
@@ -102,17 +102,17 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 	// LISTS OF TESTS ------------------ 
 	
 	@Override
-	public String getTestsResultsAll(long companyId, String timeZone) {		
+	public String getTestsResultsAll(int companyId, String timeZone) {		
 		this.id = companyId;
 		String res = "";
 		EntityCompany company = getCompany();
 		if(company!=null){
 			
 			@SuppressWarnings("unchecked")
-			List<EntityTest> tests = (List<EntityTest>) em.createQuery
-				("SELECT t FROM EntityTest t WHERE t.endTestDate!=0 AND t.entityCompany = :company ORDER BY t.entityPerson")
-				.setParameter("company", company)
-				.getResultList();
+			String queryText = "SELECT t FROM EntityTest t WHERE t.endTestDate!=0 AND t.entityCompany = :company ORDER BY t.person";
+			Query q = em.createQuery(queryText);
+			q.setParameter("company", company);
+			List<EntityTest> tests = (List<EntityTest>) q.getResultList();
 			
 			res = generateJsonResponseCommon(tests, timeZone);
 		}
@@ -120,7 +120,7 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 	}
 
 	@Override
-	public String getTestsResultsForPersonID(long companyId, int personID, String timeZone) {
+	public String getTestsResultsForPersonID(int companyId, int personID, String timeZone) {
 		String res = "";
 		EntityCompany company = em.find(EntityCompany.class, companyId);
 		EntityPerson person = em.find(EntityPerson.class, personID);
@@ -137,7 +137,7 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 	}
 
 	@Override
-	public String getTestsResultsForTimeInterval(long companyId, long date_from, long date_until, String timeZone) {
+	public String getTestsResultsForTimeInterval(int companyId, long date_from, long date_until, String timeZone) {
 		String res = "[]";
 		EntityCompany company = em.find(EntityCompany.class, companyId);
 		if(company!=null){
@@ -181,7 +181,7 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 	 * @return JSON. Keys of JSON - see in ICommonData, JSN_TESTDETAILS_
 	 */
 	@Override
-	public String getTestResultDetails(long companyId, long testId) {
+	public String getTestResultDetails(int companyId, long testId) {
 		String res = "{}";
 		EntityCompany company = em.find(EntityCompany.class, companyId);
 		if(company!=null){
@@ -262,7 +262,7 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 	 * @return JSON. Keys of JSON - see in ICommonData, JSN_TESTDETAILS_
 	 */ 
 	@Override
-	public String getListOfUncheckedQuestions(long companyId, long testId) {		
+	public String getListOfUncheckedQuestions(int companyId, long testId) {		
 		String res = "{}";
 		entityCompany = em.find(EntityCompany.class, companyId);
 		if(entityCompany!=null){
@@ -292,7 +292,7 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 	
 	// CHECK ANSWER OF PERSON
 	@Override	
-	public String checkAnswer(long companyId, String mark) {
+	public String checkAnswer(int companyId, String mark) {
 		String response = "";
 		entityCompany = em.find(EntityCompany.class, companyId);
 		if(entityCompany!=null) {
@@ -327,7 +327,7 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 		
 
 	@Override
-	public String encodeIntoToken(long companyId) {
+	public String encodeIntoToken(int companyId) {
 		//encodes current timestamp and companyId into token
 		String token = tokenProcessor.encodeIntoToken(companyId, ICommonData.TOKEN_VALID_IN_SECONDS);
 		return token;
@@ -448,7 +448,7 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 	// -- grade options ("gradeOptions") = array of String 								      // for 0 and 1 types	
 	@Override
 	@Transactional
-	public String getQuestionDetails(long companyId, long testQuestionId) {
+	public String getQuestionDetails(int companyId, long testQuestionId) {
 		String res = "{}";
 		entityCompany = em.find(EntityCompany.class, companyId);
 		if(entityCompany!=null) {
