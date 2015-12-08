@@ -5,9 +5,9 @@
 <!DOCTYPE html">
 <html>
 <head>
-<script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
-<script src="static/js_folder/header&&rightmenu.js"></script>
+<script type="text/javascript" src="<c:url value='/static/js_folder/jquery-2.1.4.min.js' />"></script>
+<script type="text/javascript" src="<c:url value='/static/js_folder/angular.min.js' />" ></script>
+<script src="/TestsProjectFes/static/js_folder/header&&rightmenu.js"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <link
 	href='<c:url value="/static/css_folder/company_styles/company.css"></c:url>'
@@ -228,8 +228,7 @@
 	<script>
 	
 	var roleNumber = ${role}; getMenu(roleNumber);	
-	var token = ${token};
-	
+	var token = "${token}";
 	
 	
 	

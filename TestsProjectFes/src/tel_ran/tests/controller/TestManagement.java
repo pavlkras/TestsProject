@@ -89,7 +89,7 @@ public class TestManagement extends AController {
 			Model model, HttpServletRequest request) {	
 		
 		String url = request.getRequestURL().toString();
-		String pathToServer = url.replace("add_test", "jobSeeker_test_preparing_click_event") + "?";
+		String pathToServer = url.replace("add_test", "jobSeeker_test_preparing_click_event");
 		////
 		System.out.println("personId--" + personId);
 		System.out.println("level_num--"+level_num);//-------------------------------sysout
@@ -120,19 +120,19 @@ public class TestManagement extends AController {
 		switch(answer[0]) {			
 			case "0" : 
 				messageText = "<a href='" + answer[1] + "'><h2><b>Test link</b></h2></a><br>" + "<H1>" + 
-						IPublicStrings.CREATE_TEST_ERROR[0] + "</H1>";
+						IPublicStrings.ERRORS_TEXT[0] + "</H1>";
 					break;
 			case "1" :
 			case "2" :
 			case "3" :
-				messageText = "<H1>" + IPublicStrings.CREATE_TEST_ERROR[Integer.parseInt(answer[0])] + "</H1>";
+				messageText = "<H1>" + IPublicStrings.ERRORS_TEXT[Integer.parseInt(answer[0])] + "</H1>";
 				break;
 			case "5" :					
 				messageText = "<a href='" + answer[1] + "'><h2><b>Test link</b></h2></a><br>" + "<H1>" + 
-						IPublicStrings.CREATE_TEST_ERROR[Integer.parseInt(answer[0])] + "</H1>";
+						IPublicStrings.ERRORS_TEXT[Integer.parseInt(answer[0])] + "</H1>";
 				break;
 			default :
-				messageText = "<H1>" + IPublicStrings.CREATE_TEST_ERROR[4] + "</H1>";			
+				messageText = "<H1>" + IPublicStrings.ERRORS_TEXT[4] + "</H1>";			
 		}
 			
 		model.addAttribute("myResult", messageText);	

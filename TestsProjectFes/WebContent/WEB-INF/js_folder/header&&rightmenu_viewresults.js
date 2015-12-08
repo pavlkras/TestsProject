@@ -10,19 +10,24 @@ $(document).ready(function(){
 	   '</div>' + 
 	   '<div id="nav_area">' +
 	       '<ul class="clearfix">' +
-		       '<li><a href=".">Home</a></li>'+
-		       '<li>'+
-		           '<a href="#">Question Maintance <span class="arrow">&#9660;</span></a>'+
-		           '<ul class="sub-menu">'+
-		               '<li><a href="maintenanceadd">Creating questions</a></li>'+
-		               '<li><a href="update">Update/delete questions</a></li>'+
-		               '<li><a href="company_otherResursCreation">Adding question from other resources</a></li>'+
-		           '</ul>'+
-		       '</li>'+
-		       '<li><a href="testGeneration">Test generation</a></li>'+
-		       '<li><a href="view_results">View test results</a></li>'+
-		       '<li><a href=".">FAQ</a></li>'+
-		       '<li><a href=".">Contacn us</a></li>'+
+	       '<li><a href=".">Home</a></li>'+
+			'<li>'+
+			'<a href="#">Question Maintance <span class="arrow">&#9660;</span></a>'+
+			'<ul class="sub-menu">'+
+				'<li><a href="add_question">Creating questions</a></li>'+
+				'<li><a href="questions_update">Update/delete questions</a></li>'+    					
+			'</ul>'+
+			'</li>'+
+			'<li>' +
+			'<a href="#">Tests management<span class="arrow">&#9660;</span></a>'+
+			'<ul class="sub-menu">'+
+				'<li><a href="testGeneration">Test generation</a></li>'+
+				'<li><a href="create_template">Create test template</a></li>'+
+			'</ul></li>'+
+			'<li><a href="view_results">View test results</a></li>'+
+			'<li><a href=".">FAQ</a></li>'+
+			'<li><a href=".">Contacn us</a></li>'+
+			'<li><a href="logout">LogOut</a></li>'+
 		   '</ul>'+
 		'</div>' +
 	   	'</div>').insertBefore("#right_side_viewresults");
