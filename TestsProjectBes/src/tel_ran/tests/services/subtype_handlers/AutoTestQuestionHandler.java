@@ -100,9 +100,12 @@ public class AutoTestQuestionHandler extends AbstractTestQuestionHandler {
 	
 	protected void putLettersForAnswerOptions(int numOfQuestion, String key, JSONObject jsn) 
 			throws JSONException {
-		JSONArray result = new JSONArray();		
+		JSONArray result = new JSONArray();	
+		System.out.println(ICommonData.LETTERS.length);
 		for(int i = 0; i < numOfQuestion; i++){
-			result.put(IPublicStrings.LETTERS[i]);
+			System.out.println(i);
+			System.out.println(ICommonData.LETTERS[0]);
+			result.put(ICommonData.LETTERS[i]);
 		}
 		jsn.put(key, result);
 			

@@ -2,6 +2,7 @@ package tel_ran.tests.services;
 import java.io.IOException;
 import java.util.List;
 
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 import org.json.JSONException;
@@ -73,7 +74,13 @@ public class PersonalActionsService extends CommonServices implements IPersonalA
 		// TODO password is potentially dangerous because it is directly the same inside of the request.
 		// Check how to write this code without SQL-injection problem !!!
 		String token = null;
-		EntityTest test = (EntityTest) em.createQuery("Select t from EntityTest t where t.password='" + password +"'" ).getSingleResult();
+		EntityTest test = null;
+		System.out.println(password);
+		try{
+			test = (EntityTest) em.createQuery("Select t from EntityTest t where t.password='" + password +"'" ).getSingleResult();
+		} catch (NoResultException e) {
+			e.printStackTrace();
+		}
 		if(test != null){
 			token = tokenProcessor.encodeIntoToken(test.getId(), ICommonData.TOKEN_VALID_IN_SECONDS);
 		}

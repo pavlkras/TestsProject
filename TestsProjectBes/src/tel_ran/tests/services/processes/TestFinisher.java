@@ -2,6 +2,8 @@ package tel_ran.tests.services.processes;
 
 import java.util.List;
 
+import javax.persistence.Query;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -79,8 +81,10 @@ public class TestFinisher extends TestsPersistence implements ITestProcess {
 	}
 	
 	protected List<EntityTestQuestions> getTestQuestions(EntityTest test) {
-		String query = "SELECT c from EntityTestQuestions c WHERE c.entityTest=?1";
-		return em.createQuery(query).setParameter(1, test).getResultList();
+		String query = "SELECT c from EntityTestQuestions c WHERE c.test=?1";
+		Query q = em.createQuery(query);
+		q.setParameter(1, test);
+		return q.getResultList();
 	}
 
 }
