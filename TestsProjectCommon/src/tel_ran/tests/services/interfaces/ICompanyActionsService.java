@@ -28,7 +28,7 @@ public interface ICompanyActionsService extends ICommonAdminService {
 	 * @param testQuestionId
 	 * @return
 	 */
-	public String getQuestionDetails(long companyId, long testQuestionId);
+	public String getQuestionDetails(int companyId, long testQuestionId);
 
 	/**
 	 * Return JSON Array = list of unchecked questions in the given test 
@@ -36,14 +36,14 @@ public interface ICompanyActionsService extends ICommonAdminService {
 	 * @param testId
 	 * @return String (JSON) or "{}", if there aren't unchecked questions in this test
 	 */
-	public String getListOfUncheckedQuestions(long companyId, long testId);
+	public String getListOfUncheckedQuestions(int companyId, long testId);
 
 	//Company actions for 3.1.4. Viewing test results
-	public String getTestsResultsAll(long companyId, String timeZone);
-	public String getTestsResultsForPersonID(long companyId, int personID, String timeZone);
-	public String getTestsResultsForTimeInterval(long companyId, long date_from, long date_until, String timeZone);
-	public String getTestResultDetails(long companyId, long testId);
-	public String encodeIntoToken(long companyId);
+	public String getTestsResultsAll(int companyId, String timeZone);
+	public String getTestsResultsForPersonID(int companyId, int personID, String timeZone);
+	public String getTestsResultsForTimeInterval(int companyId, long date_from, long date_until, String timeZone);
+	public String getTestResultDetails(int companyId, long testId);
+	public String encodeIntoToken(int companyId);
 	
 	/**
 	 * Checks the answer of the person
@@ -55,7 +55,7 @@ public interface ICompanyActionsService extends ICommonAdminService {
 	 * @param mark
 	 * @return 
 	 */
-	public String checkAnswer(long companyId, String mark);
+	public String checkAnswer(int companyId, String mark);
 	
 
 	/**
