@@ -75,14 +75,16 @@ public final class JSONKeys {
 	public static final String TEMPLATE_ID = "template_id"; //id in EntityTestTemmplate = int
 	public static final String TEMPLATE_NAME = "template_name"; //name of Template = String
 	public static final String TEMPLATE_SAVE = "template_save"; //true if the template should be saved
-	public static final String TEMPLATE_QUESTIONS = "template_by_questions"; //array of id of questions
+	public static final String TEMPLATE_QUESTIONS = "template_questions"; //array of id of questions
 	public static final String TEMPLATE_QUESTION_ID = "template_quest_id"; //id of question
-	public static final String TEMPLATE_CATEGORIES = "template_by_categories"; //array of categories with params
+	public static final String TEMPLATE_CATEGORIES = "template_categories"; //array of categories with params
 	public static final String TEMPLATE_META_CATEGORY = QUESTION_META_CATEGORY;
 	public static final String TEMPLATE_CATEGORY1 = QUESTION_CATEGORY1;
 	public static final String TEMPLATE_CATEGORY2 = QUESTION_CATEGORY2;
 	public static final String TEMPLATE_DIFFICULTY = QUESTION_DIFFICULTY_LVL;
 	public static final String TEMPLATE_QUANTITY = "quantity";  
+	public static final String TEMPLATE_SOURCE = "type";
+	public static final String TEMPLATE_SOURCE_CUSTOM = "Custom";
 	
 	//TEST
 	

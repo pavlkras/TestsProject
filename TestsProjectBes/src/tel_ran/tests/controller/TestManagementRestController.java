@@ -129,6 +129,7 @@ public class TestManagementRestController {
 	 * category2 = name of category2 (String)
 	 * level = level of difficulty (int) 
 	 * quantity = quantity of questions to create in these categories (REQUIRED) (int)
+	 * type = source of questions (Custom, SiteBase, Generation)
 	 *   
 	 * @return String with JSON
 	 * in case of SUCCESS:
@@ -146,6 +147,51 @@ public class TestManagementRestController {
 		try {
 			TestService service = (TestService) AbstractServiceGetter.getService(token, "templateService");
 			return service.createTestAndPerson(testInfo);
+		} catch (AccessException e) {
+			e.printStackTrace();
+			return e.getString();			
+		}		
+	}
+	
+	
+	/**
+	 * POST new TEMPLATE 
+	 * 
+	 * @param testInfo = JSON (required!)
+	 * This Json has info:
+	 *
+	 * (about template)
+	 * template_name = name of template (if the user want to save it) (String)
+	 * 
+	 * (list of given questions by its id)
+	 * template_questions = JSONArray
+	 * template_quest_id = id of question in array (long)
+	 * 
+	 * (list of params for random generation)
+	 * template_categories = JSONArray
+	 * metaCategory = name of MetaCategory (REQUIRED) (String)
+	 * category1 = name of category1 (String)
+	 * category2 = name of category2 (String)
+	 * level = level of difficulty (int) 
+	 * quantity = quantity of questions to create in these categories (REQUIRED) (int)
+	 * type = source of questions (Custom, SiteBase, Generation)
+	 *   
+	 * @return String with JSON
+	 * in case of SUCCESS:
+	 * test_id = id of new test (long)
+	 * code = 0 (success) (int)
+	 * 
+	 * in case of ERROR:
+	 * error = description of error (String)
+	 * code = number of error > 0 (int) 
+	 */
+	@RequestMapping(value="/createTemplate", method=RequestMethod.POST)
+	@ResponseBody
+	public String createTemplate(@RequestHeader(value="Authorization") String token, @RequestBody String testInfo) {
+				System.out.println(testInfo);
+		try {
+			TestService service = (TestService) AbstractServiceGetter.getService(token, "templateService");
+			return service.createTemplate(testInfo);
 		} catch (AccessException e) {
 			e.printStackTrace();
 			return e.getString();			

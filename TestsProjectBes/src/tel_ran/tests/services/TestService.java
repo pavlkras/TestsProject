@@ -80,6 +80,32 @@ public class TestService implements IService {
 	}
 
 	
+	public String createTemplate(String testInfo) {
+		TemplateModel template = null;
+		try {
+			template = new TemplateModel(testInfo);			
+		} catch (JSONException e) {
+			e.printStackTrace();
+			try {
+				return ResultAndErrorModel.getJson(IPublicStrings.TEST_SOME_TROUBLE);
+			} catch (JSONException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		saveTemplate(template);
+		
+		
+		
+		try {
+			return ResultAndErrorModel.getJson(IPublicStrings.TEST_SUCCESS);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return "{}";
+		}
+	}
+	
 	
 	public String createTestAndPerson(String testInfo) {
 				
@@ -144,9 +170,10 @@ public class TestService implements IService {
 	}
 
 	public List<EntityQuestionAttributes> getAllQuestionsByParams(
-			String metaCategory, String category1, String category2, int difficulty) {		
+			String metaCategory, String category1, String category2, int difficulty, boolean isAdmin) {		
+	
 		return this.testQuestsionsData.getQuestionListByParams(metaCategory, category1, category2, difficulty, this.user.getRole(),
-				this.user.getId());
+				(int)this.user.getId(), isAdmin);
 	}
 
 	public EntityQuestionAttributes findQuestionById(Long id) {		

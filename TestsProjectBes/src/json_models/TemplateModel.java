@@ -20,7 +20,7 @@ public class TemplateModel implements IJsonModels {
 	EntityTestTemplate template;
 	boolean isSaved = false;
 	TestModel test;
-	int companyId;
+	int companyId = -1;
 	
 	List<Long> questionsId;
 	List<Map<String, Object>> templates;
@@ -41,8 +41,14 @@ public class TemplateModel implements IJsonModels {
 
 	private void readJson(String jsnString) throws JSONException {
 		JSONObject jsn = new JSONObject(jsnString);
-		Boolean isSaved = jsn.getBoolean(JSONKeys.TEMPLATE_SAVE);
-		if(isSaved!=null && isSaved) {
+		boolean isSaved;
+		if(jsn.has(JSONKeys.TEMPLATE_SAVE)) {
+			isSaved = jsn.getBoolean(JSONKeys.TEMPLATE_SAVE);
+		} else {
+			isSaved = true;
+		}
+		
+		if(isSaved) {
 			this.isSaved = true;
 			template = new EntityTestTemplate();
 			String templateName = jsn.getString(JSONKeys.TEMPLATE_NAME);
@@ -79,9 +85,19 @@ public class TemplateModel implements IJsonModels {
 			JSONObject jsn = jsnTemplates.getJSONObject(i);
 			if(jsn!=null) {
 				Map<String,Object> map = new HashMap<String, Object>();
-				String mCategory = jsn.getString(JSONKeys.TEMPLATE_META_CATEGORY);				
-				String category1 = jsn.getString(JSONKeys.TEMPLATE_CATEGORY1);
-				String category2 = jsn.getString(JSONKeys.TEMPLATE_CATEGORY2);
+				String mCategory = jsn.getString(JSONKeys.TEMPLATE_META_CATEGORY);
+				String category1 = null;
+				if(jsn.has(JSONKeys.TEMPLATE_CATEGORY1)) {
+					category1 = jsn.getString(JSONKeys.TEMPLATE_CATEGORY1);
+				}
+				String category2 = null;
+				if(jsn.has(JSONKeys.TEMPLATE_CATEGORY2)){
+					category2 = jsn.getString(JSONKeys.TEMPLATE_CATEGORY2);
+				}
+				String type = null;
+				if(jsn.has(JSONKeys.TEMPLATE_SOURCE)) {
+					type = jsn.getString(JSONKeys.TEMPLATE_SOURCE);
+				}
 				int difficulty;
 				try {
 					difficulty = jsn.getInt(JSONKeys.TEMPLATE_DIFFICULTY);
@@ -102,6 +118,11 @@ public class TemplateModel implements IJsonModels {
 					map.put(JSONKeys.TEMPLATE_CATEGORY2, category2);
 					map.put(JSONKeys.TEMPLATE_DIFFICULTY, difficulty);
 					map.put(JSONKeys.TEMPLATE_QUANTITY, quantaty);
+					boolean admin = true;
+					if(type!=null && type.equals(JSONKeys.TEMPLATE_SOURCE_CUSTOM)) {
+						admin = false;
+					} 
+					map.put(JSONKeys.TEMPLATE_SOURCE, admin);
 					this.templates.add(map);
 				}
 			}			
@@ -194,9 +215,15 @@ public class TemplateModel implements IJsonModels {
 	}
 	
 	private void createQuestionsSet(Map<String,Object> map, TestService service) {
+		boolean isAdmin = false;
+		try {
+			isAdmin = (Boolean)map.get(JSONKeys.TEMPLATE_SOURCE);
+		} catch (Exception e) {
+			
+		}
 		List<EntityQuestionAttributes> questions = service.getAllQuestionsByParams((String)map.get(JSONKeys.TEMPLATE_META_CATEGORY),
 				(String)map.get(JSONKeys.TEMPLATE_CATEGORY1), (String)map.get(JSONKeys.TEMPLATE_CATEGORY2),
-				(Integer)map.get(JSONKeys.TEMPLATE_DIFFICULTY));				
+				(Integer)map.get(JSONKeys.TEMPLATE_DIFFICULTY), isAdmin);				
 		int number = (Integer)map.get(JSONKeys.TEMPLATE_QUANTITY);
 		
 		for(int i = 0; i < number; i ++) {

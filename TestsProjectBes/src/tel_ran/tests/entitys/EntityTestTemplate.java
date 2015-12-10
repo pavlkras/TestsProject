@@ -121,6 +121,7 @@ public class EntityTestTemplate {
 				jsnTemp.put(JSONKeys.TEMPLATE_CATEGORY1, template.get(JSONKeys.TEMPLATE_CATEGORY1));
 				jsnTemp.put(JSONKeys.TEMPLATE_CATEGORY2, template.get(JSONKeys.TEMPLATE_CATEGORY2));
 				jsnTemp.put(JSONKeys.TEMPLATE_DIFFICULTY, template.get(JSONKeys.TEMPLATE_DIFFICULTY));
+				array2.put(jsnTemp);
 			}
 			jsn.put(JSONKeys.TEMPLATE_CATEGORIES, array2);			
 		}
