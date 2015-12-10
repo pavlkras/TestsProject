@@ -7,8 +7,8 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title>HRTrueTest Home</title>
+<script type="text/javascript" src="<c:url value='/static/js_folder/jquery-2.1.4.min.js' />"></script>
 
-	<script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
 	<script type="text/javascript" src="static/js_folder/header&&rightmenu.js"></script>
 	<link href='<c:url value="/static/css_folder/style.css"></c:url>'
 		rel="stylesheet">
