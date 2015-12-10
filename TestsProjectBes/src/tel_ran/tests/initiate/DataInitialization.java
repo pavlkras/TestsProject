@@ -37,7 +37,7 @@ public class DataInitialization implements BeanPostProcessor {
 	
 	@Override
 	public Object postProcessAfterInitialization(Object bean, String beanName) {
-		System.out.println("HERE");
+		
 		if(beanName.equals("autoData")) {
 			
 			checkAndFill(new UserCreation((IDataLoader) bean));									
@@ -55,7 +55,7 @@ public class DataInitialization implements BeanPostProcessor {
 			System.out.println("TABLE OF "+ dataCreator.getName() + " IS EMPTY");
 			dataCreator.setProperties(getDataInstance().properties);
 			dataCreator.fill();
-			System.out.println("TABLE OF " + dataCreator.getName() + " WAS INITIALIZED");
+			System.out.println("TABLE OF " + dataCreator.getName() + " IS INITIALIZED");
 		}
 	}
 	

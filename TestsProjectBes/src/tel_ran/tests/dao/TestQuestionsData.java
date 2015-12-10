@@ -88,14 +88,17 @@ public class TestQuestionsData extends TestsPersistence implements
 		}
 		//// query if question exist as text in Data Base
 		Query tempRes = em.createQuery("SELECT q FROM EntityTitleQuestion q WHERE q.questionText='"+questionText+"'");
-		try{			
-			objectQuestion = (EntityTitleQuestion) tempRes.getSingleResult();			
-			
-		}catch(javax.persistence.NoResultException e){				
+		
+		List<EntityTitleQuestion> listTitles = tempRes.getResultList();
+		
+		if(listTitles==null || listTitles.isEmpty()) {
 			objectQuestion = new EntityTitleQuestion();	
 			objectQuestion.setQuestionText(questionText);			
-			em.persist(objectQuestion);			
-		}								
+			em.persist(objectQuestion);	
+		} else {
+			objectQuestion = listTitles.get(0);
+		}
+							
 		return objectQuestion;		
 		
 	}
@@ -537,10 +540,15 @@ public class TestQuestionsData extends TestsPersistence implements
 	@Override
 	public List<EntityQuestionAttributes> getQuestionListByParams(
 			String metaCategory, String category1, String category2,
-			int difficulty, Role role, long id) {	
+			int difficulty, Role role, int id, boolean isAdmin) {	
+		
+		if(isAdmin) id = ADMIN_C_ID;
+		else {
+			id = getCompanyId(role, id);
+		}
 		
 		StringBuilder queryString = new StringBuilder("SELECT c FROM EntityQuestionAttributes c WHERE c.");
-		queryString.append(getLimitsForCompanyQuery(getCompanyId(role, id)));
+		queryString.append(getLimitsForCompanyQuery(id));
 		
 		if(metaCategory!=null && !metaCategory.isEmpty()) {
 			queryString.append(" AND c.metaCategory='").append(metaCategory).append("'");
@@ -620,7 +628,7 @@ public class TestQuestionsData extends TestsPersistence implements
 	@Override
 	public List<EntityQuestionAttributes> getQuestionListByParams(Role role, long id) {
 		
-		return this.getQuestionListByParams(null, null, null, 0, role, id);
+		return this.getQuestionListByParams(null, null, null, 0, role, (int)id, false);
 	}
 
 

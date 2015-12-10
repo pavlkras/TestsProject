@@ -74,11 +74,12 @@ public interface IDataTestsQuestions extends IData {
 	 * @param difficulty
 	 * @param role
 	 * @param id
+	 * @param isAdmin 
 	 * @return
 	 */
 	List<EntityQuestionAttributes> getQuestionListByParams(String metaCategory,
 			String category1, String category2, int difficulty, Role role,
-			long id);
+			int id, boolean isAdmin);
 	
 	/**
 	 * Return EntityQuestionAttributes with given ID
