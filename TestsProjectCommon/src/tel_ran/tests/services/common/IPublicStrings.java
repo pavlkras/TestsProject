@@ -54,10 +54,9 @@ public final class IPublicStrings {
 	/**
 	 * Messages about errors that can be during test creation
 	 */
-	public static final String[] ERRORS_TEXT;
+	public static final String[] ERRORS_TEXT = new String[9];
 	
-	static {
-		ERRORS_TEXT = new String[8];
+	static {		
 		ERRORS_TEXT[TEST_SUCCESS] = "The test was successfully created and sended by e-mail"; // 0
 		ERRORS_TEXT[TEST_NOT_ENOUGH_QUESTIONS] = "Not enough questions in the database to generate the test." 
 				+ "Please fill in the database or create one another test with fewer number of questions";
