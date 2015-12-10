@@ -6,6 +6,8 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -37,8 +39,8 @@ public class TestsResultsRestController {
 	
 	@RequestMapping(value=ICommonData.TESTS_RESULTS, method=RequestMethod.GET)
 	@ResponseBody @JsonRawValue
-	String all(@RequestHeader(value="TimeZone") String timeZone, @RequestHeader(value="Authorization") String token){		
-		
+	String all(@RequestHeader(value="TimeZone") String timeZone, @RequestHeader(value="Authorization") String token, HttpServletResponse response){		
+		response.setDateHeader("Expires", -1);
 		companyId = (int)tokenProcessor.decodeRoleToken(token).getId();
 		String res = "";
 		if(companyId != -1){				
@@ -51,7 +53,8 @@ public class TestsResultsRestController {
 	
 	@RequestMapping(value=ICommonData.TESTS_RESULTS_BY_PERSON_ID + "/{personId}", method=RequestMethod.GET)
 	@ResponseBody @JsonRawValue 
-	String byPersonId(@PathVariable int personId, @RequestHeader(value="TimeZone") String timeZone, @RequestHeader(value="Authorization") String token){  
+	String byPersonId(@PathVariable int personId, @RequestHeader(value="TimeZone") String timeZone, @RequestHeader(value="Authorization") String token, HttpServletResponse response){  
+		response.setDateHeader("Expires", -1);
 		int companyId = (int)tokenProcessor.decodeRoleToken(token).getId();
 		String res = "";
 		if(companyId != -1){
@@ -65,7 +68,8 @@ public class TestsResultsRestController {
 	@RequestMapping(value=ICommonData.TESTS_RESULTS_BY_DATES + "/{date1}" + "/{date2}", method=RequestMethod.GET)
 	@ResponseBody @JsonRawValue
 	String byDates(@PathVariable String date1, @PathVariable String date2, @RequestHeader(value="TimeZone") String timeZone,
-			@RequestHeader(value="Authorization") String token){ 
+			@RequestHeader(value="Authorization") String token, HttpServletResponse response){ 
+		response.setDateHeader("Expires", -1);
 		companyId = (int)tokenProcessor.decodeRoleToken(token).getId();
 		String res = "";
 		if(companyId != -1){
@@ -97,7 +101,8 @@ public class TestsResultsRestController {
 	
 	@RequestMapping(value=ICommonData.TEST_RESULT_DETAILS + "/{testId}", method=RequestMethod.GET)
 	@ResponseBody @JsonRawValue
-	String testDetails(@PathVariable long testId, @RequestHeader(value="Authorization") String token){
+	String testDetails(@PathVariable long testId, @RequestHeader(value="Authorization") String token, HttpServletResponse response){
+		response.setDateHeader("Expires", -1);
 		companyId = (int)tokenProcessor.decodeRoleToken(token).getId();
 		String res = "";
 		if(companyId != -1){
@@ -117,7 +122,8 @@ public class TestsResultsRestController {
 	 */
 	@RequestMapping(value=ICommonData.TEST_QUESTION_DETAILS + "/{questId}", method=RequestMethod.GET)
 	@ResponseBody @JsonRawValue
-	String questionDetails(@PathVariable long questId, @RequestHeader(value="Authorization") String token){
+	String questionDetails(@PathVariable long questId, @RequestHeader(value="Authorization") String token, HttpServletResponse response){
+		response.setDateHeader("Expires", -1);
 		companyId = (int)tokenProcessor.decodeRoleToken(token).getId();
 		String res = "";
 		if(companyId != -1){
@@ -135,7 +141,8 @@ public class TestsResultsRestController {
 	 */
 	@RequestMapping(value=ICommonData.TEST_RESULTS_UNCHECKED_LIST + "/{testId}", method=RequestMethod.GET)
 	@ResponseBody @JsonRawValue
-	String uncheckedQuestions(@PathVariable long testId, @RequestHeader(value="Authorization") String token) {
+	String uncheckedQuestions(@PathVariable long testId, @RequestHeader(value="Authorization") String token, HttpServletResponse response) {
+		response.setDateHeader("Expires", -1);
 		int companyId = (int)tokenProcessor.decodeRoleToken(token).getId();
 		String res = "";
 		if(companyId != -1) 
@@ -160,7 +167,8 @@ public class TestsResultsRestController {
 	 */
 	@RequestMapping(value="/check_answer", method=RequestMethod.POST)
 	@ResponseBody @JsonRawValue
-	String checkAnswer(@RequestHeader(value="Authorization") String token, @RequestBody String mark) {
+	String checkAnswer(@RequestHeader(value="Authorization") String token, @RequestBody String mark, HttpServletResponse response) {
+		response.setDateHeader("Expires", -1);
 		int companyId = (int)tokenProcessor.decodeRoleToken(token).getId();
 		String res = "";
 		if(companyId!=-1) {
