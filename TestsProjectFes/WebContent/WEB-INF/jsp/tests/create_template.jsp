@@ -292,5 +292,19 @@
     </div>
 </script>
 
+<script type="text/ng-template" id="resultMessage">
+	<div class="modaleWindow">
+		<h4>{{message}}</h4>
+		<div class="rowButton">
+
+        <div class="buttonsMini">            
+			<button class="actionBtn" data-ng-click="closeThisDialog()">Ok</button>
+
+        </div>
+            </div>
+		
+	</div>
+</script>
+
 </body>
 </html>

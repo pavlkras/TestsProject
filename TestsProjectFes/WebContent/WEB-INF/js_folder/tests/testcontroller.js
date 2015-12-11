@@ -1,5 +1,11 @@
 var app = angular.module('test_app', ['ngDialog']);
 
+app.controller('message_controller', function($scope){
+	$scope.message = $scope.$parent.message;
+	
+	
+});
+
 app.controller('test_controller', function($scope, $http, ngDialog){
 	$scope.autocategories;
 	$scope.admincategories;
@@ -252,19 +258,24 @@ $scope.dataSave = function() {
     switch ($scope.$parent.switchN) {
         case 1 :
             data.metaCategory = $scope.category1;
-            data.category1 = $scope.category2;
+            if($scope.category2!=null)
+            	data.category1 = $scope.category2;
             data.type = "Generation";
             break;
         case 2 :
             data.metaCategory = $scope.mCategory;
-            data.category1 = $scope.category1;
-            data.category2 = $scope.category2;
+            if($scope.category1!=null)
+            	data.category1 = $scope.category1;
+            if($scope.category2!=null)
+            	data.category2 = $scope.category2;
             data.type = "SiteBase";
             break;
         case 3 :
             data.metaCategory = $scope.mCategory;
-            data.category1 = $scope.category1;
-            data.category2 = $scope.category2;
+            if($scope.category1!=null)
+            	data.category1 = $scope.category1;
+            if($scope.category2!=null)
+            	data.category2 = $scope.category2;
             data.type = "Custom";
             break;
     }
@@ -317,10 +328,12 @@ $scope.deleteCat = function (index) {
 $scope.clearTemplate = function() {
     $scope.resultCategories = [];
     $scope.templateName = null;
-    $scope.totalNumberQuestions = 0;
-    $scope.cancel();
+    $scope.totalNumberQuestions = 0;    
     $scope.categorisEmpty = true;
     $scope.questionsEmpty = true;
+    $scope.cancel();
+    $scope.resultQuestions = [];
+    $scope.questionsForShow = [];
 }
 
 $scope.saveTemplate = function() {
@@ -330,7 +343,7 @@ $scope.saveTemplate = function() {
     result.template_questions = $scope.resultQuestions;
     
     var answer = angular.toJson(result, false);
-    alert(answer);
+    
     $http({
 		method: 'POST',
 		url: $scope.urlPostTemplate,
@@ -340,10 +353,28 @@ $scope.saveTemplate = function() {
 		}
 	}).then(function(response) {
 		
-    	$scope.allCategories[1] = response.data;
-    	
+    	var resultCode = response.data.code;
+    	var message;
+    	if(resultCode==0)
+    		message = "Tempate created";
+    	else
+    		message = response.data.response;
+    	$scope.showResult(message);
+    	$scope.clearTemplate();
     });
+    
 
+}
+
+$scope.showResult = function(message) {
+	$scope.message = message;
+	
+	ngDialog.open({
+	        template: 'resultMessage',
+	        className: 'ngdialog-theme-default',
+	        controller: 'message_controller',
+	        scope: $scope
+	    });
 }
 
 $scope.checkQuestion = function(question) {
