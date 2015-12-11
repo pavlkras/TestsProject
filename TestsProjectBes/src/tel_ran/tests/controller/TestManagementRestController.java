@@ -137,7 +137,7 @@ public class TestManagementRestController {
 	 * code = 0 (success) (int)
 	 * 
 	 * in case of ERROR:
-	 * error = description of error (String)
+	 * response = description of error (String)
 	 * code = number of error > 0 (int) 
 	 */
 	@RequestMapping(value="/createTest", method=RequestMethod.POST)
@@ -181,8 +181,9 @@ public class TestManagementRestController {
 	 * test_id = id of new test (long)
 	 * code = 0 (success) (int)
 	 * 
+	 * 
 	 * in case of ERROR:
-	 * error = description of error (String)
+	 * response = description of error (String)
 	 * code = number of error > 0 (int) 
 	 */
 	@RequestMapping(value="/createTemplate", method=RequestMethod.POST)
@@ -213,7 +214,7 @@ public class TestManagementRestController {
 	 * 
 	 * in case of ERROR:
 	 * code = number of error > 0 (int)
-	 * error = description of error (String)	 * 
+	 * response = description of error (String)	 * 
 	 */
 	@RequestMapping(value="/sendTestByMail" + "/{testId}", method=RequestMethod.POST)
 	@ResponseBody
@@ -242,7 +243,7 @@ public class TestManagementRestController {
 	 * 
 	 * If the token is incorrect - returns error message:
 	 * code = number of error = 8
-	 * error = description of error
+	 * response = description of error
 	 * @param token
 	 */
 	@RequestMapping(value="/questionList", method=RequestMethod.GET)

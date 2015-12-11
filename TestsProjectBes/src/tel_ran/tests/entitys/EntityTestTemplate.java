@@ -106,7 +106,8 @@ public class EntityTestTemplate {
 			for(long id : questionsId) {
 				if(id<0) continue;
 				JSONObject jsnOb = new JSONObject();				
-				jsnOb.put(JSONKeys.TEMPLATE_QUESTION_ID, id);				
+				jsnOb.put(JSONKeys.TEMPLATE_QUESTION_ID, id);	
+				array.put(jsnOb);
 			}
 			jsn.put(JSONKeys.TEMPLATE_QUESTIONS, array);			
 		}
