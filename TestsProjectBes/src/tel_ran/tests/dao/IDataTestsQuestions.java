@@ -99,6 +99,7 @@ public interface IDataTestsQuestions extends IData {
 			long personId, Role role, long id);
 	EntityTest findTestById(long testId);
 	List<EntityQuestionAttributes> getQuestionListByParams(Role role, long id);
+	List<EntityTestTemplate> getTemplates(int id);
 	
 	
 	

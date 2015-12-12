@@ -632,12 +632,16 @@ public class TestQuestionsData extends TestsPersistence implements
 	}
 
 
-	
-
-	
-
-
-	
+	@Override
+	public List<EntityTestTemplate> getTemplates(int id) {
+		
+		if(id<0) id = 1;
+		String queryText = "SELECT c FROM EntityTestTemplate c WHERE c." + getLimitsForCompanyQuery(id);
+		
+		List<EntityTestTemplate> templates = em.createQuery(queryText).getResultList();
+		
+		return templates;
+	}
 
 
 	
