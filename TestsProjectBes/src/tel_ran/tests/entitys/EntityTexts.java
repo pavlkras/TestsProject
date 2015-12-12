@@ -44,7 +44,7 @@ public class EntityTexts implements Serializable {
 		return entityQuestionAttributes;
 	}
 	public void setEntityQuestionAttributes(EntityQuestionAttributes entityQuestionAttributesbutes) {
-		this.entityQuestionAttributes = entityQuestionAttributes;
+		this.entityQuestionAttributes = entityQuestionAttributesbutes;
 	}
 	////
 	@Override
