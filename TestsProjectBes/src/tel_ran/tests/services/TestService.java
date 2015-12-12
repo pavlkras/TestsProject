@@ -4,7 +4,7 @@ package tel_ran.tests.services;
 
 import java.util.List;
 
-import json_models.CategoriesList;
+
 import json_models.JSONKeys;
 import json_models.ResultAndErrorModel;
 import json_models.PersonModel;
@@ -14,106 +14,26 @@ import json_models.TestModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import tel_ran.tests.dao.CategoryMaps;
-import tel_ran.tests.dao.IDataTestsQuestions;
 import tel_ran.tests.entitys.EntityQuestionAttributes;
 import tel_ran.tests.services.common.IPublicStrings;
 import tel_ran.tests.services.fields.Role;
-import tel_ran.tests.token_cipher.User;
 
-public class TestService implements IService {
+
+public class TestService extends TemplatesService {
 	
-	@Autowired
-	IDataTestsQuestions testQuestsionsData;	
-	
-	User user;
 	
 	public TestService() {}
+		
 	
 	@Override
-	public void setUser(User user) {
-		this.user = user;
-	}
-	
-	
-			
-	public String getCategories() {
-		CategoriesList catList = testQuestsionsData.getCategoriesList(user.getRole(), user.getRoleNumber());
-		String result = "";
-		
-		try {
-			result = catList.getString();
-		} catch (JSONException e) {			
-			e.printStackTrace();
-		}
-		
-		return result;
-	}
-
-	/**
-	 * Return list of possible auto categories.
-	 * This list is saved in the Memory by CategoryMaps
-	 * @return
-	 */
-	public static String getAutoCategories() {		
-		return CategoryMaps.getJsonAutoCategories();
-	}
-	
-	/**
-	 * Return list of existing admin categories 
-	 * @return
-	 */
-	public String getAdminCategories() {
-		CategoriesList categoriesList = testQuestsionsData.getCategoriesList(Role.ADMINISTRATOR, -1);		
-		String result = "";
-		
-		try {
-			result = categoriesList.getString();
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return result;
-	}
-
-	
-	public String createTemplate(String testInfo) {
-		TemplateModel template = null;
-		try {
-			template = new TemplateModel(testInfo);			
-		} catch (JSONException e) {
-			e.printStackTrace();
-			try {
-				return ResultAndErrorModel.getJson(IPublicStrings.TEST_SOME_TROUBLE);
-			} catch (JSONException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		}
-		saveTemplate(template);
-		
-		
-		
-		try {
-			return ResultAndErrorModel.getJson(IPublicStrings.TEST_SUCCESS);
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return "{}";
-		}
-	}
-	
-	
-	public String createTestAndPerson(String testInfo) {
+	public String createNewElement(String dataJson) {
 				
 		//0 - read info about save template
 		//1 - read info for tests
 		TemplateModel template = null;
 		try {
-			template = new TemplateModel(testInfo);			
+			template = new TemplateModel(dataJson);			
 		} catch (JSONException e) {
 			e.printStackTrace();
 			try {
@@ -130,7 +50,7 @@ public class TestService implements IService {
 		//2 - read Info for new Person
 		PersonModel person = null;
 		try {		
-			person = new PersonModel(testInfo);
+			person = new PersonModel(dataJson);
 		} catch (JSONException e) {
 			e.printStackTrace();			
 			try {
@@ -141,8 +61,10 @@ public class TestService implements IService {
 		}
 		
 		//3 - create new Test
-		template.createNewTest(this);
-		template.fillTest(this);
+		QuestionsService service = (QuestionsService) AbstractServiceGetter.getService(user, 
+				AbstractServiceGetter.BEAN_QUESTIONS_SERVICE);
+		template.createNewTest(service);
+		template.fillTest(this.testQuestsionsData);
 		
 		//4 - save Test
 		long testId = saveTest(template.getTest(), person);
@@ -165,20 +87,9 @@ public class TestService implements IService {
 		return testQuestsionsData.createTest(test.getTest(), test.getQuestions(), personId, this.user.getRole(), this.user.getId());		
 	}
 
-	private void saveTemplate(TemplateModel template) {
-		testQuestsionsData.createTemplate(template.getEntity(), this.user.getRole(), this.user.getId());		
-	}
-
-	public List<EntityQuestionAttributes> getAllQuestionsByParams(
-			String metaCategory, String category1, String category2, int difficulty, boolean isAdmin) {		
 	
-		return this.testQuestsionsData.getQuestionListByParams(metaCategory, category1, category2, difficulty, this.user.getRole(),
-				(int)this.user.getId(), isAdmin);
-	}
 
-	public EntityQuestionAttributes findQuestionById(Long id) {		
-		return testQuestsionsData.findQuestionById(id);
-	}
+	
 
 	public String sendTestByMail(String link, long testId) {
 		//1 - find test by id
@@ -233,37 +144,13 @@ public class TestService implements IService {
 		
 	}
 
-	public String getQuestionsByCompany() {
-		
-		List<EntityQuestionAttributes> questions = this.testQuestsionsData.getQuestionListByParams(this.user.getRole(),
-				this.user.getId());
-		
-		return getStringFromQuestionList(questions);
-	}
+	
 
-	private String getStringFromQuestionList(List<EntityQuestionAttributes> questions) {
-		JSONArray jsonArray = new JSONArray();
-		for(EntityQuestionAttributes question : questions) {
-			try {
-				jsonArray.put(new QuestionModel(question).getJSON());
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
-		
-		return jsonArray.toString();
+	@Override
+	public String getAllElements() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
-
-	
-	
-	
-	
-	
-	
-	
-
 
 }

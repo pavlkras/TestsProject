@@ -10,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import tel_ran.tests.dao.IDataTestsQuestions;
 import tel_ran.tests.entitys.EntityQuestionAttributes;
 import tel_ran.tests.entitys.EntityTest;
 import tel_ran.tests.entitys.EntityTestQuestions;
@@ -89,16 +90,15 @@ public class TestModel implements IJsonModels {
 	}
 
 
-	public void fill(TestService testService) {
+	public void fill(IDataTestsQuestions testQuestsionsData) {
 		this.questions = new ArrayList();
 		for(Long id : this.questionsId) {
 			EntityTestQuestions testQuestions = new EntityTestQuestions();
 			testQuestions.setEntityTest(test);
-			testQuestions.setEntityQuestionAttributes(testService.findQuestionById(id));
+			testQuestions.setEntityQuestionAttributes(testQuestsionsData.findQuestionById(id));
 			this.questions.add(testQuestions);
 		}		
-	}
-		
+	}		
 	
 	public List<EntityTestQuestions> getQuestions() {
 		return questions;

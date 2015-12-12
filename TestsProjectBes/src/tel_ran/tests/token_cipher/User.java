@@ -22,6 +22,11 @@ public class User {
 			this.uniqueName = this.role.toString() +id;
 		}
 	}
+	
+	public static User getAdminUser() {
+		User user = new User(1, Role.ADMINISTRATOR.ordinal());
+		return user;
+	}
 		
 	public String getUniqueName() {
 		return uniqueName;

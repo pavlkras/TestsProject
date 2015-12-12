@@ -10,9 +10,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import tel_ran.tests.dao.IDataTestsQuestions;
 import tel_ran.tests.entitys.EntityQuestionAttributes;
 import tel_ran.tests.entitys.EntityTestQuestions;
 import tel_ran.tests.entitys.EntityTestTemplate;
+import tel_ran.tests.services.QuestionsService;
 import tel_ran.tests.services.TestService;
 
 public class TemplateModel implements IJsonModels {
@@ -199,7 +201,7 @@ public class TemplateModel implements IJsonModels {
 		return template;
 	}
 
-	public void createNewTest(TestService service) {
+	public void createNewTest(QuestionsService service) {
 		this.test = new TestModel();
 		
 		if(this.hasQuestionsList()) {
@@ -214,14 +216,14 @@ public class TemplateModel implements IJsonModels {
 				
 	}
 	
-	private void createQuestionsSet(Map<String,Object> map, TestService service) {
+	private void createQuestionsSet(Map<String,Object> map, QuestionsService service) {
 		boolean isAdmin = false;
 		try {
 			isAdmin = (Boolean)map.get(JSONKeys.TEMPLATE_SOURCE);
 		} catch (Exception e) {
 			
 		}
-		List<EntityQuestionAttributes> questions = service.getAllQuestionsByParams((String)map.get(JSONKeys.TEMPLATE_META_CATEGORY),
+		List<EntityQuestionAttributes> questions = service.getElementsByParams((String)map.get(JSONKeys.TEMPLATE_META_CATEGORY),
 				(String)map.get(JSONKeys.TEMPLATE_CATEGORY1), (String)map.get(JSONKeys.TEMPLATE_CATEGORY2),
 				(Integer)map.get(JSONKeys.TEMPLATE_DIFFICULTY), isAdmin);				
 		int number = (Integer)map.get(JSONKeys.TEMPLATE_QUANTITY);
@@ -239,8 +241,8 @@ public class TemplateModel implements IJsonModels {
 		return questions.get(index).getId();
 	}
 
-	public void fillTest(TestService testService) {
-		this.test.fill(testService);		
+	public void fillTest(IDataTestsQuestions testQuestsionsData) {
+		this.test.fill(testQuestsionsData);		
 	}
 	
 	

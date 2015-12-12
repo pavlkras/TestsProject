@@ -31,16 +31,13 @@ public class QuestionsCreation extends DataCreation implements Runnable {
 	
 	public QuestionsCreation(IDataTestsQuestions tp) {
 		this.persistence = tp;	
-//		this.taskExecutor = (TaskExecutor) SpringApplicationContext.getBean("taskExecutor");
 	}
 
 	
 	
 
 	@Override
-	void fill() {
-//		taskExecutor.execute(this);	
-		System.out.println("I am HERE");
+	void fill() {		
 		Thread td = new Thread(this);
 		td.start();
 	}
@@ -49,9 +46,8 @@ public class QuestionsCreation extends DataCreation implements Runnable {
 	public void run() {	
 		
 		try {
-			Thread.sleep(30000);
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
+			Thread.sleep(20000);
+		} catch (InterruptedException e1) {			
 			e1.printStackTrace();
 		}
 		List<String> mCategories = TestProcessor.getMetaCategory();

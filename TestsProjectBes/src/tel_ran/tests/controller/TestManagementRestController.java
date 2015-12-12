@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fasterxml.jackson.annotation.JsonRawValue;
 
 import tel_ran.tests.services.AbstractServiceGetter;
+import tel_ran.tests.services.AbstractService;
 import tel_ran.tests.services.TestService;
+import tel_ran.tests.token_cipher.User;
 import tel_ran.tests.utils.errors.AccessException;
 
 @Controller
@@ -37,11 +39,10 @@ public class TestManagementRestController {
 	@RequestMapping(value="/categoriesList", method=RequestMethod.GET)
 	@ResponseBody @JsonRawValue
 	public String getCategories(@RequestHeader(value="Authorization") String token){		
-		
-		
+				
 		try {
-			TestService service = (TestService) AbstractServiceGetter.getService(token, "templateService");
-			return service.getCategories();	
+			AbstractService service = (AbstractService) AbstractServiceGetter.getService(token, "customCategoriesService");
+			return service.getAllElements();	
 		} catch (AccessException e) {
 			e.printStackTrace();
 			return e.getString();			
@@ -60,14 +61,14 @@ public class TestManagementRestController {
 	public String getAutoList(@RequestHeader(value="Authorization") String token) {
 		
 		try {
-			TestService service = (TestService) AbstractServiceGetter.getService(token, "templateService");
-			return TestService.getAutoCategories();
+			AbstractService service = (AbstractService) AbstractServiceGetter.getService(token, "autoCategoriesService");
+			return service.getAllElements();
 		} catch (AccessException e) {
 			e.printStackTrace();
 			return e.getString();			
 		} catch (NullPointerException ne) {
 			ne.printStackTrace();
-			return null;
+			return "";
 		}
 	}
 	
@@ -90,13 +91,13 @@ public class TestManagementRestController {
 	public String getAdminCategoryList(@RequestHeader(value="Authorization") String token) {
 				
 		try {
-			TestService service = (TestService) AbstractServiceGetter.getService(token, "templateService");
-			return service.getAdminCategories();
+			AbstractService service = (AbstractService) AbstractServiceGetter.getService(token, "customCategoriesService");
+			service.setUser(User.getAdminUser());
+			return service.getAllElements();
 		} catch (AccessException e) {
 			e.printStackTrace();
 			return e.getString();			
-		}	
-		
+		}			
 	}
 
 	
@@ -145,8 +146,8 @@ public class TestManagementRestController {
 	public String createTestAndPerson(@RequestHeader(value="Authorization") String token, @RequestBody String testInfo) {
 				
 		try {
-			TestService service = (TestService) AbstractServiceGetter.getService(token, "templateService");
-			return service.createTestAndPerson(testInfo);
+			AbstractService service = (AbstractService) AbstractServiceGetter.getService(token, "testService");
+			return service.createNewElement(testInfo);
 		} catch (AccessException e) {
 			e.printStackTrace();
 			return e.getString();			
@@ -191,8 +192,8 @@ public class TestManagementRestController {
 	public String createTemplate(@RequestHeader(value="Authorization") String token, @RequestBody String testInfo) {
 				System.out.println(testInfo);
 		try {
-			TestService service = (TestService) AbstractServiceGetter.getService(token, "templateService");
-			return service.createTemplate(testInfo);
+			AbstractService service = AbstractServiceGetter.getService(token, AbstractServiceGetter.BEAN_TEMPLATE_SERVICE);
+			return service.createNewElement(testInfo);
 		} catch (AccessException e) {
 			e.printStackTrace();
 			return e.getString();			
@@ -221,7 +222,7 @@ public class TestManagementRestController {
 	public String sendTestToEmail(@RequestHeader(value="Authorization") String token, @PathVariable long testId, @RequestBody String link) {
 				
 		try {
-			TestService service = (TestService) AbstractServiceGetter.getService(token, "templateService");
+			TestService service = (TestService) AbstractServiceGetter.getService(token, "testService");
 			return service.sendTestByMail(link, testId);
 		} catch (AccessException e) {
 			e.printStackTrace();
@@ -251,12 +252,26 @@ public class TestManagementRestController {
 	public String getQuestionsByCompany(@RequestHeader(value="Authorization") String token) {
 		
 		try {
-			TestService service = (TestService) AbstractServiceGetter.getService(token, "templateService");
-			return service.getQuestionsByCompany();
+			AbstractService service = (AbstractService) AbstractServiceGetter.getService(token, 
+					AbstractServiceGetter.BEAN_QUESTIONS_SERVICE);
+			return service.getAllElements();
 		} catch (AccessException e) {
 			e.printStackTrace();
 			return e.getString();			
 		}		
+	}
+	
+	@RequestMapping(value="/listTemplates", method=RequestMethod.GET)
+	@ResponseBody
+	public String getTemplatesByCompany(@RequestHeader(value="Authorization") String token) {
+		
+		try {
+			AbstractService service = (AbstractService) AbstractServiceGetter.getService(token, AbstractServiceGetter.BEAN_TEMPLATE_SERVICE);
+			return service.getAllElements();
+		} catch (AccessException e) {
+			e.printStackTrace();
+			return e.getString();			
+		}
 	}
 	
 		
