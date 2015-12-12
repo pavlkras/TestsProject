@@ -261,6 +261,17 @@ public class TestManagementRestController {
 		}		
 	}
 	
+	/**
+	 * LIST of all templates by ID of company.
+	 * Return JSONArray with json objects:
+	 * template_id = id of template (long)
+	 * template_name = name of template (String)
+	 * 
+	 * If the token is incorrect - returns error message:
+	 * code = number of error = 8
+	 * response = description of error
+	 * @param token
+	 */
 	@RequestMapping(value="/listTemplates", method=RequestMethod.GET)
 	@ResponseBody
 	public String getTemplatesByCompany(@RequestHeader(value="Authorization") String token) {
