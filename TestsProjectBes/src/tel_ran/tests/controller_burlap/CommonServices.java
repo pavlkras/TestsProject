@@ -1,4 +1,4 @@
-package tel_ran.tests.services;
+package tel_ran.tests.controller_burlap;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
