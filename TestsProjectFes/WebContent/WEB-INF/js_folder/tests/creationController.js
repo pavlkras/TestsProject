@@ -2,17 +2,11 @@ var app = angular.module('testcreation_app', ['ngDialog']);
 
 app.controller('testcreation_controller', function($scope, $http, ngDialog){
 
-    $scope.templates = [{
-        template_id : 0,
-        template_name : "Programmer"
-    }, {
-        template_id : 1,
-        template_name : "Administrator"
-    }, {
-        template_id : 2,
-        template_name : "Tester"
-    }];
-
+	$scope.urlBes = "/TestsProjectBes/tests";
+	$scope.urlTemplates = $scope.urlBes + "/listTemplates";
+	
+    $scope.templates = [];
+    $scope.token = token;
     $scope.template = null;
 
     $scope.personDataList = [];
@@ -20,6 +14,25 @@ app.controller('testcreation_controller', function($scope, $http, ngDialog){
 
     $scope.data = null;
     $scope.index = -1;
+    
+    $scope.renewData = function() {
+    	
+    	
+    	$http({
+			method: 'GET',
+			url: $scope.urlTemplates,
+			headers: {
+				'Authorization' : $scope.token
+			}
+		}).then(function(response) {
+			
+	    	$scope.templates = response.data;
+	    	
+	    	
+	    });
+    }
+    
+    $scope.renewData();
 
     $scope.addOnePerson = function() {
         ngDialog.open({
