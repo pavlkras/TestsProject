@@ -91,4 +91,6 @@ public final class JSONKeys {
 	public static final String TEST_ID = "test_id"; //id in EntityTest = long
 	public static final String TEST_PASSWORD = "test_password"; // String
 	public static final String TEST_LINK_TO_SEND = "test_link"; // String
+	public static final String TEST_FOR_PERSONS = "test_persons"; // String
+	public static final String TEST_WAS_SENT= "test_is_sent"; //boolean
 }

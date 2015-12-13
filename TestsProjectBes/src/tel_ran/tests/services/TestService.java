@@ -81,10 +81,13 @@ public class TestService extends TemplatesService {
 	}
 	
 	
-	private long saveTest(TestModel test, PersonModel person) {
+	protected long saveTest(TestModel test, PersonModel person) {
 		long personId = testQuestsionsData.createPerson(person.getEntity());			
-				
-		return testQuestsionsData.createTest(test.getTest(), test.getQuestions(), personId, this.user.getRole(), this.user.getId());		
+		long testId = testQuestsionsData.createTest(test.getTest(), test.getQuestions(), personId, this.user.getRole(), this.user.getId());	
+		
+		person.setTest(test);
+		
+		return testId;
 	}
 
 	
@@ -94,7 +97,7 @@ public class TestService extends TemplatesService {
 	public String sendTestByMail(String link, long testId) {
 		//1 - find test by id
 		
-		TestModel test = new TestModel(testQuestsionsData.findTestById(testId));		
+		TestModel test = new TestModel(testQuestsionsData.findTestById(testId));	
 				
 		//2 - check test
 		if(!this.user.getRole().equals(Role.ADMINISTRATOR) && !(this.user.getRole().equals(Role.COMPANY) && 

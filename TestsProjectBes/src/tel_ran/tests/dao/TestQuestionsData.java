@@ -644,5 +644,12 @@ public class TestQuestionsData extends TestsPersistence implements
 	}
 
 
+	@Override
+	public EntityTestTemplate getTemplate(long templateId) {
+		
+		return em.find(EntityTestTemplate.class, templateId);
+	}
+
+
 	
 }

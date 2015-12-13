@@ -14,6 +14,7 @@ import tel_ran.tests.dao.IDataTestsQuestions;
 import tel_ran.tests.entitys.EntityQuestionAttributes;
 import tel_ran.tests.entitys.EntityTest;
 import tel_ran.tests.entitys.EntityTestQuestions;
+import tel_ran.tests.entitys.EntityTestTemplate;
 import tel_ran.tests.services.TestService;
 import tel_ran.tests.services.utils.MailSender;
 
@@ -22,6 +23,7 @@ public class TestModel implements IJsonModels {
 	Set<Long> questionsId;	
 	EntityTest test;
 	List<EntityTestQuestions> questions;
+	String link;
 
 	public TestModel() {		
 		this.questionsId = new HashSet<Long>();
@@ -104,10 +106,10 @@ public class TestModel implements IJsonModels {
 		return questions;
 	}
 
-
 	public void setQuestions(List<EntityTestQuestions> list) {
 		
 	}
+	
 		
 	public boolean sendMail(String linkJson) throws JSONException {
 		StringBuilder txt = new StringBuilder(getPath(linkJson)); 
@@ -122,6 +124,18 @@ public class TestModel implements IJsonModels {
 	private String getPath(String linkJson) throws JSONException {
 		JSONObject jsn = new JSONObject(linkJson);
 		return jsn.getString(JSONKeys.TEST_LINK_TO_SEND);
+	}
+
+	public boolean sendEmailByPath(String path) {
+		this.link = path.concat("?").concat(getPassword());
+		MailSender sender = new MailSender(link);
+		boolean result = sender.sendEmail(this.test.getEntityPerson().getPersonEmail());
+		return result;
+	}
+
+	public void setTemplate(EntityTestTemplate template) {
+		this.test.setBaseTemplate(template);
+		
 	}
 		
 

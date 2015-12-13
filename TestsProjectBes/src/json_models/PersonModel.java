@@ -1,8 +1,5 @@
 package json_models;
 
-import java.util.UUID;
-
-import netscape.javascript.JSException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -13,9 +10,18 @@ import tel_ran.tests.entitys.EntityPerson;
 public class PersonModel implements IJsonModels {
 	
 	EntityPerson person;
+	long testId;
+	TestModel test;
+	boolean mailSent;
+	
 	
 	public PersonModel(EntityPerson p) {
 		this.person = p;
+	}
+	
+	public PersonModel(JSONObject json) throws JSONException {
+		this.person = new EntityPerson();
+		readJson(json);	
 	}
 	
 	public PersonModel(String json) throws JSONException {
@@ -27,23 +33,36 @@ public class PersonModel implements IJsonModels {
 		return person;
 	}
 
+	private void readJson(JSONObject jsnObject) throws JSONException {
+		
+		if(jsnObject.has(JSONKeys.PERSON_MAIL)){
+			String email = jsnObject.getString(JSONKeys.PERSON_MAIL);
+			person.setPersonEmail(email);
+		} else {
+			throw new JSONException("no email");
+		}
+		
+		if(jsnObject.has(JSONKeys.PERSON_PASSPORT)){
+			String passport = jsnObject.getString(JSONKeys.PERSON_PASSPORT);
+			person.setIdentify(passport);			
+		}
+		
+		if(jsnObject.has(JSONKeys.PERSON_FNAME)) {
+			String fname = jsnObject.getString(JSONKeys.PERSON_FNAME);
+			person.setPersonName(fname);
+		}
+				
+		if(jsnObject.has(JSONKeys.PERSON_LNAME)) {
+			String lname = jsnObject.getString(JSONKeys.PERSON_LNAME);
+			person.setPersonSurname(lname);		
+		}
+		
+	}
+	
 	private void readJson(String jsn) throws JSONException {
 		
-		JSONObject jsnObject = new JSONObject(jsn);
-		
-		String email = jsnObject.getString(JSONKeys.PERSON_MAIL);
-		if(email==null) throw new JSONException("no email");
-		person.setPersonEmail(email);
-				
-		String passport = jsnObject.getString(JSONKeys.PERSON_PASSPORT);
-		if(passport == null) throw new JSONException("no passport");
-		person.setIdentify(passport);
-		
-		String fname = jsnObject.getString(JSONKeys.PERSON_FNAME);
-		if(fname!=null) person.setPersonName(fname);
-		
-		String lname = jsnObject.getString(JSONKeys.PERSON_LNAME);
-		if(lname!=null) person.setPersonSurname(lname);		
+		JSONObject jsnObject = new JSONObject(jsn);		
+		readJson(jsnObject);	
 				
 	}
 	
@@ -64,6 +83,30 @@ public class PersonModel implements IJsonModels {
 	public JSONArray getJSONArray() throws JSONException {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public void setTestId(long testId) {
+		this.testId = testId;
+		
+	}
+
+	public void setTest(TestModel testModel) {
+		this.test = testModel;
+		
+	}
+
+	public void sendEmail(String path) {
+		if(this.test.sendEmailByPath(path))
+			this.mailSent = true;
+		System.out.println(Boolean.toString(mailSent));
+	}
+	
+	public String getMail(){
+		return this.person.getPersonEmail();
+	}
+	
+	public String getLink(){
+		return this.test.link;
 	}
 
 }

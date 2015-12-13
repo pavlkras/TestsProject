@@ -68,6 +68,20 @@ public class EntityTest {
 		
 	public EntityTest() {}
 
+	
+	
+	public EntityTestTemplate getBaseTemplate() {
+		return baseTemplate;
+	}
+
+
+
+	public void setBaseTemplate(EntityTestTemplate baseTemplate) {
+		this.baseTemplate = baseTemplate;
+	}
+
+
+
 	public void setAmountOfCorrectAnswers(int amountOfCorrectAnswers) {
 		this.amountOfCorrectAnswers = amountOfCorrectAnswers;
 	}

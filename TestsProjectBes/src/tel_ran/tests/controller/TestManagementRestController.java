@@ -286,10 +286,41 @@ public class TestManagementRestController {
 		}
 	}
 	
+	
+	/**
+	 * POST new TEST by TEMPLATE
+	 * 
+	 * @param testInfo = JSON (required!)
+	 * This Json has info:
+	 * 
+	 * test_persons - ARRAY with person data:
+	 * (about person)
+	 * per_passport = number of person's passport (REQUIRED) (String)
+	 * per_mail = e-mail of Person (REQUIRED) (String)
+	 * per_fname = firstname of Person (String)
+	 * per_lname = lastname of Person (String)
+	 * 
+	 * (about template)
+	 * template_id = id of template (if the user want to save it) (String)
+	 * 
+	 * (about link to test)
+	 * path = first part of link to tests (FES + mapping)
+	 *   
+	 * @return String with JSON
+	 * in case of SUCCESS:
+	 * ARRAY Json width fields:
+	 * per_mail = email of person
+	 * test_link = link to new test
+	 * test_is_sent = if it was sent or not
+	 * 
+	 * in case of ERROR:
+	 * response = description of error (String)
+	 * code = number of error > 0 (int) 
+	 */
 	@RequestMapping(value="/createTestByTemplate", method=RequestMethod.POST)
 	@ResponseBody
 	public String createTestByTemplate(@RequestHeader(value="Authorization") String token, @RequestBody String testInfo) {
-		
+		System.out.println("In controller");
 		try {
 			AbstractService service = AbstractServiceGetter.getService(token, "testTemplateService");
 			return service.createNewElement(testInfo);

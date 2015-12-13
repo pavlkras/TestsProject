@@ -23,10 +23,15 @@ public class TemplateModel implements IJsonModels {
 	boolean isSaved = false;
 	TestModel test;
 	int companyId = -1;
+	long templateId = -1;
 	
 	List<Long> questionsId;
 	List<Map<String, Object>> templates;
 	Random ran = new Random();
+	
+	public TemplateModel(){
+		
+	}
 	
 	public TemplateModel(String initiateJson) throws JSONException {
 		readJson(initiateJson);
@@ -62,15 +67,19 @@ public class TemplateModel implements IJsonModels {
 		JSONObject jsn = new JSONObject(jsnString);
 		
 		//read questions
-		JSONArray jsnQuestions = jsn.getJSONArray(JSONKeys.TEMPLATE_QUESTIONS);
-		if(jsnQuestions!=null && jsnQuestions.length()>0) {
-			readListOfQuestions(jsnQuestions);			
-		}		
+		if(jsn.has(JSONKeys.TEMPLATE_QUESTIONS)) {
+			JSONArray jsnQuestions = jsn.getJSONArray(JSONKeys.TEMPLATE_QUESTIONS);
+			if(jsnQuestions!=null && jsnQuestions.length()>0) {
+				readListOfQuestions(jsnQuestions);			
+			}		
+		}
 				
 		//read templates
-		JSONArray jsnTemplates = jsn.getJSONArray(JSONKeys.TEMPLATE_CATEGORIES);
-		if(jsnTemplates!=null) {
-			readListOfTemplates(jsnTemplates);
+		if(jsn.has(JSONKeys.TEMPLATE_CATEGORIES)){
+			JSONArray jsnTemplates = jsn.getJSONArray(JSONKeys.TEMPLATE_CATEGORIES);
+			if(jsnTemplates!=null) {
+				readListOfTemplates(jsnTemplates);
+			}
 		}
 		
 		//save template in Entity
@@ -203,6 +212,7 @@ public class TemplateModel implements IJsonModels {
 
 	public void createNewTest(QuestionsService service) {
 		this.test = new TestModel();
+		this.test.setTemplate(this.template);
 		
 		if(this.hasQuestionsList()) {
 			this.test.addQuestiionsList(questionsId);
@@ -220,8 +230,7 @@ public class TemplateModel implements IJsonModels {
 		boolean isAdmin = false;
 		try {
 			isAdmin = (Boolean)map.get(JSONKeys.TEMPLATE_SOURCE);
-		} catch (Exception e) {
-			
+		} catch (Exception e) {			
 		}
 		List<EntityQuestionAttributes> questions = service.getElementsByParams((String)map.get(JSONKeys.TEMPLATE_META_CATEGORY),
 				(String)map.get(JSONKeys.TEMPLATE_CATEGORY1), (String)map.get(JSONKeys.TEMPLATE_CATEGORY2),
@@ -244,6 +253,23 @@ public class TemplateModel implements IJsonModels {
 	public void fillTest(IDataTestsQuestions testQuestsionsData) {
 		this.test.fill(testQuestsionsData);		
 	}
+
+	public void setIdFromJson(String dataJson) throws JSONException {
+		JSONObject jsnOb = new JSONObject(dataJson);
+		this.templateId = jsnOb.getLong(JSONKeys.TEMPLATE_ID);
+	}
+
+	public long getTemplateId() {
+		return templateId;
+	}
+
+	public void setTemplate(EntityTestTemplate template2) throws JSONException {
+		this.template = template2;
+		String json = template2.getTemplate();
+		readTemplateFromJson(json);
+	}
+	
+	
 	
 	
 	
