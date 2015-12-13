@@ -278,6 +278,7 @@ public class TestManagementRestController {
 		
 		try {
 			AbstractService service = (AbstractService) AbstractServiceGetter.getService(token, AbstractServiceGetter.BEAN_TEMPLATE_SERVICE);
+			System.out.println(service.getAllElements());
 			return service.getAllElements();
 		} catch (AccessException e) {
 			e.printStackTrace();
@@ -285,5 +286,17 @@ public class TestManagementRestController {
 		}
 	}
 	
+	@RequestMapping(value="/createTestByTemplate", method=RequestMethod.POST)
+	@ResponseBody
+	public String createTestByTemplate(@RequestHeader(value="Authorization") String token, @RequestBody String testInfo) {
+		
+		try {
+			AbstractService service = AbstractServiceGetter.getService(token, "testTemplateService");
+			return service.createNewElement(testInfo);
+		} catch (AccessException e) {
+			e.printStackTrace();
+			return e.getString();			
+		}		
+	}
 		
 }

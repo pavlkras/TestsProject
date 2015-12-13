@@ -15,6 +15,7 @@ public class AbstractServiceGetter {
 	
 	public static final String BEAN_QUESTIONS_SERVICE = "questionsService";
 	public static final String BEAN_TEMPLATE_SERVICE = "templateService";
+	public static final String BEAN_TEST_TEMPLATE_SERVICE = "testTemplateService";
 	
 	private static TokenProcessor tokenProcessor;
 	

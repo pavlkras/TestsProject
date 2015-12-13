@@ -43,6 +43,8 @@
 	<bean id="autoCategoriesService" class="tel_ran.tests.services.AutoCategoriesService" scope="prototype"/>
 	<bean id="customCategoriesService" class="tel_ran.tests.services.CustomCategoriesService" scope="prototype"/>
 	<bean id="questionsService" class="tel_ran.tests.services.QuestionsService" scope="prototype"/>
+<bean id="testTemplateService" class="tel_ran.tests.services.QuestionsService" scope="prototype"/>
+
 
 <!-- Utils -->
 	<bean id="springApplicationContext" class="tel_ran.tests.services.utils.SpringApplicationContext"/>
