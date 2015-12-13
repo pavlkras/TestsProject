@@ -234,7 +234,7 @@
                 <div class="cell pager">
                     <div class="cell">
                         <div class="lbl"><label>Questions on page</label></div>
-                        <div class="inpt"><input data-ng-model="itemsOnPage" type="number"></div>
+                        <div class="inpt"><input data-ng-model="itemsOnPage" type="number" min="1" max="20"></div>
                     </div>
                     <div class="cell">
                         <div class="lbl"><label>Go To Page</label></div>
@@ -278,7 +278,7 @@
             </div>
             <div class="cellWindow" data-ng-show="level > 0">
 
-                <input class="form-control" type="number" data-ng-model="numberQuestions">
+                <input class="form-control" type="number" data-ng-model="numberQuestions" min="1" max="50">
 
             </div>
         </div>

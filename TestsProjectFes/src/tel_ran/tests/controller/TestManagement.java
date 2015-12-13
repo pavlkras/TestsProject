@@ -156,4 +156,10 @@ public class TestManagement extends AController {
 		return "tests/create_template";
 	}
 	
+	@RequestMapping(value="/test_by_template")
+	public String createTestByTemplate(@ModelAttribute Visitor visitor, Model model) {
+		model.addAttribute("token", visitor.getToken());
+		return "tests/create_test_by_template";
+	}
+	
 }

@@ -24,7 +24,7 @@
 }
 
 table#buttons {
-    width: 95%;
+    width: 100%;
     margin: auto;
 }
 
@@ -416,4 +416,37 @@ td.SiteBase {
 	margin-left: 2em;
 	padding-left: 2em;
 	text-align: left;
+}
+
+.bigField {
+    width: 15em;
+}
+
+.miniButtons {
+    width: 12em;
+    height: 2.5em;
+}
+
+.formInput .form-control {
+    width: 15em;
+}
+
+.oneRow {
+    border-bottom: 1px solid #eee;
+    margin-bottom: 1em;
+    padding-bottom: 1.5em;
+}
+
+.requiredStar {
+    color: red;
+    padding-left: 0;
+}
+
+.requiredStar span {
+    font-size: 0.8em;
+}
+
+.formInput label {
+    margin-right: 1em;
+    font-size: 0.9em;
 }

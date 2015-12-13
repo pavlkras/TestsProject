@@ -20,6 +20,7 @@
     				'<li>' +
     				'<a href="#">Tests management<span class="arrow">&#9660;</span></a>'+
     				'<ul class="sub-menu">'+
+    					'<li><a href="test_by_template">Create test by template</a></li>'+
     					'<li><a href="testGeneration">Test generation</a></li>'+
     					'<li><a href="create_template">Create test template</a></li>'+
     				'</ul>'+
@@ -40,6 +41,7 @@
     				'<li>' +
     				'<a href="#">Tests management<span class="arrow">&#9660;</span></a>'+
     				'<ul class="sub-menu">'+
+    					'<li><a href="test_by_template">Create test by template</a></li>'+
     					'<li><a href="testGeneration">Test generation</a></li>'+
     					'<li><a href="create_template">Create test template</a></li>'+
     				'</ul>'+
