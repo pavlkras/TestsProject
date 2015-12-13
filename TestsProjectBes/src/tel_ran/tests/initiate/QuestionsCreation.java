@@ -11,10 +11,10 @@ import java.util.Properties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.TaskExecutor;
 
+import tel_ran.tests.controller_burlap.CommonAdminServices;
+import tel_ran.tests.controller_burlap.MaintenanceService;
 import tel_ran.tests.dao.IDataTestsQuestions;
 import tel_ran.tests.processor.TestProcessor;
-import tel_ran.tests.services.CommonAdminServices;
-import tel_ran.tests.services.MaintenanceService;
 import tel_ran.tests.services.fields.Role;
 import tel_ran.tests.services.utils.FileManagerService;
 import tel_ran.tests.services.utils.SpringApplicationContext;

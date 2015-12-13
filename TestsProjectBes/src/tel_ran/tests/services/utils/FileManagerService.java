@@ -29,7 +29,7 @@ import java.util.zip.ZipFile;
 
 import org.springframework.stereotype.Repository;
 
-import tel_ran.tests.services.CompanyActionsService;
+import tel_ran.tests.controller_burlap.CompanyActionsService;
 import tel_ran.tests.services.subtype_handlers.programming.ICodeTester;
 
 
