@@ -26,6 +26,7 @@
 	
 <script>	
 		var token = "${token}";
+		var link = "${link}";
 </script>
 </head>
 <body>
@@ -71,10 +72,10 @@
                 </thead>
                 <tr data-ng-repeat="person in personDataList">
                     <td>{{$index+1}}</td>
-                    <td>{{person.person_lastname}}</td>
-                    <td>{{person.person_name}}</td>
-                    <td>{{person.person_email}}</td>
-                    <td>{{person.person_passport}}</td>
+                    <td>{{person.per_lname}}</td>
+                    <td>{{person.per_fname}}</td>
+                    <td>{{person.per_mail}}</td>
+                    <td>{{person.per_passport}}</td>
                     <td class="delete-cell" data-ng-click="edit($index)">E</td>
                     <td class="delete-cell" data-ng-click="deletePerson($index)">X</td>
                 </tr>
@@ -128,7 +129,17 @@
 
 <script type="text/ng-template" id="resultMessage">
     <div class="modaleWindow">
-        <h4>{{message}}</h4>
+        <h4>{{message.text}}</h4>
+		<div data-ng-show="message.data!=null">
+			<table>
+				<tr data-ng-repeat="d in message.data">
+					<td>For: {{d.per_mail}}</td>
+					<td><a href="{{d.test_link}}">Link to test</a></td>
+					<td><span data-ng-show="{{d.test_is_sent}}> was succesfully sent</span>
+						<span data-ng-hide="{{d.test_is_sent}}> wasn't sent!</span></td>
+				</tr>
+			</table>
+		</div>
         <div class="rowButton">
 
             <div class="buttonsMini">

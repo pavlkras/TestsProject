@@ -4,9 +4,11 @@ app.controller('testcreation_controller', function($scope, $http, ngDialog){
 
 	$scope.urlBes = "/TestsProjectBes/tests";
 	$scope.urlTemplates = $scope.urlBes + "/listTemplates";
+	$scope.urlTestCreation = $scope.urlBes + "/createTestByTemplate";
 	
     $scope.templates = [];
     $scope.token = token;
+    $scope.link = link;
     $scope.template = null;
 
     $scope.personDataList = [];
@@ -15,8 +17,7 @@ app.controller('testcreation_controller', function($scope, $http, ngDialog){
     $scope.data = null;
     $scope.index = -1;
     
-    $scope.renewData = function() {
-    	
+    $scope.renewData = function() {    	
     	
     	$http({
 			method: 'GET',
@@ -73,17 +74,40 @@ app.controller('testcreation_controller', function($scope, $http, ngDialog){
         $scope.personDataList = [];
         $scope.personListShow = false;
     }
+    
     $scope.saveTest = function() {
         var result = {};
         result.template_id = $scope.template;
-        result.persons = $scope.personDataList;
+        result.test_link = $scope.link;
+        result.test_persons = $scope.personDataList;
 
         var answer = angular.toJson(result, false);
+        
+        $http({
+    		method: 'POST',
+    		url: $scope.urlTestCreation,
+    		data: answer,
+    		headers: {
+    			'Authorization' : $scope.token
+    		}
+    	}).then(function(response) {
+    		        	
+        	var message = {};
+        	if(response.data.code != undefined) {
+        		alert(response.data.code);
+        		message.text = response.data.response;
+        	} else {
+        		
+        		message.text = "Test(s) was(were) generated and sent to persons";
+        		message.data = response.data;
+        		$scope.showResult(message);
+        	}
+        	alert(4);
+        	
+        });
 
-        alert(answer);
-
-        var message = "Test was generated and sended to persons";
-        $scope.showResult(message);
+       
+        
         $scope.clearTest();
     }
 
@@ -112,10 +136,10 @@ app.controller('person_controller', function($scope){
             $scope.edit = true;
             $scope.index = $scope.$parent.dataIndex;
             var data = $scope.$parent.data;
-            $scope.email = data.person_email;
-            $scope.name = data.person_name;
-            $scope.lastname = data.person_lastname;
-            $scope.passport = data.person_passport;
+            $scope.email = data.per_mail;
+            $scope.name = data.per_fname;
+            $scope.lastname = data.per_lname;
+            $scope.passport = data.per_passport;
             $scope.$parent.data = null;
             $scope.$parent.dataIndex = null;
         }
@@ -126,15 +150,15 @@ app.controller('person_controller', function($scope){
 
     $scope.personSave = function() {
         var data = {};
-        data.person_email = $scope.email;
+        data.per_mail = $scope.email;
         if($scope.name!=null) {
-            data.person_name = $scope.name;
+            data.per_fname = $scope.name;
         }
         if($scope.lastname!=null) {
-            data.person_lastname = $scope.lastname;
+            data.per_lname = $scope.lastname;
         }
         if($scope.passport!=null) {
-            data.person_passport = $scope.passport;
+            data.per_passport = $scope.passport;
         }
 
         if($scope.edit) {

@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,14 +15,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import tel_ran.tests.services.common.IPublicStrings;
-import tel_ran.tests.services.interfaces.ICompanyActionsService;
 import tel_ran.tests.users.Visitor;
+import tel_ran.tests.utils.AppProps;
 
 @Controller
 @Scope("session") /*session timer default = 20min*/
 @RequestMapping({"/"})
 @SessionAttributes({"role","visitor"})
 public class TestManagement extends AController {
+	
+	@Autowired
+	AppProps appPropps;
+	
 
 	@RequestMapping({"/testGeneration"})
 	public String testGeneration(@ModelAttribute Visitor visitor, Model model) {
@@ -159,7 +165,12 @@ public class TestManagement extends AController {
 	@RequestMapping(value="/test_by_template")
 	public String createTestByTemplate(@ModelAttribute Visitor visitor, Model model) {
 		model.addAttribute("token", visitor.getToken());
+		String linkForTest = this.appPropps.getClientname().concat("/jobSeeker_test_preparing_click_event");
+		System.out.println(linkForTest);
+		model.addAttribute("link", linkForTest);
 		return "tests/create_test_by_template";
 	}
+	
+	
 	
 }

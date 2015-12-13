@@ -58,7 +58,10 @@
 
 <!-- Utils -->
 	<bean id="springApplicationContext" class="tel_ran.tests.utils.SpringApplicationContext"/>
-
+	<bean id="appProps" class="tel_ran.tests.utils.AppProps">
+		<property name="hostname" value="${host.name.${phase}}"></property>
+		<property name="clientname" value="${client.name.${phase}}"></property>
+	</bean>
 
 <!-- EOF Utils -->
 
