@@ -1,16 +1,11 @@
 package tel_ran.tests.services;
 
-import json_models.AutorizationModel;
-import json_models.ResultAndErrorModel;
-import json_models.RegistrationModel;
-
 import org.json.JSONException;
 
-
-import org.springframework.beans.factory.annotation.Autowired;
-
+import json_models.AutorizationModel;
+import json_models.RegistrationModel;
+import json_models.ResultAndErrorModel;
 import tel_ran.tests.dao.IDataLoader;
-import tel_ran.tests.services.common.ICommonData;
 import tel_ran.tests.services.fields.Role;
 import tel_ran.tests.services.utils.SpringApplicationContext;
 import tel_ran.tests.token_cipher.TokenProcessor;

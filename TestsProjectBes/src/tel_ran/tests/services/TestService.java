@@ -2,20 +2,13 @@ package tel_ran.tests.services;
 
 
 
-import java.util.List;
-
-
-import json_models.JSONKeys;
-import json_models.ResultAndErrorModel;
-import json_models.PersonModel;
-import json_models.QuestionModel;
-import json_models.TemplateModel;
-import json_models.TestModel;
-
-import org.json.JSONArray;
 import org.json.JSONException;
 
-import tel_ran.tests.entitys.EntityQuestionAttributes;
+import json_models.JSONKeys;
+import json_models.PersonModel;
+import json_models.ResultAndErrorModel;
+import json_models.TemplateModel;
+import json_models.TestModel;
 import tel_ran.tests.services.common.IPublicStrings;
 import tel_ran.tests.services.fields.Role;
 

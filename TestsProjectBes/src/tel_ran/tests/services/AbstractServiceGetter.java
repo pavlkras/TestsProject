@@ -1,10 +1,7 @@
 package tel_ran.tests.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import tel_ran.tests.services.AbstractService;
-import tel_ran.tests.services.fields.Role;
 import tel_ran.tests.services.utils.SpringApplicationContext;
 import tel_ran.tests.token_cipher.TokenProcessor;
 import tel_ran.tests.token_cipher.User;
