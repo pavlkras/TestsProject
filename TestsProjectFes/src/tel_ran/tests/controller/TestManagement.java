@@ -152,7 +152,13 @@ public class TestManagement extends AController {
 	@RequestMapping({"/view_results"})
 	public String viewResults(@ModelAttribute Visitor visitor, Model model){
 			model.addAttribute("token", visitor.getToken());
-		return "company/CompanyViewTestsResults";
+		return "company/ViewTestsResults";
+	}	
+	
+	@RequestMapping({"/view_template_based_results"})
+	public String viewTemplateBasedResults(@ModelAttribute Visitor visitor, Model model){
+			model.addAttribute("token", visitor.getToken());
+		return "company/ViewTestsResultsTemplateBased";
 	}	
 	/*------------END Viewing test results-------------*/
 	
