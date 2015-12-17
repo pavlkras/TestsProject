@@ -19,7 +19,6 @@ import com.fasterxml.jackson.annotation.JsonRawValue;
 @RequestMapping({"/persontest"})
 public class PersonTestRESTController {
 	
-	long testId = -1;
 	
 	@Autowired
 	IPersonalActionsService personal;
@@ -32,8 +31,7 @@ public class PersonTestRESTController {
 	@RequestMapping(value="/saveprev_getnext", method=RequestMethod.POST)
 	@ResponseBody @JsonRawValue
 	String getNextAndSavePrevious(@RequestHeader(value="Authorization") String token, @RequestBody String answer){
-		if(testId==-1)
-			testId = tokenProcessor.decodeAndCheckToken(token);
+		long testId = tokenProcessor.decodeAndCheckToken(token);
 				
 		String res = null;
 
