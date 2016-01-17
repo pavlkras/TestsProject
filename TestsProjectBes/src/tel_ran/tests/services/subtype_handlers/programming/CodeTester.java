@@ -18,7 +18,7 @@ public abstract class CodeTester {
 	public static String workFolderPath = "";
 		
 	public abstract String saveCode(InTestQuestion tQuestion, String[] lines) throws IOException;
-	protected abstract IProgramTestHandler getTestHandler();	
+//	protected abstract IProgramTestHandler getTestHandler();	
 		
 	public abstract boolean testIt(String codeFromPersonPath, String pathToAnswersZip);
 	

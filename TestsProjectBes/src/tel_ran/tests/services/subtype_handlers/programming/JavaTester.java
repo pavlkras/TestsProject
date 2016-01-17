@@ -28,7 +28,6 @@ public class JavaTester extends CodeTester {
 		return result;
 	}
 
-	@Override
 	protected IProgramTestHandler getTestHandler() {
 		this.testTemplateHandler = new GradleJava();
 		return this.testTemplateHandler;
