@@ -1,90 +1,136 @@
 package tel_ran.tests.services.processes;
 
+import java.util.Collection;
+import java.util.HashMap;
+
 import java.util.List;
+import java.util.Map;
 
-import javax.persistence.Query;
 
+import org.json.JSONException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
-import tel_ran.tests.dao.TestsPersistence;
-import tel_ran.tests.entitys.EntityTest;
-import tel_ran.tests.entitys.EntityTestQuestions;
+import tel_ran.tests.dao.IDataTestsQuestions;
+import tel_ran.tests.entitys.Test;
+import tel_ran.tests.entitys.InTestQuestion;
 import tel_ran.tests.services.common.ICommonData;
 import tel_ran.tests.services.subtype_handlers.ITestQuestionHandler;
-import tel_ran.tests.services.subtype_handlers.SingleTestQuestionHandlerFactory;
+
 
 @Service
-public class TestFinisher extends TestsPersistence implements ITestProcess {
+public class TestFinisher implements ITestProcess {
 	
-	private long testId;
-	private static final String LOG = TestFinisher.class.getSimpleName();
+	
+	private Test test;
+	private IDataTestsQuestions dao;
 	
 	public TestFinisher() {
 		
 	}
 	
-	public void setTestId(long testId) {
-		this.testId = testId;
+	public void setTest(Test test) {
+		this.test = test;
 	}
 
 
-	@Override
-	@Transactional(readOnly=false, propagation = Propagation.REQUIRES_NEW)
-	public void run() {		
-		EntityTest test = em.find(EntityTest.class, testId);
+	@Override	
+	public void run() {	
+		
 		long time = System.currentTimeMillis();
 		test.setEndTestDate(time);	
-		test.setDuration((int)(time - test.getStartTestDate()));
-		em.merge(test);	
-		int numQuestions = test.getAmountOfQuestions();				
-		List<EntityTestQuestions> list = getTestQuestions(test);
-		int[] result = new int[numQuestions];		
-		for (int i = 0; i < numQuestions; i++) {
-			ITestQuestionHandler testQuestionHandler = SingleTestQuestionHandlerFactory.getInstance(list.get(i));
-			testQuestionHandler.setEntityQuestionAttributes(list.get(i).getEntityQuestionAttributes());
-			testQuestionHandler.setCompanyId(test.getEntityCompany().getId());
-			testQuestionHandler.setTestId(testId);
-			testQuestionHandler.setEtqId(list.get(i).getId());
-			result[i] = testQuestionHandler.checkResult();			
-		}		
+		test.setDuration((int)(time - test.getStartTestDate()));			
 		
-		saveStatus(result, test);	
+		List<InTestQuestion> list = test.getInTestQuestions();		
+		
+		Map<Integer, CategoryResults> catResults = saveAnswers(list);		
+		
+		
+		try {			
+			saveStatus(catResults);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+			
+		dao.saveTest(test);
+		
 		
 	}
 	
 	
-	@Transactional(readOnly=false, propagation = Propagation.REQUIRED)
-	private boolean saveStatus(int[] answers, EntityTest test) {
-		int status[] = new int[4];
+
+	private Map<Integer, CategoryResults> saveAnswers(List<InTestQuestion> list) {
 		
-		for (int i = 0; i < answers.length; i++) {
-			status[answers[i]]++;
+		Map<Integer, CategoryResults> catResults = new HashMap<Integer, CategoryResults>();
+		
+		for(InTestQuestion tQuestion : list) {
+			ITestQuestionHandler tHandler = tQuestion.getQuestion().getHandler();
+			tHandler.setCompanyId(test.getCompany().getId());
+			tHandler.setTestId(test.getId());
+			tHandler.setTestQuestion(tQuestion);
+			int res = tHandler.checkResult();
+			
+			
+			
+			int categoryId = tQuestion.getQuestion().getCategory().getId();
+			
+			
+			if(catResults.containsKey(categoryId)) {
+				CategoryResults catResult = catResults.get(categoryId);
+				catResult.setAnswerResult(res);
+				
+			} else {
+				CategoryResults catResult = new CategoryResults(categoryId, tHandler.getCategoryType());
+				catResult.setAnswerResult(res);
+				catResults.put(categoryId, catResult);
+			}
+						
+		}	
+		
+		return catResults;
+		
+	}
+	
+	
+	private boolean saveStatus(Map<Integer, CategoryResults> resultsByCategory) throws JSONException {
+		int status[] = new int[4];
+		int answers = 0;
+		int questions = 0;
+		
+		Collection<CategoryResults> results = resultsByCategory.values();
+		
+		for(CategoryResults res : results) {
+			status[ICommonData.STATUS_CORRECT] += res.getNumCorrectAnswers();
+			answers += res.getNumAnswers();
+			status[ICommonData.STATUS_INCORRECT] += answers - res.getNumCorrectAnswers();
+			status[ICommonData.STATUS_UNCHECKED] += res.getNumUncheckedUnswers();
+			questions += res.getNumQuestions();			
 		}
 		
+		status[ICommonData.STATUS_UNCHECKED] = questions - answers;
+		
+	
+		
 		if(status[ICommonData.STATUS_NO_ANSWER] == 0) {
-			test.setPassed(true);
-			
+			test.setPassed(true);			
 		}
 		
 		if(status[ICommonData.STATUS_UNCHECKED]==0 && status[ICommonData.STATUS_NO_ANSWER] ==0) {
-			test.setChecked(true);
-			
+			test.setChecked(true);			
 		}
 		
 		test.setAmountOfCorrectAnswers(status[ICommonData.STATUS_CORRECT]);
-		em.merge(test);
+		
+		test.createJsonResult(results, answers);
 		
 		return true;
 		
 	}
-	
-	protected List<EntityTestQuestions> getTestQuestions(EntityTest test) {
-		String query = "SELECT c from EntityTestQuestions c WHERE c.test=?1";
-		Query q = em.createQuery(query);
-		q.setParameter(1, test);
-		return q.getResultList();
+
+	public void setDao(IDataTestsQuestions testQuestsionsData) {
+		this.dao = testQuestsionsData;
+		
 	}
+	
+
 
 }

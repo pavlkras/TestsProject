@@ -10,7 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.PrePersist;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -39,7 +38,7 @@ public class EntityUser implements Serializable{
 	private boolean adminAccess;
 	
 	@OneToMany(mappedBy="user")
-	private List<EntityTest> passedTests;
+	private List<Test> passedTests;
 			
 	public long getId() {
 		return id;

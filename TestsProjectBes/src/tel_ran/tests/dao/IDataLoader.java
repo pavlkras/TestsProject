@@ -19,5 +19,6 @@ public interface IDataLoader extends IData {
 	boolean checkCompanyName(String login);
 	boolean companyRegistration(String login, String password,
 			String employesNumber, String webSite, String spec);
+	long findTestIdByPassword(String key);
 	
 }

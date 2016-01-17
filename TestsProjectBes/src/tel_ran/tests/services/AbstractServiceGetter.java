@@ -13,6 +13,12 @@ public class AbstractServiceGetter {
 	public static final String BEAN_QUESTIONS_SERVICE = "questionsService";
 	public static final String BEAN_TEMPLATE_SERVICE = "templateService";
 	public static final String BEAN_TEST_TEMPLATE_SERVICE = "testTemplateService";
+	public static final String BEAN_CATEGORIES_SERVICE = "categoriesService";
+	public static final String BEAN_AUTO_CATEGORIES = "autoCatService";
+	public static final String BEAN_CUSTOM_CATEGORIES = "customCatService";
+	public static final String BEAN_TEST_SERVICE = "testService";
+	public static final String BEAN_TEST_RESULT_SERVICE = "testResultService";
+	public static final String BEAN_AUTHORIZATION_SERVICE = "authorization";
 	
 	private static TokenProcessor tokenProcessor;
 	
@@ -20,6 +26,12 @@ public class AbstractServiceGetter {
 		tokenProcessor = (TokenProcessor) SpringApplicationContext.getBean("tokenProc");
 	}
 		
+	
+	public static AbstractService getService(String beanName) {
+		AbstractService result = getServiceByBeanName(beanName);
+		return result;
+	}
+	
 	public static AbstractService getService(String token, String beanName) throws AccessException {
 		User user = encodeToken(token);
 		

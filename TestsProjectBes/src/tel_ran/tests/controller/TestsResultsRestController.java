@@ -9,7 +9,6 @@ import java.util.TimeZone;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,14 +17,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import tel_ran.tests.services.AbstractServiceGetter;
+import tel_ran.tests.services.TestResultService;
 import tel_ran.tests.services.common.ICommonData;
 import tel_ran.tests.services.interfaces.ICompanyActionsService;
 import tel_ran.tests.token_cipher.TokenProcessor;
+import tel_ran.tests.utils.errors.DataException;
 
 import com.fasterxml.jackson.annotation.JsonRawValue;
 
 @Controller
-@Scope("session")
 @RequestMapping({"/view_results_rest"})
 public class TestsResultsRestController {
 	@Autowired
@@ -33,7 +34,7 @@ public class TestsResultsRestController {
 	@Autowired
 	TokenProcessor tokenProcessor;
 	
-	private int companyId;
+
 	
 	public static final String LOG = TestsResultsRestController.class.getSimpleName();
 	
@@ -41,7 +42,7 @@ public class TestsResultsRestController {
 	@ResponseBody @JsonRawValue
 	String all(@RequestHeader(value="TimeZone") String timeZone, @RequestHeader(value="Authorization") String token, HttpServletResponse response){		
 		response.setDateHeader("Expires", -1);
-		companyId = (int)tokenProcessor.decodeRoleToken(token).getId();
+		int companyId = (int)tokenProcessor.decodeRoleToken(token).getId();
 		String res = "";
 		if(companyId != -1){				
 			res = company.getTestsResultsAll(companyId, timeZone);			
@@ -70,7 +71,7 @@ public class TestsResultsRestController {
 	String byDates(@PathVariable String date1, @PathVariable String date2, @RequestHeader(value="TimeZone") String timeZone,
 			@RequestHeader(value="Authorization") String token, HttpServletResponse response){ 
 		response.setDateHeader("Expires", -1);
-		companyId = (int)tokenProcessor.decodeRoleToken(token).getId();
+		int companyId = (int)tokenProcessor.decodeRoleToken(token).getId();
 		String res = "";
 		if(companyId != -1){
 			SimpleDateFormat dateFormat = new SimpleDateFormat(ICommonData.DATE_FORMAT);
@@ -103,7 +104,7 @@ public class TestsResultsRestController {
 	@ResponseBody @JsonRawValue
 	String testDetails(@PathVariable long testId, @RequestHeader(value="Authorization") String token, HttpServletResponse response){
 		response.setDateHeader("Expires", -1);
-		companyId = (int)tokenProcessor.decodeRoleToken(token).getId();
+		int companyId = (int)tokenProcessor.decodeRoleToken(token).getId();
 		String res = "";
 		if(companyId != -1){
 			res = company.getTestResultDetails(companyId, testId);
@@ -124,7 +125,7 @@ public class TestsResultsRestController {
 	@ResponseBody @JsonRawValue
 	String questionDetails(@PathVariable long questId, @RequestHeader(value="Authorization") String token, HttpServletResponse response){
 		response.setDateHeader("Expires", -1);
-		companyId = (int)tokenProcessor.decodeRoleToken(token).getId();
+		int companyId = (int)tokenProcessor.decodeRoleToken(token).getId();
 		String res = "";
 		if(companyId != -1){
 			res = company.getQuestionDetails(companyId, questId);
@@ -168,15 +169,15 @@ public class TestsResultsRestController {
 	@RequestMapping(value="/check_answer", method=RequestMethod.POST)
 	@ResponseBody @JsonRawValue
 	String checkAnswer(@RequestHeader(value="Authorization") String token, @RequestBody String mark, HttpServletResponse response) {
-		response.setDateHeader("Expires", -1);
-		int companyId = (int)tokenProcessor.decodeRoleToken(token).getId();
-		String res = "";
-		if(companyId!=-1) {
-			res = company.checkAnswer(companyId, mark);
-		} else {
-			res = getJsonErrorMessage();
+				
+		TestResultService service = (TestResultService) AbstractServiceGetter.getService(AbstractServiceGetter.BEAN_TEST_RESULT_SERVICE);
+		
+		try {
+			service.setCompanyId((int)tokenProcessor.decodeRoleToken(token).getId());		
+			return service.createNewElement(mark);			
+		} catch (DataException e) {
+			return e.getString();
 		}
-		return res;
 	}
 
 		

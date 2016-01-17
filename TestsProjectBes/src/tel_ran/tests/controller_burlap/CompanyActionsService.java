@@ -2,13 +2,10 @@ package tel_ran.tests.controller_burlap;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.TimeZone;
 
 import javax.persistence.Query;
@@ -20,21 +17,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import tel_ran.tests.entitys.EntityCompany;
-import tel_ran.tests.entitys.EntityPerson;
+import tel_ran.tests.entitys.Company;
+import tel_ran.tests.entitys.Person;
 import tel_ran.tests.entitys.EntityQuestionAttributes;
-import tel_ran.tests.entitys.EntityTest;
-import tel_ran.tests.entitys.EntityTestQuestions;
+import tel_ran.tests.entitys.Test;
+import tel_ran.tests.entitys.InTestQuestion;
 import tel_ran.tests.services.common.ICommonData;
 import tel_ran.tests.services.common.IPublicStrings;
 import tel_ran.tests.services.fields.Role;
 import tel_ran.tests.services.interfaces.ICompanyActionsService;
 import tel_ran.tests.services.subtype_handlers.ITestQuestionHandler;
 import tel_ran.tests.services.subtype_handlers.SingleTestQuestionHandlerFactory;
-import tel_ran.tests.services.testhandler.CompanyTestHandler;
-import tel_ran.tests.services.testhandler.ICompanyTestHandler;
-import tel_ran.tests.services.testhandler.IPersonTestHandler;
-import tel_ran.tests.services.testhandler.PersonTestHandler;
 import tel_ran.tests.services.utils.FileManagerService;
 import tel_ran.tests.services.utils.UtilsStatic;
 import tel_ran.tests.token_cipher.TokenProcessor;
@@ -42,7 +35,7 @@ import tel_ran.tests.token_cipher.User;
 
 public class CompanyActionsService extends CommonAdminServices implements ICompanyActionsService {
 	
-	private EntityCompany entityCompany;
+	private Company entityCompany;
 	@Autowired
 	private TokenProcessor tokenProcessor;
 	
@@ -63,12 +56,12 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 	}
 	
 	@Override
-	protected EntityCompany getCompany() {	
+	protected Company getCompany() {	
 		if((this.entityCompany==null) || (this.entityCompany.getId()!=this.id)) {
 		
 //				System.out.println(LOG + "81 - BUT I HAVE ID = " + this.entityCompany.getId());
 			if(this.id>=0)
-				this.entityCompany = em.find(EntityCompany.class, id);
+				this.entityCompany = em.find(Company.class, id);
 			else
 				this.entityCompany = null;
 		}
@@ -77,15 +70,15 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 	}
 	
 	@Override
-	protected EntityCompany renewCompany() {
-		EntityCompany result = em.find(EntityCompany.class, id);
+	protected Company renewCompany() {
+		Company result = em.find(Company.class, id);
 		return result;
 	}
 	
 	
 	@Override
 	protected String getLimitsForQuery() {	
-		EntityCompany ec = getCompany();
+		Company ec = getCompany();
 		return "companyId='" + ec.getId() + "'";
 	}
 	
@@ -105,14 +98,14 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 	public String getTestsResultsAll(int companyId, String timeZone) {		
 		this.id = companyId;
 		String res = "";
-		EntityCompany company = getCompany();
+		Company company = getCompany();
 		if(company!=null){
 			
 			@SuppressWarnings("unchecked")
-			String queryText = "SELECT t FROM EntityTest t WHERE t.endTestDate!=0 AND t.entityCompany = :company ORDER BY t.person";
+			String queryText = "SELECT t FROM Test t WHERE t.endTestDate!=0 AND t.company = :company ORDER BY t.person";
 			Query q = em.createQuery(queryText);
 			q.setParameter("company", company);
-			List<EntityTest> tests = (List<EntityTest>) q.getResultList();
+			List<Test> tests = (List<Test>) q.getResultList();
 			
 			res = generateJsonResponseCommon(tests, timeZone);
 		}
@@ -122,12 +115,12 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 	@Override
 	public String getTestsResultsForPersonID(int companyId, int personID, String timeZone) {
 		String res = "";
-		EntityCompany company = em.find(EntityCompany.class, companyId);
-		EntityPerson person = em.find(EntityPerson.class, personID);
+		Company company = em.find(Company.class, companyId);
+		Person person = em.find(Person.class, personID);
 		if(company!=null && person != null){
 			@SuppressWarnings("unchecked")
-			List<EntityTest> tests = (List<EntityTest>) em.createQuery
-				("SELECT t FROM EntityTest t WHERE t.isPassed=true AND t.entityPerson = :person AND t.entityCompany = :company")
+			List<Test> tests = (List<Test>) em.createQuery
+				("SELECT t FROM Test t WHERE t.isPassed=true AND t.person = :person AND t.company = :company")
 				.setParameter("person", person)
 				.setParameter("company", company)
 				.getResultList();
@@ -139,11 +132,11 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 	@Override
 	public String getTestsResultsForTimeInterval(int companyId, long date_from, long date_until, String timeZone) {
 		String res = "[]";
-		EntityCompany company = em.find(EntityCompany.class, companyId);
+		Company company = em.find(Company.class, companyId);
 		if(company!=null){
 			@SuppressWarnings("unchecked")
-			List<EntityTest> tests = (List<EntityTest>) em.createQuery
-				("SELECT t FROM EntityTest t WHERE t.isPassed=true AND t.startTestDate >= :date_from AND t.startTestDate <= :date_until AND t.entityCompany = :company ORDER BY t.entityPerson")
+			List<Test> tests = (List<Test>) em.createQuery
+				("SELECT t FROM Test t WHERE t.isPassed=true AND t.startTestDate >= :date_from AND t.startTestDate <= :date_until AND t.company = :company ORDER BY t.person")
 				.setParameter("date_from", date_from)
 				.setParameter("date_until", date_until)
 				.setParameter("company", company)
@@ -169,7 +162,7 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 	 * - photo-pictures (JSN = "pictures")
 	 * - list of questions (JSN = "questions") with:
 	 * ----- index in list (JSN = "index") 
-	 * ----- ID (EntityTestQuestions) (JSN = "questionId")
+	 * ----- ID (InTestQuestio) (JSN = "questionId")
 	 * ----- metaCategory (JSN = "metaCategory")
 	 * ----- category1 (JSN = "category")
 	 * ----- status (correct,incorrect,unchecked) in two options:
@@ -183,13 +176,9 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 	@Override
 	public String getTestResultDetails(int companyId, long testId) {
 		String res = "{}";
-		EntityCompany company = em.find(EntityCompany.class, companyId);
+		Company company = em.find(Company.class, companyId);
 		if(company!=null){
-			EntityTest test = (EntityTest) em.createQuery
-				("SELECT t FROM EntityTest t WHERE t.testId = :testId AND t.entityCompany = :company")
-				.setParameter("testId", testId)
-				.setParameter("company", company)
-				.getSingleResult();
+			Test test = em.find(Test.class, testId);
 			
 			if(test!=null) {
 				
@@ -222,17 +211,6 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 					// amount of questions
 					int numberOfQuestions = test.getAmountOfQuestions();
 					jsonObj.put(ICommonData.JSN_TESTDETAILS_QUESTIONS_NUMBER, numberOfQuestions);
-					
-//					JSONArray questions = new JSONArray();
-//					for(int i=0; i<numberOfQuestions; i++){
-//						JSONObject singleQuestion = new JSONObject();
-//						singleQuestion.put("index", i);
-//						singleQuestion.put("status", getTestResultsHandler(companyId, testId).getStatus(i));
-//						questions.put(singleQuestion);
-//					}
-//					jsonObj.put("questions", questions);
-						
-//					jsonObj = this.getStatusOfTest(test.getTestId());
 
 				} catch (JSONException e) {
 					e.printStackTrace();					
@@ -246,11 +224,183 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 	}
 	
 	/**
+	 * Return JSONObject with list of questions and some info about all test.	 
+	 * @param testId
+	 * @param fullList
+	 * @return
+	 * @throws JSONException
+	 */
+	@Transactional(readOnly=false, propagation = Propagation.REQUIRED)
+	public JSONObject checkStatusAndGetJson(long testId) throws JSONException {
+		int correct = 0;
+		int inCorrect = 0;
+		int unAnswered = 0;
+		int unChecked = 0;
+				
+		Test test = em.find(Test.class, testId);
+		
+		String query = "SELECT c from InTestQuestion c WHERE c.test=?1";
+		
+		JSONArray jsnArray = new JSONArray();
+		
+		@SuppressWarnings("unchecked")
+		List<InTestQuestion> list = em.createQuery(query).setParameter(1, test).getResultList();			
+				
+		int index = 0;
+		for(InTestQuestion etq : list) {			
+			
+				JSONObject jsnQuest = new JSONObject();
+				int status = this.getObjectForShortQuestionInfo(etq, jsnQuest);
+				jsnQuest.put(ICommonData.JSN_TESTDETAILS_QUESTION_INDEX, index++);			
+				jsnArray.put(jsnQuest);
+			
+			
+			switch(status) {
+			case ICommonData.STATUS_CORRECT :
+				correct++;
+				break;
+			case ICommonData.STATUS_INCORRECT :
+				inCorrect++;
+				break;
+			case ICommonData.STATUS_NO_ANSWER :
+				unAnswered++;
+				break;
+			case ICommonData.STATUS_UNCHECKED :
+				unChecked++;							
+				break;
+			default:
+//				System.out.println(LOG + " -315-M: getStatusOfTest - incorrect status = " + status);
+			}
+		}
+		
+		boolean testIsPassed;		
+						
+		if(unAnswered==0) {			
+			testIsPassed = true;
+			if(!test.isPassed()) {				
+				test.setPassed(true);						
+			}
+		} else {
+			testIsPassed = false;
+		}
+		
+		if(unChecked==0 && testIsPassed) {			
+			if(!test.isChecked()) {
+				test.setChecked(true);				
+			}
+		} 
+						
+		if(test.getAmountOfCorrectAnswers()!=correct) {
+			test.setAmountOfCorrectAnswers(correct);			
+		}		
+		
+		em.merge(test);
+		
+		int allQuestions = test.getAmountOfQuestions();
+			
+		JSONObject result = new JSONObject();
+		
+		result.put(ICommonData.JSN_TESTDETAILS_LIST_OF_QUESTIONS, jsnArray);
+		result.put(ICommonData.JSN_TESTDETAILS_CORRECT_QUESTIONS_NUMBER, correct);
+		result.put(ICommonData.JSN_TESTDETAILS_INCORRECT_ANSWERS_NUMBER, inCorrect);		
+		result.put(ICommonData.JSN_TESTDETAILS_UNCHECKED_QUESTIONS_NUMBER, unChecked);
+		
+		float percent;
+		int checked = allQuestions - unAnswered - unChecked;
+		if(checked==0) 
+			percent = 0;
+		else
+			percent = Math.round((float)correct/(float)checked)*100;
+		String resPercent = Float.toHexString(percent) + "%";
+		
+		if(unChecked==0 && unAnswered==0) {
+			result.put(ICommonData.JSN_TEST_PERCENT_OF_CORRECT, resPercent); // Add calculations from the resultTestCodeFromPerson field
+		} else if (unChecked==0){
+			result.put(ICommonData.JSN_TEST_PERCENT_OF_CORRECT, "not answered (" + resPercent + " from " + checked +")");
+		} else {
+			result.put(ICommonData.JSN_TEST_PERCENT_OF_CORRECT, "not checked (" + resPercent + " from " + checked + ")");
+		}
+		
+		return result;
+		
+	}
+	
+	/**
+	 * Fill JSONObject with short information about question in the test. It includes:
+	 * -- test-question ID
+	 * -- status (in num and String)
+	 * -- metaCategory
+	 * -- category
+	 * @param etq
+	 * @param jsnQuest
+	 * @param index
+	 * @return
+	 * @throws JSONException
+	 */
+	private int getObjectForShortQuestionInfo (InTestQuestion etq, JSONObject jsnQuest) throws JSONException {
+		int status = etq.getStatus();
+		
+		//set ID and index
+		jsnQuest.put(ICommonData.JSN_TESTDETAILS_QUESTION_ID, etq.getId());		
+	
+		//set STATUS	
+		jsnQuest.put(ICommonData.JSN_TESTDETAILS_QUESTION_STATUS_NUM, status);
+		jsnQuest.put(ICommonData.JSN_TESTDETAILS_QUESTION_STATUS_STR, IPublicStrings.QUESTION_STATUS[status]);
+	
+		//set category-metacategory
+		jsnQuest.put(ICommonData.JSN_TESTDETAILS_QUESTION_METACATEGORY, etq.getQuestion().getCategory().getTopCategory());
+		jsnQuest.put(ICommonData.JSN_TESTDETAILS_QUESTION_CATEGORY1, etq.getQuestion().getCategory().getSecondCategory());
+		
+		return status;
+	}
+	
+	
+	/**
+	 * Return JSONObject with list of questions and some info about all test.
+	 * JSON includes fields:
+	 * -- "questions" = list of questions (array) with fields:
+	 * ------ test-question ID
+	 * ------ status (in num and String)
+	 * ------ metaCategory
+	 * ------ category
+	 * ------ index in list
+	 * -- number of unchecked questions
+	 * @param testId
+	 * @param fullList
+	 * @return
+	 * @throws JSONException
+	 */
+	@Transactional
+	public JSONObject getListOfUncheckedQuestions(long testId) throws JSONException {
+		Test test = em.find(Test.class, testId);
+		String query = "SELECT c from InTestQuestion c WHERE c.test=?1 AND c.status=?2";
+		@SuppressWarnings("unchecked")
+		List<InTestQuestion> list = em.createQuery(query).setParameter(1, test).setParameter(2, ICommonData.STATUS_UNCHECKED)
+				.getResultList();
+		JSONObject result = new JSONObject();
+		int num = 0;
+		JSONArray array = new JSONArray();
+		if(list!=null) {			
+			for (InTestQuestion etq : list) {
+				JSONObject jsn = new JSONObject();
+				getObjectForShortQuestionInfo(etq, jsn);
+				num++;
+				jsn.put(ICommonData.JSN_TESTDETAILS_QUESTION_INDEX, num);
+				array.put(jsn);
+			}
+			
+		}
+		result.put(ICommonData.JSN_TESTDETAILS_LIST_OF_QUESTIONS, array);
+		result.put(ICommonData.JSN_TESTDETAILS_UNCHECKED_QUESTIONS_NUMBER, num);
+		return result;
+	}
+	
+	/**
 	 * Method for ViewResults - get list of UNCHECKED questions. Should return:	 	 
 	 * - amount of unchecked answers (JSN = "unchecked")	 	 
 	 * - list of questions (JSN = "questions") with:
 	 * ----- index in list (JSN = "index") 
-	 * ----- ID (EntityTestQuestions) (JSN = "questionId")
+	 * ----- ID (InTestQuestion) (JSN = "questionId")
 	 * ----- metaCategory (JSN = "metaCategory")
 	 * ----- category1 (JSN = "category")
 	 * ----- status (unchecked) in two options:
@@ -264,10 +414,10 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 	@Override
 	public String getListOfUncheckedQuestions(int companyId, long testId) {		
 		String res = "{}";
-		entityCompany = em.find(EntityCompany.class, companyId);
+		entityCompany = em.find(Company.class, companyId);
 		if(entityCompany!=null){
-			EntityTest test = (EntityTest) em.createQuery
-				("SELECT t FROM EntityTest t WHERE t.testId = :testId AND t.entityCompany = :company")
+			Test test = (Test) em.createQuery
+				("SELECT t FROM Test t WHERE t.testId = :testId AND t.company = :company")
 				.setParameter("testId", testId)
 				.setParameter("company", entityCompany)
 				.getSingleResult();
@@ -289,38 +439,6 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 		return res;
 	}
 	
-	
-	// CHECK ANSWER OF PERSON
-	@Override	
-	public String checkAnswer(int companyId, String mark) {
-		String response = "";
-		entityCompany = em.find(EntityCompany.class, companyId);
-		if(entityCompany!=null) {
-			try {
-				JSONObject jsn = new JSONObject(mark);
-				String res = jsn.getString(ICommonData.JSN_CHECK_MARK);
-				long testQuestionId = jsn.getLong(ICommonData.JSN_CHECK_ID);
-				EntityTestQuestions etq = em.find(EntityTestQuestions.class, testQuestionId);
-				if(etq!=null && etq.getStatus()==ICommonData.STATUS_UNCHECKED) {
-					ITestQuestionHandler handler = SingleTestQuestionHandlerFactory.getInstance(etq);
-					int newStatus = handler.setMark(res);
-					response = IPublicStrings.QUESTION_STATUS[newStatus];
-					ICompanyTestHandler testHandler = SingleTestQuestionHandlerFactory.getTestCompanyHandler();
-					long testId = etq.getEntityTest().getId();
-//					System.out.println(testId);
-					testHandler.setTestId(testId);
-					testHandler.renewStatusOfTest();
-//					this.renewStatusOfTest(etq.getEntityTest().getTestId());
-				}
-							
-			} catch (JSONException e) {
-				e.printStackTrace();			
-			}
-		}
-		
-		return response;
-	}
-	
 			
 		//------------- Viewing test results  3.1.4.----------- // END ////	
 		
@@ -335,16 +453,16 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 	
 	//PRIVATE
 	// JSON for Lists of test
-	private String generateJsonResponseCommon(List<EntityTest> testresults, String timeZone) {		
+	private String generateJsonResponseCommon(List<Test> testresults, String timeZone) {		
 		JSONArray result = new JSONArray();
-		for (EntityTest test: testresults){
+		for (Test test: testresults){
 			
 			
 			JSONObject jsonObj = new JSONObject();
 			try {
 				jsonObj.put(ICommonData.JSN_TEST_IS_CHECKED, test.isChecked());
-				jsonObj.put("personName",test.getEntityPerson().getPersonName());
-				jsonObj.put("personSurname",test.getEntityPerson().getPersonSurname());
+				jsonObj.put("personName",test.getPerson().getPersonName());
+				jsonObj.put("personSurname",test.getPerson().getPersonSurname());
 				jsonObj.put("testid",test.getId());
 				SimpleDateFormat sdf = new SimpleDateFormat(ICommonData.DATE_FORMAT);
 				sdf.setTimeZone(TimeZone.getTimeZone(timeZone));
@@ -379,15 +497,15 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 
 	@Override
 	public List<String> listOfCreatedTest() {
-		Query qry = em.createQuery("SELECT et FROM EntityTest et WHERE et.entityCompany=?1");
+		Query qry = em.createQuery("SELECT et FROM Test et WHERE et.company=?1");
 		qry.setParameter(1, entityCompany);
-		List<EntityTest> list = qry.getResultList();
+		List<Test> list = qry.getResultList();
 		List<String> resultList = null;
 		if(list!=null) {
 		
 		resultList = new ArrayList<String>();
 		
-		for(EntityTest et : list) {
+		for(Test et : list) {
 			try {
 				resultList.add(getTestJson(et));
 			} catch (JSONException e) {
@@ -401,16 +519,16 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 	
 
 	
-	private String getTestJson(EntityTest et) throws JSONException {
+	private String getTestJson(Test et) throws JSONException {
 		String result = null;
 		JSONObject jsn = new JSONObject();
 		if(et!=null) {
 			jsn.put("id", et.getId());
 			jsn.put("question_num", et.getAmountOfQuestions());
 			jsn.put("passed", et.isPassed());
-			jsn.put("pers_surname", et.getEntityPerson().getPersonSurname());
-			jsn.put("pers_name", et.getEntityPerson().getPersonName());
-			jsn.put("pers_id", et.getEntityPerson().getPersonId());		
+			jsn.put("pers_surname", et.getPerson().getPersonSurname());
+			jsn.put("pers_name", et.getPerson().getPersonName());
+			jsn.put("pers_id", et.getPerson().getPersonId());		
 			result = jsn.toString();
 		}
 		
@@ -450,15 +568,15 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 	@Transactional
 	public String getQuestionDetails(int companyId, long testQuestionId) {
 		String res = "{}";
-		entityCompany = em.find(EntityCompany.class, companyId);
+		entityCompany = em.find(Company.class, companyId);
 		if(entityCompany!=null) {
-			EntityTestQuestions entityTestQuestion = em.find(EntityTestQuestions.class, testQuestionId);
-			if(entityTestQuestion!=null && entityTestQuestion.getEntityTest().getEntityCompany().equals(entityCompany)) {
+			InTestQuestion entityTestQuestion = em.find(InTestQuestion.class, testQuestionId);
+			if(entityTestQuestion!=null && entityTestQuestion.getTest().getCompany().equals(entityCompany)) {
 				
 				JSONObject jsonObject = null;
 				
 				try {
-					EntityQuestionAttributes entityQuestionAttributes = entityTestQuestion.getEntityQuestionAttributes();
+//					EntityQuestionAttributes entityQuestionAttributes = entityTestQuestion.getEntityQuestionAttributes();
 					ITestQuestionHandler handler = SingleTestQuestionHandlerFactory.getInstance(entityTestQuestion);
 					jsonObject = handler.getJsonWithCorrectAnswer(entityTestQuestion);
 														
@@ -500,7 +618,6 @@ public class CompanyActionsService extends CommonAdminServices implements ICompa
 		}			
 		return result;
 	}
-
 
 
 

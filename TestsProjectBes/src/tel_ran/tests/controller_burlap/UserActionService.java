@@ -1,31 +1,17 @@
 package tel_ran.tests.controller_burlap;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.Query;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
-import tel_ran.tests.entitys.EntityCompany;
 import tel_ran.tests.entitys.EntityQuestionAttributes;
-import tel_ran.tests.entitys.EntityTitleQuestion;
-import tel_ran.tests.entitys.EntityUser;
-import tel_ran.tests.interfaces.IConstants;
-import tel_ran.tests.services.common.ICommonData;
+import tel_ran.tests.entitys.QuestionTitle;
 import tel_ran.tests.services.interfaces.IUserActionService;
 
 @SuppressWarnings("unchecked")
 public class UserActionService extends CommonServices implements IUserActionService {
 	
-	private EntityUser entityUser;
-	
-
 
 	////------- Test mode Test for User case ----------------// BEGIN //
 	
@@ -60,7 +46,7 @@ public class UserActionService extends CommonServices implements IUserActionServ
 		q.setParameter(1, catName);
 		q.setParameter(2, Integer.parseInt(complexityLevel));
 
-		List<EntityTitleQuestion> qlist = q.getResultList();
+		List<QuestionTitle> qlist = q.getResultList();
 		String res = String.valueOf(qlist.size());
 		return res;
 	}
@@ -75,7 +61,7 @@ public class UserActionService extends CommonServices implements IUserActionServ
 		Query q = em.createQuery(query);
 		q.setParameter(1, catName);
 		q.setParameter(2, Integer.parseInt(level));
-		List<EntityTitleQuestion> qlist = q.getResultList();
+		List<QuestionTitle> qlist = q.getResultList();
 		String res = String.valueOf(qlist.size());
 		return res;
 	}

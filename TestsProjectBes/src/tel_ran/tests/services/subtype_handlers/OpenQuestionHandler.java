@@ -9,21 +9,57 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import tel_ran.tests.entitys.EntityQuestionAttributes;
-import tel_ran.tests.entitys.EntityTestQuestions;
+import tel_ran.tests.entitys.InTestQuestion;
+import tel_ran.tests.entitys.Question;
+import tel_ran.tests.entitys.QuestionCustom;
+import tel_ran.tests.entitys.QuestionCustomOpen;
+import tel_ran.tests.entitys.QuestionCustomTest;
 import tel_ran.tests.services.common.ICommonData;
 import tel_ran.tests.services.common.IPublicStrings;
 import tel_ran.tests.services.utils.FileManagerService;
 
 public class OpenQuestionHandler extends AbstractTestQuestionHandler {
 
+	QuestionCustomOpen question;
+	
+	@Override
+	public void setQuestion(Question question) {
+		this.question = (QuestionCustomOpen)question;
+	}
 	
 		
 	public OpenQuestionHandler() {
 		super();
 		type = ICommonData.QUESTION_TYPE_OPEN;
 		gradeType = 0;
+		categoryType = "custom";
 	}
 
+	@Override
+	protected void addDataToJson(JSONObject jsn) throws JSONException {
+		
+		jsn.put(ICommonData.JSN_INTEST_QUESTION_TEXT, question.getTitle().getQuestionText());
+		jsn.put(ICommonData.JSN_INTEST_DESCRIPTION, getManyLinesField(question.getDescription()));
+		
+		String fileLink = question.getFileLocationLink();
+		if(fileLink!=null && fileLink.length() > 2) {
+			jsn.put(ICommonData.JSN_INTEST_IMAGE, getImageBase64(fileLink));
+		}	
+		
+	}
+	
+	@Override
+	protected void addFullDataToJson(JSONObject jsn) throws JSONException {
+		jsn.put(ICommonData.JSN_QUESTDET_METACATEGORY, question.getCategory().getMetaCategory());
+		jsn.put(ICommonData.JSN_QUESTDET_CATEGORY1, question.getCategory().getCategory1());
+		jsn.put(ICommonData.JSN_QUESTDET_TEXT, question.getCategory().getCategory2());
+		
+		jsn.put(ICommonData.JSN_QUESTDET_DESCRIPTION, getManyLinesField(question.getDescription()));
+		
+		JSONArray array = getManyLinesField(tQuestion.getAnswer());
+		jsn.put(ICommonData.JSN_QUESTDET_ANSWER, array);
+		
+	}
 
 	@Override
 	public String getQuestionJson(int index) {
@@ -36,24 +72,6 @@ public class OpenQuestionHandler extends AbstractTestQuestionHandler {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	@Override
-	public JSONObject getJsonForTest(long eqtId, int index) throws JSONException {
-		// from SUPER - text of question, id of EntityTestQuestion, index, type
-		JSONObject result = super.getJsonForTest(eqtId, index);
-				
-		// description		
-		result.put(ICommonData.JSN_INTEST_DESCRIPTION, getManyLinesField(getQuestionAttribubes().getDescription()));
-		
-		// get image
-		String fileLink = getQuestionAttribubes().getFileLocationLink();
-		if(fileLink!=null && fileLink.length() > 2) {
-			result.put(ICommonData.JSN_INTEST_IMAGE, getImageBase64(fileLink));
-		}
-		
-		return result;		
-	}
-
 	
 	@Override
 	protected int checkAnswers() {		
@@ -63,19 +81,6 @@ public class OpenQuestionHandler extends AbstractTestQuestionHandler {
 	@Override
 	protected String preparingAnswer(String answer) {
 		return answer;
-	}
-
-
-	// DESCRIPTION, ANSWER + DATA FROM SUPER
-	@Override
-	public JSONObject getJsonWithCorrectAnswer(EntityTestQuestions entityTestQuestion) throws JSONException {
-		JSONObject result = super.getJsonWithCorrectAnswer(entityTestQuestion);
-		result.put(ICommonData.JSN_QUESTDET_DESCRIPTION, getManyLinesField(getQuestionAttribubes().getDescription()));
-				
-		JSONArray array = getManyLinesField(entityTestQuestion.getAnswer());
-		result.put(ICommonData.JSN_QUESTDET_ANSWER, array);
-				
-		return result;
 	}
 
 
@@ -89,5 +94,11 @@ public class OpenQuestionHandler extends AbstractTestQuestionHandler {
 		return res;
 	}
 
+
+	@Override
+	public void printQuestion() {
+		System.out.println(this.question.getId());
+		
+	}
 	
 }

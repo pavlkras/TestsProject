@@ -17,17 +17,6 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns
    <!-- <url-pattern>*.service1</url-pattern> -->
      <url-pattern>/</url-pattern>
   </servlet-mapping>
-
-  <servlet>
-    <servlet-name>personal_service</servlet-name>
-    <servlet-class>org.springframework.web.servlet.DispatcherServlet
-  </servlet-class>
-    <load-on-startup>2</load-on-startup>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>personal_service</servlet-name>
-    <url-pattern>*.service2</url-pattern>
-  </servlet-mapping>
   
   <servlet>
     <servlet-name>maintenance_service</servlet-name>

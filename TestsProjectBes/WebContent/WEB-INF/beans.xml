@@ -24,25 +24,32 @@
 <bean id="testQuestsionsData" class="tel_ran.tests.dao.TestQuestionsData"></bean>
 <bean id="dataInitialize" class="tel_ran.tests.initiate.DataInitialization"></bean>
 
-<bean id="personal_actions" class="tel_ran.tests.services.PersonalActionsService" scope="prototype"/> 
-
-<bean id="testHandler" class ="tel_ran.tests.services.testhandler.CompanyTestHandler" scope="prototype"/>
-
-<bean id="testFinisher" class="tel_ran.tests.services.processes.TestFinisher" scope="prototype"/>
-
 <bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
     <property name="corePoolSize" value="5" />
     <property name="maxPoolSize" value="10" />
     <property name="queueCapacity" value="25" />
 </bean>
 
+<bean id="autoCatList" class="tel_ran.tests.categoryLists.GeneratedCategoryList" scope="prototype"/>
+<bean id="customCatList" class="tel_ran.tests.categoryLists.CustomCategoryList" scope="prototype"/>
+
 <!--  Services -->
-	<bean id="testService" class="tel_ran.tests.services.TestService" scope="prototype"/>
+	<bean id="authorization" class="tel_ran.tests.services.AuthorizationService"/>
+	<bean id="companyAccount" class="tel_ran.tests.services.CompanyAccountService" scope="prototype"/>	
 	<bean id="templateService" class="tel_ran.tests.services.TemplatesService" scope="prototype"/>
-	<bean id="autoCategoriesService" class="tel_ran.tests.services.AutoCategoriesService" scope="prototype"/>
-	<bean id="customCategoriesService" class="tel_ran.tests.services.CustomCategoriesService" scope="prototype"/>
+	<bean id="categoriesService" class="tel_ran.tests.services.CategoriesService" scope="prototype"/>
+	
+	<bean id="autoCatService" class="tel_ran.tests.services.CategoriesService" scope="prototype">
+	<property name="categoriesList" ref="autoCatList"></property></bean>
+	
+	<bean id="customCatService" class="tel_ran.tests.services.CategoriesService" scope="prototype">
+	<property name="categoriesList" ref="customCatList"></property></bean>
+	
 	<bean id="questionsService" class="tel_ran.tests.services.QuestionsService" scope="prototype"/>
-<bean id="testTemplateService" class="tel_ran.tests.services.TestForTemplateService" scope="prototype"/>
+	<bean id="testTemplateService" class="tel_ran.tests.services.TestForTemplateService" scope="prototype"/>
+	<bean id="testService" class="tel_ran.tests.services.TestService" scope="prototype"/>
+	<bean id="testResultService" class="tel_ran.tests.services.TestResultService" scope="prototype"/>
+
 
 
 <!-- Utils -->
@@ -50,6 +57,11 @@
 <!-- EOF Utils -->
 
 <!-- TestHandlers -->
+	<bean id="java_tester" class="tel_ran.tests.services.subtype_handlers.programming.JavaTester" scope="prototype"></bean>
+	
+	<bean id="java" class="tel_ran.tests.services.subtype_handlers.CodeTestQuestionHandler" scope="prototype">
+	<property name="codeTester" ref="java_tester"></property></bean> 
+	
 	<bean id="Abstract_Reasoning" class="tel_ran.tests.services.subtype_handlers.AutoTestQuestionHandler" scope="prototype"></bean>
 	<bean id="Attention_Test" class="tel_ran.tests.services.subtype_handlers.AutoTestQuestionHandler" scope="prototype"></bean>
 	<bean id="Attention" class="tel_ran.tests.services.subtype_handlers.AutoTestQuestionHandler" scope="prototype"></bean>

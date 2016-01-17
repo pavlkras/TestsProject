@@ -9,8 +9,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
@@ -18,7 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
-import java.util.HashMap;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -29,8 +28,6 @@ import java.util.zip.ZipFile;
 
 import org.springframework.stereotype.Repository;
 
-import tel_ran.tests.controller_burlap.CompanyActionsService;
-import tel_ran.tests.services.subtype_handlers.programming.ICodeTester;
 
 
 
@@ -109,8 +106,9 @@ public class FileManagerService {
 				
 		Date d = new Date(System.currentTimeMillis());
 		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd_hhmmss");		
-	
-		String basePath = getBasePathForPhoto(compId, testId) + File.separator; 
+			
+		String basePath = getBasePathForPhoto(compId, testId) + File.separator;
+				
 		String nameFile = sf.format(d);
 		String extension = ".txt";
 		String path;
@@ -126,7 +124,7 @@ public class FileManagerService {
 				if(fl.exists()) {
 					nameFile = nameFile + "-" + index;
 					index++;
-				} else {
+				} else {										
 					fl.createNewFile();
 					flag = true;
 					System.out.println(LOG + " - 92: path to image, try="+index+" : " + path);

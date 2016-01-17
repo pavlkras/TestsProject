@@ -37,11 +37,11 @@ public final class JSONKeys {
 	
 	public static final String QUESTION_ID = "id"; // id in EntityQuestionAttributes = long
 	public static final String QUESTION_INDEX = "index"; 
-	public static final String QUESTION_TYPE = "question_type"; // user or auto 
+	public static final String QUESTION_TYPE = "question_type"; // open or american (only for custom!) 
 	public static final String QUESTION_META_CATEGORY = "metaCategory"; // = String
 	public static final String QUESTION_CATEGORY1 = "category1"; // user's category or programming language = String
 	public static final String QUESTION_CATEGORY2 = "category2"; // used for auto-question only = String
-	public static final String QUESTION_TEXT = "questionText"; // common question = title of question = String	
+	public static final String QUESTION_TITLE = "questionText"; // common question = title of question = String	
 	public static final String QUESTION_DESCRIPTION = "description"; // long text with the question's body = String
 	public static final String QUESTION_ANSWER_OPTIONS = "options"; //JSONArray for answers in American Test = List	
 	public static final String QUESTION_ONE_OPTION = "option"; 
@@ -55,6 +55,7 @@ public final class JSONKeys {
 	
 	// CATEGORIES LISTS
 	
+	public static final String CATEGORY_ID = "cat_id"; // int
 	public static final String CATEGORY_PARENT = "cat_parent"; // String - name of MetaCategory or Category1
 	public static final String CATEGORY_CHILDREN = "cat_children"; //String - name of JSONArray
 	public static final String CATEGORY_CHILD = "cat_child"; //String - name of sub-category
@@ -85,6 +86,7 @@ public final class JSONKeys {
 	public static final String TEMPLATE_QUANTITY = "quantity";  
 	public static final String TEMPLATE_SOURCE = "type";
 	public static final String TEMPLATE_SOURCE_CUSTOM = "Custom";
+	public static final String TEMPLATE_TYPE_OF_QUESTION = "typeQuestion"; //open question OR american test
 	
 	//TEST
 	
@@ -93,4 +95,28 @@ public final class JSONKeys {
 	public static final String TEST_LINK_TO_SEND = "test_link"; // String
 	public static final String TEST_FOR_PERSONS = "test_persons"; // String
 	public static final String TEST_WAS_SENT= "test_is_sent"; //boolean
+	public static final String TEST_KEY = "test_key"; //String
+
+	
+	//RESULTS OF TESTS
+	
+	public static final String RESULTS_CATEGORY_TYPE = "type"; //String = auto OR custom
+	public static final String RESULTS_CATEGORY_ID = "category_id"; // int
+	public static final String RESULTS_CATEGORY_NUM_QUESTIONS = "num_questions"; //int 
+	public static final String RESULTS_CATEGORY_NUM_ANSWERS = "num_answers"; //int
+	public static final String RESULTS_CATEGORY_NUM_CORRECT_ANSWERS = "correct_answers"; //int
+	public static final String RESULTS_CATEGORY_NUM_UNCHECKED_ANSWERS = "unchecked_answers"; //int
+	public static final String RESULTS_TEST_ID = "test_id"; //long
+	public static final String RESULTS_TEST_NUM_QUESTIONS = "total_num_questions"; //int
+	public static final String RESULTS_TEST_NUM_ANSWERS = "total_num_answers"; //int
+	public static final String RESULTS_TEST_TOTAL_RESULT = "total_result"; //float
+	public static final String RESULTS_TEST_MANUAL_CHECK_PENDING = "manual_check_pending"; //boolean
+	public static final String RESULTS_BY_CATEGORY = "results_by_categories"; //JSONArray
+	public static final String RESULTS_TEST_DATA = "common_test_data"; // JSONObject
+	public static final String RESULTS_PERSON_DATA = "person_data"; //JSONObject
+	
+	public static final String PERSON_NAME = "name"; //String
+	public static final String PERSON_SURNAME = "surname"; //String
+	public static final String PERSON_id = "person_id"; //long
+	
 }

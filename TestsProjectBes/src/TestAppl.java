@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.IOException;
 
 import tel_ran.tests.services.subtype_handlers.programming.CodeTester;
+import tel_ran.tests.services.subtype_handlers.programming.JavaTester;
 
 
 
@@ -14,7 +15,7 @@ public class TestAppl {
 
 	public static void main(String[] args) throws IOException {
 		
-		CodeTester test = new CodeTester();
+		CodeTester test = new JavaTester();
 		System.out.println(test.testIt(taskPath, testSamplePath));
 		
 		

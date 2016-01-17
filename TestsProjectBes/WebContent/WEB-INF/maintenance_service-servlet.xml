@@ -7,7 +7,7 @@
   http://www.springframework.org/schema/tx 
   http://www.springframework.org/schema/tx/spring-tx-4.2.xsd">
 
-<import resource="beans.xml" />
+
 <!-- components of the application service getting result of any query -->
 <bean id="maintenance" class="tel_ran.tests.controller_burlap.MaintenanceService" /> <!-- class for application model -->
 

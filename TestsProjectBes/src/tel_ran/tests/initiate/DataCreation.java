@@ -3,7 +3,6 @@ package tel_ran.tests.initiate;
 import java.util.Properties;
 
 import tel_ran.tests.dao.IData;
-import tel_ran.tests.dao.TestsPersistence;
 
 public abstract class DataCreation {
 

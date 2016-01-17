@@ -9,7 +9,7 @@ import json_models.ResultAndErrorModel;
 import json_models.TemplateListModel;
 import json_models.TemplateModel;
 import tel_ran.tests.dao.IDataTestsQuestions;
-import tel_ran.tests.entitys.EntityTestTemplate;
+import tel_ran.tests.entitys.TestTemplate;
 import tel_ran.tests.services.common.IPublicStrings;
 
 public class TemplatesService extends AbstractService {
@@ -20,7 +20,7 @@ public class TemplatesService extends AbstractService {
 
 	@Override
 	public String getAllElements() {
-		List<EntityTestTemplate> templatesList = testQuestsionsData.getTemplates((int)this.user.getId());
+		List<TestTemplate> templatesList = testQuestsionsData.getTemplates((int)this.user.getId());
 		TemplateListModel model = new TemplateListModel(templatesList);
 		try {
 			return model.getString();
@@ -33,9 +33,12 @@ public class TemplatesService extends AbstractService {
 
 	@Override
 	public String createNewElement(String dataJson) {
-		TemplateModel template = null;
+		
+		TemplateModel template = new TemplateModel();
+		template.setDao(this.testQuestsionsData);		
+				
 		try {
-			template = new TemplateModel(dataJson);			
+			template.setData(dataJson);		
 		} catch (JSONException e) {
 			e.printStackTrace();
 			try {
@@ -45,6 +48,7 @@ public class TemplatesService extends AbstractService {
 				e1.printStackTrace();
 			}
 		}
+		
 		saveTemplate(template);
 				
 		try {
@@ -58,7 +62,25 @@ public class TemplatesService extends AbstractService {
 	}
 	
 	protected void saveTemplate(TemplateModel template) {
-		testQuestsionsData.createTemplate(template.getEntity(), this.user.getRole(), this.user.getId());		
+		testQuestsionsData.createTemplate(template, this.user.getRole(), this.user.getId());		
+	}
+
+	@Override
+	public List<String> getSimpleList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getInformation() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getElement(String params) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

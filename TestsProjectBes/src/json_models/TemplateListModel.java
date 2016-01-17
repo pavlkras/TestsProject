@@ -6,13 +6,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import tel_ran.tests.entitys.EntityTestTemplate;
+import tel_ran.tests.entitys.TestTemplate;
 
 public class TemplateListModel implements IJsonModels {
 
-	List<EntityTestTemplate> templates;
+	List<TestTemplate> templates;
 	
-	public TemplateListModel(List<EntityTestTemplate> templatesList) {
+	public TemplateListModel(List<TestTemplate> templatesList) {
 		this.templates = templatesList;
 	}
 
@@ -31,7 +31,7 @@ public class TemplateListModel implements IJsonModels {
 	@Override
 	public JSONArray getJSONArray() throws JSONException {
 		JSONArray result = new JSONArray();
-		for(EntityTestTemplate template : templates) {
+		for(TestTemplate template : templates) {
 			JSONObject jsnObj = new JSONObject();
 			jsnObj.put(JSONKeys.TEMPLATE_NAME, template.getTemplateName());
 			jsnObj.put(JSONKeys.TEMPLATE_ID, template.getId());

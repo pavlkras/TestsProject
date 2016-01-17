@@ -4,7 +4,7 @@
    xmlns:tx="http://www.springframework.org/schema/tx"
   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
   http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd ">
-  <import resource="beans.xml" />
+  
 <!-- components of the application service getting result of any query -->
 <bean id="user" class="tel_ran.tests.controller_burlap.UserActionService" /> <!-- class for application model -->
 

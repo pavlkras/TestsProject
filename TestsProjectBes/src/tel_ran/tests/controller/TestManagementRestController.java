@@ -1,7 +1,6 @@
 package tel_ran.tests.controller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,7 +11,6 @@ import com.fasterxml.jackson.annotation.JsonRawValue;
 
 import tel_ran.tests.services.AbstractServiceGetter;
 import tel_ran.tests.services.AbstractService;
-import tel_ran.tests.services.TestService;
 import tel_ran.tests.token_cipher.User;
 import tel_ran.tests.utils.errors.AccessException;
 
@@ -29,8 +27,7 @@ public class TestManagementRestController {
 	 * [{cat_parent : 'category1name', cat_children : [{cat_child : 'category2name', cat_mc_array : [{cat_mc : 'mcName'}]}] }]
 	 * By KEY:
 	 * cat_parent = name of category1 (String)
-	 * cat_children = array of categories2 that are in this category1 (JSONArray)
-	 * cat_child = name of category2 (String)
+	 * cat_id = id of category1 (int)
 	 * cat_mc_array = array of types of questions in this category (AMERICAN TEST or OPEN QUESTION)
 	 * cat_mc = name of type (metaCategory) (String)
 	 * @param token
@@ -41,7 +38,7 @@ public class TestManagementRestController {
 	public String getCategories(@RequestHeader(value="Authorization") String token){		
 				
 		try {
-			AbstractService service = (AbstractService) AbstractServiceGetter.getService(token, "customCategoriesService");
+			AbstractService service = (AbstractService) AbstractServiceGetter.getService(token, AbstractServiceGetter.BEAN_CUSTOM_CATEGORIES);
 			return service.getAllElements();	
 		} catch (AccessException e) {
 			e.printStackTrace();
@@ -61,7 +58,7 @@ public class TestManagementRestController {
 	public String getAutoList(@RequestHeader(value="Authorization") String token) {
 		
 		try {
-			AbstractService service = (AbstractService) AbstractServiceGetter.getService(token, "autoCategoriesService");
+			AbstractService service = (AbstractService) AbstractServiceGetter.getService(token, AbstractServiceGetter.BEAN_AUTO_CATEGORIES);
 			return service.getAllElements();
 		} catch (AccessException e) {
 			e.printStackTrace();
@@ -74,14 +71,12 @@ public class TestManagementRestController {
 	
 	/**
 	 * LIST of ADMIN categories
-	 * Returns list of categories that were created by Admin
-	 * Result doesn't depend on the user. But only registred users can get information
-	 *  Lists are in JSON format. JSONArray:
+	 * Lists of categories that are available for test-template generation
+	 * Lists are in JSON format. JSONArray:
 	 * [{cat_parent : 'category1name', cat_children : [{cat_child : 'category2name', cat_mc_array : [{cat_mc : 'mcName'}]}] }]
 	 * By KEY:
 	 * cat_parent = name of category1 (String)
-	 * cat_children = array of categories2 that are in this category1 (JSONArray)
-	 * cat_child = name of category2 (String)
+	 * cat_id = id of category1 (int)
 	 * cat_mc_array = array of types of questions in this category (AMERICAN TEST or OPEN QUESTION)
 	 * cat_mc = name of type (metaCategory) (String)
 	 * @return
@@ -91,7 +86,7 @@ public class TestManagementRestController {
 	public String getAdminCategoryList(@RequestHeader(value="Authorization") String token) {
 				
 		try {
-			AbstractService service = (AbstractService) AbstractServiceGetter.getService(token, "customCategoriesService");
+			AbstractService service = (AbstractService) AbstractServiceGetter.getService(token, AbstractServiceGetter.BEAN_CUSTOM_CATEGORIES);
 			service.setUser(User.getAdminUser());
 			return service.getAllElements();
 		} catch (AccessException e) {
@@ -170,9 +165,8 @@ public class TestManagementRestController {
 	 * 
 	 * (list of params for random generation)
 	 * template_categories = JSONArray
-	 * metaCategory = name of MetaCategory (REQUIRED) (String)
-	 * category1 = name of category1 (String)
-	 * category2 = name of category2 (String)
+	 * cat_id = id of category (REQUIRED) (String)
+	 * typeQuestion = american test or open question (String)
 	 * level = level of difficulty (int) 
 	 * quantity = quantity of questions to create in these categories (REQUIRED) (int)
 	 * type = source of questions (Custom, SiteBase, Generation)
@@ -200,42 +194,12 @@ public class TestManagementRestController {
 		}		
 	}
 		
-	/**
-	 * SEND test to person e-mail
-	 * Company can send only its tests
-	 * Administrator can send any tests	 
-	 * 
-	 * @param token = token
-	 * @param link = JSON with field:
-	 * path = first part of path (path to Client + mapping) (String)	 
-	 * 
-	 * @return 
-	 * in case of SUCCESS:
-	 * code = 0 (int)
-	 * 
-	 * in case of ERROR:
-	 * code = number of error > 0 (int)
-	 * response = description of error (String)	 * 
-	 */
-	@RequestMapping(value="/sendTestByMail" + "/{testId}", method=RequestMethod.POST)
-	@ResponseBody
-	public String sendTestToEmail(@RequestHeader(value="Authorization") String token, @PathVariable long testId, @RequestBody String link) {
-				
-		try {
-			TestService service = (TestService) AbstractServiceGetter.getService(token, "testService");
-			return service.sendTestByMail(link, testId);
-		} catch (AccessException e) {
-			e.printStackTrace();
-			return e.getString();			
-		}
 		
-	}
-	
 	/**
 	 * LIST of all questions by ID of company. For Administrator returns list of admin questions
 	 * Return JSONArray with json objects:
 	 * id = id of question (long)
-	 * metaCategory (String)
+	 * question_type (String) - Open question or AmericanTest
 	 * category1 (String)
 	 * category2 (String)
 	 * is_image = true if the question has image (boolean)
@@ -320,7 +284,7 @@ public class TestManagementRestController {
 	@RequestMapping(value="/createTestByTemplate", method=RequestMethod.POST)
 	@ResponseBody
 	public String createTestByTemplate(@RequestHeader(value="Authorization") String token, @RequestBody String testInfo) {
-		System.out.println("In controller");
+		
 		try {
 			AbstractService service = AbstractServiceGetter.getService(token, "testTemplateService");
 			return service.createNewElement(testInfo);

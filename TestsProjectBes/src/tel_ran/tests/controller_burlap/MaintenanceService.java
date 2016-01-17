@@ -1,7 +1,7 @@
 package tel_ran.tests.controller_burlap;
 
 
-import tel_ran.tests.entitys.EntityCompany;
+import tel_ran.tests.entitys.Company;
 import tel_ran.tests.entitys.EntityQuestionAttributes;
 import tel_ran.tests.services.interfaces.IMaintenanceService;
 
@@ -18,7 +18,7 @@ public class MaintenanceService extends CommonAdminServices implements IMaintena
 		
 
 	@Override
-	protected EntityCompany renewCompany() {
+	protected Company renewCompany() {
 		return null;
 	}
 	
@@ -28,7 +28,7 @@ public class MaintenanceService extends CommonAdminServices implements IMaintena
 	}
 		
 	@Override
-	protected EntityCompany getCompany() {
+	protected Company getCompany() {
 		return null;
 	}
 		

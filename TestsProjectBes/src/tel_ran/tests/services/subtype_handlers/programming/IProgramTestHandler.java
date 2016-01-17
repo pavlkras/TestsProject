@@ -11,5 +11,7 @@ public interface IProgramTestHandler {
 	void fillTemplate(String codeFromPersonPath, String pathToAnswersZip);
 	boolean test();
 	void cleanWorkFolder();
+	
+	
 
 }

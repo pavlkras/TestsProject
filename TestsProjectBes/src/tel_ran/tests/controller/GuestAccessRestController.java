@@ -4,11 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import tel_ran.tests.services.AutorizationService;
+import tel_ran.tests.services.AbstractServiceGetter;
+import tel_ran.tests.services.AuthorizationService;
+import tel_ran.tests.services.utils.SpringApplicationContext;
 import tel_ran.tests.token_cipher.TokenProcessor;
 
 import com.fasterxml.jackson.annotation.JsonRawValue;
@@ -35,7 +38,7 @@ public class GuestAccessRestController {
 	@RequestMapping(value="/login", method=RequestMethod.POST)
 	@ResponseBody @JsonRawValue
 	String logInAction(@RequestBody String answer){		
-		AutorizationService service = AutorizationService.getInstance();	
+		AuthorizationService service = (AuthorizationService) SpringApplicationContext.getBean(AbstractServiceGetter.BEAN_AUTHORIZATION_SERVICE);	
 		return service.testLogIn(answer);
 	}
 
@@ -56,7 +59,7 @@ public class GuestAccessRestController {
 	@RequestMapping(value="/signin", method=RequestMethod.POST)
 	@ResponseBody @JsonRawValue
 	String signInAction(@RequestBody String answer){		
-		AutorizationService service = AutorizationService.getInstance();	
+		AuthorizationService service = (AuthorizationService) SpringApplicationContext.getBean(AbstractServiceGetter.BEAN_AUTHORIZATION_SERVICE);	
 		
 		return service.testSignIn(answer);
 	}
@@ -64,7 +67,7 @@ public class GuestAccessRestController {
 	@RequestMapping(value="/company_login", method=RequestMethod.POST)
 	@ResponseBody @JsonRawValue
 	String companyLogin(@RequestBody String request) {
-		AutorizationService service = AutorizationService.getInstance();	
+		AuthorizationService service = (AuthorizationService) SpringApplicationContext.getBean(AbstractServiceGetter.BEAN_AUTHORIZATION_SERVICE);	
 		return service.companyLogIn(request);
 	}
 	
@@ -72,16 +75,25 @@ public class GuestAccessRestController {
 	@RequestMapping(value="/company_signup", method=RequestMethod.POST)
 	@ResponseBody @JsonRawValue
 	String companySignUp(@RequestBody String request){		
-		AutorizationService service = AutorizationService.getInstance();			
+		AuthorizationService service = (AuthorizationService) SpringApplicationContext.getBean(AbstractServiceGetter.BEAN_AUTHORIZATION_SERVICE);				
 		return service.companySignUp(request);
 	}
 
 	@RequestMapping(value="/if_company_exist"+"/{name_company}", method=RequestMethod.GET)
 	@ResponseBody @JsonRawValue
 	boolean findCompany(@PathVariable String name_company){		
-		AutorizationService service = AutorizationService.getInstance();			
+		AuthorizationService service = (AuthorizationService) SpringApplicationContext.getBean(AbstractServiceGetter.BEAN_AUTHORIZATION_SERVICE);				
 		return service.findCompany(name_company);
 	}
 	
+	@RequestMapping(value="/getToken", method=RequestMethod.POST)
+	@ResponseBody
+	String getTokenForTest(@RequestHeader(value="Key") String password) {
+		
+		AuthorizationService service = (AuthorizationService) SpringApplicationContext.getBean(AbstractServiceGetter.BEAN_AUTHORIZATION_SERVICE);	
+		System.out.println(password);
+		return service.getTokenByTest(password);
+		
+	}
 	
 }

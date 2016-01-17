@@ -8,10 +8,9 @@ import json_models.AutorizationModel;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import tel_ran.tests.entitys.EntityCompany;
+import tel_ran.tests.entitys.Company;
 import tel_ran.tests.entitys.EntityUser;
-import tel_ran.tests.services.common.ICommonData;
-import tel_ran.tests.services.fields.Role;
+
 
 public class AutorizationData extends TestsPersistence implements IDataLoader {
 
@@ -39,15 +38,15 @@ public class AutorizationData extends TestsPersistence implements IDataLoader {
 	@Override
 	@Transactional
 	public long checkCompanyLogIn(String name, String password) {
-		String queryText = "Select ec from EntityCompany ec where ec.C_Name=?1 and ec.C_Password=?2";
+		String queryText = "Select ec from Company ec where ec.C_Name=?1 and ec.C_Password=?2";
 		Query q = (Query) em.createQuery(queryText);
 		q.setParameter(1, name);
 		q.setParameter(2, password);
 		
-		EntityCompany company = null;
+		Company company = null;
 		
 		try {
-			company = (EntityCompany) q.getSingleResult();
+			company = (Company) q.getSingleResult();
 		} catch(NoResultException e) {
 			return -1;
 		}
@@ -84,7 +83,7 @@ public class AutorizationData extends TestsPersistence implements IDataLoader {
 	@Transactional
 	public boolean checkCompanyName(String login) {
 		boolean result = false;
-		String queryText = "Select c from EntityCompany c where c.C_Name=?1";
+		String queryText = "Select c from Company c where c.C_Name=?1";
 		Query q = (Query) em.createQuery(queryText);
 		q.setParameter(1, "%"+login+"%");				
 		if(!q.getResultList().isEmpty()) {
@@ -154,7 +153,7 @@ public class AutorizationData extends TestsPersistence implements IDataLoader {
 	@Override
 	@Transactional
 	public void fillInfoAboutCompany(AutorizationModel model, int id) {
-		EntityCompany company = em.find(EntityCompany.class, id);
+		Company company = em.find(Company.class, id);
 		model.setEmail(company.getC_email());
 		model.setWebSite(company.getC_Site());
 		model.setSpec(company.getC_Specialization());
@@ -165,7 +164,7 @@ public class AutorizationData extends TestsPersistence implements IDataLoader {
 	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
 	public boolean companyRegistration(String login, String password,
 			String employesNumber, String webSite, String spec) {
-		EntityCompany company = new EntityCompany();
+		Company company = new Company();
 		company.setC_Password(password);
 		company.setC_Name(login);
 		
@@ -182,10 +181,24 @@ public class AutorizationData extends TestsPersistence implements IDataLoader {
 
 	@Override
 	public boolean checkFirstCompany() {
-		EntityCompany ec = em.find(EntityCompany.class, 1);
+		Company ec = em.find(Company.class, 1);
 		if(ec==null) return false;
 		return true;
 	}
 
+	@Override
+	public long findTestIdByPassword(String key) {
+
+		try {
+			long testId = (long) em.createQuery("Select t.id from Test t where t.password='" + key + "'").getSingleResult();
+			System.out.println(testId);
+			return testId;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return -1;
+		}
+		
+	}
+	
 
 }

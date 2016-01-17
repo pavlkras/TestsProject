@@ -1,152 +1,207 @@
 package tel_ran.tests.services;
 
-
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONException;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.task.TaskExecutor;
 
-import json_models.JSONKeys;
-import json_models.PersonModel;
-import json_models.ResultAndErrorModel;
-import json_models.TemplateModel;
-import json_models.TestModel;
-import tel_ran.tests.services.common.IPublicStrings;
-import tel_ran.tests.services.fields.Role;
+import tel_ran.tests.dao.IDataTestsQuestions;
+import tel_ran.tests.entitys.InTestQuestion;
+import tel_ran.tests.entitys.Question;
+import tel_ran.tests.entitys.Test;
+import tel_ran.tests.services.common.ICommonData;
+import tel_ran.tests.services.processes.TestFinisher;
+import tel_ran.tests.services.subtype_handlers.ITestQuestionHandler;
+import tel_ran.tests.services.utils.FileManagerService;
+import tel_ran.tests.utils.errors.DataException;
 
-
-public class TestService extends TemplatesService {
+public class TestService extends AbstractService {
+	
+	@Autowired
+	IDataTestsQuestions testQuestsionsData;	
+	
+	long testId;
+	Test test;
+	
+	/**
+	 * TaskExecutor is used for the process of test finishing (analyzing in a thread)
+	 */
+	@Autowired
+	TaskExecutor taskExecutor;
 	
 	
-	public TestService() {}
-		
-	
-	@Override
-	public String createNewElement(String dataJson) {
-				
-		//0 - read info about save template
-		//1 - read info for tests
-		TemplateModel template = null;
-		try {
-			template = new TemplateModel(dataJson);			
-		} catch (JSONException e) {
-			e.printStackTrace();
-			try {
-				return ResultAndErrorModel.getJson(IPublicStrings.TEST_SOME_TROUBLE);
-			} catch (JSONException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		}
-		
-		if(template!=null && template.isSaved()) 
-			saveTemplate(template);
-		
-		//2 - read Info for new Person
-		PersonModel person = null;
-		try {		
-			person = new PersonModel(dataJson);
-		} catch (JSONException e) {
-			e.printStackTrace();			
-			try {
-				return ResultAndErrorModel.getJson(IPublicStrings.TEST_NOT_CORRECT_PERSON_INFO);
-			} catch (JSONException e1) {				
-				e1.printStackTrace();
-			}			
-		}
-		
-		//3 - create new Test
-		QuestionsService service = (QuestionsService) AbstractServiceGetter.getService(user, 
-				AbstractServiceGetter.BEAN_QUESTIONS_SERVICE);
-		template.createNewTest(service);
-		template.fillTest(this.testQuestsionsData);
-		
-		//4 - save Test
-		long testId = saveTest(template.getTest(), person);
-		
-		String result = "";
-		try {
-			result = ResultAndErrorModel.getResponse(JSONKeys.TEST_ID, testId, IPublicStrings.TEST_SUCCESS);
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return result;
-	}
-	
-	
-	protected long saveTest(TestModel test, PersonModel person) {
-		long personId = testQuestsionsData.createPerson(person.getEntity());			
-		long testId = testQuestsionsData.createTest(test.getTest(), test.getQuestions(), personId, this.user.getRole(), this.user.getId());	
-		
-		person.setTest(test);
-		
+	public long getTestId() {
 		return testId;
 	}
 
-	
-
-	
-
-	public String sendTestByMail(String link, long testId) {
-		//1 - find test by id
-		
-		TestModel test = new TestModel(testQuestsionsData.findTestById(testId));	
-				
-		//2 - check test
-		if(!this.user.getRole().equals(Role.ADMINISTRATOR) && !(this.user.getRole().equals(Role.COMPANY) && 
-				test.getCompanyId() != this.user.getId())) {
-				try {
-					return ResultAndErrorModel.getJson(IPublicStrings.TEST_NO_RIGHT_TO_SEND);
-				} catch (JSONException e) {
-					
-					e.printStackTrace();
-					return "";
-				}
-		}			
-					
-		//3 - create Sender
-		boolean result;
-		
-		try {
-			result = test.sendMail(link);
-		} catch (JSONException e) {
-			e.printStackTrace();
-			try {
-				return ResultAndErrorModel.getJson(IPublicStrings.TEST_NOT_SENDED);
-			} catch (JSONException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-				return "";
-			}
-			
-		}
-		
-		if(!result) {
-			try {
-				return ResultAndErrorModel.getJson(IPublicStrings.TEST_NOT_SENDED);
-			} catch (JSONException e) {			
-				e.printStackTrace();
-				return "";
-			}			
-		} else {
-			try {
-				return ResultAndErrorModel.getAnswer("The mail was sended", 0);
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return "";
-		}				
-		
+	public void setTestId(long testId) throws DataException {
+		this.testId = testId;
+		this.test = testQuestsionsData.findTestById(testId);
+		if(this.test==null) throw new DataException(DataException.NO_TEST);
 	}
-
-	
 
 	@Override
 	public String getAllElements() {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public String createNewElement(String dataJson) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<String> getSimpleList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getInformation() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getElement(String answer) {
+			
+		String result = null;
+		
+		if(!test.isPassed()) {
+			
+			try {
+				long gotAnswer = this.saveAnswer(answer);
+				if(gotAnswer<0) {
+					System.out.println("NO ANSWER");
+				}
+				
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return passedTestMessage();
+			}			
+			
+			checkTestStartTime();
+			
+			List<InTestQuestion> activeQuestions = getActiveQuestions();		
+						
+			if(activeQuestions.size()>0) {
+				try {
+					result = getNewQuestion(activeQuestions);
+				} catch (JSONException e) {
+					e.printStackTrace();
+				} 				
+				
+			} else {	
+				//if the test is finished (no questions in the response from DB), 
+				//TestFinisher will be start in a new Thread
+				result = passedTestMessage();
+				TestFinisher finisher = new TestFinisher();
+				finisher.setTest(test);
+				finisher.setDao(this.testQuestsionsData);
+				taskExecutor.execute(finisher);
+			}
+						
+		}		
+		
+		
+		
+		return result;
 	
+	}
+	
+	private String passedTestMessage() {
+		return "{\"error\":\"test is already passed\",\"isPassed\":true}";
+		
+	}
+	
+	
+	private String getNewQuestion(List<InTestQuestion> activeQuestions) throws JSONException {
+		
+		
+		int index = test.getAmountOfQuestions() - activeQuestions.size();		
+		
+		InTestQuestion tQuestion = activeQuestions.get(0);		
+		Question baseQuestion = this.testQuestsionsData.initiateQuestionInTest(tQuestion);
+		ITestQuestionHandler handler = baseQuestion.getHandler();			
+		handler.setTestQuestion(tQuestion);
+		
+		return handler.getJsonForTest(index);			
+	}
+
+	private List<InTestQuestion> getActiveQuestions() {
+		this.test = testQuestsionsData.findTestById(testId);
+		
+		List<InTestQuestion> allQuestions = this.test.getInTestQuestions();
+		List<InTestQuestion> activeQuestions = new ArrayList();
+		for(InTestQuestion tQuestion : allQuestions) {
+			if(tQuestion.getStatus()==ICommonData.STATUS_NO_ANSWER) {
+				activeQuestions.add(tQuestion);
+			}
+		}		
+		return activeQuestions;
+	}
+
+	private void checkTestStartTime() {
+		if (test.getStartTestDate()==0) {
+			test.setStartTestDate(System.currentTimeMillis());
+			FileManagerService.initializeTestFileStructure(test.getCompany().getId(), test.getId());
+			this.testQuestsionsData.saveTest(test);		
+		}		
+	}
+
+	private long saveAnswer(String answer) throws JSONException {	
+		long tQuestionId = -1;
+		if(answer==null || answer.length()<3) return -1;
+		
+		System.out.println(answer);
+				
+		JSONObject jsn = new JSONObject(answer);
+		
+		if(jsn.has(ICommonData.JSN_INTEST_QUESTION_ID)) {
+			tQuestionId = jsn.getLong(ICommonData.JSN_INTEST_QUESTION_ID);
+						
+			InTestQuestion tQuestion = testQuestsionsData.findTestQuestionById(tQuestionId);
+			System.out.println(tQuestion.getId());
+			System.out.println("STATUS = " + tQuestion.getStatus());
+			if(tQuestion==null) return -1;
+		
+			if(tQuestion.getStatus()==ICommonData.STATUS_NO_ANSWER) {
+				System.out.println("HERE");
+				Question baseQuestion = tQuestion.getQuestion();
+				ITestQuestionHandler testQuestionHandler = baseQuestion.getHandler();	
+			
+				try {
+					tQuestion = testQuestionHandler.setPersonAnswer(jsn, tQuestion);
+				
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}				
+				if(tQuestion!=null) {
+					testQuestsionsData.saveAnswer(tQuestion);
+				}
+			}
+		}
+		return tQuestionId;
+		
+	}
+
+	public void saveImage(String image) {		
+		if(test!=null && !test.isPassed()){
+			try {
+					FileManagerService.saveImage(test.getCompany().getId(), testId, image);
+			} catch (IOException e) {					
+					e.printStackTrace();
+			}			
+		}
+	}
+
 
 }

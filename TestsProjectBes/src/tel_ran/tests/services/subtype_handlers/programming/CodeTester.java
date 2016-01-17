@@ -3,31 +3,24 @@ package tel_ran.tests.services.subtype_handlers.programming;
 
 import java.io.IOException;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 
-public class CodeTester implements ICodeTester {
+import tel_ran.tests.entitys.GeneratedProgrammingQuestion;
+import tel_ran.tests.entitys.InTestQuestion;
+
+
+public abstract class CodeTester {
 
 	IProgramTestHandler testTemplateHandler;
-		
-	public CodeTester() throws IOException{
-		testTemplateHandler = new GradleJava();
-	}	
-	
-	public synchronized boolean testIt(String codeFromPersonPath, String pathToAnswersZip) {
-		boolean results = false;
 				
-		try{
-			testTemplateHandler.fillTemplate(codeFromPersonPath, pathToAnswersZip);
-			results = testTemplateHandler.test();		
-			
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		finally{
-//			saveResults(results);
-		}
+	public static String testTemplatePath = "";
+	public static String workFolderPath = "";
 		
-		testTemplateHandler.cleanWorkFolder();
+	public abstract String saveCode(InTestQuestion tQuestion, String[] lines) throws IOException;
+	protected abstract IProgramTestHandler getTestHandler();	
+		
+	public abstract boolean testIt(String codeFromPersonPath, String pathToAnswersZip);
 	
-		return results;
-	}
+	public  abstract void addDataToJson(JSONObject jsn, GeneratedProgrammingQuestion question) throws JSONException;
 }

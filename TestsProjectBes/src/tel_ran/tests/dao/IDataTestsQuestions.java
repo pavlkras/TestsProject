@@ -1,24 +1,28 @@
 package tel_ran.tests.dao;
 
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
-import json_models.CategoriesList;
 import json_models.IJsonModels;
-import json_models.QuestionModel;
-import tel_ran.tests.entitys.EntityPerson;
-import tel_ran.tests.entitys.EntityQuestionAttributes;
-import tel_ran.tests.entitys.EntityTest;
-import tel_ran.tests.entitys.EntityTestQuestions;
-import tel_ran.tests.entitys.EntityTestTemplate;
+import json_models.TemplateModel;
+
+import tel_ran.tests.entitys.Category;
+
+import tel_ran.tests.entitys.Company;
+import tel_ran.tests.entitys.Person;
+
+import tel_ran.tests.entitys.Test;
+import tel_ran.tests.entitys.InTestQuestion;
+import tel_ran.tests.entitys.TestTemplate;
+import tel_ran.tests.entitys.Texts;
+import tel_ran.tests.entitys.Question;
+import tel_ran.tests.entitys.QuestionCustom;
+import tel_ran.tests.entitys.TemplateCategory;
 import tel_ran.tests.services.fields.Role;
-import tel_ran.tests.token_cipher.User;
 
 public interface IDataTestsQuestions extends IData {
 	int getNumberQuestions(int id, Role role);
 	int getNumberTests(int id, Role role);	
-	boolean saveNewQuestion(String fileLocationLink, String metaCategory, String category1, String category2, int levelOfDifficulty,
-			List<String> answers, String correctAnswerChar, int answerOptionsNumber, String description, String questionText, int id, Role role);
 	List<String> getUserCategories(int id, Role role);
 	List<IJsonModels> getQuesionsList(Boolean typeOfQuestion, String metaCategory,
 			String category1, int id, Role role);
@@ -30,11 +34,8 @@ public interface IDataTestsQuestions extends IData {
 	long createTest(String pass, long personId, long startTime, long stopTime,
 			List<Long> questionIdList, int companyId, Role role);
 	
-	/**
-	 * returns true if the table with EntityQuestionAttributes is empty.
-	 * This method is used for auto-generation of questions whild starting the application	 * 
-	 */
-	boolean isNoQuestions();
+	
+	
 	
 	/**
 	 * Returns list of category that exist in DB. The method can be used for getting categories of any level 
@@ -57,36 +58,17 @@ public interface IDataTestsQuestions extends IData {
 	 * @param companyId - id of company. For ADMNI can be = -1 or any other number
 	 * @return
 	 */
-	CategoriesList getCategoriesList(Role role, int companyId);
+	List<Category> getCategoriesList(Role role, int companyId);
 	
 	/**
 	 * Save new Template
 	 * @param entity
 	 * @param user 
 	 */
-	void createTemplate(EntityTestTemplate entity, Role role, long companyId);
+	void createTemplate(TemplateModel template, Role role, long companyId);
 	
-	/**
-	 * Return full list of questions by params
-	 * @param metaCategory
-	 * @param category1
-	 * @param category2
-	 * @param difficulty
-	 * @param role
-	 * @param id
-	 * @param isAdmin 
-	 * @return
-	 */
-	List<EntityQuestionAttributes> getQuestionListByParams(String metaCategory,
-			String category1, String category2, int difficulty, Role role,
-			int id, boolean isAdmin);
 	
-	/**
-	 * Return EntityQuestionAttributes with given ID
-	 * @param id
-	 * @return
-	 */
-	EntityQuestionAttributes findQuestionById(Long id);
+	Question findQuestionById(Long id);
 	
 	
 	/**
@@ -94,13 +76,39 @@ public interface IDataTestsQuestions extends IData {
 	 * @param entity
 	 * @return id of new element
 	 */
-	long createPerson(EntityPerson entity);
-	long createTest(EntityTest test, List<EntityTestQuestions> questions,
-			long personId, Role role, long id);
-	EntityTest findTestById(long testId);
-	List<EntityQuestionAttributes> getQuestionListByParams(Role role, long id);
-	List<EntityTestTemplate> getTemplates(int id);
-	EntityTestTemplate getTemplate(long templateId);
+	long createPerson(Person entity);
+	long createTest(Test test, Set<Question> questions, Person person, Role role, int id);
+	Test findTestById(long testId);
+//	List<Question> getQuestionListByParams(Role role, long id);
+	List<TestTemplate> getTemplates(int id);
+	TestTemplate getTemplate(long templateId);
+	
+	/**
+	 * returns true if the table with Categoryes is empty.
+	 * This method is used for auto-generation of questions while starting the application	 * 
+	 */
+	boolean isNoCategory();
+	
+	/**
+	 * returns true if the table with Questions is empty.
+	 * This method is used for auto-generation of questions while starting the application	 * 
+	 */
+	boolean isNoQuestions();
+	
+	void createCategory(Category cat, int id, Role role);
+	List<Category> getAutoCategoriesList();	
+	boolean saveNewQuestion(Question qstn, Category category, Company adminCompany, List<Texts> texts);
+	boolean saveNewCustomQuestion(QuestionCustom question, List<Texts> texts);
+	Category createCategory(Category category, Company company);
+	Category getCategory(int categoryId);
+	List<Question> getAmericanTestsByParams(Category category, int difficulty, Role role, int id, boolean isAdmin);
+	List<Question> getOpenQuestionsByParams(Category category, int difficulty, Role role, int id, boolean isAdmin);
+	List<Question> getQuestionsByParams(TemplateCategory tCategory);
+	List<Question> getAllQuestionsByParams(Category category, int difficulty, Role role, int id, boolean isAdmin);
+	InTestQuestion findTestQuestionById(long tQuestionId);
+	void saveAnswer(InTestQuestion tQuestion);
+	void saveTest(Test test);
+	Question initiateQuestionInTest(InTestQuestion tQuestion);
 	
 	
 	

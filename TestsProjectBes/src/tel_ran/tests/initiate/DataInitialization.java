@@ -11,8 +11,6 @@ import java.util.Properties;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 
-import tel_ran.tests.dao.AutorizationData;
-import tel_ran.tests.dao.IData;
 import tel_ran.tests.dao.IDataLoader;
 import tel_ran.tests.dao.IDataTestsQuestions;
 
@@ -44,6 +42,7 @@ public class DataInitialization implements BeanPostProcessor {
 			checkAndFill(new CompanyCreation((IDataLoader) bean));			
 			
 		} else if(beanName.equals("testQuestsionsData")) {
+			checkAndFill(new CategoryCreation((IDataTestsQuestions) bean));			
 			checkAndFill(new QuestionsCreation((IDataTestsQuestions) bean));
 		}
 		
@@ -51,6 +50,7 @@ public class DataInitialization implements BeanPostProcessor {
 	}
 	
 	private void checkAndFill(DataCreation dataCreator) {
+		
 		if(dataCreator.isNeedToFill()) {
 			System.out.println("TABLE OF "+ dataCreator.getName() + " IS EMPTY");
 			dataCreator.setProperties(getDataInstance().properties);

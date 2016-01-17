@@ -1,28 +1,36 @@
 package tel_ran.tests.dao;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
+
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+
+import java.util.Set;
 
 import javax.persistence.Query;
 
-import json_models.CategoriesList;
 import json_models.IJsonModels;
 import json_models.QuestionModel;
+import json_models.TemplateModel;
 
+import org.hibernate.Hibernate;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import tel_ran.tests.entitys.EntityCompany;
-import tel_ran.tests.entitys.EntityPerson;
+
+import tel_ran.tests.entitys.Category;
+
+import tel_ran.tests.entitys.Company;
+import tel_ran.tests.entitys.Person;
 import tel_ran.tests.entitys.EntityQuestionAttributes;
-import tel_ran.tests.entitys.EntityTest;
-import tel_ran.tests.entitys.EntityTestQuestions;
-import tel_ran.tests.entitys.EntityTestTemplate;
-import tel_ran.tests.entitys.EntityTexts;
-import tel_ran.tests.entitys.EntityTitleQuestion;
+import tel_ran.tests.entitys.Test;
+import tel_ran.tests.entitys.InTestQuestion;
+import tel_ran.tests.entitys.TestTemplate;
+import tel_ran.tests.entitys.Texts;
+import tel_ran.tests.entitys.QuestionTitle;
+import tel_ran.tests.entitys.TemplateCategory;
+import tel_ran.tests.entitys.Question;
+import tel_ran.tests.entitys.QuestionCustom;
 import tel_ran.tests.processor.TestProcessor;
 import tel_ran.tests.services.common.ICommonData;
 import tel_ran.tests.services.common.IPublicStrings;
@@ -32,12 +40,28 @@ public class TestQuestionsData extends TestsPersistence implements
 		IDataTestsQuestions {
 
 	// ------------------------ STATUS OF DB ---------------------------------------------------------------------- //
+		
+	@Override
+	public boolean isNoCategory() {
+		Category c = em.find(Category.class, 1);
+		if(c==null)
+			return true;
+		return false;
+	}
+
+
+
+
 	@Override
 	public boolean isNoQuestions() {
-		int count = getNumberQuestions(-1, Role.ADMINISTRATOR);
-		if(count>0) return false;
-		return true;
+		Question q = em.find(Question.class, 1L);
+		if(q==null)
+			return true;
+		return false;
 	}
+
+	
+	
 	
 	
 	// ----------------------------------------------------------------------------------------------------------- //
@@ -45,13 +69,13 @@ public class TestQuestionsData extends TestsPersistence implements
 	@Override
 	public int getNumberQuestions(int id, Role role) {
 		
-		StringBuilder query = new StringBuilder("SELECT COUNT(eqa) from EntityQuestionAttributes eqa");
+		StringBuilder query = new StringBuilder("SELECT COUNT(q) from QuestionCustom q");
 		
 		switch(role) {
 			case COMPANY :
-				query.append(" WHERE eqa.").append(getLimitsForCompanyQuery(id)); break;
+				query.append(" WHERE q.").append(getLimitsForCompanyQuery(id)); break;
 			case ADMINISTRATOR :
-				query.append(" WHERE eqa.").append(getLimitsForCompanyQuery(ADMIN_C_ID)); break;
+				query.append(" WHERE q.").append(getLimitsForCompanyQuery(ADMIN_C_ID)); break;
 			default:
 				break;				
 		}		
@@ -62,7 +86,7 @@ public class TestQuestionsData extends TestsPersistence implements
 
 	@Override
 	public int getNumberTests(int id, Role role) {
-		StringBuilder query = new StringBuilder("SELECT COUNT(et) from EntityTest et");
+		StringBuilder query = new StringBuilder("SELECT COUNT(et) from Test et");
 		
 		switch(role) {
 		case COMPANY :
@@ -80,19 +104,20 @@ public class TestQuestionsData extends TestsPersistence implements
 	//-------------------------------------QUESTIONS ---------------------------------------------------//
 	
 	@Transactional(readOnly=false, propagation=Propagation.REQUIRED) 
-	public EntityTitleQuestion createQuestion(String questionText) {
-		EntityTitleQuestion objectQuestion;		
+	public QuestionTitle createQuestionTitle(String questionText) {
+		QuestionTitle objectQuestion;		
 		
 		if(questionText == null) {
 			questionText = ICommonData.NO_QUESTION;
 		}
-		//// query if question exist as text in Data Base
-		Query tempRes = em.createQuery("SELECT q FROM EntityTitleQuestion q WHERE q.questionText='"+questionText+"'");
 		
-		List<EntityTitleQuestion> listTitles = tempRes.getResultList();
+		//// query if question exist as text in Data Base
+		Query tempRes = em.createQuery("SELECT q FROM QuestionTitle q WHERE q.questionTitle=?1").setParameter(1, questionText);
+		
+		List<QuestionTitle> listTitles = tempRes.getResultList();
 		
 		if(listTitles==null || listTitles.isEmpty()) {
-			objectQuestion = new EntityTitleQuestion();	
+			objectQuestion = new QuestionTitle();	
 			objectQuestion.setQuestionText(questionText);			
 			em.persist(objectQuestion);	
 		} else {
@@ -105,56 +130,117 @@ public class TestQuestionsData extends TestsPersistence implements
 	
 	@Override
 	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW) 
-	public boolean saveNewQuestion(String fileLocationLink, String metaCategory,
-			String category1, String category2, int levelOfDifficulty,
-			List<String> answers, String correctAnswerChar, int answerOptionsNumber, String description,
-			String questionText, int id, Role role) {
-		boolean result = false;
+	public boolean saveNewQuestion(Question qstn, Category category, Company adminCompany,
+			List<Texts> texts) {
 		
-		EntityTitleQuestion etq = createQuestion(questionText);
+		//1 - title save
+		QuestionTitle title = this.createQuestionTitle(qstn.getTitle().getQuestionText());
+		qstn.setTitle(title);
+			
+		
+		//2 - question save
+		qstn.setCompany(adminCompany);
+		qstn.setCategory(category);
+		saveQuestion(qstn);
+		
+		//3 - texts check and save
+		saveTexts(texts, qstn);
+		
+		return true;
+	}
 	
-		EntityQuestionAttributes questionAttributesList = new EntityQuestionAttributes();// new question attributes creation		
+	
+
+	@Override
+	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW) 
+	public boolean saveNewCustomQuestion(QuestionCustom question, List<Texts> text) {
+			
+		QuestionTitle title = this.createQuestionTitle(question.getTitle().getQuestionText());
+		question.setTitle(title);
+						
+		saveQuestion(question);
 		
-		questionAttributesList.setDescription(description);		
-		if(role.equals(Role.COMPANY)) {	
-			EntityCompany ec = em.find(EntityCompany.class, id);
-			questionAttributesList.setCompanyId(ec);
-		} else if(role.equals(Role.ADMINISTRATOR)) {
-			EntityCompany ec = em.find(EntityCompany.class, ADMIN_C_ID);
-			questionAttributesList.setCompanyId(ec);
-		}
-		questionAttributesList.setEntityTitleQuestion(etq);	
-		questionAttributesList.setFileLocationLink(fileLocationLink);	
-		questionAttributesList.setMetaCategory(metaCategory);
-		questionAttributesList.setCategory1(category1);		
-		questionAttributesList.setCategory2(category2);
-		questionAttributesList.setLevelOfDifficulty(levelOfDifficulty);	
-		questionAttributesList.setCorrectAnswer(correctAnswerChar);		
-		questionAttributesList.setNumberOfResponsesInThePicture(answerOptionsNumber);
-		em.persist(questionAttributesList);	
-		
-		if(answers != null)	{			
-			List<EntityTexts> answersList = new ArrayList<EntityTexts>();
-			for (String answerText : answers) {	
+		saveTexts(text, question);	
 				
-				if(answerText!=null && answerText.length()>0) {
-					EntityTexts ans = writeNewAnswer(answerText, questionAttributesList); 
-					answersList.add(ans);
-				}
-			}			
-			questionAttributesList.setQuestionAnswersList(answersList);// mapping to answers
-			em.merge(questionAttributesList);	
-		}				
-		em.merge(etq);		
+		return true;
+	}
+	
+	@Override
+	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW) 
+	public Category createCategory(Category category, Company company) {
 		
-		result = true;
-		return result;
+		Category parent = category.getParentCategory();
+		if(parent!=null) {
+			createCategory(parent, company);
+			category.setParentCategory(parent);
+		}
+		category.setCompany(company);
+		category.setControlName(company.getId());
+		System.out.println(category.getControlName());
+		
+		return saveCategory(category);	
+		
+	}
+	
+	
+	@Transactional(readOnly=false) 
+	private Category saveCategory(Category category) {
+		
+		Category checkCategory = findCategoryByControlName(category.getControlName());
+		if(checkCategory!=null) {
+			System.out.println("CHECK CATEGORY ID = " + checkCategory.getId());
+			if(checkCategory.equals(category)) {
+				System.out.println("Category equals");				
+			} else {
+				System.out.println("Category doesn't equal");
+				checkCategory.copyCategory(category);				
+				em.merge(checkCategory);				
+			}	
+			return checkCategory;
+		} else {
+			em.persist(category);
+			System.out.println(category.getId());	
+		}
+		return category;
+		
+	}
+
+
+
+	private Category findCategoryByControlName(String controlName) {
+		String query = "SELECT c FROM Category c WHERE c.controlName=?1";
+		List<Category> result = em.createQuery(query).setParameter(1, controlName).getResultList();
+		if(result==null || result.isEmpty()) {
+			System.out.println("No!");
+			return null;
+		}
+		return result.get(0);
+	}
+
+
+
+
+	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW) 
+	private void saveQuestion(Question question) {
+		em.persist(question);
+	}
+	
+	@Transactional(readOnly=false, propagation=Propagation.REQUIRES_NEW)
+	private void saveTexts(List<Texts> list, Question question) {
+		if(list!=null) {
+			for(Texts text : list) {
+				text.setQuestion(question);
+				em.merge(text);
+				
+			}
+			
+		}
 	}
 	
 	@Transactional(readOnly=false,propagation=Propagation.REQUIRED) 
-	private EntityTexts writeNewAnswer(String answer, EntityQuestionAttributes qAttrId){		
-		EntityTexts temp = new EntityTexts();
-		temp.setAnswerText(answer);		
+	private Texts writeNewAnswer(String answer, EntityQuestionAttributes qAttrId){		
+		Texts temp = new Texts();
+		temp.setText(answer);		
 		temp.setEntityQuestionAttributes(qAttrId);	
 		em.persist(temp);	
 		em.clear();
@@ -291,17 +377,17 @@ public class TestQuestionsData extends TestsPersistence implements
 	public long createPerson(String personPassport, String personName,
 			String personSurname, String personEmail) {		
 		
-		EntityPerson person;
-		String query = "Select p FROM EntityPerson p WHERE p.identify='" + personPassport + "'";
+		Person person;
+		String query = "Select p FROM Person p WHERE p.identify='" + personPassport + "'";
 		
 		System.out.println("I'm here + " + query);
 		
-		List<EntityPerson> result = em.createQuery(query).getResultList();
+		List<Person> result = em.createQuery(query).getResultList();
 		if(result!=null && !result.isEmpty()) {
 			person = result.get(0);
 			
 		} else {
-			person = new EntityPerson();
+			person = new Person();
 			person.setIdentify(personPassport);
 		}
 		if(personEmail!=null && personEmail.length()>1)
@@ -353,19 +439,19 @@ public class TestQuestionsData extends TestsPersistence implements
 			long stopTime, List<Long> questionIdList, int id, Role role) {
 		long result = -1;
 				
-		EntityTest test = new EntityTest();		
+		Test test = new Test();		
 		test.setPassword(pass); 
 		test.setStartTestDate(startTime);// setting parameter for wotchig method in FES
 		test.setEndTestDate(stopTime);// setting parameter for wotchig method in FES		
 			
-		EntityCompany ec = null;
+		Company ec = null;
 		if(role.equals(Role.COMPANY)) {
-			ec = em.find(EntityCompany.class, id);
+			ec = em.find(Company.class, id);
 		}
-		test.setEntityCompany(ec);
+		test.setCompany(ec);
 		
-		EntityPerson ePerson = em.find(EntityPerson.class, personId);
-		test.setEntityPerson(ePerson);	
+		Person ePerson = em.find(Person.class, personId);
+		test.setPerson(ePerson);	
 		test.setAmountOfQuestions(questionIdList.size());
 		test.setPassed(false);
 		test.setChecked(false);
@@ -376,12 +462,12 @@ public class TestQuestionsData extends TestsPersistence implements
 		
 		for(Long qId : questionIdList) {
 			EntityQuestionAttributes eqa = em.find(EntityQuestionAttributes.class, qId);
-			EntityTestQuestions etq = new EntityTestQuestions();
-			etq.setEntityQuestionAttributes(eqa);
-			etq.setEntityTest(test);
+			InTestQuestion etq = new InTestQuestion();
+//			etq.setEntityQuestionAttributes(eqa);
+			etq.setTest(test);
 			etq.setStatus(ICommonData.STATUS_NO_ANSWER);
 			em.persist(etq);
-			test.addEntityTestQuestions(etq);
+			test.addInTestQuestions(etq);
 		}
 		
 		em.merge(test);		
@@ -394,29 +480,25 @@ public class TestQuestionsData extends TestsPersistence implements
 	
 	// LIST OF CUSTOM CATEGORIES
 	@Override
-	public CategoriesList getCategoriesList(Role role, int companyId) {
-		
-		//1 - check role. If it's an ADMIN companyId = 1			
-		if (role.equals(Role.ADMINISTRATOR)) companyId = ADMIN_C_ID;
+	public List<Category> getCategoriesList(Role role, int companyId) {
+				
+		//1 - check ID
+		companyId = getCompanyId(role, companyId);		
 		if(companyId<0) return null;
 				
 		//2 - get List of categories1
-		List<String> categories1 = getCategories(companyId, 1, null, -1);
-		
-		//3 - get Map for each value in the list
-		Map<String, Map<String,List<String>>> map = new LinkedHashMap<>();
-		
-		for(String s : categories1) {
-			Map<String, List<String>> innerMap = getCustomCategories2WithMetaCategory(s, companyId);
-			map.put(s, innerMap);			
-		}
-						
-		//4 - create object of CategoryMaps
-		CategoriesList result = new CategoriesList();
-		result.setCategoriesWithData(map);
-		
-		return result;
+		List<Category> categories = getCustomCategoriesByCompanyId(companyId);
+				
+		return categories;
 	}
+		
+
+	private List<Category> getCustomCategoriesByCompanyId(int companyId) {
+		String query = "SELECT c FROM CategoryCustom c WHERE c." + getLimitsForCompanyQuery(companyId);
+		List<Category> list = em.createQuery(query).getResultList();			
+		return list;
+	}
+
 
 	@Override
 	public List<String> getCategories(int companyId, int categoryLevel,
@@ -465,154 +547,195 @@ public class TestQuestionsData extends TestsPersistence implements
 		return result;
 	}
 	
-	private Map<String,List<String>> getCustomCategories2WithMetaCategory(
-			String category1, int companyId) {
-		
-		
-		StringBuilder queryBuilder = new StringBuilder("SELECT c.metaCategory FROM EntityQuestionAttributes c WHERE c.");
-		queryBuilder.append(getLimitsForCompanyQuery(companyId));
-		queryBuilder.append(" AND c.category1=?1 AND c.category2 is null");
-		Query query = em.createQuery(queryBuilder.toString());
-		query.setParameter(1, category1);
-		List<String> resultsQuery = query.getResultList();
-		Map<String,List<String>> map = new HashMap<>();
-		List<String> mc;
-		if(resultsQuery!=null) {			 
-			mc = new ArrayList<String>();
-			if(resultsQuery.contains(IPublicStrings.COMPANY_AMERICAN_TEST)) {
-				mc.add(IPublicStrings.COMPANY_AMERICAN_TEST);
-			}
-			if(resultsQuery.contains(IPublicStrings.COMPANY_QUESTION)) {
-				mc.add(IPublicStrings.COMPANY_QUESTION);
-			}			
-			map.put(null, mc);				
-		}
-		
-		List<String> listCategories2 = getCategories(companyId, 2, category1, 1);	
-		
-		if(listCategories2!=null) {
-			queryBuilder = new StringBuilder("SELECT c.metaCategory FROM EntityQuestionAttributes c WHERE c.");			
-			queryBuilder.append(getLimitsForCompanyQuery(companyId));
-			queryBuilder.append(" AND c.category2=?1 AND c.category1=?2");			
-			
-						
-			for(String category2 : listCategories2) {				
-				mc = new ArrayList<>();
-				query = em.createQuery(queryBuilder.toString());
-				query.setParameter(2, category1);
-				query.setParameter(1, category2);				
-				List<String> mcQuery = query.getResultList();
-				if(mcQuery!=null) {
-					if (mcQuery.contains(IPublicStrings.COMPANY_AMERICAN_TEST)) {
-						mc.add(IPublicStrings.COMPANY_AMERICAN_TEST);						
-					} 
-					if(mcQuery.contains(IPublicStrings.COMPANY_QUESTION)) {
-						mc.add(IPublicStrings.COMPANY_QUESTION);						
-					}	
-					map.put(category2, mc);					
-				}					
-			}			
-		}
-					
-		return map;
-	}
-	
-
 	
 	// -------------------------------------- TEST TEMPLATES --------------------------------------------- //
 	
 	@Override
 	@Transactional(readOnly=false)
-	public void createTemplate(EntityTestTemplate entity, Role role, long companyId) {
-		EntityCompany company = em.find(EntityCompany.class, getCompanyId(role, companyId));
-		entity.setEntityCompany(company);
-		em.persist(entity);
-				
-		String templateName = entity.getTemplateName();
-		if(templateName==null) {
-			templateName = "Template_" + entity.getId();
-			entity.setTemplateName(templateName);
-			em.merge(entity);
-		}		
+	public void createTemplate(TemplateModel template, Role role, long companyId) {		
+		Company company = em.find(Company.class, getCompanyId(role, companyId));
+		TestTemplate testTemplate = template.getTemplate();
+		testTemplate.setCompany(company);
+		String templateName = testTemplate.getTemplateName();
+		if(templateName==null) testTemplate.setTemplateName("New Template");
+		em.persist(testTemplate);
+		
+		if(template.hasQuestionsList()) {
+			Set<Long> questionsId = template.getQuestionsId();
+			Set<Question> questions = new HashSet();
+			for(long questionId : questionsId) {
+				Question q = findQuestionById(questionId);
+				questions.add(q);
+			}
+			testTemplate.setQuestions(questions);
+			em.merge(testTemplate);
+		}
+		
+		if(template.hasCategories()) {
+			Set<TemplateCategory> categories = template.getCategories();
+			
+			for(TemplateCategory cat : categories) {
+				cat.setTemplate(testTemplate);
+				em.persist(cat);			
+			}
+		}
+		
 	}
 
+	
 
 	@Override
-	public List<EntityQuestionAttributes> getQuestionListByParams(
-			String metaCategory, String category1, String category2,
-			int difficulty, Role role, int id, boolean isAdmin) {	
+	public List<Question> getQuestionsByParams(TemplateCategory tCategory) {
+		
+		StringBuilder queryString = new StringBuilder("SELECT c FROM");
+		
+		String type = tCategory.getTypeOfQuestion();
+		if(type==null) {
+			queryString.append(" Question");
+		} else if(type.equals(IPublicStrings.COMPANY_AMERICAN_TEST)) {
+			queryString.append(" QuestionCustomTest");
+		} else if(type.equals(IPublicStrings.COMPANY_QUESTION)) {
+			queryString.append(" QuestionCustomOpen");
+		} else {
+			queryString.append(" Question");
+		}
+		
+		queryString.append(" c WHERE c.category=?1 AND c.levelOfDifficulty=?2");
+		Query q = em.createQuery(queryString.toString());
+		q.setParameter(1, tCategory.getCategory());
+		q.setParameter(2, tCategory.getDifficulty());
+		
+		List<Question> result = q.getResultList();
+		
+		return result;
+	}
+	
+
+	@Override
+	public List<Question> getAllQuestionsByParams(Category category, int difficulty, Role role, int id,
+			boolean isAdmin) {
 		
 		if(isAdmin) id = ADMIN_C_ID;
 		else {
 			id = getCompanyId(role, id);
 		}
 		
-		StringBuilder queryString = new StringBuilder("SELECT c FROM EntityQuestionAttributes c WHERE c.");
+		StringBuilder queryString = new StringBuilder("SELECT c FROM Question c WHERE c.");
 		queryString.append(getLimitsForCompanyQuery(id));
 		
-		if(metaCategory!=null && !metaCategory.isEmpty()) {
-			queryString.append(" AND c.metaCategory='").append(metaCategory).append("'");
+		if(category!=null) {
+			queryString.append(" AND c.category='").append(category.getId()).append("'");
 		}
-		
-		if(category1!=null && !category1.isEmpty()) {
-			queryString.append(" AND c.category1='").append(category1).append("'");
-		}
-		
-		if(category2!=null && !category2.isEmpty()) {
-			queryString.append(" AND c.category2='").append(category2).append("'");
-		}
-		
+				
 		if(difficulty>0) {
 			queryString.append(" AND c.levelOfDifficulty='").append(difficulty).append("'");
 		}
 		
-		List<EntityQuestionAttributes> result = em.createQuery(queryString.toString()).getResultList();
+		List<Question> result = em.createQuery(queryString.toString()).getResultList();
 				
 		return result;
+		
+	}
+
+
+	@Override
+	public List<Question> getAmericanTestsByParams(Category category, int difficulty, Role role, int id,
+			boolean isAdmin) {
+		
+		if(isAdmin) id = ADMIN_C_ID;
+		else {
+			id = getCompanyId(role, id);
+		}
+		
+		StringBuilder queryString = new StringBuilder("SELECT c FROM QuestionCustomTest c WHERE c.");
+		queryString.append(getLimitsForCompanyQuery(id));
+		
+		if(category!=null) {
+			queryString.append(" AND c.category='").append(category.getId()).append("'");
+		}
+				
+		if(difficulty>0) {
+			queryString.append(" AND c.levelOfDifficulty='").append(difficulty).append("'");
+		}
+		
+		List<Question> result = em.createQuery(queryString.toString()).getResultList();
+				
+		return result;
+		
 	}
 	
+	@Override
+	public List<Question> getOpenQuestionsByParams(Category category, int difficulty, Role role, int id,
+			boolean isAdmin) {
+		if(isAdmin) id = ADMIN_C_ID;
+		else {
+			id = getCompanyId(role, id);
+		}
+		
+		StringBuilder queryString = new StringBuilder("SELECT c FROM QuestionCustomOpen c WHERE c.");
+		queryString.append(getLimitsForCompanyQuery(id));
+		
+		if(category!=null) {
+			queryString.append(" AND c.category='").append(category.getId()).append("'");
+		}
+				
+		if(difficulty>0) {
+			queryString.append(" AND c.levelOfDifficulty='").append(difficulty).append("'");
+		}
+		
+		List<Question> result = em.createQuery(queryString.toString()).getResultList();
+				
+		return result;
+		
+	}
+
+	
+	
+
 	
 	@Override
-	public EntityQuestionAttributes findQuestionById(Long id) {		
-		return (EntityQuestionAttributes) em.find(EntityQuestionAttributes.class, id);
+	public Question findQuestionById(Long id) {		
+		return (Question) em.find(Question.class, id);
 	}
 
 	@Override
 	@Transactional(readOnly=false)
-	public long createPerson(EntityPerson entity) {
+	public long createPerson(Person entity) {
 		em.persist(entity);		 
 		return entity.getPersonId();
 		
 	}
 
 	@Override
-	@Transactional(readOnly=false)
-	public long createTest(EntityTest test,
-			List<EntityTestQuestions> questions, long personId, Role role, long id) {
+	@Transactional(readOnly=false)	
+	public long createTest(Test test, Set<Question> questions, Person person, Role role, int id) {
 		
-		EntityPerson person = em.find(EntityPerson.class, personId);
-		test.setEntityCompany(em.find(EntityCompany.class, getCompanyId(role, id)));
-		test.setEntityPerson(person);
-		em.persist(test);				
-		for(EntityTestQuestions etq : questions) {
-			etq.setEntityTest(test);
-			em.persist(etq);
+		test.setCompany(em.find(Company.class, getCompanyId(role, id)));
+		test.setPerson(person);
+		em.persist(test);
+		
+		for(Question q : questions) {
+			InTestQuestion tQuestion = new InTestQuestion();
+			tQuestion.setQuestion(q);
+			tQuestion.setTest(test);			
+			em.persist(tQuestion);
 		}
-		return test.getId();
-		
+		return test.getId();		
 	}
 	
 	@Override
-	public EntityTest findTestById(long testId) {		
-		return em.find(EntityTest.class, testId);
+	@Transactional
+	public Test findTestById(long testId) {		
+		Test test = em.find(Test.class, testId);
+		Hibernate.initialize(test.getInTestQuestions());
+		return test;
 	}
 
 
 	
 	//------------------------------------ INNER METHODS ------------------------------------------------//
 	private String getLimitsForCompanyQuery(int id) {	
-//		EntityCompany ec = em.find(EntityCompany.class, id);
-		return "entityCompany='" + id + "'";
+		return "company='" + id + "'";
 	}
 	
 	private String getLimitsForNotCompanyQuery() {	
@@ -623,32 +746,117 @@ public class TestQuestionsData extends TestsPersistence implements
 		if(role.equals(Role.ADMINISTRATOR)) return ADMIN_C_ID;
 		return (int)companyId;
 	}
+	
+	
+
+//
+//	public List<Question> getQuestionListByParams(Role role, long id) {
+//		
+//		
+//		
+//		return this.getQuestionListByParams(null, 0, role, (int)id, false);
+//	}
 
 
 	@Override
-	public List<EntityQuestionAttributes> getQuestionListByParams(Role role, long id) {
-		
-		return this.getQuestionListByParams(null, null, null, 0, role, (int)id, false);
-	}
-
-
-	@Override
-	public List<EntityTestTemplate> getTemplates(int id) {
+	public List<TestTemplate> getTemplates(int id) {
 		
 		if(id<0) id = 1;
-		String queryText = "SELECT c FROM EntityTestTemplate c WHERE c." + getLimitsForCompanyQuery(id);
+		String queryText = "SELECT c FROM TestTemplate c WHERE c." + getLimitsForCompanyQuery(id);
 		
-		List<EntityTestTemplate> templates = em.createQuery(queryText).getResultList();
+		List<TestTemplate> templates = em.createQuery(queryText).getResultList();
 		
 		return templates;
 	}
 
 
+	
 	@Override
-	public EntityTestTemplate getTemplate(long templateId) {
+	@Transactional
+	public TestTemplate getTemplate(long templateId) {
+		TestTemplate template = em.find(TestTemplate.class, templateId);
+		Hibernate.initialize(template.getQuestions());
+		Hibernate.initialize(template.getCategories());
 		
-		return em.find(EntityTestTemplate.class, templateId);
+		
+		return template;
 	}
+
+	
+
+	@Override
+	@Transactional(readOnly=false)
+	public void createCategory(Category cat, int id, Role role) {		
+		Company company = getCompanyById(id, role);
+		cat.setCompany(company);
+		cat.setControlName(company.getId());
+		try {
+			em.persist(cat);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+
+	@Override
+	public List<Category> getAutoCategoriesList() {
+		String query = "SELECT c FROM CategoryGenerated c";
+		List<Category> categories = em.createQuery(query).getResultList();
+				
+		return categories;
+	}
+
+	@Override
+	public Category getCategory(int categoryId) {
+		Category category = em.find(Category.class, categoryId);
+		
+		return category;
+	}
+
+	@Override
+	@Transactional
+	public InTestQuestion findTestQuestionById(long tQuestionId) {
+		if(tQuestionId<=0) return null;
+		InTestQuestion result =  em.find(InTestQuestion.class, tQuestionId);
+		Hibernate.initialize(result.getTest());
+		Hibernate.initialize(result.getTest().getCompany());
+		Hibernate.initialize(result.getQuestion());
+		return result;
+	}
+
+
+
+
+	@Override
+	@Transactional(readOnly=false)
+	public void saveAnswer(InTestQuestion tQuestion) {
+		em.merge(tQuestion);		
+	}
+
+	@Override
+	@Transactional(readOnly=false)
+	public void saveTest(Test test) {
+		em.merge(test);		
+	}
+
+
+
+
+	@Override
+	@Transactional
+	public Question initiateQuestionInTest(InTestQuestion tQuestion) {
+		Question question = tQuestion.getQuestion();
+		
+		
+		
+		return question;
+	}
+
+
+
+
+
 
 
 	

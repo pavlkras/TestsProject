@@ -24,13 +24,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import tel_ran.tests.dao.IDataTestsQuestions;
 import tel_ran.tests.dao.TestsPersistence;
-import tel_ran.tests.entitys.EntityCompany;
-import tel_ran.tests.entitys.EntityPerson;
-import tel_ran.tests.entitys.EntityTexts;
+import tel_ran.tests.entitys.Company;
+import tel_ran.tests.entitys.Person;
+import tel_ran.tests.entitys.Texts;
 import tel_ran.tests.entitys.EntityQuestionAttributes;
-import tel_ran.tests.entitys.EntityTest;
-import tel_ran.tests.entitys.EntityTestQuestions;
+import tel_ran.tests.entitys.Test;
+import tel_ran.tests.entitys.InTestQuestion;
 import tel_ran.tests.processor.TestProcessor;
+import tel_ran.tests.services.AbstractService;
+import tel_ran.tests.services.AbstractServiceGetter;
 import tel_ran.tests.services.common.ICommonData;
 import tel_ran.tests.services.common.IPublicStrings;
 import tel_ran.tests.services.fields.Role;
@@ -38,6 +40,7 @@ import tel_ran.tests.services.interfaces.ICommonService;
 import tel_ran.tests.services.utils.FileManagerService;
 import tel_ran.tests.token_cipher.TokenProcessor;
 import tel_ran.tests.token_cipher.User;
+import tel_ran.tests.utils.errors.AccessException;
 
 public abstract class CommonServices extends TestsPersistence implements ICommonService {
 	
@@ -53,15 +56,19 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 	// ***** RENEWED ***********************************************
 	
 	
+	//USED IN FES  !!!!!!!!!!!!!!!!!!!!
 	@Override
-	public List<String> getUsersCategories1FromDataBase(String token) {
-		User user = tokenProcessor.decodeRoleToken(token);
-		List<String> result = null;
-		if(user.isAutorized()) {
-			result = testQuestsionsData.getUserCategories((int)user.getId(), user.getRole());
-		}
-				
-		return result;
+	public List<String> getUsersCategories1FromDataBase(String token) {				
+		
+		try {
+			AbstractService service = AbstractServiceGetter.getService(token, "customCatService");
+			List<String> result = service.getSimpleList();
+			return result;
+		
+		} catch (AccessException e) {
+			e.printStackTrace();
+			return null;			
+		}	
 	}
 	
 	
@@ -122,12 +129,12 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 	}
 	
 	protected String getAnswers(EntityQuestionAttributes eqa) {
-		List<EntityTexts> anRes;
+		List<Texts> anRes;
 		StringBuilder outRes = new StringBuilder("");
 		if(eqa.getQuestionAnswersList() != null){					
 			anRes = eqa.getQuestionAnswersList();
-			for(EntityTexts rRes :anRes){
-				outRes.append(rRes.getAnswerText()).append(DELIMITER);
+			for(Texts rRes :anRes){
+				outRes.append(rRes.getText()).append(DELIMITER);
 			}
 		}
 		return outRes.toString();
@@ -138,7 +145,7 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 		String[] outArray = new String[4];
 		StringBuilder  outRes = new StringBuilder("");
 		StringBuilder outAnsRes = new StringBuilder("");	
-		List<EntityTexts> answers;
+		List<Texts> answers;
 		long id = (long)Integer.parseInt(questionID);
 		EntityQuestionAttributes question = em.find(EntityQuestionAttributes.class, id);
 		
@@ -183,8 +190,8 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 			}		
 			
 			if(answers != null){
-				for(EntityTexts tAn :answers) {
-					outAnsRes.append(tAn.getAnswerText()).append(DELIMITER);	// answers on text if exist!!!
+				for(Texts tAn :answers) {
+					outAnsRes.append(tAn.getText()).append(DELIMITER);	// answers on text if exist!!!
 				}
 				outArray[3] = outAnsRes.toString();
 			}	
@@ -310,13 +317,13 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 	protected int[] renewStatusOfTest(long testId) {
 		int[] result = new int[5];
 		
-		EntityTest test = em.find(EntityTest.class, testId);
-		String query = "SELECT c from EntityTestQuestions c WHERE c.entityTest=?1";
+		Test test = em.find(Test.class, testId);
+		String query = "SELECT c from InTestQuestion c WHERE c.test=?1";
 		
 		@SuppressWarnings("unchecked")
-		List<EntityTestQuestions> list = em.createQuery(query).setParameter(1, test).getResultList();	
+		List<InTestQuestion> list = em.createQuery(query).setParameter(1, test).getResultList();	
 		
-		for(EntityTestQuestions etq : list) {
+		for(InTestQuestion etq : list) {
 			int status = etq.getStatus();			
 			result[4]++;
 			result[status]++;
@@ -394,180 +401,14 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 	}
 	
 	
-	/**
-	 * Fill JSONObject with short information about question in the test. It includes:
-	 * -- test-question ID
-	 * -- status (in num and String)
-	 * -- metaCategory
-	 * -- category
-	 * @param etq
-	 * @param jsnQuest
-	 * @param index
-	 * @return
-	 * @throws JSONException
-	 */
-	private int getObjectForShortQuestionInfo (EntityTestQuestions etq, JSONObject jsnQuest) throws JSONException {
-		int status = etq.getStatus();
-		
-		//set ID and index
-		jsnQuest.put(ICommonData.JSN_TESTDETAILS_QUESTION_ID, etq.getId());		
+
+
 	
-		//set STATUS	
-		jsnQuest.put(ICommonData.JSN_TESTDETAILS_QUESTION_STATUS_NUM, status);
-		jsnQuest.put(ICommonData.JSN_TESTDETAILS_QUESTION_STATUS_STR, IPublicStrings.QUESTION_STATUS[status]);
 	
-		//set category-metacategory
-		jsnQuest.put(ICommonData.JSN_TESTDETAILS_QUESTION_METACATEGORY, etq.getEntityQuestionAttributes().getMetaCategory());
-		jsnQuest.put(ICommonData.JSN_TESTDETAILS_QUESTION_CATEGORY1, etq.getEntityQuestionAttributes().getCategory1());
-		
-		return status;
-	}
-	
-	/**
-	 * Return JSONObject with list of questions and some info about all test.
-	 * JSON includes fields:
-	 * -- "questions" = list of questions (array) with fields:
-	 * ------ test-question ID
-	 * ------ status (in num and String)
-	 * ------ metaCategory
-	 * ------ category
-	 * ------ index in list
-	 * -- number of unchecked questions
-	 * @param testId
-	 * @param fullList
-	 * @return
-	 * @throws JSONException
-	 */
-	@Transactional
-	public JSONObject getListOfUncheckedQuestions(long testId) throws JSONException {
-		EntityTest test = em.find(EntityTest.class, testId);
-		String query = "SELECT c from EntityTestQuestions c WHERE c.entityTest=?1 AND c.status=?2";
-		@SuppressWarnings("unchecked")
-		List<EntityTestQuestions> list = em.createQuery(query).setParameter(1, test).setParameter(2, ICommonData.STATUS_UNCHECKED)
-				.getResultList();
-		JSONObject result = new JSONObject();
-		int num = 0;
-		JSONArray array = new JSONArray();
-		if(list!=null) {			
-			for (EntityTestQuestions etq : list) {
-				JSONObject jsn = new JSONObject();
-				getObjectForShortQuestionInfo(etq, jsn);
-				num++;
-				jsn.put(ICommonData.JSN_TESTDETAILS_QUESTION_INDEX, num);
-				array.put(jsn);
-			}
-			
-		}
-		result.put(ICommonData.JSN_TESTDETAILS_LIST_OF_QUESTIONS, array);
-		result.put(ICommonData.JSN_TESTDETAILS_UNCHECKED_QUESTIONS_NUMBER, num);
-		return result;
-	}
-	
-	/**
-	 * Return JSONObject with list of questions and some info about all test.	 
-	 * @param testId
-	 * @param fullList
-	 * @return
-	 * @throws JSONException
-	 */
-	@Transactional(readOnly=false, propagation = Propagation.REQUIRED)
-	public JSONObject checkStatusAndGetJson(long testId) throws JSONException {
-		int correct = 0;
-		int inCorrect = 0;
-		int unAnswered = 0;
-		int unChecked = 0;
-				
-		EntityTest test = em.find(EntityTest.class, testId);
-		
-		String query = "SELECT c from EntityTestQuestions c WHERE c.entityTest=?1";
-		
-		JSONArray jsnArray = new JSONArray();
-		
-		@SuppressWarnings("unchecked")
-		List<EntityTestQuestions> list = em.createQuery(query).setParameter(1, test).getResultList();			
-				
-		int index = 0;
-		for(EntityTestQuestions etq : list) {			
-			
-				JSONObject jsnQuest = new JSONObject();
-				int status = this.getObjectForShortQuestionInfo(etq, jsnQuest);
-				jsnQuest.put(ICommonData.JSN_TESTDETAILS_QUESTION_INDEX, index++);			
-				jsnArray.put(jsnQuest);
-			
-			
-			switch(status) {
-			case ICommonData.STATUS_CORRECT :
-				correct++;
-				break;
-			case ICommonData.STATUS_INCORRECT :
-				inCorrect++;
-				break;
-			case ICommonData.STATUS_NO_ANSWER :
-				unAnswered++;
-				break;
-			case ICommonData.STATUS_UNCHECKED :
-				unChecked++;							
-				break;
-			default:
-//				System.out.println(LOG + " -315-M: getStatusOfTest - incorrect status = " + status);
-			}
-		}
-		
-		boolean testIsPassed;		
-						
-		if(unAnswered==0) {			
-			testIsPassed = true;
-			if(!test.isPassed()) {				
-				test.setPassed(true);						
-			}
-		} else {
-			testIsPassed = false;
-		}
-		
-		if(unChecked==0 && testIsPassed) {			
-			if(!test.isChecked()) {
-				test.setChecked(true);				
-			}
-		} 
-						
-		if(test.getAmountOfCorrectAnswers()!=correct) {
-			test.setAmountOfCorrectAnswers(correct);			
-		}		
-		
-		em.merge(test);
-		
-		int allQuestions = test.getAmountOfQuestions();
-			
-		JSONObject result = new JSONObject();
-		
-		result.put(ICommonData.JSN_TESTDETAILS_LIST_OF_QUESTIONS, jsnArray);
-		result.put(ICommonData.JSN_TESTDETAILS_CORRECT_QUESTIONS_NUMBER, correct);
-		result.put(ICommonData.JSN_TESTDETAILS_INCORRECT_ANSWERS_NUMBER, inCorrect);		
-		result.put(ICommonData.JSN_TESTDETAILS_UNCHECKED_QUESTIONS_NUMBER, unChecked);
-		
-		float percent;
-		int checked = allQuestions - unAnswered - unChecked;
-		if(checked==0) 
-			percent = 0;
-		else
-			percent = Math.round((float)correct/(float)checked)*100;
-		String resPercent = Float.toHexString(percent) + "%";
-		
-		if(unChecked==0 && unAnswered==0) {
-			result.put(ICommonData.JSN_TEST_PERCENT_OF_CORRECT, resPercent); // Add calculations from the resultTestCodeFromPerson field
-		} else if (unChecked==0){
-			result.put(ICommonData.JSN_TEST_PERCENT_OF_CORRECT, "not answered (" + resPercent + " from " + checked +")");
-		} else {
-			result.put(ICommonData.JSN_TEST_PERCENT_OF_CORRECT, "not checked (" + resPercent + " from " + checked + ")");
-		}
-		
-		return result;
-		
-	}
 	
 	@SuppressWarnings("unchecked")
-	protected List<EntityTestQuestions> getTestQuestions(EntityTest test) {
-		String query = "SELECT c from EntityTestQuestions c WHERE c.entityTest=?1";
+	protected List<InTestQuestion> getTestQuestions(Test test) {
+		String query = "SELECT c from InTestQuestion c WHERE c.test=?1";
 		return em.createQuery(query).setParameter(1, test).getResultList();
 	}
 	
@@ -578,14 +419,14 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 	 * @return index
 	 */
 	protected int getIndexForTestQuestion(long testQuestionId, boolean onlyUnanswered) {
-		EntityTestQuestions etq = em.find(EntityTestQuestions.class, testQuestionId);
-		EntityTest test = etq.getEntityTest();
+		InTestQuestion etq = em.find(InTestQuestion.class, testQuestionId);
+		Test test = etq.getTest();
 		List<Long> list = null;
 		if(onlyUnanswered)
-			list = em.createQuery("SELECT c.tQuestionId FROM EntityTestQuestions c WHERE c.entityTest=?1 AND c.status=?2 ORDER BY c.tQuestionId").
+			list = em.createQuery("SELECT c.tQuestionId FROM InTestQuestion c WHERE c.test=?1 AND c.status=?2 ORDER BY c.tQuestionId").
 			setParameter(1, test).setParameter(2, ICommonData.STATUS_NO_ANSWER).getResultList();
 		else
-			list = em.createQuery("SELECT c.tQuestionId FROM EntityTestQuestions c WHERE c.entityTest=?1 ORDER BY c.tQuestionId").
+			list = em.createQuery("SELECT c.tQuestionId FROM InTestQuestion c WHERE c.test=?1 ORDER BY c.tQuestionId").
 			setParameter(1, test).getResultList();
 		
 		return binarySearchForList(list, etq.getId());		
@@ -699,15 +540,15 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 						
 			StringBuilder condition;
 			Query query;
-//			EntityCompany ec = getCompany();
+
 			List<Long> allAttributeQuestionsId;
 						
 			int typeNumbers = categoryArray.length;			
-//			System.out.println("Number of categories " + typeNumbers);
+
 			long step = nQuestion/typeNumbers;
-//			System.out.println("Step " + step);
+
 			long r = nQuestion % typeNumbers;
-//			System.out.println("Rest " + r);
+
 			long nGeneratedQuestion = 0L;
 			int count = typeNumbers;
 			

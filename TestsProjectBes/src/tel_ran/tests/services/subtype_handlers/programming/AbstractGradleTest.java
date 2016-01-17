@@ -1,19 +1,10 @@
 package tel_ran.tests.services.subtype_handlers.programming;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.zip.ZipFile;
-
 import org.gradle.tooling.BuildException;
 import org.gradle.tooling.BuildLauncher;
-import org.gradle.tooling.CancellationToken;
 import org.gradle.tooling.GradleConnector;
 import org.gradle.tooling.ProjectConnection;
 

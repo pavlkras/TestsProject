@@ -29,11 +29,11 @@ public class EntityQuestionAttributes implements Serializable {
 	
 	////codeQuestionTable
 	@ManyToOne
-	private EntityTitleQuestion titleQuestion;
+	private QuestionTitle titleQuestion;
 	
 	////link to the company that has created this question (EntityCompany)
 	@ManyToOne	
-	private EntityCompany entityCompany;
+	private Company entityCompany;
 	
 	////name of MetaCategory (Attention, Programming Task, etc)
 	@Column(name = "metaCategory")
@@ -61,7 +61,7 @@ public class EntityQuestionAttributes implements Serializable {
 	
 	////links to some text fields that can be used for American Tests and Programming Tasks (EntityAnswersText) 
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "entityQuestionAttributes")
-	List<EntityTexts> textsList;
+	List<Texts> textsList;
 		
 	////letter of the correct answer (for American Tests)
 	@Column(name = "correctAnswer")
@@ -80,17 +80,17 @@ public class EntityQuestionAttributes implements Serializable {
 	public void setDescription(String description) {
 		this.description = description;
 	}	
-	public EntityCompany getEntityCompany() {
+	public Company getEntityCompany() {
 		return entityCompany;
 	}
-	public void setCompanyId(EntityCompany entityCompany) {
+	public void setCompanyId(Company entityCompany) {
 		this.entityCompany = entityCompany;
 	}
 
-	public EntityTitleQuestion getEntityTitleQuestion() {
+	public QuestionTitle getEntityTitleQuestion() {
 		return titleQuestion;
 	}
-	public void setEntityTitleQuestion(EntityTitleQuestion titleQuestion) {
+	public void setEntityTitleQuestion(QuestionTitle titleQuestion) {
 		this.titleQuestion = titleQuestion;
 	}
 	public String getFileLocationLink() {
@@ -128,10 +128,10 @@ public class EntityQuestionAttributes implements Serializable {
 	public void setCorrectAnswer(String correctAnswer) {
 		this.correctAnswer = correctAnswer;
 	}
-	public List<EntityTexts> getQuestionAnswersList() {
+	public List<Texts> getQuestionAnswersList() {
 		return textsList;
 	}
-	public void setQuestionAnswersList(List<EntityTexts> questionAnswers) {
+	public void setQuestionAnswersList(List<Texts> questionAnswers) {
 		this.textsList = questionAnswers;
 	}
 	public int getNumberOfResponsesInThePicture() {
@@ -154,8 +154,8 @@ public class EntityQuestionAttributes implements Serializable {
 		if(textsList!=null) {
 			List<String> result = new ArrayList<String>();
 		
-			for(EntityTexts eat : textsList) {
-				result.add(eat.getAnswerText());
+			for(Texts eat : textsList) {
+				result.add(eat.getText());
 			}
 		
 			return result;

@@ -7,6 +7,11 @@ import tel_ran.tests.services.common.IPublicStrings;
 
 public class AccessException extends Exception {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public String getString() {
 		String result = "";
 		try {
