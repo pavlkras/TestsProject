@@ -50,11 +50,14 @@ public final class IPublicStrings {
 	public static final int TEST_NOT_CORRECT_PERSON_INFO = 6;
 	public static final int TEST_NO_RIGHT_TO_SEND = 7;
 	public static final int ERROR_NO_ACCESS = 8;
+	public static final int ERROR_NO_TEST = 9;
+	public static final int ERROR_NO_COMPANY = 10;
+	public static final int ERROR_NO_QUESTION = 11;
 	
 	/**
 	 * Messages about errors that can be during test creation
 	 */
-	public static final String[] ERRORS_TEXT = new String[9];
+	public static final String[] ERRORS_TEXT = new String[12];
 	
 	static {		
 		ERRORS_TEXT[TEST_SUCCESS] = "The test was successfully created and sended by e-mail"; // 0
@@ -67,6 +70,9 @@ public final class IPublicStrings {
 		ERRORS_TEXT[TEST_NOT_CORRECT_PERSON_INFO] = "The information about the Person is not correct. The test was not created"; //6
 		ERRORS_TEXT[TEST_NO_RIGHT_TO_SEND] = "You are not allowed to send this test"; // 7
 		ERRORS_TEXT[ERROR_NO_ACCESS] = "You are not allowed to execute this action"; //8
+		ERRORS_TEXT[ERROR_NO_TEST] = "Incorrect link to Test. This test does not exist"; //9
+		ERRORS_TEXT[ERROR_NO_COMPANY] = "Incorrect id of Company. This company does not exist"; //10
+		ERRORS_TEXT[ERROR_NO_QUESTION] = "Incorrect id of Question. This question does not exist"; //11
 	}	
 	
 	

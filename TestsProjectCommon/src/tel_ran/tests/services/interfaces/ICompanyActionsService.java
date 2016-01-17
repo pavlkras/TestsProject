@@ -45,18 +45,6 @@ public interface ICompanyActionsService extends ICommonAdminService {
 	public String getTestResultDetails(int companyId, long testId);
 	public String encodeIntoToken(int companyId);
 	
-	/**
-	 * Checks the answer of the person
-	 * It receives String = JSON with fields:
-	 * -- "mark" = correct or incorrect or other (from gradeOptions)
-	 * -- "id" - id of test-q
-	 * String = status of the question in the DB or ""
-	 * @param companyId
-	 * @param mark
-	 * @return 
-	 */
-	public String checkAnswer(int companyId, String mark);
-	
 
 	/**
 	 * The method returns a list of all custom categories (category1 and category2) that were created by the company
