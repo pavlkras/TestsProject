@@ -22,10 +22,4 @@ public class User extends Registred {
 		return "user/UserAccountPage";
 	}
 	
-	@Override
-	public boolean generateAutoQuestions(String metaCategory, String category2, int levelOfDifficulty,
-			String nQuestions) {
-		return false;		
-	}
-
 }

@@ -1,6 +1,5 @@
 package tel_ran.tests.controller;
 
-import handlers.IHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
-import tel_ran.tests.controller.AbstractAdminActions.JsonResponse;
 import tel_ran.tests.services.common.IPublicStrings;
 import tel_ran.tests.strings.IMessages;
 import tel_ran.tests.users.Visitor;
@@ -29,8 +27,8 @@ import tel_ran.tests.users.Visitor;
 public class QuestionsManagement extends AController {
 	
 	@RequestMapping({"/autoGeneration"})
-	public String maintenanceOtherResurses(@ModelAttribute Visitor visitor) {
-		System.out.println("In new controller " + visitor.getRoleNumber() + " " + visitor.handler.getClass().toString());				
+	public String maintenanceOtherResurses() {
+						
 		return "questions/auto_generation";
 		
 	}	
@@ -48,27 +46,27 @@ public class QuestionsManagement extends AController {
 	 */
 	@RequestMapping({"/callAutoGeneration"})
 	public String moduleForBuildingQuestions(@ModelAttribute Visitor visitor, String category, String nQuestions, Model model) {	
-		System.out.println("In new controller " + visitor.getRoleNumber());
-		boolean actionRes = false;
-		try {
-			actionRes = visitor.handler.generateAutoQuestions(category, null, 5, nQuestions);			
-		} catch (Exception e) {
-			System.out.println("catch call maintenanceaction from FES moduleForBuildingQuestions");//----------------------------------------------------sysout
-			//e.printStackTrace();
-		}
-				
-		StringBuilder result = new StringBuilder("<br><p class='informationTextP'>");
-		result.append(IMessages.YOUR_REQUEST).append(" |").append(nQuestions).
-			append("| ").append(IMessages.QUESTION_ITEMS).append(" ");
-		if(actionRes){				
-			result.append(IMessages.MADE); 		
-		}else{			
-			result.append(IMessages.FAILED);
-		}
-		result.append("</p>");
-		model.addAttribute(RESULT, result.toString());
-//		addTextHTML(result.toString());	
-		
+//		System.out.println("In new controller " + visitor.getRoleNumber());
+//		boolean actionRes = false;
+//		try {
+//			actionRes = visitor.handler.generateAutoQuestions(category, null, 5, nQuestions);			
+//		} catch (Exception e) {
+//			System.out.println("catch call maintenanceaction from FES moduleForBuildingQuestions");//----------------------------------------------------sysout
+//			//e.printStackTrace();
+//		}
+//				
+//		StringBuilder result = new StringBuilder("<br><p class='informationTextP'>");
+//		result.append(IMessages.YOUR_REQUEST).append(" |").append(nQuestions).
+//			append("| ").append(IMessages.QUESTION_ITEMS).append(" ");
+//		if(actionRes){				
+//			result.append(IMessages.MADE); 		
+//		}else{			
+//			result.append(IMessages.FAILED);
+//		}
+//		result.append("</p>");
+//		model.addAttribute(RESULT, result.toString());
+////		addTextHTML(result.toString());	
+//		
 		return "questions/auto_generation";
 	}
 		
@@ -107,11 +105,11 @@ public class QuestionsManagement extends AController {
 	
 	@RequestMapping(value = "/add_question_action" , method = RequestMethod.POST)
 	@ResponseBody
-	public String addQuestionAction(@ModelAttribute Visitor visitor, String questionText, String descriptionText, String codeText,
+	public String addQuestionAction(@ModelAttribute Visitor visitor, String descriptionText, String codeText,
 			String  category1, String metaCategory, String category2, String  compcategory, String levelOfDifficulty, 
 			String fileLocationLink, String correctAnswer, String at1, String at2, String at3, String at4,  Model model)
-	{	
-		
+	{			
+				
 		// creating list of answers
 		int countAnswersOptions = 0;
 		List<String> answers = new ArrayList<>();
@@ -143,10 +141,10 @@ public class QuestionsManagement extends AController {
 		if(!isError) {
 		
 			//check if the new category was added		
-			if(category1.equals("Create company category")) {
+			if(category1.startsWith("Create company category")) {
 				category1 = compcategory;
 			}
-		
+					
 			//check if the new category2 was added	
 			String repCategory = null;
 			if(category2!=null) {
@@ -165,8 +163,8 @@ public class QuestionsManagement extends AController {
 			
 			
 			//ADDING QUESTION			
-			actionRes = visitor.handler.createNewQuestion(questionText, fileLocationLink, metaCategory, category1, lvl, answers, correctAnswer, 
-					0, countAnswersOptions, descriptionText, codeText, repCategory);
+			actionRes = visitor.handler.createNewQuestion(fileLocationLink, metaCategory, category1, lvl, answers, correctAnswer, 
+					countAnswersOptions, descriptionText, codeText, repCategory);
 						
 					
 			if (actionRes) {

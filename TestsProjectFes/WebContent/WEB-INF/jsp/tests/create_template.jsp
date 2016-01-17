@@ -117,9 +117,8 @@
         <thead>
         <tr>
             <th>Source</th>
-            <th>Meta Category</th>
             <th>Category</th>
-            <th>SubCategory</th>
+            <th>SubCategory</th>            
             <th>Level</th>
             <th>Quantity</th>
             <th>Delete</th>
@@ -128,8 +127,7 @@
         <tr data-ng-repeat="res in resultCategories">
             <td class="{{res.type}}">{{res.type}}</td>
             <td>{{res.metaCategory}}</td>
-            <td>{{res.category1}}</td>
-            <td>{{res.category2}}</td>
+            <td>{{res.category1}}</td>            
             <td>{{res.level}}</td>
             <td>{{res.quantity}}</td>
             <td class="delete-cell" data-ng-click="deleteCat($index)">X</td>

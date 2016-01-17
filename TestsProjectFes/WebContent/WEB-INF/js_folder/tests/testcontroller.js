@@ -25,6 +25,8 @@ app.controller('test_controller', function($scope, $http, ngDialog){
     $scope.categories = [];
     
     $scope.category1;
+    $scope.categoryId;   
+    $scope.categoryParentId;
     $scope.category2;
     $scope.mCategory;
     $scope.showCat2 = false;
@@ -162,14 +164,13 @@ $scope.clearAll = function() {
     $scope.showCat2 = false;
     $scope.clearSubCategory();
     $scope.clearCategory1();
-
 }
 
 $scope.clearSubCategory = function() {
     $scope.showLevel = false;
     $scope.clearCategory2();
     $scope.clearMCategory();
-
+   
 }
 
 $scope.clearMCategory = function() {
@@ -189,12 +190,15 @@ $scope.clearCategory1 = function() {
     $scope.category1 = null;
     angular.element($scope.elementCategory1).removeClass('chosen');
     $scope.elementCategory1 = null;
+    $scope.categoryId = null;
+    $scope.categoryParentId = null;
 }
 
 $scope.clearCategory2 = function() {
     $scope.category2 = null;
     angular.element($scope.elementCategory2).removeClass('chosen');
     $scope.elementCategory2 = null;
+    $scope.categoryId = $scope.categoryParentId;
 }
 
 $scope.setCategory = function(cat, $event) {
@@ -202,6 +206,7 @@ $scope.setCategory = function(cat, $event) {
         $scope.clearAll();
     }
     $scope.category1 = cat.cat_parent;
+    $scope.categoryId = cat.cat_id;
     $scope.changeStyle($event);
     $scope.elementCategory1 = $event.target;
     if(cat.cat_children!=null && cat.cat_children.length>0) {
@@ -220,6 +225,8 @@ $scope.setCategory = function(cat, $event) {
 
 $scope.setSubCategory = function(cat2, $event) {
     if($scope.category2!=null) $scope.clearSubCategory();
+    $scope.categoryParentId = $scope.categoryId;
+    $scope.categoryId = cat2.cat_id;
     $scope.changeStyle($event);
     $scope.elementCategory2 = $event.target;
     $scope.category2 = cat2.cat_child;
@@ -255,27 +262,34 @@ $scope.dataSave = function() {
     };
     data.level = $scope.level;
     data.quantity = $scope.numberQuestions;
+    data.cat_id = $scope.categoryId;
+   
+	alert(data.cat_id);
     switch ($scope.$parent.switchN) {
-        case 1 :
-            data.metaCategory = $scope.category1;
-            if($scope.category2!=null)
-            	data.category1 = $scope.category2;
+        case 1 :     
+        	 data.metaCategory = $scope.category1;
+        	 data.category1 = $scope.category2;
+//            data.metaCategory = $scope.category1;
+//            if($scope.category2!=null)
+//            	data.category1 = $scope.category2;
             data.type = "Generation";
             break;
         case 2 :
-            data.metaCategory = $scope.mCategory;
-            if($scope.category1!=null)
-            	data.category1 = $scope.category1;
-            if($scope.category2!=null)
-            	data.category2 = $scope.category2;
+            data.typeQuestion = $scope.mCategory;
+//            if($scope.category1!=null)
+//            	data.category1 = $scope.category1;
+//            if($scope.category2!=null)
+//            	data.category2 = $scope.category2;
             data.type = "SiteBase";
             break;
         case 3 :
-            data.metaCategory = $scope.mCategory;
-            if($scope.category1!=null)
-            	data.category1 = $scope.category1;
-            if($scope.category2!=null)
-            	data.category2 = $scope.category2;
+            data.typeQuestion = $scope.mCategory;
+            data.metaCategory = $scope.category1;
+            data.category1 = $scope.category2;
+//            if($scope.category1!=null)
+//            	data.category1 = $scope.category1;
+//            if($scope.category2!=null)
+//            	data.category2 = $scope.category2;
             data.type = "Custom";
             break;
     }
@@ -283,8 +297,6 @@ $scope.dataSave = function() {
     $scope.$parent.totalNumberQuestions += $scope.numberQuestions;
     $scope.$parent.categorisEmpty = false;
     $scope.cancel();
-
-
 }
 
 $scope.questionsSave = function() {

@@ -24,14 +24,11 @@ public interface IHandler {
 	String getAccountInformation(Visitor visitor);
 	boolean checkCompanyName(String name_company);
 	String[] findCompaniesByName(String jpaStr);
-	boolean generateAutoQuestions(String metaCategory, String category2, int levelOfDifficulty,
-			String nQuestions);
-	
 	List<String> getPossibleMetaCaterories();
 	List<String> getUsersCategories();
-	boolean createNewQuestion(String questionText, String fileLocationLink,
+	boolean createNewQuestion(String fileLocationLink,
 			String metaCategory, String category1, int lvl,
-			List<String> answers, String correctAnswer, int i,
+			List<String> answers, String correctAnswer,
 			int countAnswersOptions, String descriptionText, String codeText,
 			String repCategory);
 	String getAllQuestionsList(String view_mode);

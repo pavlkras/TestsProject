@@ -2,19 +2,13 @@ package tel_ran.tests.controller;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
+
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
-
-import tel_ran.tests.controller.AbstractAdminActions.JsonResponse;
-import tel_ran.tests.strings.IMessages;
 import tel_ran.tests.users.Visitor;
 
 @Controller

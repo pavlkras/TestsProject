@@ -143,7 +143,7 @@ var captureMe = function() {
 	window.document.body.appendChild(img);// added  images on html page for test uncoment
 	context.setTransform(1, 0, 0, 1, 0, 0);
 }
-////
+
 var counterQuestions = 0;
 function onchangeClick(incrementValue){		
 	counterQuestions  +=  incrementValue;

@@ -170,4 +170,7 @@ public class MainController extends AController {
 		model.addAttribute("myResult", buf.toString());
 		return "company/Company_search_form";
 	}
+	
+	// -------------- TOKEN FOR TESTS ---------------------------------------------------------- //
+	
 }

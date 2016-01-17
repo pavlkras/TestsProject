@@ -24,23 +24,6 @@ public class Admin extends Registred {
 	public String companyLogInPage() {
 		return "maintenance/MaintenanceMainPage";	
 	}
-
-	@Override
-	public String[] findCompaniesByName(String jpaStr) {
-		String[] result = commonService.getAnySingleQuery(jpaStr);
-		return result;
-	}
-
-	
-
-	
-
-
-	
-
-
-	
-
 	
 
 }

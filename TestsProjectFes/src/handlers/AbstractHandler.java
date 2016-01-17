@@ -22,7 +22,6 @@ import javax.mail.internet.MimeMessage;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.ui.Model;
@@ -31,20 +30,16 @@ import org.springframework.web.client.RestTemplate;
 import tel_ran.tests.controller.HeaderRequestInterceptor;
 import tel_ran.tests.controller.MainController;
 import tel_ran.tests.services.fields.Role;
-import tel_ran.tests.services.interfaces.ICommonAdminService;
 import tel_ran.tests.services.interfaces.ICommonService;
 import tel_ran.tests.strings.JSONKeys;
 import tel_ran.tests.users.Visitor;
-import tel_ran.tests.utils.AppProps;
 import tel_ran.tests.utils.JsonFabric;
-import tel_ran.tests.utils.SpringApplicationContext;
 
 
 public abstract class AbstractHandler implements IHandler {
 	
 	@Value("${host.name.${phase}}")
 	protected String hostname;
-//	AppProps appProps;
 	
 	protected String token = ""; //token for getting information from BES. It contains id and role	
 	protected Role role;
@@ -103,10 +98,6 @@ public abstract class AbstractHandler implements IHandler {
 		return role.ordinal();
 	}
 	
-		
-//	public void setAppProps(AppProps appProps) {
-//		this.appProps = appProps;
-//	}
 
 	public String getToken() {
 		return token;
@@ -125,7 +116,7 @@ public abstract class AbstractHandler implements IHandler {
 //		String outPage = "UserSignIn";
 		Map<String, Object> result = new HashMap<String, Object>();
 		
-		RestTemplate restTemplate = new RestTemplate();
+		RestTemplate restTemplate = new RestTemplate();		
 				
 		try {
 			String request = JsonFabric.getAutorizationJson(userEmail, password);

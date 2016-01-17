@@ -1,15 +1,10 @@
 package handlers;
 
-import java.util.Map;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
-import tel_ran.tests.services.common.ICommonData;
 import tel_ran.tests.services.fields.Role;
-import tel_ran.tests.services.interfaces.ICommonAdminService;
 import tel_ran.tests.strings.JSONKeys;
 import tel_ran.tests.users.Visitor;
 
@@ -57,20 +52,10 @@ public class Company extends  Registred  {
 		}		
 		
 		result = jsn.toString();
-			
-//			JSONObject jsn = new JSONObject();
-//			try {
-//				jsn.put(ICommonData.MAP_ACCOUNT_NAME, entityCompany.getC_Name());
-//				jsn.put(ICommonData.MAP_ACCOUNT_WEB, entityCompany.getC_Site());
-//				jsn.put(ICommonData.MAP_ACCOUNT_QUESTION_NUMBER, getNumberQuestion());
-//				jsn.put(ICommonData.MAP_ACCOUNT_TESTS_NUM, getNumberTests());
-//			} 
+
 		return result;
 
 	}
-	
-	
-
 
 
 }

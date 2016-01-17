@@ -3,9 +3,15 @@ package handlers;
 import java.util.List;
 import java.util.UUID;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import sun.misc.InvalidJarIndexException;
 import tel_ran.tests.services.common.ICommonData;
 import tel_ran.tests.services.interfaces.ICommonAdminService;
 import tel_ran.tests.services.interfaces.ICompanyActionsService;
+import tel_ran.tests.strings.JSONKeys;
 
 public abstract class Registred extends AbstractHandler {
 
@@ -16,13 +22,6 @@ public abstract class Registred extends AbstractHandler {
 		this.commonService = commonService;
 	}
 
-	@Override
-	public boolean generateAutoQuestions(String metaCategory, String category2, int levelOfDifficulty,
-			String nQuestions) {
-		// TODO Auto-generated method stub
-		int num = Integer.parseInt(nQuestions);
-		return ((ICommonAdminService)commonService).moduleForBuildingQuestions(token, metaCategory, category2, levelOfDifficulty , num);	
-	}
 	
 	@Override
 	public List<String> getPossibleMetaCaterories() {
@@ -37,14 +36,47 @@ public abstract class Registred extends AbstractHandler {
 	}
 	
 	@Override
-	public boolean createNewQuestion(String questionText,
-			String fileLocationLink, String metaCategory, String category1,
-			int lvl, List<String> answers, String correctAnswer, int i,
+	public boolean createNewQuestion(String fileLocationLink, String metaCategory, String category1,
+			int lvl, List<String> answers, String correctAnswer,
 			int countAnswersOptions, String descriptionText, String codeText,
 			String repCategory) {
+			
+		System.out.println("Category1 in handler " + category1);
+		
+		JSONObject jsn = new JSONObject();		
+		
+		
+		if(fileLocationLink!=null)
+			try {
+				jsn.put(JSONKeys.QUESTION_IMAGE, fileLocationLink);
+				jsn.put(JSONKeys.QUESTION_META_CATEGORY, metaCategory);
+				jsn.put(JSONKeys.QUESTION_CATEGORY1, category1);
+				jsn.put(JSONKeys.QUESTION_DIFFICULTY_LVL, lvl);
+				if(correctAnswer!=null)
+					jsn.put(JSONKeys.QUESTION_CORRECT_ANSWER_CHAR, correctAnswer);
+				if(countAnswersOptions>0)
+					jsn.put(JSONKeys.QUESTION_ANSWERS_NUMBER, countAnswersOptions);
+				jsn.put(JSONKeys.QUESTION_DESCRIPTION, descriptionText);
+				if(codeText!=null)
+					jsn.put(JSONKeys.QUESTION_CODE_SIMPLE, codeText);
+				if(repCategory!=null)
+					jsn.put(JSONKeys.QUESTION_CATEGORY2, repCategory);
+				if(answers!=null && answers.size()>0) {
+					JSONArray array = new JSONArray();
+					for(String str : answers) {
+						JSONObject jsn2 = new JSONObject();
+						jsn2.put(JSONKeys.QUESTION_ONE_OPTION, str);
+						array.put(jsn2);
+					}
+					jsn.put(JSONKeys.QUESTION_ANSWER_OPTIONS, array);					
 					
-		return commonService.createNewQuestion(token, questionText, fileLocationLink, metaCategory, category1, lvl, answers, correctAnswer, 
-					0, countAnswersOptions, descriptionText, codeText, repCategory);
+				}
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}		
+				
+		return commonService.createNewQuestion(token, jsn.toString());
 	}
 
 	@Override

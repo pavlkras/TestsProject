@@ -139,7 +139,8 @@ $(document).ready(function(){
 	$("#takeFile").change(function(){reader.readAsBinaryString(this.files[0]);});
 	
 	
-	$("#button_send").click(function(){
+	$("#button_send").click(function(){		
+		
 		$.ajax({
 			type: "POST", url: "add_question_action", async : false,
 			data: {
@@ -153,7 +154,7 @@ $(document).ready(function(){
 				at2 : $("#at2").val(),
 				at3 : $("#at3").val(),
 				at4 : $("#at4").val(),
-				correctAnswer : $("#correctAnswer").val()
+				correctAnswer : document.question_adding_form.correctAnswer.value
 			},
 			complete: function(data){	
 			document.getElementById("resultDB").innerHTML=data.responseText;
@@ -164,9 +165,8 @@ $(document).ready(function(){
 			}
 		});
 		
-		$("#button_OK").click(function(){document.location.href = "add_question";});
-
-		
+		$("#button_OK").click(function(){			
+			document.location.href = "add_question";});		
 		
 	});
 });
