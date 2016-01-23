@@ -7,10 +7,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import sun.misc.InvalidJarIndexException;
+
 import tel_ran.tests.services.common.ICommonData;
 import tel_ran.tests.services.interfaces.ICommonAdminService;
-import tel_ran.tests.services.interfaces.ICompanyActionsService;
 import tel_ran.tests.strings.JSONKeys;
 
 public abstract class Registred extends AbstractHandler {

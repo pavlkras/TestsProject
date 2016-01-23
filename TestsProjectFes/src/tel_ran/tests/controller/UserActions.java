@@ -23,6 +23,10 @@ import tel_ran.tests.services.interfaces.IUserActionService;
 public class UserActions implements Serializable{ 	
 	
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@Autowired
 	IUserActionService userService; 
 	

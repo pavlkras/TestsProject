@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -19,11 +18,8 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import org.springframework.http.HttpRequest;
-
 import tel_ran.tests.services.fields.Role;
-import tel_ran.tests.users.Visitor;
+
 
 @WebFilter(filterName="mainFilter")
 public class AccessFilter implements Filter {

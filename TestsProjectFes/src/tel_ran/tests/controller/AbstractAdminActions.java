@@ -1,20 +1,13 @@
 package tel_ran.tests.controller;
 
-import handlers.AbstractHandler;
-
-
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import tel_ran.tests.services.common.ICommonData;
-import tel_ran.tests.services.common.IPublicStrings;
 import tel_ran.tests.services.interfaces.ICommonAdminService;
 import tel_ran.tests.strings.IMessages;
 
@@ -88,13 +81,7 @@ public abstract class AbstractAdminActions {
 	
 	// ----------------------- METHODS FOR LISTS AND TEXTS----------------------------------------------- // 
 
-	private String buildAutoMetaCategoryList() {		
-		List<String> categoryList = adminService.getPossibleMetaCaterories();
-		// TEXT OF MESSAGE
-		// auto generation isn't available
-		return getOptionsFromList(categoryList, IMessages.NO_AUTO_CATEGORIES);
-	}
-	
+		
 	protected String buildingUsersCategoryBoxTestHTML() {
 		String result;
 		List<String> categoryList;

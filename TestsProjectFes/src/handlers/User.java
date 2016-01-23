@@ -1,8 +1,5 @@
 package handlers;
 
-import org.springframework.ui.Model;
-
-import tel_ran.tests.controller.MainController;
 import tel_ran.tests.services.fields.Role;
 
 public class User extends Registred {
