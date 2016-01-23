@@ -3,6 +3,7 @@ package tel_ran.tests.controller;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -12,6 +13,7 @@ import com.fasterxml.jackson.annotation.JsonRawValue;
 
 import tel_ran.tests.services.AbstractService;
 import tel_ran.tests.services.AbstractServiceGetter;
+import tel_ran.tests.services.TestResultsService;
 import tel_ran.tests.services.common.ICommonData;
 import tel_ran.tests.utils.errors.AccessException;
 
@@ -32,6 +34,19 @@ public class TestsResultsTemplateBasedRestController {
 		} catch (AccessException e) {
 			e.printStackTrace();
 			return e.getString();			
+		}	
+	}
+	
+	@RequestMapping(value="/by_template" + "/{tempate_id}", method = RequestMethod.GET)
+	@ResponseBody
+	String getResultsByTemplate(@RequestHeader(value="Authorization") String token, @PathVariable long template_id) {
+		try {			
+			TestResultsService service = AbstractServiceGetter.getResultsService(token, AbstractServiceGetter.BEAN_TEST_RESULTS_BY_TEMPLATE);			
+			service.setTemplateId(template_id);			
+			return service.getAllElements();
+		} catch (AccessException e) {
+			e.printStackTrace();
+			return e.getString();
 		}	
 	}
 		

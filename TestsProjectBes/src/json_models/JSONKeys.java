@@ -115,6 +115,12 @@ public final class JSONKeys {
 	public static final String RESULTS_TEST_DATA = "common_test_data"; // JSONObject
 	public static final String RESULTS_PERSON_DATA = "person_data"; //JSONObject
 	
+	public static final String RESULTS_HEADER = "header"; //JSON Object
+	public static final String RESULTS_HEADER_CELL_NAME = "cellName"; //JSON Object
+	public static final String RESULTS_HEADER_COMMON_DATA = "common_test_data"; //JSON Object
+	public static final String RESULTS_HEADER_CATEGORIES = "categories"; //JSON Array
+	public static final String RESULTS_RESULTS = "results"; //JSON Array
+	
 	public static final String PERSON_NAME = "name"; //String
 	public static final String PERSON_SURNAME = "surname"; //String
 	public static final String PERSON_id = "person_id"; //long

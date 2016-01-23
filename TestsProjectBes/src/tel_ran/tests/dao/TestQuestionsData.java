@@ -306,7 +306,6 @@ public class TestQuestionsData extends TestsPersistence implements
 						.append("')");
 				} else {
 					List<String> cat = TestProcessor.getMetaCategory();
-					int count = cat.size();
 					query.append(" (");
 					for(String c : cat) {
 						query.append("c.metaCategory='").append(c).append("' OR ");					
@@ -461,8 +460,9 @@ public class TestQuestionsData extends TestsPersistence implements
 		
 		
 		for(Long qId : questionIdList) {
-			EntityQuestionAttributes eqa = em.find(EntityQuestionAttributes.class, qId);
+			Question eqa = em.find(Question.class, qId);
 			InTestQuestion etq = new InTestQuestion();
+			etq.setQuestion(eqa);
 //			etq.setEntityQuestionAttributes(eqa);
 			etq.setTest(test);
 			etq.setStatus(ICommonData.STATUS_NO_ANSWER);
@@ -562,7 +562,7 @@ public class TestQuestionsData extends TestsPersistence implements
 		
 		if(template.hasQuestionsList()) {
 			Set<Long> questionsId = template.getQuestionsId();
-			Set<Question> questions = new HashSet();
+			Set<Question> questions = new HashSet<Question>();
 			for(long questionId : questionsId) {
 				Question q = findQuestionById(questionId);
 				questions.add(q);
@@ -747,16 +747,6 @@ public class TestQuestionsData extends TestsPersistence implements
 		return (int)companyId;
 	}
 	
-	
-
-//
-//	public List<Question> getQuestionListByParams(Role role, long id) {
-//		
-//		
-//		
-//		return this.getQuestionListByParams(null, 0, role, (int)id, false);
-//	}
-
 
 	@Override
 	public List<TestTemplate> getTemplates(int id) {
@@ -851,6 +841,39 @@ public class TestQuestionsData extends TestsPersistence implements
 		
 		
 		return question;
+	}
+
+
+
+
+	@Override
+	@Transactional
+	public TestTemplate getTemplateForResults(long template_id, long id, Role role) {
+		TestTemplate template = em.find(TestTemplate.class, template_id);
+		int companyId = getCompanyId(role, id);
+		int companyIdOfTemplate = template.getCompany().getId();
+		if(companyIdOfTemplate==companyId || companyIdOfTemplate==ADMIN_C_ID) {
+			Hibernate.initialize(template.getCategories());
+			return template;
+		}
+		
+		return null;
+	}
+
+
+
+
+	@Override
+	@Transactional
+	public List<Test> getFinishedTestsForTemplate(TestTemplate template, long id, Role role) {
+		
+		String queryText = "SELECT t FROM Test t WHERE t.baseTemplate=?1 AND t.isPassed=?2 AND t.company=?3";
+		Query query = em.createQuery(queryText)
+				.setParameter(1, template)
+				.setParameter(2, true)
+				.setParameter(3, getCompanyId(role, id));
+				
+		return query.getResultList();
 	}
 
 

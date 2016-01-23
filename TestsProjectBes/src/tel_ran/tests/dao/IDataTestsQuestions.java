@@ -109,6 +109,8 @@ public interface IDataTestsQuestions extends IData {
 	void saveAnswer(InTestQuestion tQuestion);
 	void saveTest(Test test);
 	Question initiateQuestionInTest(InTestQuestion tQuestion);
+	TestTemplate getTemplateForResults(long template_id, long id, Role role);
+	List<Test> getFinishedTestsForTemplate(TestTemplate template, long id, Role role);
 	
 	
 	
