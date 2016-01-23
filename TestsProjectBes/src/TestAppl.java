@@ -1,4 +1,3 @@
-import java.io.File;
 import java.io.IOException;
 
 import tel_ran.tests.services.subtype_handlers.programming.CodeTester;

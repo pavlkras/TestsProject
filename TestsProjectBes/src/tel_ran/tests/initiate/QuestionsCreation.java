@@ -100,7 +100,7 @@ public class QuestionsCreation extends DataCreation implements Runnable {
 
 			for(Question qstn : questions){	
 
-				boolean result = ((IDataTestsQuestions)this.persistence).saveNewQuestion(qstn, category, adminCompany, generator.getTexts());
+				((IDataTestsQuestions)this.persistence).saveNewQuestion(qstn, category, adminCompany, generator.getTexts());
 								
 			}
 		}

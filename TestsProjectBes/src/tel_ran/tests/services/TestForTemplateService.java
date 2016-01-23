@@ -7,6 +7,8 @@ import java.util.Set;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import json_models.JSONKeys;
 
@@ -18,6 +20,8 @@ import tel_ran.tests.entitys.TestTemplate;
 import tel_ran.tests.services.common.IPublicStrings;
 import tel_ran.tests.services.utils.MailSender;
 
+@Component("testTemplateService")
+@Scope("prototype")
 public class TestForTemplateService extends TemplatesService {
 	
 	@Override
@@ -84,7 +88,7 @@ public class TestForTemplateService extends TemplatesService {
 	private List<Person> getPersonListFromJson(JSONObject jsnInfo) throws JSONException {
 		List<Person> result = null;
 		if(jsnInfo.has(JSONKeys.TEST_FOR_PERSONS)) {
-			result = new ArrayList();
+			result = new ArrayList<Person>();
 			JSONArray personsJsn = jsnInfo.getJSONArray(JSONKeys.TEST_FOR_PERSONS);
 			int personNum = personsJsn.length();
 			

@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import tel_ran.tests.services.AbstractServiceGetter;
-import tel_ran.tests.services.TestResultService;
+import tel_ran.tests.services.TestAnswerService;
 import tel_ran.tests.services.common.ICommonData;
 import tel_ran.tests.services.interfaces.ICompanyActionsService;
 import tel_ran.tests.token_cipher.TokenProcessor;
@@ -170,7 +170,7 @@ public class TestsResultsRestController {
 	@ResponseBody @JsonRawValue
 	String checkAnswer(@RequestHeader(value="Authorization") String token, @RequestBody String mark, HttpServletResponse response) {
 				
-		TestResultService service = (TestResultService) AbstractServiceGetter.getService(AbstractServiceGetter.BEAN_TEST_RESULT_SERVICE);
+		TestAnswerService service = (TestAnswerService) AbstractServiceGetter.getService(AbstractServiceGetter.BEAN_TEST_RESULT_SERVICE);
 		
 		try {
 			service.setCompanyId((int)tokenProcessor.decodeRoleToken(token).getId());		

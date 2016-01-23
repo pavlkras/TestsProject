@@ -6,6 +6,8 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import tel_ran.tests.dao.IDataTestsQuestions;
 import tel_ran.tests.entitys.Category;
@@ -15,6 +17,8 @@ import tel_ran.tests.entitys.Question;
 import tel_ran.tests.entitys.QuestionCustom;
 import tel_ran.tests.entitys.Texts;
 
+@Component("questionsService")
+@Scope("prototype")
 public class QuestionsService extends AbstractService {
 	
 	@Autowired

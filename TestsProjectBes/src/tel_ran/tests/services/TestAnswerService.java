@@ -5,6 +5,8 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import tel_ran.tests.dao.IDataTestsQuestions;
 import tel_ran.tests.entitys.Company;
@@ -16,7 +18,9 @@ import tel_ran.tests.services.fields.Role;
 import tel_ran.tests.services.subtype_handlers.ITestQuestionHandler;
 import tel_ran.tests.utils.errors.DataException;
 
-public class TestResultService extends AbstractService {
+@Component("testResultService")
+@Scope("prototype")
+public class TestAnswerService extends AbstractService {
 	
 	@Autowired
 	IDataTestsQuestions testQuestsionsData;

@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import json_models.ResultAndErrorModel;
 import json_models.TemplateListModel;
@@ -12,6 +14,8 @@ import tel_ran.tests.dao.IDataTestsQuestions;
 import tel_ran.tests.entitys.TestTemplate;
 import tel_ran.tests.services.common.IPublicStrings;
 
+@Component("templateService")
+@Scope("prototye")
 public class TemplatesService extends AbstractService {
 	
 	@Autowired

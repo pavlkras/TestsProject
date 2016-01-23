@@ -67,8 +67,7 @@ public class FileManagerService {
 	
 	
 	private static final String TEST_JSON_FILE = "test.json";
-	private static final String NO_COMPANY = "admin";
-			
+		
 	
 	//monitors
 	private static final Object MONITOR_PHOTO = new Object();
@@ -154,16 +153,6 @@ public class FileManagerService {
 			writer.write(image);			 
 			writer.close();
 			System.out.println(LOG + " - 117 - in method saveImageByPath");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}		
-	}
-	
-	private static void saveImageByPath(String path, String image) {		
-		try {			
-			BufferedWriter writer = new BufferedWriter(new FileWriter(path));
-			writer.write(image);			 
-			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}		

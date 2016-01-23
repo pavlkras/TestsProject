@@ -7,7 +7,9 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.core.task.TaskExecutor;
+import org.springframework.stereotype.Component;
 
 import tel_ran.tests.dao.IDataTestsQuestions;
 import tel_ran.tests.entitys.InTestQuestion;
@@ -19,6 +21,8 @@ import tel_ran.tests.services.subtype_handlers.ITestQuestionHandler;
 import tel_ran.tests.services.utils.FileManagerService;
 import tel_ran.tests.utils.errors.DataException;
 
+@Component("testService")
+@Scope("prototye")
 public class TestService extends AbstractService {
 	
 	@Autowired
@@ -139,7 +143,7 @@ public class TestService extends AbstractService {
 		this.test = testQuestsionsData.findTestById(testId);
 		
 		List<InTestQuestion> allQuestions = this.test.getInTestQuestions();
-		List<InTestQuestion> activeQuestions = new ArrayList();
+		List<InTestQuestion> activeQuestions = new ArrayList<InTestQuestion>();
 		for(InTestQuestion tQuestion : allQuestions) {
 			if(tQuestion.getStatus()==ICommonData.STATUS_NO_ANSWER) {
 				activeQuestions.add(tQuestion);
@@ -170,8 +174,9 @@ public class TestService extends AbstractService {
 			InTestQuestion tQuestion = testQuestsionsData.findTestQuestionById(tQuestionId);
 			System.out.println(tQuestion.getId());
 			System.out.println("STATUS = " + tQuestion.getStatus());
-			if(tQuestion==null) return -1;
-		
+			
+			if(tQuestion!=null) {
+				
 			if(tQuestion.getStatus()==ICommonData.STATUS_NO_ANSWER) {
 				System.out.println("HERE");
 				Question baseQuestion = tQuestion.getQuestion();
@@ -187,6 +192,7 @@ public class TestService extends AbstractService {
 				if(tQuestion!=null) {
 					testQuestsionsData.saveAnswer(tQuestion);
 				}
+			}
 			}
 		}
 		return tQuestionId;

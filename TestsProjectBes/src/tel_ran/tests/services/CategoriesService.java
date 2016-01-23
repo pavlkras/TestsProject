@@ -4,10 +4,14 @@ import java.util.List;
 
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import tel_ran.tests.categoryLists.CategoriesList;
 import tel_ran.tests.dao.IDataTestsQuestions;
 
-
+@Component("categoriesService")
+@Scope("prototype")
 public class CategoriesService extends AbstractService {
 
 	CategoriesList categoriesList;

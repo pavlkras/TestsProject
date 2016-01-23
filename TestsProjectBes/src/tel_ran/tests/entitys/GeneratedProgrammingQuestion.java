@@ -46,7 +46,7 @@ public class GeneratedProgrammingQuestion extends GeneratedQuestion {
 	
 	public void setStubList(List<String> texts) {		
 		if(texts!=null) {
-			this.texts = new ArrayList();
+			this.texts = new ArrayList<Texts>();
 			for(String s : texts) {
 				Texts	text = new Texts();
 				text.setText(s);

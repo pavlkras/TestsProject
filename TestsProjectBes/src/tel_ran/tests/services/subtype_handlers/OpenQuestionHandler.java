@@ -1,22 +1,17 @@
 package tel_ran.tests.services.subtype_handlers;
 
-import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
-import tel_ran.tests.entitys.EntityQuestionAttributes;
-import tel_ran.tests.entitys.InTestQuestion;
 import tel_ran.tests.entitys.Question;
-import tel_ran.tests.entitys.QuestionCustom;
+
 import tel_ran.tests.entitys.QuestionCustomOpen;
-import tel_ran.tests.entitys.QuestionCustomTest;
+
 import tel_ran.tests.services.common.ICommonData;
 import tel_ran.tests.services.common.IPublicStrings;
-import tel_ran.tests.services.utils.FileManagerService;
+
 
 public class OpenQuestionHandler extends AbstractTestQuestionHandler {
 

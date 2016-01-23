@@ -25,7 +25,6 @@ public class GradleJava extends AbstractGradleTest {
 										"dependencies{\n" +
 										"testCompile group: 'junit', name: 'junit', version: '4.+'\n}";
 	
-	private static final String innerFolder00 = "src";
 	private static final String innerFolder01 = "src" + File.separator + "main" + File.separator + "java";
 	private static final String innerFolder02 = "src" + File.separator + "test" + File.separator + "java";
 	

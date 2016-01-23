@@ -3,10 +3,14 @@ package tel_ran.tests.services;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import tel_ran.tests.dao.IDataTestsQuestions;
 import tel_ran.tests.services.common.ICommonData;
 
+@Component("companyAccount")
+@Scope("prototype")
 public class CompanyAccountService extends AccountService {
 
 	@Autowired

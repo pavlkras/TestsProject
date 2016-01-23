@@ -6,6 +6,8 @@ import javax.annotation.Resource;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import json_models.AutorizationModel;
 import json_models.JSONKeys;
@@ -17,6 +19,8 @@ import tel_ran.tests.services.fields.Role;
 
 import tel_ran.tests.token_cipher.TokenProcessor;
 
+@Component("authorization")
+@Scope("prototype")
 public class AuthorizationService {
 
 	@Resource(name="autoData")

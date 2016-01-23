@@ -11,8 +11,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import org.json.JSONArray;
@@ -24,8 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import tel_ran.tests.dao.IDataTestsQuestions;
 import tel_ran.tests.dao.TestsPersistence;
-import tel_ran.tests.entitys.Company;
-import tel_ran.tests.entitys.Person;
 import tel_ran.tests.entitys.Texts;
 import tel_ran.tests.entitys.EntityQuestionAttributes;
 import tel_ran.tests.entitys.Test;
@@ -34,8 +30,6 @@ import tel_ran.tests.processor.TestProcessor;
 import tel_ran.tests.services.AbstractService;
 import tel_ran.tests.services.AbstractServiceGetter;
 import tel_ran.tests.services.common.ICommonData;
-import tel_ran.tests.services.common.IPublicStrings;
-import tel_ran.tests.services.fields.Role;
 import tel_ran.tests.services.interfaces.ICommonService;
 import tel_ran.tests.services.utils.FileManagerService;
 import tel_ran.tests.token_cipher.TokenProcessor;
@@ -537,10 +531,7 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 				Arrays.fill(categories1Array, ICommonData.NO_CATEGORY1);
 			}
 
-						
-			StringBuilder condition;
-			Query query;
-
+		
 			List<Long> allAttributeQuestionsId;
 						
 			int typeNumbers = categoryArray.length;			
@@ -568,7 +559,7 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 					} 					
 				} else if (allAttributeQuestionsId.size() < step) {					
 					long resultSize = (long) allAttributeQuestionsId.size();
-					int resPlus = randomAttributeQuestionsId(allAttributeQuestionsId, resultSize, allQuestId);
+					randomAttributeQuestionsId(allAttributeQuestionsId, resultSize, allQuestId);
 					nGeneratedQuestion += resultSize;
 					
 					if(count-i-1>0) {
@@ -579,7 +570,7 @@ public abstract class CommonServices extends TestsPersistence implements ICommon
 					
 				} else {					
 					
-					int resPlus = randomAttributeQuestionsId(allAttributeQuestionsId, step, allQuestId);
+					randomAttributeQuestionsId(allAttributeQuestionsId, step, allQuestId);
 					nGeneratedQuestion += step;
 				}			
 				
