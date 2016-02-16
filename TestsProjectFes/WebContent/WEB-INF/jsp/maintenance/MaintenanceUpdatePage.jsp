@@ -27,16 +27,10 @@
 </head>
 <body onload="actionTypeChange()">
 	<div id="container">
-
-
 		<div id="right_side_company">
-
-
 			<div>
-				<a class="myButton" href='.'>home</a>&nbsp;<a class="myButton"
-					href='maintenanceadd'>add</a>
-				<form name="delete_q" class="displayAction" action='deleteAction'
-					method="post">
+				<a class="myButton" href='.'>home</a>&nbsp;<a class="myButton"	href='maintenanceadd'>add</a>
+					<form name="delete_q" class="displayAction" action='deleteAction'	method="post">
 					Question N: <input type='text' name='questionIDdelete' size="8">&nbsp;&nbsp;
 					<input type="submit" class="myButton" value='Delete ?'>
 				</form>
