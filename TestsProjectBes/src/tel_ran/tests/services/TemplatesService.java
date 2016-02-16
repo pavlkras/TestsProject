@@ -15,7 +15,7 @@ import tel_ran.tests.entitys.TestTemplate;
 import tel_ran.tests.services.common.IPublicStrings;
 
 @Component("templateService")
-@Scope("prototye")
+@Scope("prototype")
 public class TemplatesService extends AbstractService {
 	
 	@Autowired

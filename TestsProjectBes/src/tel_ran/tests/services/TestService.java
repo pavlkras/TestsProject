@@ -22,7 +22,7 @@ import tel_ran.tests.services.utils.FileManagerService;
 import tel_ran.tests.utils.errors.DataException;
 
 @Component("testService")
-@Scope("prototye")
+@Scope("prototype")
 public class TestService extends AbstractService {
 	
 	@Autowired
