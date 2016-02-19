@@ -36,7 +36,7 @@
 						document.write("${myResult}");						
 					</script>
 				<br>
-				<form class='myButton' action="loginProcessing">
+				<form class='myButton' action="loginProcessing" method="post"> 
 					<div>
 						<label>Login: </label> <span class="ipsForm_required">*</span> <input
 							type="text" name="companyName" size="24">
