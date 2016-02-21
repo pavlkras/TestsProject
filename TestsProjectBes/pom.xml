@@ -11,10 +11,6 @@
 			<id>spring-milestones</id>
 			<url>http://repo.spring.io/libs-milestone/</url>
 		</repository>
-		<repository>
-			<id>local-repo</id>
-			<url>file://${basedir}/local_repo</url>
-		</repository>
 	</repositories>
 
 	<properties>
@@ -75,9 +71,8 @@
 	<dependencies>
 		<dependency>
 			<groupId>HRTrueTest</groupId>
-			<artifactId>Common</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-			<scope>compile</scope>
+			<artifactId>telran-common</artifactId>
+			<version>0.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>HRTrueTest</groupId>
