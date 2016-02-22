@@ -20,7 +20,7 @@
  <!--   <mvc:resources mapping="/resources/**" location="/resources/" />
    <mvc:annotation-driven/> -->
    
-     <mvc:resources mapping="/static/**" location="/WEB-INF/css_folder" />
+     <mvc:resources mapping="/static/**" location="/WEB-INF/" />
      <mvc:resources mapping="/static_js/**" location="/WEB-INF/js_folder/js" />
    <mvc:annotation-driven/>
 </beans>
