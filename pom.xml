@@ -6,7 +6,9 @@
   <artifactId>telran-common</artifactId>
   <version>0.0.1</version>
   <packaging>jar</packaging>
+  
   <name>telran-common</name>
+  
   <build>
     <sourceDirectory>src</sourceDirectory>
     <plugins>
