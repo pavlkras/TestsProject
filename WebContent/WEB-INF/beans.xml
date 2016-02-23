@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-4.0.xsd 
+                           http://www.springframework.org/schema/tx
+                           http://www.springframework.org/schema/tx/spring-tx-3.0.xsd 
+                           http://www.springframework.org/schema/context 
+      					   http://www.springframework.org/schema/context/spring-context-4.2.xsd 
+      					   http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+
+<bean id="appProperties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"> 
+	    <property name="locations" value="classpath:application.properties" />
+</bean>
+
+<bean id="companyService" class="org.springframework.remoting.caucho.BurlapProxyFactoryBean">
+<property name="serviceUrl" value="${host.name.${phase}}/company_service.service1"></property>
+<property name="serviceInterface" value="tel_ran.tests.services.interfaces.ICompanyActionsService"></property>
+</bean>
+
+<bean id="maintanenceService" class="org.springframework.remoting.caucho.BurlapProxyFactoryBean">
+<property name="serviceUrl" value="${host.name.${phase}}/maintenance_service.service3"></property>
+<property name="serviceInterface" value="tel_ran.tests.services.interfaces.IMaintenanceService"></property>
+</bean>
+
+<bean id="userService" class="org.springframework.remoting.caucho.BurlapProxyFactoryBean">
+<property name="serviceUrl" value="${host.name.${phase}}/user_service.service4"></property>
+<property name="serviceInterface" value="tel_ran.tests.services.interfaces.IUserActionService"></property>
+</bean>
+
+<!-- Handlers -->
+<bean id="handler" class="handlers.Guest" scope="prototype">
+	<property name="hostname" value="${host.name.${phase}}"></property>
+</bean>
+<bean id="admin" class="handlers.Admin" scope="prototype">
+	<property name="hostname" value="${host.name.${phase}}"></property>
+	<property name="commonService" ref="maintanenceService"></property>
+</bean>
+<bean id="user" class="handlers.User" scope="prototype">
+	<property name="hostname" value="${host.name.${phase}}"></property>
+	<property name="service" ref="userService"></property>
+</bean>
+<bean id="company" class="handlers.Company" scope="prototype">
+	<property name="hostname" value="${host.name.${phase}}"></property>
+	<property name="commonService" ref="companyService"></property>
+</bean>
+
+
+<!-- EOF Handlers -->
+
+<!-- Utils -->
+	<bean id="springApplicationContext" class="tel_ran.tests.utils.SpringApplicationContext"/>
+	<bean id="appProps" class="tel_ran.tests.utils.AppProps">
+		<property name="hostname" value="${host.name.${phase}}"></property>
+		<property name="clientname" value="${client.name.${phase}}"></property>
+	</bean>
+
+<!-- EOF Utils -->
+
+</beans>
