@@ -1,0 +1,25 @@
+public class StringCalculator implements SCalculator {
+ 
+ public String multiply(String op1, String op2) {
+  
+  int i1;
+  try {
+   i1 = Integer.parseInt(op1);
+  } catch (NumberFormatException e) {
+   return SCalculator.WRONG;
+   
+  }
+  
+  int i2;
+  try {
+   i2 = Integer.parseInt(op2);
+  } catch (NumberFormatException e) {
+   return SCalculator.WRONG;
+  }
+  
+  return Integer.toString(i1*i2);
+  
+  
+ }
+
+}

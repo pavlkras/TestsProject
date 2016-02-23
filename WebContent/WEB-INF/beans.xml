@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd 
+  http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+  http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd  
+  http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+
+	<bean id="emf"
+		class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
+		<property name="persistenceUnitName" value="springHibernate" />
+	</bean>
+	<bean
+		class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" />
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="emf" />
+	</bean>
+
+
+<bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor" />
+
+<bean id="autoData" class="tel_ran.tests.dao.AutorizationData"></bean>
+<bean id="testQuestsionsData" class="tel_ran.tests.dao.TestQuestionsData"></bean>
+<bean id="dataInitialize" class="tel_ran.tests.initiate.DataInitialization"></bean>
+
+<bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+    <property name="corePoolSize" value="5" />
+    <property name="maxPoolSize" value="10" />
+    <property name="queueCapacity" value="25" />
+</bean>
+
+<bean id="autoCatList" class="tel_ran.tests.categoryLists.GeneratedCategoryList" scope="prototype"/>
+<bean id="customCatList" class="tel_ran.tests.categoryLists.CustomCategoryList" scope="prototype"/>
+
+<!--  Services -->
+	<context:component-scan base-package="tel_ran.tests.services"/>		
+		
+	<bean id="autoCatService" class="tel_ran.tests.services.CategoriesService" scope="prototype">
+	<property name="categoriesList" ref="autoCatList"></property></bean>
+		
+	<bean id="customCatService" class="tel_ran.tests.services.CategoriesService" scope="prototype">
+	<property name="categoriesList" ref="customCatList"></property></bean>
+	
+
+
+<!-- Utils -->
+	<bean id="springApplicationContext" class="tel_ran.tests.services.utils.SpringApplicationContext"/>
+<!-- EOF Utils -->
+
+<!-- TestHandlers -->
+	<bean id="java_tester" class="tel_ran.tests.services.subtype_handlers.programming.JavaTester" scope="prototype"></bean>
+	
+	<bean id="java" class="tel_ran.tests.services.subtype_handlers.CodeTestQuestionHandler" scope="prototype">
+	<property name="codeTester" ref="java_tester"></property></bean> 
+	
+	<bean id="Abstract_Reasoning" class="tel_ran.tests.services.subtype_handlers.AutoTestQuestionHandler" scope="prototype"></bean>
+	<bean id="Attention_Test" class="tel_ran.tests.services.subtype_handlers.AutoTestQuestionHandler" scope="prototype"></bean>
+	<bean id="Attention" class="tel_ran.tests.services.subtype_handlers.AutoTestQuestionHandler" scope="prototype"></bean>
+	<bean id="Quantative_Reasoning" class="tel_ran.tests.services.subtype_handlers.AutoTestQuestionHandler" scope="prototype"></bean>
+	<bean id="Programming_Task_java" class="tel_ran.tests.services.subtype_handlers.CodeTestQuestionHandler" scope="prototype"></bean>
+	<bean id="American Test" class="tel_ran.tests.services.subtype_handlers.AmericanTestQuestionHandler" scope="prototype"></bean>
+	<bean id="Open Question" class="tel_ran.tests.services.subtype_handlers.OpenQuestionHandler" scope="prototype"></bean>
+<!-- <bean id="Text" class="tel_ran.tests.services.subtype_handlers.TextTestQuestionHandler" scope="prototype"></bean>  -->
+<!-- EOF TestHandlers -->
+
+
+
+<!-- Token processing -->
+	<bean id="cipher" class="tel_ran.tests.token_cipher.AESCipher" scope="singleton"/>
+	<bean id="tokenProc" class="tel_ran.tests.token_cipher.TokenProcessor" scope="singleton"/>
+	
+<!-- EOF Token processing -->
+
+</beans>
