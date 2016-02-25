@@ -1,5 +1,6 @@
 package tel_ran.tests.controller;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,33 +21,36 @@ import tel_ran.tests.users.Visitor;
 @Scope("session") /*session timer default = 20min*/
 @RequestMapping({"/"})
 @SessionAttributes({"role","visitor"})
-public class MainController extends AController {
+public class MainController extends AController implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7427378904632396110L;
 
-			
 	// ------------------  MAIN PAGE  ----------------------------------------------------- // 
 	@RequestMapping({"/"}) // to index page !
 	public String Index(){	
 		return "index";      
 	}
-	
+
 	// ------------------  LOG IN  -- SIGN UP --------------------------------------------- // 	
 	// USER & ADMIN ------------------------------------------------------------------------//
 	@RequestMapping(value = "/login")
 	public String userlogin(@ModelAttribute Visitor visitor) {		
-		
+
 		return visitor.handler.logInPage();		
 	}
-	
+
 	@RequestMapping(value = "/login_action", method = {RequestMethod.POST, RequestMethod.GET})
 	public String login_action(@ModelAttribute Visitor visitor, String userEmail, String password, HttpServletRequest request, Model pageModel) {
-						
+
 		String sign_up = request.getParameter("sign_up");
 		if(sign_up != null){			
 			return "user/UserRegistration";
 		}
-		
+
 		Map<String, Object> resultLogin = visitor.handler.logInAction(userEmail, password);
-		
+
 		if(resultLogin.containsKey("error")) {
 			String response = (String)  resultLogin.get("error");
 			pageModel.addAttribute("logedUser", response);
@@ -54,33 +58,32 @@ public class MainController extends AController {
 			Visitor newVisitor = (Visitor) resultLogin.get("result");
 			visitor = newVisitor;
 			changeAttributes(newVisitor, pageModel);
-			
+
 		} 
-//		System.out.println("I'm here!!! My visitor " + visitor.getCompanyName());
 		return visitor.handler.logInPage();			
 	}
-	
+
 	@RequestMapping(value = "/signup_action", method = RequestMethod.POST)
 	public String signup_action(@ModelAttribute Visitor visitor, String firstname, String lastname,String email, String password, String nickname, Model model) {
-		
+
 		if (email == null || password == null) {				
 			return "user/UserRegistration";
 		}
-		
+
 		return visitor.handler.signUpAction(firstname, lastname, email, password, nickname, model);
 	}
-	
+
 	// COMPANY ------------------------------------------------------------------------//
 	@RequestMapping({"/companyLogin"})
 	public String companyLogIn(@ModelAttribute Visitor visitor) {		
 		return visitor.handler.companyLogInPage();  
 	}
-	
+
 	@RequestMapping("/loginProcessing")
 	public String companyLoginAction(@ModelAttribute Visitor visitor, String companyName, String password, Model model){
-		
+
 		Map<String,Object> resultLogin = visitor.handler.companyLoginAction(companyName, password);
-		
+
 		if(resultLogin.containsKey("error")) {
 			String response = (String)  resultLogin.get("error");
 			model.addAttribute(RESULT, response);
@@ -89,30 +92,29 @@ public class MainController extends AController {
 			visitor = newVisitor;
 			changeAttributes(newVisitor, model);
 			String info = visitor.handler.getAccountInformation(visitor);
-//			System.out.println(info);
 			model.addAttribute(ACCOUNT_INFO, info);
 			return "company/Company_main";
 		} 
-		
+
 		return "companyLogin";	
-		
+
 	}
-	
+
 	@RequestMapping({"/companyadd"})
 	public String addCompany() {
 		return "company/Company_add_form";
 	}
-	
+
 	@RequestMapping({"/add_processing"})
 	public String addProcessing(@ModelAttribute Visitor visitor, String C_Name,String C_Site, String C_Specialization,String C_AmountEmployes,String C_Password,Model model) {
 		if (C_Name == null || C_Password == null) {		
 			return "user/UserRegistration";
 		}
-		
+
 		return visitor.handler.companySignUp(C_Name, C_Site, C_Specialization, C_AmountEmployes, C_Password, model);
-	
+
 	}
-		
+
 	//// method response JSON, Ajax on company add page 
 	@RequestMapping(value="/add_processing_ajax",method=RequestMethod.POST)
 	public @ResponseBody JsonResponse ajaxRequestStream(@ModelAttribute Visitor visitor, HttpServletRequest request) {   
@@ -128,37 +130,28 @@ public class MainController extends AController {
 		}
 		return res;
 	}
-	
-		
 	// -------------------- ACCOUNT PAGES ---------------------------------------------------- //
-	
+
 	@RequestMapping({"/company_main"})
 	public String loginSucceessCompany(@ModelAttribute Visitor visitor, Model model){	
-//		System.out.println(visitor.getCompanyName());
 		model.addAttribute(ACCOUNT_INFO, visitor.handler.getAccountInformation(visitor));
 		return "company/Company_main";
 	}
-	
+
 	// -------------------- LOG OUT --------------------------------------------------------- //
-	
+
 	@RequestMapping({"/logout"})
 	public String logOut(Model model) {
 		Visitor visitor = new Visitor(0);
 		changeAttributes(visitor, model);
 		return "index";
-	}
-	
-
-	
-	// ------------------------- OTHERS ------------------------------------------------------- //
-	
-	
+	}	
 	// ------------------------- COMPANY SEARCH ----------------------------------------------- //
 	@RequestMapping({"/search_form"})
 	public String query() {
 		return "company/Company_search_form";
 	}
-	
+
 	@RequestMapping({"/query_processing"})
 	public String queryProcessing(@ModelAttribute Visitor visitor, String jpaStr, Model model) {
 		// -- TO TEST -------------------------------------------------------------------------- //
@@ -170,7 +163,6 @@ public class MainController extends AController {
 		model.addAttribute("myResult", buf.toString());
 		return "company/Company_search_form";
 	}
-	
+
 	// -------------- TOKEN FOR TESTS ---------------------------------------------------------- //
-	
 }

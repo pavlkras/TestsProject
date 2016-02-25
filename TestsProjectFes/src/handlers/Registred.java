@@ -119,7 +119,7 @@ public abstract class Registred extends AbstractHandler {
 				category1, level_num, selectCountQuestions, personId, personName, personSurname, personEmail, password);	
 		String link = null;
 		if(result==0) {
-			link = pathToServer + "?" + password; // -------------------------------------------------------------------------------------TO DO real address NOT text in string !!!
+			link = pathToServer + "?" + password; // ------------------------------------------TO DO real address NOT text in string !!!
 			if(!sendEmail(link,personEmail))
 				result = 5;
 		}

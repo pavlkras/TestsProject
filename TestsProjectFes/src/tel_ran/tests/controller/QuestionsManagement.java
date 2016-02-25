@@ -177,7 +177,7 @@ public class QuestionsManagement extends AController {
 			
 						
 		}
-		System.out.println(message);
+		System.out.println("addQuestionAction res- "+message);
 		model.addAttribute("result",message);
 		addingQuestion(visitor, model);			
 		return message; // return too page after action	
@@ -203,7 +203,7 @@ public class QuestionsManagement extends AController {
 		model.addAttribute("categoryList", result);
 				
 		String res = visitor.handler.getAllQuestionsList(view_mode);	
-		System.out.println(res);
+		System.out.println("updatePage res- "+res);
 		model.addAttribute(RESULT, res);		
 		
 		return "questions/update_page";

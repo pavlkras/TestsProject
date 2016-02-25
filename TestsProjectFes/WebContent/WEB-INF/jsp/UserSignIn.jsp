@@ -55,24 +55,16 @@
 		}, function() {
 			///$(".formDiv").css("display", "none");
 		});
-
 	});
 </script>
 <title>HRTrueTest User SignIn</title>
 </head>
 <body>
 	<div id="container">
-	 	
-
  	  <div id="right_side" class="centerBlock">
-
-
 	 		<div id="formDiv">
 		<h2>User Login</h2>
         <form action="login_action" method="post" name="user_login_form">
-
- 
-
 		<div>
         <label>Mail       </label>
       <span class="ipsForm_required">*</span>
@@ -90,15 +82,9 @@
 		<div id="resultMessage">${logedUser}</div>	
 		</form>
 	   </div>
-			<div id="additional_area"></div>
-			
-						
+			<div id="additional_area"></div>						
  	  </div><!--end of right area-->
- 	
-
-
- 	<div id="footer_area">
-	
+ 	<div id="footer_area">	
  	<p> Copyright &copy; 2014 HrTrueTest</p>
 	</div>
 </div>

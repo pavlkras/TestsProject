@@ -31,7 +31,6 @@ public class AccessFilter implements Filter {
 	@Override
 	public void destroy() {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -41,7 +40,7 @@ public class AccessFilter implements Filter {
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse resp = (HttpServletResponse) response;
 		String uri = req.getRequestURI();
-		System.out.println(uri);
+		System.out.println("doFilter uri- "+uri);
 		int role;
 		HttpSession s = (HttpSession) req.getSession();
 		
@@ -50,17 +49,17 @@ public class AccessFilter implements Filter {
 			
 		} catch(NullPointerException e) {
 			role = 0;
-			System.out.println("I'm here!");
+			System.out.println("doFilter role=0");
 //			Visitor visitor = new Visitor(role);
 //			s.setAttribute("role", role);
 //			s.setAttribute("visitor", visitor);
 		}
-		System.out.println(role);
+		System.out.println("doFilter role- " +role);
 		String redirection = rules.isApply(uri, role);		
 		if(redirection==null) {
 			chain.doFilter(request, response);
 		} else {
-			System.out.println(redirection);
+			System.out.println("else redirect- "+redirection);
 			resp.sendRedirect(req.getContextPath() + redirection);
 		}
 	}
@@ -140,7 +139,7 @@ public class AccessFilter implements Filter {
 		
 		public String isApply(String uri, int role) {
 			Role r = Role.values()[role];
-			System.out.println(role);
+			System.out.println("isApply role- "+role);
 			String result = null;
 			List<Role> list = rulesMap.get(uri);
 			if(list!=null) {

@@ -171,7 +171,7 @@ public class TestManagement extends AController {
 	public String createTestByTemplate(@ModelAttribute Visitor visitor, Model model) {
 		model.addAttribute("token", visitor.getToken());
 		String linkForTest = this.appPropps.getClientname().concat("/jobSeeker_test_preparing_click_event");
-		System.out.println(linkForTest);
+		System.out.println("link test - "+linkForTest);
 		model.addAttribute("link", linkForTest);
 		return "tests/create_test_by_template";
 	}

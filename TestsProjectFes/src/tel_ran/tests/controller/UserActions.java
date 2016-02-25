@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import tel_ran.tests.model.Test;
-import tel_ran.tests.services.interfaces.IMaintenanceService;
 import tel_ran.tests.services.interfaces.IUserActionService;
 @Controller
 @Scope("session")
@@ -119,8 +118,7 @@ public class UserActions implements Serializable{
 		}else{// ---------------- TO DO REST FOR the case  bilding question for user on test
 
 			String tempQuestion = questionList.get(counter++);
-			String[] questionAttributes = tempQuestion.split(IMaintenanceService.DELIMITER);
-			//	for(int i=0;i<questionAttributes.length;i++){	System.out.println(i+ " - "+questionAttributes[i]+"\n");}// -------------------------------------------- test - susout
+			String[] questionAttributes = tempQuestion.split(" ");
 			if(userTest.getRightAnswersChars() == null && questionAttributes[5] != null){
 				userTest.setRightAnswersChars(questionAttributes[5]);
 			}else if(userTest.getRightAnswersChars() != null && questionAttributes[5] != null){
@@ -153,7 +151,7 @@ public class UserActions implements Serializable{
 			////  ------------------------- 
 			String[] res = userService.getQuestionById(questionAttributes[0], IUserActionService.ACTION_GET_ARRAY);
 			if(res[1] != null && res[1].length() > 15){
-				String[] tempres = res[0].split(IMaintenanceService.DELIMITER);  		
+				String[] tempres = res[0].split(" ");  		
 
 				nextQuestionInTest.append("<br><img class='imageClass' src='" + res[1] + "' alt='image not supported'>");// image text in coding Base64 
 				// -------------- testResultList.add: view result for user after the test 

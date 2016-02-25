@@ -7,9 +7,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
-<link
+<%-- <link
 	href='<c:url value="/static/css_folder/css/MaintenanceHomePage.css"></c:url>'
-	rel="stylesheet">
+	rel="stylesheet"> --%>
 
 <link
 	href='<c:url value="/static/css_folder/user_styles/IndexPage.css"></c:url>'
