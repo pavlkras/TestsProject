@@ -11,7 +11,7 @@
 		<org.springframework.version>4.2.4.RELEASE</org.springframework.version>
 		<javax.servlet.version>3.1.0</javax.servlet.version>
 		<org.json.version>20160212</org.json.version>
-		<com.fasterxml.jackson.core.version>2.7.1</com.fasterxml.jackson.core.version>
+		<com.fasterxml.jackson.core.version>2.6.5</com.fasterxml.jackson.core.version>
 		<javax.servlet.jstl.version>1.2</javax.servlet.jstl.version>
 		<com.caucho.version>4.0.38</com.caucho.version>
 	</properties>

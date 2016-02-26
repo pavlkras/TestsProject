@@ -21,6 +21,6 @@
    <mvc:annotation-driven/> -->
    
      <mvc:resources mapping="/static/**" location="/WEB-INF/" />
-     <mvc:resources mapping="/static_js/**" location="/WEB-INF/js_folder/js" />
+     <mvc:resources mapping="/static_js/**" location="/WEB-INF/js_folder/" />
    <mvc:annotation-driven/>
 </beans>

@@ -22,7 +22,7 @@
 		<org.hibernate.version>4.2.12.Final</org.hibernate.version>
 		<javax.servlet.version>2.5</javax.servlet.version>
 		<org.json.version>20160212</org.json.version>
-		<com.fasterxml.jackson.core.version>2.7.1</com.fasterxml.jackson.core.version>
+		<com.fasterxml.jackson.core.version>2.6.5</com.fasterxml.jackson.core.version>
 		<com.caucho.version>4.0.38</com.caucho.version>
 		<mysql.version>5.1.38</mysql.version>
 	</properties>
