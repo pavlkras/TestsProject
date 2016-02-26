@@ -18,7 +18,8 @@
 		<org.springframework.version>4.2.4.RELEASE</org.springframework.version>
 		<org.gradle.version>2.6</org.gradle.version>
 		<org.hibernate.javax.persistence.version>1.0.0.Final</org.hibernate.javax.persistence.version>
-		<org.hibernate.version>5.1.0.Final</org.hibernate.version>
+		<!--<org.hibernate.version>5.1.0.Final</org.hibernate.version>-->
+		<org.hibernate.version>4.2.12.Final</org.hibernate.version>
 		<javax.servlet.version>2.5</javax.servlet.version>
 		<org.json.version>20160212</org.json.version>
 		<com.fasterxml.jackson.core.version>2.7.1</com.fasterxml.jackson.core.version>
@@ -27,8 +28,7 @@
 	</properties>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
-		<!--<resources> <resource> <directory>src</directory> <excludes> <exclude>**/*.java</exclude> 
-			</excludes> </resource> </resources> -->
+		<finalName>TestsProjectBes</finalName>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>

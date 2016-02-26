@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.util.Properties;
 
@@ -87,15 +88,17 @@ public class DataInitialization implements BeanPostProcessor {
 			
 			File f = null;
 			try {
-				f = new File(DataInitialization.class.getResource(FILE_PROPERTIES).toURI());
-				this.reader = new BufferedReader (new FileReader(f));			
+				ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+				/*f = new File(DataInitialization.class.getResource(FILE_PROPERTIES).toURI());
+				this.reader = new BufferedReader (new FileReader(f));*/
+				this.reader = new BufferedReader(new InputStreamReader(classLoader.getResourceAsStream("/"+FILE_PROPERTIES)));
 				this.properties = new Properties();
 				this.properties.load(reader);				
 				
-			} catch (URISyntaxException e) {
+			} /*catch (URISyntaxException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} catch (FileNotFoundException e) {
+			}*/ catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {

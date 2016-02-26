@@ -31,7 +31,7 @@ import="java.util.*, java.text.*, tel_ran.tests.controller.AbstractAdminActions"
 </style>
 <script src="static/js_folder/maintenance_scripts/add_question_page.js">
 </script>
-<script src="/TestsProjectFes/static/js_folder/header&&rightmenu.js"></script>
+<script src="static/js_folder/header&&rightmenu.js"></script>
 <title>COMPANY ADDING QUESTION</title>
 </head>
 <body>

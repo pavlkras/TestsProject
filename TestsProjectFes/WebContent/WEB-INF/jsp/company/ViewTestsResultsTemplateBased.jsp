@@ -19,22 +19,22 @@
 <script
 	src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.js"></script>
 <script
-	src="/TestsProjectFes/static_js/js/viewresultsjs/ViewTestsResultsTemplateBased.js"></script>
+	src="static_js/js/viewresultsjs/ViewTestsResultsTemplateBased.js"></script>
 <script
-	src="/TestsProjectFes/static_js/js/viewresultsjs/smart-table.min.js"></script>
+	src="static_js/js/viewresultsjs/smart-table.min.js"></script>
 <script
-	src="/TestsProjectFes/static_js/js/viewresultsjs/angular-bootstrap-select.min.js"></script>
+	src="static_js/js/viewresultsjs/angular-bootstrap-select.min.js"></script>
 <script
-	src="/TestsProjectFes/static_js/js/viewresultsjs/bootstrap.min.js"></script>
+	src="static_js/js/viewresultsjs/bootstrap.min.js"></script>
 <script
-	src="/TestsProjectFes/static_js/js/viewresultsjs/ngDialog.min.js"></script>
+	src="static_js/js/viewresultsjs/ngDialog.min.js"></script>
 <script
 	src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.12.1.js"></script>
 <script
 	src="static/js_folder/header&&rightmenu_viewresults.js"></script>
 
 <link
-	href="/TestsProjectFes/static/css_folder/company_styles/viewresults/CompanyViewTestResults.css"
+	href="static/css_folder/company_styles/viewresults/CompanyViewTestResults.css"
 	rel="stylesheet">
 <link
 	href="http://cdn.jsdelivr.net/bootstrap/3.3.4/css/bootstrap.min.css"

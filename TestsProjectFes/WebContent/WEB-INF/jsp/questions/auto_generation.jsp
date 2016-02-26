@@ -17,8 +17,8 @@
 	rel="stylesheet">
 
 <script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
-<script src="/TestsProjectFes/static_js/CompanyJS/comp_other_resourses_page.js"></script>
-<script src="/TestsProjectFes/static/js_folder/header&&rightmenu.js"></script>
+<script src="static_js/CompanyJS/comp_other_resourses_page.js"></script>
+<script src="static/js_folder/header&&rightmenu.js"></script>
 
 <title>OTHER RESURSES FOR COMPANY</title>
 </head>

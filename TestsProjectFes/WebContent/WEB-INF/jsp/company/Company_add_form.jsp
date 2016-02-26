@@ -8,7 +8,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
-<script src="/TestsProjectFes/static_js/CompanyJS/add_company.js"></script>
+<script src="static_js/CompanyJS/add_company.js"></script>
 
 
 <script src="static/js_folder/header&&rightmenu.js"></script>

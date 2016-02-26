@@ -12,23 +12,23 @@
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.js"></script>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/angular-strap/2.1.2/angular-strap.min.js"></script>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/angular-strap/2.1.2/angular-strap.tpl.min.js"></script>
-<link href="/TestsProjectFes/static/css_folder/company_styles/viewresults/CompanyViewTestResults.css" rel="stylesheet">
-<link href="/TestsProjectFes/static/css_folder/company_styles/viewresults/ngDialog.min.css" rel="stylesheet">
-<link href="/TestsProjectFes/static/css_folder/company_styles/viewresults/ngDialog-theme-default.min.css" rel="stylesheet">
-<script src="/TestsProjectFes/static_js/js/viewresultsjs/CompanyViewTestsResults.js"></script>
-<script src="/TestsProjectFes/static_js/js/viewresultsjs/smart-table.min.js"></script>
-<script src="/TestsProjectFes/static_js/js/viewresultsjs/angular-bootstrap-select.min.js"></script>
-<script src="/TestsProjectFes/static_js/js/viewresultsjs/transition.js"></script>
-<script src="/TestsProjectFes/static_js/js/viewresultsjs/collapse.js"></script>
-<script src="/TestsProjectFes/static_js/js/viewresultsjs/ui-utils.min.js"></script>
-<script src="/TestsProjectFes/static_js/js/viewresultsjs/bootstrap.min.js"></script>
-<script src="/TestsProjectFes/static_js/js/viewresultsjs/date-parser.js"></script>
-<script src="/TestsProjectFes/static_js/js/viewresultsjs/ngDialog.min.js"></script>
+<link href="static/css_folder/company_styles/viewresults/CompanyViewTestResults.css" rel="stylesheet">
+<link href="static/css_folder/company_styles/viewresults/ngDialog.min.css" rel="stylesheet">
+<link href="static/css_folder/company_styles/viewresults/ngDialog-theme-default.min.css" rel="stylesheet">
+<script src="static_js/js/viewresultsjs/CompanyViewTestsResults.js"></script>
+<script src="static_js/js/viewresultsjs/smart-table.min.js"></script>
+<script src="static_js/js/viewresultsjs/angular-bootstrap-select.min.js"></script>
+<script src="static_js/js/viewresultsjs/transition.js"></script>
+<script src="static_js/js/viewresultsjs/collapse.js"></script>
+<script src="static_js/js/viewresultsjs/ui-utils.min.js"></script>
+<script src="static_js/js/viewresultsjs/bootstrap.min.js"></script>
+<script src="static_js/js/viewresultsjs/date-parser.js"></script>
+<script src="static_js/js/viewresultsjs/ngDialog.min.js"></script>
 <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.12.1.js"></script>
 <link href="http://mgcrea.github.io/angular-strap/styles/libs.min.css" rel="stylesheet">
 <!-- Code Highlighter  -->
-<link rel="stylesheet" href="/TestsProjectFes/static/css_folder/company_styles/viewresults/prism.css">
-<script src="/TestsProjectFes/static_js/js/viewresultsjs/prism.js"></script>
+<link rel="stylesheet" href="static/css_folder/company_styles/viewresults/prism.css">
+<script src="static_js/js/viewresultsjs/prism.js"></script>
 <!-- EOF Code Highlighter  -->
 
 <link href="http://cdn.jsdelivr.net/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">       

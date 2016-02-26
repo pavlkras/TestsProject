@@ -17,7 +17,7 @@
 	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
 <script
-	src="/TestsProjectFes/static/js_folder/person_scripts/testController.js"></script>
+	src="static/js_folder/person_scripts/testController.js"></script>
 
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 

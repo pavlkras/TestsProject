@@ -21,11 +21,6 @@
 <property name="serviceInterface" value="tel_ran.tests.services.interfaces.ICompanyActionsService"></property>
 </bean>
 
-<bean id="maintanenceService" class="org.springframework.remoting.caucho.BurlapProxyFactoryBean">
-<property name="serviceUrl" value="${host.name.${phase}}/maintenance_service.service3"></property>
-<property name="serviceInterface" value="tel_ran.tests.services.interfaces.IMaintenanceService"></property>
-</bean>
-
 <bean id="userService" class="org.springframework.remoting.caucho.BurlapProxyFactoryBean">
 <property name="serviceUrl" value="${host.name.${phase}}/user_service.service4"></property>
 <property name="serviceInterface" value="tel_ran.tests.services.interfaces.IUserActionService"></property>
@@ -37,7 +32,6 @@
 </bean>
 <bean id="admin" class="handlers.Admin" scope="prototype">
 	<property name="hostname" value="${host.name.${phase}}"></property>
-	<property name="commonService" ref="maintanenceService"></property>
 </bean>
 <bean id="user" class="handlers.User" scope="prototype">
 	<property name="hostname" value="${host.name.${phase}}"></property>
