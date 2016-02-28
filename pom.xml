@@ -3,14 +3,18 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>HRTrueTest</groupId>
-	<artifactId>build-FES</artifactId>
-	<version>0.0.1</version>
+	<artifactId>TestsProject</artifactId>
+	<version>${project.version}</version>
 	<packaging>pom</packaging>
 
-	<name>build-FES</name>
-
+	<properties>
+		<project.version>0.0.1</project.version>
+	</properties>
+	
 	<modules>
-		<module>../TestsProjectCommon</module>
-		<module>../TestsProjectFes</module>
+		<module>TestsProjectCommon</module>
+		<module>TestsProjectBes/custom-JAR-BES</module>
+		<module>TestsProjectBes</module>
+		<module>TestsProjectFes</module>
 	</modules>
 </project>
