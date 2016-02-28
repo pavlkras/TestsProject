@@ -3,7 +3,6 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>HRTrueTest</groupId>
-	<artifactId>TestsProject</artifactId>
 	<version>${project.version}</version>
 	<packaging>pom</packaging>
 
@@ -17,4 +16,5 @@
 		<module>TestsProjectBes</module>
 		<module>TestsProjectFes</module>
 	</modules>
+	<artifactId>build-main</artifactId>
 </project>

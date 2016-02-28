@@ -1,9 +1,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>HRTrueTest</groupId>
-	<artifactId>FES</artifactId>
-	<version>0.0.1</version>
+	
+	<parent>
+		<groupId>HRTrueTest</groupId>
+		<artifactId>build-main</artifactId>
+		<version>${project.version}</version>
+	</parent>
+	
+	<artifactId>testsproject-FES</artifactId>
 	<packaging>war</packaging>
 
 	<properties>
@@ -42,7 +47,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>HRTrueTest</groupId>
-			<artifactId>telran-common</artifactId>
+			<artifactId>testsproject-common</artifactId>
 			<version>0.0.1</version>
 		</dependency>
 
