@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns="http://www.springframework.org/schema/security" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/security
+	http://www.springframework.org/schema/security/spring-security-4.0.xsd
+	http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-4.2.xsd
+	http://www.springframework.org/schema/util
+	http://www.springframework.org/schema/util/spring-util-4.2.xsd">
+
+	<global-method-security pre-post-annotations="enabled" />
+
+	<http pattern="/guest/**" security="none" />
+
+	<http pattern="/authorized/get_with_role_1" entry-point-ref="restAuthenticationEntryPoint"
+		create-session="stateless">
+		<csrf disabled="true" />
+		<custom-filter before="FORM_LOGIN_FILTER" ref="jwtAuthenticationFilterForAdmin" />
+	</http>
+
+	<http pattern="/authorized/get_with_role_2" entry-point-ref="restAuthenticationEntryPoint"
+		create-session="stateless">
+		<csrf disabled="true" />
+		<custom-filter before="FORM_LOGIN_FILTER" ref="jwtAuthenticationFilterForHR" />
+	</http>
+
+	<http pattern="/authorized/**" entry-point-ref="restAuthenticationEntryPoint"
+		create-session="stateless">
+		<csrf disabled="true" />
+		<custom-filter before="FORM_LOGIN_FILTER" ref="jwtAuthenticationFilter" />
+	</http>
+
+	<context:annotation-config />
+
+	<util:map id="roles">
+		<beans:entry key="ROLE_ADMIN" value="1"></beans:entry>
+		<beans:entry key="ROLE_HR" value="2"></beans:entry>
+		<beans:entry key="ROLE_USER" value="3"></beans:entry>
+	</util:map>
+
+	<beans:bean id="jwtAuthenticationFilterForAdmin" parent="jwtAuthenticationFilter">
+		<beans:property name="allowedRoles">
+			<util:set>
+				<beans:value>#{roles['ROLE_ADMIN']}</beans:value>
+			</util:set>
+		</beans:property>
+	</beans:bean>
+	<beans:bean id="jwtAuthenticationFilterForHR" parent="jwtAuthenticationFilter">
+		<beans:property name="allowedRoles">
+			<util:set>
+				<beans:value>#{roles['ROLE_HR']}</beans:value>
+			</util:set>
+		</beans:property>
+	</beans:bean>
+
+	<beans:bean id="jwtAuthenticationFilter" class="main.java.security.JwtAuthenticationFilter">
+		<beans:property name="authenticationManager" ref="authenticationManager" />
+		<beans:property name="authenticationSuccessHandler"
+			ref="jwtAuthenticationSuccessHandler" />
+		<beans:property name="authenticationFailureHandler"
+			ref="jwtAuthenticationFailureHandler" />
+	</beans:bean>
+	<beans:bean id="jwtAuthenticationProvider"
+		class="main.java.security.JwtAuthenticationProvider">
+	</beans:bean>
+	<beans:bean id="jwtAuthenticationSuccessHandler"
+		class="main.java.security.JwtAuthenticationSuccessHandler">
+	</beans:bean>
+	<beans:bean id="jwtAuthenticationFailureHandler"
+		class="main.java.security.JwtAuthenticationFailureHandler">
+	</beans:bean>
+	<beans:bean id="restAuthenticationEntryPoint"
+		class="main.java.security.RestAuthenticationEntryPoint">
+	</beans:bean>
+
+	<authentication-manager alias="authenticationManager">
+		<authentication-provider ref="jwtAuthenticationProvider" />
+	</authentication-manager>
+</beans:beans>
