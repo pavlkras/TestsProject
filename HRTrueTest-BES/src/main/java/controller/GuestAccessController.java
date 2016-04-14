@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 import main.java.jsonsupport.IJsonModel;
 import main.java.jsonsupport.JsonKeys;
 import main.java.jsonsupport.SuccessJsonModel;
+import main.java.model.dao.CompanyData;
 import main.java.model.dao.LoginData;
-import main.java.model.dao.UserData;
 import main.java.model.interfaces.IUserModel;
 
 @RestController
@@ -20,8 +20,8 @@ public class GuestAccessController {
 	IUserModel model;
 	
 	@RequestMapping(value="/signin", method=RequestMethod.POST)
-	public IJsonModel registerCompany(@RequestBody UserData user){
-		model.registerUser(user);
+	public IJsonModel registerCompany(@RequestBody CompanyData company){
+		model.registerCompany(company);
 		return new SuccessJsonModel(JsonKeys.R_OK);
 	}
 	
