@@ -13,7 +13,7 @@
    <!-- <bean name="guestController" class="main.java.controller.GuestAccessController" />
    <bean name="authorizedController" class="main.java.controller.AuthorizedAccessController" /> -->
    <bean class="main.java.controller.GuestAccessController" />
-   <bean class="main.java.controller.AuthorizedAccessController" />
+   <bean class="main.java.controller.CompanyAccessController" />
    <mvc:annotation-driven></mvc:annotation-driven>
    
    <!-- Configure to plugin JSON as request and response in method handler -->

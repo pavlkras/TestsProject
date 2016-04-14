@@ -16,16 +16,10 @@
 
 	<http pattern="/guest/**" security="none" />
 
-	<http pattern="/authorized/get_with_role_1" entry-point-ref="restAuthenticationEntryPoint"
+	<http pattern="/authorized/company/**" entry-point-ref="restAuthenticationEntryPoint"
 		create-session="stateless">
 		<csrf disabled="true" />
-		<custom-filter before="FORM_LOGIN_FILTER" ref="jwtAuthenticationFilterForAdmin" />
-	</http>
-
-	<http pattern="/authorized/get_with_role_2" entry-point-ref="restAuthenticationEntryPoint"
-		create-session="stateless">
-		<csrf disabled="true" />
-		<custom-filter before="FORM_LOGIN_FILTER" ref="jwtAuthenticationFilterForHR" />
+		<custom-filter before="FORM_LOGIN_FILTER" ref="jwtAuthenticationFilterForCompany" />
 	</http>
 
 	<http pattern="/authorized/**" entry-point-ref="restAuthenticationEntryPoint"
@@ -37,22 +31,15 @@
 	<context:annotation-config />
 
 	<util:map id="roles">
-		<beans:entry key="ROLE_ADMIN" value="1"></beans:entry>
-		<beans:entry key="ROLE_HR" value="2"></beans:entry>
-		<beans:entry key="ROLE_USER" value="3"></beans:entry>
+		<beans:entry key="ROLE_ADMIN" value="0"></beans:entry>
+		<beans:entry key="ROLE_COMPANY" value="1"></beans:entry>
+		<beans:entry key="ROLE_USER" value="2"></beans:entry>
 	</util:map>
 
-	<beans:bean id="jwtAuthenticationFilterForAdmin" parent="jwtAuthenticationFilter">
+	<beans:bean id="jwtAuthenticationFilterForCompany" parent="jwtAuthenticationFilter">
 		<beans:property name="allowedRoles">
 			<util:set>
-				<beans:value>#{roles['ROLE_ADMIN']}</beans:value>
-			</util:set>
-		</beans:property>
-	</beans:bean>
-	<beans:bean id="jwtAuthenticationFilterForHR" parent="jwtAuthenticationFilter">
-		<beans:property name="allowedRoles">
-			<util:set>
-				<beans:value>#{roles['ROLE_HR']}</beans:value>
+				<beans:value>#{roles['ROLE_COMPANY']}</beans:value>
 			</util:set>
 		</beans:property>
 	</beans:bean>

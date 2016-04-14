@@ -1,5 +1,7 @@
 package main.java.entities;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -13,6 +15,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import main.java.model.dao.CategoryData;
 
 @Entity
 @Table(name="category")
@@ -58,5 +62,17 @@ public class CategoryEntity {
 	}
 	public void setTemplateItems(Set<TemplateItemEntity> templateItems) {
 		this.templateItems = templateItems;
+	}
+	
+	public static CategoryData convertToCategoryData(CategoryEntity entity){
+		return new CategoryData(entity.id, entity.name);
+	}
+	
+	public static Iterable<CategoryData> convertToCategoryDataList(Iterable<CategoryEntity> entities){
+		List<CategoryData> categoryDatas = new ArrayList<CategoryData>();
+		for (CategoryEntity entity : entities){
+			categoryDatas.add(convertToCategoryData(entity));
+		}
+		return categoryDatas;
 	}
 }

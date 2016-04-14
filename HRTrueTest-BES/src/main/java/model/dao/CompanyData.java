@@ -5,7 +5,22 @@ public class CompanyData extends UserData {
 	String site;
 	byte specialization;
 	byte employees_amnt;
+	private long id;
 	
+	
+	public CompanyData(){
+		
+	}
+	
+	public CompanyData(String email, String password, byte role, String name, String site, byte specialization,
+			byte employees_amnt) {
+		super(email, password, role);
+		this.name = name;
+		this.site = site;
+		this.specialization = specialization;
+		this.employees_amnt = employees_amnt;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -29,5 +44,14 @@ public class CompanyData extends UserData {
 	}
 	public void setEmployees_amnt(byte employees_amnt) {
 		this.employees_amnt = employees_amnt;
+	}
+
+	public long getId(){
+		return id;
+	}
+	
+	public void setId(long id) {
+		this.id = id;
+		
 	}
 }
