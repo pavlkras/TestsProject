@@ -1,0 +1,6 @@
+target/
+/src/META-INF/persistence.xml
+.settings/
+.project
+.classpath
+*.iml
