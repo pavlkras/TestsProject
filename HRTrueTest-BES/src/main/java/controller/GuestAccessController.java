@@ -1,5 +1,7 @@
 package main.java.controller;
 
+import java.util.Map;
+
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 
@@ -14,6 +16,8 @@ import main.java.jsonsupport.ErrorJsonModel;
 import main.java.jsonsupport.IJsonModel;
 import main.java.jsonsupport.SuccessJsonModel;
 import main.java.jsonsupport.TokenJsonModel;
+import main.java.model.config.ActivityTypeMap;
+import main.java.model.config.EmployeesAmountMap;
 import main.java.model.dao.CompanyData;
 import main.java.model.dao.LoginData;
 import main.java.model.interfaces.IUserModel;
@@ -27,6 +31,10 @@ import main.java.utils.Crypto;
 public class GuestAccessController {
 	@Autowired
 	IUserModel model;
+	@Autowired
+	ActivityTypeMap activityTypeOpts;
+	@Autowired
+	EmployeesAmountMap employeesAmountOpts;
 	
 	@RequestMapping(value="/signin", method=RequestMethod.POST)
 	public IJsonModel registerCompany(@RequestBody CompanyData company){
@@ -64,5 +72,15 @@ public class GuestAccessController {
 			return new TokenJsonModel(token);
 		}
 		return new ErrorJsonModel("invalid credentials");
+	}
+	
+	@RequestMapping(value="/activity-types", method=RequestMethod.GET)
+	public Map<Integer, String> getActivityTypes(){
+		return activityTypeOpts;
+	}
+	
+	@RequestMapping(value="/employees-amounts", method=RequestMethod.GET)
+	public Map<Integer, String> getEmployeesAmountOpts(){
+		return employeesAmountOpts;
 	}
 }
