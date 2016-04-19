@@ -1,7 +1,5 @@
 package main.java.controller;
 
-import java.util.Map;
-
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 
@@ -16,11 +14,13 @@ import main.java.jsonsupport.ErrorJsonModel;
 import main.java.jsonsupport.IJsonModel;
 import main.java.jsonsupport.SuccessJsonModel;
 import main.java.jsonsupport.TokenJsonModel;
+import main.java.model.GuestPersistence;
 import main.java.model.config.ActivityTypeMap;
 import main.java.model.config.EmployeesAmountMap;
+import main.java.model.dao.ActivityTypeData;
 import main.java.model.dao.CompanyData;
+import main.java.model.dao.EmployeesAmountData;
 import main.java.model.dao.LoginData;
-import main.java.model.interfaces.IUserModel;
 import main.java.security.AuthenticationTimeout;
 import main.java.security.dao.User;
 import main.java.security.util.JwtUtil;
@@ -30,13 +30,13 @@ import main.java.utils.Crypto;
 @RequestMapping("guest")
 public class GuestAccessController {
 	@Autowired
-	IUserModel model;
+	GuestPersistence model;
 	@Autowired
 	ActivityTypeMap activityTypeOpts;
 	@Autowired
 	EmployeesAmountMap employeesAmountOpts;
 	
-	@RequestMapping(value="/signin", method=RequestMethod.POST)
+	@RequestMapping(value="/signup/company", method=RequestMethod.POST)
 	public IJsonModel registerCompany(@RequestBody CompanyData company){
 		try{
 			model.registerCompany(company);
@@ -75,12 +75,12 @@ public class GuestAccessController {
 	}
 	
 	@RequestMapping(value="/activity-types", method=RequestMethod.GET)
-	public Map<Integer, String> getActivityTypes(){
-		return activityTypeOpts;
+	public Iterable<ActivityTypeData> getActivityTypes(){
+		return ActivityTypeMap.convertToActivityTypeDataList(activityTypeOpts);
 	}
 	
 	@RequestMapping(value="/employees-amounts", method=RequestMethod.GET)
-	public Map<Integer, String> getEmployeesAmountOpts(){
-		return employeesAmountOpts;
+	public Iterable<EmployeesAmountData> getEmployeesAmountOpts(){
+		return EmployeesAmountMap.convertToEmployeesAmountDataList(employeesAmountOpts);
 	}
 }

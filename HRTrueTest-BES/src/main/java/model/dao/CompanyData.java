@@ -3,8 +3,8 @@ package main.java.model.dao;
 public class CompanyData extends UserData {
 	String name;
 	String site;
-	byte specialization;
-	byte employees_amnt;
+	byte activityType;
+	byte employeesAmnt;
 	private long id;
 	
 	
@@ -12,13 +12,14 @@ public class CompanyData extends UserData {
 		
 	}
 	
-	public CompanyData(String email, String password, byte role, String name, String site, byte specialization,
-			byte employees_amnt) {
-		super(email, password, role);
+	public CompanyData(String email, String password, String name, String site, byte activityType,
+			byte employeesAmnt) {
+		//TODO add constants for roles
+		super(email, password, (byte)1);
 		this.name = name;
 		this.site = site;
-		this.specialization = specialization;
-		this.employees_amnt = employees_amnt;
+		this.activityType = activityType;
+		this.employeesAmnt = employeesAmnt;
 	}
 
 	public String getName() {
@@ -33,17 +34,17 @@ public class CompanyData extends UserData {
 	public void setSite(String site) {
 		this.site = site;
 	}
-	public byte getSpecialization() {
-		return specialization;
+	public byte getAcitivityType() {
+		return activityType;
 	}
-	public void setSpecialization(byte specialization) {
-		this.specialization = specialization;
+	public void setActivityType(byte activityType) {
+		this.activityType = activityType;
 	}
-	public byte getEmployees_amnt() {
-		return employees_amnt;
+	public byte getEmployeesAmnt() {
+		return employeesAmnt;
 	}
-	public void setEmployees_amnt(byte employees_amnt) {
-		this.employees_amnt = employees_amnt;
+	public void setEmployeesAmnt(byte employeesAmnt) {
+		this.employeesAmnt = employeesAmnt;
 	}
 
 	public long getId(){

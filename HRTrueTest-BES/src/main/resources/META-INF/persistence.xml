@@ -12,9 +12,9 @@
 			<property name="hibernate.connection.password" value="12345.com" />
 			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect" />
 			<!-- Show SQL created by Hibernate -->
-			<property name="show_sql" value="true" />
-        	<property name="format_sql" value="true" />
-        	<property name="use_sql_comments" value="true" />
+			<property name="hibernate.show_sql" value="true" />
+        	<property name="hibernate.format_sql" value="true" />
+        	<property name="hibernate.use_sql_comments" value="true" />
 		</properties>
 	</persistence-unit>
 </persistence>

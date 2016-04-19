@@ -1,5 +1,7 @@
 package main.java.entities;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -13,9 +15,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+
+import main.java.model.dao.TemplateData;
+import main.java.model.dao.TemplateItemData;
 
 @Entity
-@Table(name="template")
+@Table(name="template", uniqueConstraints={@UniqueConstraint(columnNames={"name","company_id"})})
 public class TemplateEntity {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -26,7 +32,7 @@ public class TemplateEntity {
 	@ManyToOne
 	@JoinColumn(name="company_id")
 	CompanyEntity company = null;
-	@OneToMany(mappedBy="template",cascade=CascadeType.ALL,fetch=FetchType.LAZY,orphanRemoval=true)
+	@OneToMany(mappedBy="template",cascade=CascadeType.ALL,fetch=FetchType.EAGER,orphanRemoval=true)
 	Set<TemplateItemEntity> items;
 	
 	public TemplateEntity(String name, CompanyEntity company) {
@@ -59,4 +65,39 @@ public class TemplateEntity {
 	public long getId() {
 		return id;
 	}	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (id ^ (id >>> 32));
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		TemplateEntity other = (TemplateEntity) obj;
+		if (id != other.id)
+			return false;
+		return true;
+	}
+	
+	public static TemplateData convertToTemplateData(TemplateEntity entity){
+		long id = entity.id;
+		String name = entity.name;
+		List<TemplateItemData> items = (List<TemplateItemData>) TemplateItemEntity.convertToTemplateItemDataList(entity.items);
+		return new TemplateData(id, name, items);
+	}
+	
+	public static Iterable<TemplateData> convertToTemplateDataSet(Iterable<TemplateEntity> entities) {
+		Set<TemplateData> templates = new HashSet<TemplateData>();
+		for(TemplateEntity entity : entities){
+			templates.add(convertToTemplateData(entity));
+		}
+		return templates;
+	}
 }

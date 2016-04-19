@@ -3,7 +3,15 @@ package main.java.model.dao;
 public class LoginData {
 	String email;
 	String password;
-	
+	public LoginData() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	public LoginData(String email, String password) {
+		super();
+		this.email = email;
+		this.password = password;
+	}
 	public String getEmail() {
 		return email;
 	}
@@ -15,7 +23,7 @@ public class LoginData {
 	}
 	public void setPassword(String password) {
 		this.password = password;
-	} 
+	}
 	
 	
 }

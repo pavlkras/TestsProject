@@ -54,4 +54,9 @@ public class JwtUtil {
                 .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
     }
+    
+    public long getUserId(String authorizationHeader){
+    	User user = parseToken(authorizationHeader.substring(7));
+    	return user.getId();
+    }
 }

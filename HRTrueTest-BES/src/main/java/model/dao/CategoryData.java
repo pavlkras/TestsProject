@@ -1,29 +1,29 @@
 package main.java.model.dao;
 
+import java.util.List;
+
 public class CategoryData {
 	int id;
 	String name;
+	List<CategoryData> children;
 	
-	public CategoryData() {
+	public CategoryData(int id, String name, List<CategoryData> children) {
 		super();
-		// TODO Auto-generated constructor stub
-	}
-	public CategoryData(int id2, String name) {
-		super();
-		this.id = id2;
+		this.id = id;
 		this.name = name;
+		this.children = children;
 	}
-	
+
 	public int getId() {
 		return id;
 	}
-	public void setId(byte id) {
-		this.id = id;
-	}
+
 	public String getName() {
 		return name;
 	}
-	public void setName(String name) {
-		this.name = name;
+
+	public List<CategoryData> getChildren() {
+		return children;
 	}
+
 }

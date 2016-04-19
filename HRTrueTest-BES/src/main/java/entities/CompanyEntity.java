@@ -1,5 +1,7 @@
 package main.java.entities;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -15,6 +17,9 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Parameter;
+
+import main.java.model.dao.CompanyData;
+
 import org.hibernate.annotations.GenericGenerator;
 
 
@@ -36,10 +41,10 @@ public class CompanyEntity {
 	String name;
 	@Column(name="site", length=50)
 	String site;
-	@Column(name="specialization")
-	byte specialization;
+	@Column(name="activity_type")
+	byte activityType;
 	@Column(name="employees_amnt")
-	byte employees_amnt;
+	byte employeesAmnt;
 	@OneToMany(mappedBy="company",cascade=CascadeType.ALL,fetch=FetchType.LAZY,orphanRemoval=true)
 	Set<TemplateEntity> templates;
 	
@@ -48,12 +53,12 @@ public class CompanyEntity {
 	}
 	
 	public CompanyEntity(CredentialsEntity credentials, String name, String site,
-			byte specialization, byte employees_amnt){
+			byte activityType, byte employeesAmnt){
 		setCredentials(credentials);
 		setName(name);
 		setSite(site);
-		setSpecialization(specialization);
-		setEmployees_amnt(employees_amnt);
+		setActivityType(activityType);
+		setEmployeesAmnt(employeesAmnt);
 	}
 	
 	public CredentialsEntity getCredentials() {
@@ -74,17 +79,17 @@ public class CompanyEntity {
 	public void setSite(String site) {
 		this.site = site;
 	}
-	public byte getSpecialization() {
-		return specialization;
+	public byte getActivityType() {
+		return activityType;
 	}
-	public void setSpecialization(byte specialization) {
-		this.specialization = specialization;
+	public void setActivityType(byte activityType) {
+		this.activityType = activityType;
 	}
-	public byte getEmployees_amnt() {
-		return employees_amnt;
+	public byte getEmployeesAmnt() {
+		return employeesAmnt;
 	}
-	public void setEmployees_amnt(byte employees_amnt) {
-		this.employees_amnt = employees_amnt;
+	public void setEmployeesAmnt(byte employeesAmnt) {
+		this.employeesAmnt = employeesAmnt;
 	}
 	public Set<TemplateEntity> getTemplates() {
 		return templates;
@@ -94,5 +99,19 @@ public class CompanyEntity {
 	}
 	public long getId() {
 		return id;
+	}
+	
+	public static CompanyData convertToCompanyData(CompanyEntity entity){
+		return new CompanyData(entity.getCredentials().login, entity.getCredentials().getPassword(),
+				entity.getName(), entity.getSite(),
+				entity.getActivityType(), entity.getEmployeesAmnt());
+	}
+	
+	public static Iterable<CompanyData> convertToCompanyDataList(Iterable<CompanyEntity> entities){
+		List<CompanyData> companyDatas = new ArrayList<CompanyData>();
+		for (CompanyEntity entity : entities){
+			companyDatas.add(convertToCompanyData(entity));
+		}
+		return companyDatas;
 	}
 }
