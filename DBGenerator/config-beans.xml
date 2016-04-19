@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+  http://www.springframework.org/schema/beans/spring-beans-4.2.xsd 
+  http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd
+  http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.2.xsd">
+
+	<context:annotation-config />
+
+	<util:map id="activityTypes">
+		<entry key="0" value="Education" />
+		<entry key="1" value="Software Development" />
+		<entry key="2" value="Telecommunication" />
+		<entry key="3" value="Other" />
+	</util:map>
+
+	<util:map id="employeesAmount">
+		<entry key="0" value="up to 10" />
+		<entry key="1" value="10-50" />
+		<entry key="2" value="50-100" />
+		<entry key="3" value="100-500" />
+		<entry key="4" value="500-1000" />
+		<entry key="5" value="more than 1000" />
+	</util:map>
+	
+	<bean id="categoryAbstractReasoning" class="main.java.entities.CategoryConfigEntity">
+		<constructor-arg name="id" value="0" />
+		<constructor-arg name="name" value="Abstract Reasoning" />
+		<constructor-arg name="parent"><null /></constructor-arg>
+	</bean>
+	<bean id="categoryAttention" class="main.java.entities.CategoryConfigEntity">
+		<constructor-arg name="id" value="1" />
+		<constructor-arg name="name" value="Attention Test" />
+		<constructor-arg name="parent"><null /></constructor-arg>
+	</bean>
+	<bean id="categoryQuantativeReasoning" class="main.java.entities.CategoryConfigEntity">
+		<constructor-arg name="id" value="2" />
+		<constructor-arg name="name" value="Quantative Reasoning" />
+		<constructor-arg name="parent"><null /></constructor-arg>
+	</bean>
+	<bean id="categoryAmericanTest" class="main.java.entities.CategoryConfigEntity">
+		<constructor-arg name="id" value="3" />
+		<constructor-arg name="name" value="American Test" />
+		<constructor-arg name="parent"><null /></constructor-arg>
+	</bean>
+	<bean id="categoryOpenQuestion" class="main.java.entities.CategoryConfigEntity">
+		<constructor-arg name="id" value="4" />
+		<constructor-arg name="name" value="Open Question" />
+		<constructor-arg name="parent"><null /></constructor-arg>
+	</bean>
+	<bean id="categoryProgrammingTask" class="main.java.entities.CategoryConfigEntity">
+		<constructor-arg name="id" value="5" />
+		<constructor-arg name="name" value="Programming Task" />
+		<constructor-arg name="parent"><null /></constructor-arg>
+	</bean>
+	<bean id="categoryJavaTask" class="main.java.entities.CategoryConfigEntity">
+		<constructor-arg name="id" value="6" />
+		<constructor-arg name="name" value="Java" />
+		<constructor-arg name="parent" ref="categoryProgrammingTask" />
+	</bean>
+	<util:set id="categories" set-class="java.util.LinkedHashSet" value-type="main.java.entities.CategoryConfigEntity">
+		<ref bean="categoryAbstractReasoning" />
+		<ref bean="categoryAttention" />
+		<ref bean="categoryQuantativeReasoning" />
+		<ref bean="categoryAmericanTest" />
+		<ref bean="categoryOpenQuestion" />
+		<ref bean="categoryProgrammingTask" />
+		<ref bean="categoryJavaTask" />
+	</util:set>
+
+	<bean class="main.java.model.config.ActivityTypeMap">
+		<constructor-arg type="java.util.Map" ref="activityTypes" />
+	</bean>
+	<bean class="main.java.model.config.EmployeesAmountMap">
+		<constructor-arg type="java.util.Map" ref="employeesAmount" />
+	</bean>
+	<bean class="main.java.model.config.CategorySet">
+		<constructor-arg ref="categories" />
+	</bean>
+
+</beans>

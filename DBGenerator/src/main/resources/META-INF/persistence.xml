@@ -4,6 +4,7 @@
 	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
 	<persistence-unit name="testsHibernate">
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<jar-file>lib/dao.jar</jar-file>
 		<properties>
 			<property name="hibernate.hbm2ddl.auto" value="create" />
 			<property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/hr_t_t_db" />

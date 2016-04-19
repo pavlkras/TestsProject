@@ -1,56 +1,71 @@
 package main.java.controller;
 
+import java.util.LinkedHashSet;
 import java.util.Random;
+import java.util.Set;
 
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
+import main.java.model.DbGenPersistence;
 import main.java.model.dao.CompanyData;
-import main.java.model.interfaces.IDbGenModel;
+import main.java.model.dao.TemplateItemData;
 
 public class DbGenApp {
-	private static final byte ROLE_COMPANY = 1;
-	private static final int SPECIALIZATIONS_OPT = 12;
-	private static final int EMPLOYEES_CNT_OPT = 6;
 	private static final byte QUESTIONS_AMOUNT_MAX_CNT = 10;
 	private static final byte DIFFICULTY_OPT = 3;
 	private static final int COMPANIES_CNT = 20;
-	private static final int ROOT_CATEGORIES_CNT = 5;
-	private static final int CHILD_CAT_CNT = 20;
 	private static final int TEMPLATES_MAX_CNT = 10;
 	private static final int ITEMS_PER_TEMPLATE_MAX_CNT = 20;
 	
 	private static Random random = new Random();
+	private static DbGenPersistence model = null;
 	
 	public static void main(String[] args) {
 		AbstractApplicationContext ctx = new FileSystemXmlApplicationContext("beans.xml");
-		IDbGenModel model = (IDbGenModel)ctx.getBean("dbGen");
-		
-		for (int i = 0; i < ROOT_CATEGORIES_CNT; ++i){
-			model.addRootCategory();
-		}
-		
-		for (int i = 0; i < CHILD_CAT_CNT; ++i){
-			model.addChildCategory();
-		}	
+		model = (DbGenPersistence)ctx.getBean("dbGen");
 		
 		for (int i = 0; i < COMPANIES_CNT; ++i){
-			CompanyData data = new CompanyData(getEmail(i), getPassword(i), getCompanyRole(), getRandomString("Comp_Name_"), getRandomString("Site_"), getRandomSpecialization(), getRandomEmployeesAmnt()); 
+			CompanyData data = new CompanyData(getEmail(i), getPassword(i), getRandomString("Comp_Name_"), getRandomString("Site_"),
+					getRandomByte(model.getActivityTypes().size()), getRandomByte(model.getEmployeesAmounts().size())); 
 			model.addCompany(data);
 			int templ_cnt = random.nextInt(TEMPLATES_MAX_CNT);
 			for (int j = 0; j < templ_cnt; ++j){
 				String templateName = "Template_" + i + "_" + j;
 				model.addTemplate(templateName, data);
-				int items_cnt = random.nextInt(ITEMS_PER_TEMPLATE_MAX_CNT);
-				for (int k = 0; k < items_cnt; ++k){
-					byte amount = getRandomQuestionsAmount();
-					byte difficulty = getRandomDifficulty();
-					model.addTemplateItem(amount, difficulty, templateName, data);
-				}
+				addTemplateItems(templateName, data);
 			}
 		}
 		
 		ctx.close();
+	}
+
+	private static void addTemplateItems(String templateName, CompanyData data) {
+		Set<TemplateItemData> items = new LinkedHashSet<>();
+		int items_cnt = random.nextInt(ITEMS_PER_TEMPLATE_MAX_CNT);
+		for (int k = 0; k < items_cnt; ++k){
+			byte amount = getRandomQuestionsAmount();
+			byte difficulty = getRandomDifficulty();
+			byte category = getRandomByte(model.getCategories().size());
+			TemplateItemData tid = new TemplateItemData(0, difficulty, amount, category);
+			
+			boolean existsInSet = false;
+			for (TemplateItemData item : items){
+				if (item.equals(tid)){
+					item.setAmount((byte)(item.getAmount() + tid.getAmount()));
+					existsInSet = true;
+				}
+			}
+			if (!existsInSet)
+				items.add(tid);
+		}
+		for (TemplateItemData item : items){
+			model.addTemplateItem(item, templateName, data);
+		}
+	}
+
+	private static byte getRandomByte(int maxValue) {
+		return (byte) random.nextInt(maxValue);
 	}
 
 	private static byte getRandomDifficulty() {
@@ -61,25 +76,12 @@ public class DbGenApp {
 		return (byte)(random.nextInt(QUESTIONS_AMOUNT_MAX_CNT) + 1);
 	}
 
-	private static byte getCompanyRole() {
-		return ROLE_COMPANY;
-	}
-
 	private static String getPassword(int i) {
 		return new String("passwd" + i);
 	}
 
 	private static String getEmail(int i) {
 		return new String("mail" + i + "@aol.com");
-	}
-
-	private static byte getRandomEmployeesAmnt() {
-		return (byte)random.nextInt(EMPLOYEES_CNT_OPT);
-	}
-
-	private static byte getRandomSpecialization() {
-		// TODO Auto-generated method stub
-		return (byte)random.nextInt(SPECIALIZATIONS_OPT);
 	}
 
 	private static String getRandomString(String prefix) {
