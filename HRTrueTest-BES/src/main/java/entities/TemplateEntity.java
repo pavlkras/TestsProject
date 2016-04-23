@@ -34,6 +34,8 @@ public class TemplateEntity {
 	CompanyEntity company = null;
 	@OneToMany(mappedBy="template",cascade=CascadeType.ALL,fetch=FetchType.EAGER,orphanRemoval=true)
 	Set<TemplateItemEntity> items;
+	@OneToMany(mappedBy="template",fetch=FetchType.EAGER,orphanRemoval=true)
+	Set<TestEntity> tests;
 	
 	public TemplateEntity(String name, CompanyEntity company) {
 		super();
@@ -61,6 +63,12 @@ public class TemplateEntity {
 	}
 	public void setItems(Set<TemplateItemEntity> items) {
 		this.items = items;
+	}
+	public Set<TestEntity> getTests() {
+		return tests;
+	}
+	public void setTests(Set<TestEntity> tests) {
+		this.tests = tests;
 	}
 	public long getId() {
 		return id;

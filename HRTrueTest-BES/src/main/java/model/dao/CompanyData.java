@@ -9,7 +9,6 @@ public class CompanyData extends UserData {
 	
 	
 	public CompanyData(){
-		
 	}
 	
 	public CompanyData(String email, String password, String name, String site, byte activityType,

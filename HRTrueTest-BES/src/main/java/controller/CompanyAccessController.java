@@ -1,5 +1,7 @@
 package main.java.controller;
 
+import javax.persistence.PersistenceException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -7,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import main.java.jsonsupport.ErrorJsonModel;
 import main.java.jsonsupport.IJsonModel;
 import main.java.jsonsupport.SuccessJsonModel;
 import main.java.model.CompanyPersistence;
@@ -40,7 +43,11 @@ public class CompanyAccessController {
 	public IJsonModel addTemplate(@RequestHeader("Authorization") String authorization, 
 			@RequestBody TemplateData template){
 		long id = new JwtUtil().getUserId(authorization);
-		model.addTemplateForId(id, template);
+		try{
+			model.addTemplateForId(id, template);
+		} catch (PersistenceException e){
+			return new ErrorJsonModel("persistence error");
+		}
 		return new SuccessJsonModel("ok");
 	}
 }

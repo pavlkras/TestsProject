@@ -16,28 +16,26 @@ import javax.persistence.UniqueConstraint;
 import main.java.model.dao.TemplateItemData;
 
 @Entity
-@Table(name="template_item", uniqueConstraints={@UniqueConstraint(columnNames={"difficulty","category","template_id"})})
+@Table(name="template_item", uniqueConstraints={@UniqueConstraint(columnNames={"cat_diff_id","template_id"})})
 public class TemplateItemEntity {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="aa_id")
 	long id;
-	@Column(name="difficulty", nullable=false)
-	byte difficulty;
 	@Column(name="amount", nullable=false)
 	byte amount;
-	@Column(name="category", nullable=false)
-	byte category;
+	@ManyToOne
+	@JoinColumn(name="cat_diff_id", referencedColumnName="aa_id", nullable=false)
+	CatDiffEntity catDiff;
 	@ManyToOne
 	@JoinColumn(name="template_id", referencedColumnName="aa_id", nullable=false)
 	TemplateEntity template;
 	
-	public TemplateItemEntity(byte difficulty, byte amount, byte category, TemplateEntity template) {
+	public TemplateItemEntity(byte amount, CatDiffEntity catDiff, TemplateEntity template) {
 		super();
-		this.difficulty = difficulty;
+		this.catDiff = catDiff;
 		this.amount = amount;
 		this.template = template;
-		this.category = category;
 	}
 	public TemplateItemEntity() {
 		super();
@@ -45,11 +43,11 @@ public class TemplateItemEntity {
 	}
 
 
-	public byte getDifficulty() {
-		return difficulty;
+	public CatDiffEntity getCatDiff() {
+		return catDiff;
 	}
-	public void setDifficulty(byte difficulty) {
-		this.difficulty = difficulty;
+	public void setCatDiff(CatDiffEntity catDiff) {
+		this.catDiff = catDiff;
 	}
 	public byte getAmount() {
 		return amount;
@@ -62,12 +60,6 @@ public class TemplateItemEntity {
 	}
 	public void setTemplate(TemplateEntity template) {
 		this.template = template;
-	}
-	public byte getCategory() {
-		return category;
-	}
-	public void setCategory(byte category) {
-		this.category = category;
 	}
 	public long getId() {
 		return id;
@@ -94,7 +86,7 @@ public class TemplateItemEntity {
 		return true;
 	}
 	public static TemplateItemData convertToTemplateItemData(TemplateItemEntity entity){
-		return new TemplateItemData(entity.id, entity.difficulty, entity.amount, entity.category);
+		return new TemplateItemData(entity.id, entity.catDiff.difficulty, entity.amount, entity.catDiff.category);
 	}
 	
 	public static List<TemplateItemData> convertToTemplateItemDataList(Iterable<TemplateItemEntity> entities){

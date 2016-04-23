@@ -5,12 +5,14 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import main.java.entities.CatDiffEntity;
 import main.java.entities.CompanyEntity;
 import main.java.entities.TemplateEntity;
 import main.java.entities.TemplateItemEntity;
@@ -56,9 +58,19 @@ public class CompanyPersistence {
 				itemsSet.add(item);
 			}
 		}
+
 		for (TemplateItemData item : itemsSet){
-			TemplateItemEntity entity = new TemplateItemEntity(item.getDifficulty(), item.getAmount(), 
-					item.getCategory(), template);
+			Query query = em.createQuery("SELECT cd FROM CatDiffEntity cd WHERE cd.difficulty = ?1 AND cd.category = ?2")
+					.setParameter(1, item.getDifficulty())
+					.setParameter(2, item.getCategory());
+			CatDiffEntity catDiffEntity = null;
+			try{
+				catDiffEntity = (CatDiffEntity) query.getSingleResult();
+			} catch (NoResultException e){
+				catDiffEntity = new CatDiffEntity(item.getDifficulty(), item.getCategory());
+				em.persist(catDiffEntity);
+			}
+			TemplateItemEntity entity = new TemplateItemEntity(item.getAmount(), catDiffEntity, template);
 			em.persist(entity);
 		}
 	}
