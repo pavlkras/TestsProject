@@ -13,6 +13,14 @@ public class AttentionTest
 		this.answers = answers;
 	}
 
+	public String getDescription() {
+		return description;
+	}
+
+	public Map<String, Boolean> getAnswers() {
+		return answers;
+	}
+
 	@Override
 	public String toString()
 	{

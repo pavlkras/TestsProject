@@ -14,6 +14,18 @@ public class SequenceTest
 		this.answers = answers;
 	}
 
+	public String getDescription() {
+		return description;
+	}
+
+	public Integer[] getSequence() {
+		return sequence;
+	}
+
+	public Map<Integer, Boolean> getAnswers() {
+		return answers;
+	}
+
 	@Override
 	public String toString()
 	{
