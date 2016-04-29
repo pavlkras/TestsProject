@@ -27,37 +27,37 @@
 	
 	<bean id="categoryAbstractReasoning" class="main.java.entities.CategoryConfigEntity">
 		<constructor-arg name="id" value="0" />
-		<constructor-arg name="name" value="Abstract Reasoning" />
+		<constructor-arg name="name" value="#{T(main.java.model.config.CategorySet).ABSTRACT_TASK}" />
 		<constructor-arg name="parent"><null /></constructor-arg>
 	</bean>
 	<bean id="categoryAttention" class="main.java.entities.CategoryConfigEntity">
 		<constructor-arg name="id" value="1" />
-		<constructor-arg name="name" value="Attention Test" />
+		<constructor-arg name="name" value="#{T(main.java.model.config.CategorySet).ATTENTION_TASK}" />
 		<constructor-arg name="parent"><null /></constructor-arg>
 	</bean>
 	<bean id="categoryQuantativeReasoning" class="main.java.entities.CategoryConfigEntity">
 		<constructor-arg name="id" value="2" />
-		<constructor-arg name="name" value="Quantative Reasoning" />
+		<constructor-arg name="name" value="#{T(main.java.model.config.CategorySet).NUMERICAL_TASK}" />
 		<constructor-arg name="parent"><null /></constructor-arg>
 	</bean>
 	<bean id="categoryAmericanTest" class="main.java.entities.CategoryConfigEntity">
 		<constructor-arg name="id" value="3" />
-		<constructor-arg name="name" value="American Test" />
+		<constructor-arg name="name" value="#{T(main.java.model.config.CategorySet).AMERICAN_TEST}" />
 		<constructor-arg name="parent"><null /></constructor-arg>
 	</bean>
 	<bean id="categoryOpenQuestion" class="main.java.entities.CategoryConfigEntity">
 		<constructor-arg name="id" value="4" />
-		<constructor-arg name="name" value="Open Question" />
+		<constructor-arg name="name" value="#{T(main.java.model.config.CategorySet).OPEN_QUESTION}" />
 		<constructor-arg name="parent"><null /></constructor-arg>
 	</bean>
 	<bean id="categoryProgrammingTask" class="main.java.entities.CategoryConfigEntity">
 		<constructor-arg name="id" value="5" />
-		<constructor-arg name="name" value="Programming Task" />
+		<constructor-arg name="name" value="#{T(main.java.model.config.CategorySet).PROGRAMMING_TASK}" />
 		<constructor-arg name="parent"><null /></constructor-arg>
 	</bean>
 	<bean id="categoryJavaTask" class="main.java.entities.CategoryConfigEntity">
 		<constructor-arg name="id" value="6" />
-		<constructor-arg name="name" value="Java" />
+		<constructor-arg name="name" value="#{T(main.java.model.config.CategorySet).JAVA_PROGRAMMING_TASK}" />
 		<constructor-arg name="parent" ref="categoryProgrammingTask" />
 	</bean>
 	<util:set id="categories" set-class="java.util.LinkedHashSet" value-type="main.java.entities.CategoryConfigEntity">

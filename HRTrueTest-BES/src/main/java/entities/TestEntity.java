@@ -18,6 +18,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import main.java.model.dao.CandidateData;
 import main.java.model.dao.TestData;
 
 @Entity
@@ -36,19 +37,24 @@ public class TestEntity {
 	@Column(name="link_to_test", nullable=false, unique=true)
 	String link;
 	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name="creation_date")
+	Date creationDate;
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="start_date")
 	Date startDate;
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="end_date")
 	Date endDate;
 	@OneToMany(mappedBy="test",fetch=FetchType.EAGER,orphanRemoval=true)
-	Set<QuestionEntity> questions;
+	Set<BaseQuestionEntity> questions;
 	
-	public TestEntity(TemplateEntity template, CandidateEntity candidate, String link, Date startDate, Date endDate) {
+	public TestEntity(TemplateEntity template, CandidateEntity candidate, String link, 
+			Date creationDate, Date startDate, Date endDate) {
 		super();
 		this.template = template;
 		this.candidate = candidate;
 		this.link = link;
+		this.creationDate = creationDate;
 		this.startDate = startDate;
 		this.endDate = endDate;
 	}
@@ -74,6 +80,12 @@ public class TestEntity {
 	public void setLink(String link) {
 		this.link = link;
 	}
+	public Date getCreationDate() {
+		return creationDate;
+	}
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
+	}
 	public Date getStartDate() {
 		return startDate;
 	}
@@ -86,10 +98,10 @@ public class TestEntity {
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
 	}
-	public Set<QuestionEntity> getQuestions() {
+	public Set<BaseQuestionEntity> getQuestions() {
 		return questions;
 	}
-	public void setQuestions(Set<QuestionEntity> questions) {
+	public void setQuestions(Set<BaseQuestionEntity> questions) {
 		this.questions = questions;
 	}
 	public long getId() {
@@ -123,8 +135,9 @@ public class TestEntity {
 		return true;
 	}
 	public static TestData convertToTestData(TestEntity entity){
-		return new TestData(entity.candidate.id, entity.template.id,
-				entity.link, entity.startDate, entity.endDate);
+		CandidateData candidate = CandidateEntity.convertToCandidateData(entity.candidate);
+		return new TestData(candidate, entity.template.id,
+				entity.link, entity.creationDate, entity.startDate, entity.endDate);
 	}
 	public static List<TestData> convertToTestDataList(Iterable<TestEntity> entities){
 		List<TestData> tests = new ArrayList<TestData>();

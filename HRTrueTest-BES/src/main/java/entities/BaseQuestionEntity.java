@@ -5,40 +5,55 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="base_question")
-public class QuestionEntity {
+@Inheritance(strategy=InheritanceType.JOINED)
+public abstract class BaseQuestionEntity {
 	@Id
 	@Column(name="aa_id")
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	long id;
-	@Column(name="answer")
-	String answer;
+	@Column(name="question_type", nullable=false)
+	byte questionType;
+	@Column(name="candidate_answer")
+	String candidateAnswer;
+	@Column(name="passed")
+	Boolean passed;
 	@ManyToOne
 	@JoinColumn(name="cat_diff_id", nullable=false)
 	CatDiffEntity catDiff;
 	@ManyToOne
 	@JoinColumn(name="test_id",nullable=false)
 	TestEntity test;
-	public QuestionEntity(String answer, CatDiffEntity catDiff, TestEntity test) {
+	public BaseQuestionEntity(Byte questionType, String candidateAnswer, Boolean passed, CatDiffEntity catDiff, TestEntity test) {
 		super();
-		this.answer = answer;
+		this.questionType = questionType;
+		this.candidateAnswer = candidateAnswer;
+		this.passed = passed;
 		this.catDiff = catDiff;
 		this.test = test;
 	}
-	public QuestionEntity() {
+	public BaseQuestionEntity() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public String getAnswer() {
-		return answer;
+	public byte getQuestionType() {
+		return questionType;
 	}
-	public void setAnswer(String answer) {
-		this.answer = answer;
+	public void setQuestionType(byte questionType) {
+		this.questionType = questionType;
+	}
+	public String getCandidateAnswer() {
+		return candidateAnswer;
+	}
+	public void setCandidateAnswer(String candidateAnswer) {
+		this.candidateAnswer = candidateAnswer;
 	}
 	public CatDiffEntity getCatDiff() {
 		return catDiff;
@@ -51,6 +66,12 @@ public class QuestionEntity {
 	}
 	public void setTest(TestEntity test) {
 		this.test = test;
+	}
+	public Boolean isPassed() {
+		return passed;
+	}
+	public void setPassed(Boolean passed) {
+		this.passed = passed;
 	}
 	public long getId() {
 		return id;
@@ -70,7 +91,7 @@ public class QuestionEntity {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		QuestionEntity other = (QuestionEntity) obj;
+		BaseQuestionEntity other = (BaseQuestionEntity) obj;
 		if (id != other.id)
 			return false;
 		return true;

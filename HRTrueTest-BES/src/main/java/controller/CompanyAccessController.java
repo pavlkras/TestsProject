@@ -1,5 +1,7 @@
 package main.java.controller;
 
+import java.util.List;
+
 import javax.persistence.PersistenceException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +18,7 @@ import main.java.model.CompanyPersistence;
 import main.java.model.config.CategorySet;
 import main.java.model.dao.CategoryData;
 import main.java.model.dao.TemplateData;
-import main.java.security.dao.User;
+import main.java.model.dao.TestData;
 import main.java.security.util.JwtUtil;
 
 @RestController
@@ -45,6 +47,17 @@ public class CompanyAccessController {
 		long id = new JwtUtil().getUserId(authorization);
 		try{
 			model.addTemplateForId(id, template);
+		} catch (PersistenceException e){
+			return new ErrorJsonModel("persistence error");
+		}
+		return new SuccessJsonModel("ok");
+	}
+	@RequestMapping(value="/create-multiple-tests", method=RequestMethod.POST)
+	public IJsonModel createTest(@RequestHeader("Authorization") String authorization,
+			@RequestBody List<TestData> tests){
+		long id = new JwtUtil().getUserId(authorization);
+		try {
+			model.createMultipleTests(id, tests, categories);
 		} catch (PersistenceException e){
 			return new ErrorJsonModel("persistence error");
 		}

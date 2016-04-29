@@ -84,7 +84,7 @@ public class CandidateEntity {
 		return true;
 	}
 	public static CandidateData convertToCandidateData(CandidateEntity entity){
-		return new CandidateData(entity.email, entity.firstName, entity.lastName);
+		return new CandidateData(entity.id, entity.email, entity.firstName, entity.lastName);
 	}
 	public static List<CandidateData> convertToCandidateDataList(Iterable<CandidateEntity> entities){
 		List<CandidateData> candidates = new ArrayList<CandidateData>();

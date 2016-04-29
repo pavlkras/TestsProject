@@ -3,13 +3,15 @@ package main.java.model.dao;
 import java.util.Date;
 
 public class TestData {
-	long candidateId;
+	CandidateData candidate;
 	long templateId;
 	String link;
+	Date creationDate;
 	Date startDate;
 	Date endDate;
-	public TestData(long candidateId, long templateId, String link, Date startDate, Date endDate) {
-		this.candidateId = candidateId;
+	public TestData(CandidateData candidate, long templateId, String link, 
+			Date creationDate, Date startDate, Date endDate) {
+		this.candidate = candidate;
 		this.templateId = templateId;
 		this.link = link;
 		this.startDate = startDate;
@@ -19,11 +21,11 @@ public class TestData {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public long getCandidateId() {
-		return candidateId;
+	public CandidateData getCandidate() {
+		return candidate;
 	}
-	public void setCandidateId(long candidateId) {
-		this.candidateId = candidateId;
+	public void setCandidateId(CandidateData candidate) {
+		this.candidate = candidate;
 	}
 	public long getTemplateId() {
 		return templateId;
@@ -36,6 +38,12 @@ public class TestData {
 	}
 	public void setLink(String link) {
 		this.link = link;
+	}
+	public Date getCreationDate() {
+		return creationDate;
+	}
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
 	}
 	public Date getStartDate() {
 		return startDate;

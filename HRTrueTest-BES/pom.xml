@@ -41,6 +41,12 @@
 	</properties>
 
 	<dependencies>
+		<!-- Test Generator -->
+		<dependency>
+			<groupId>com.telran.hrtruetest</groupId>
+			<artifactId>test-generator</artifactId>
+			<version>0.0.1</version>
+		</dependency>
 		<!-- JWT support -->
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>

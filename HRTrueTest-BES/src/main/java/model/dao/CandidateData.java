@@ -1,12 +1,13 @@
 package main.java.model.dao;
 
 public class CandidateData {
-
+	long id;
 	String email;
 	String firstName;
 	String lastName;
 	
-	public CandidateData(String email, String firstName, String lastName) {
+	public CandidateData(long id, String email, String firstName, String lastName) {
+		this.id = id;
 		this.email = email;
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -15,6 +16,14 @@ public class CandidateData {
 	public CandidateData() {
 		super();
 		// TODO Auto-generated constructor stub
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 
 	public String getEmail() {
@@ -40,5 +49,5 @@ public class CandidateData {
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
-	
+
 }

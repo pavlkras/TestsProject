@@ -1,5 +1,8 @@
 package main.java.model;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -12,16 +15,27 @@ import javax.persistence.Query;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import dao.test.AttentionTest;
+import generator.Generator;
+import main.java.entities.AttentionQuestionEntity;
+import main.java.entities.BaseQuestionEntity;
+import main.java.entities.CandidateEntity;
 import main.java.entities.CatDiffEntity;
 import main.java.entities.CompanyEntity;
 import main.java.entities.TemplateEntity;
 import main.java.entities.TemplateItemEntity;
+import main.java.entities.TestEntity;
+import main.java.model.config.CategorySet;
+import main.java.model.dao.CandidateData;
 import main.java.model.dao.TemplateData;
 import main.java.model.dao.TemplateItemData;
+import main.java.model.dao.TestData;
 
 public class CompanyPersistence {
 	@PersistenceContext(unitName="HRTrueTestBES")
 	EntityManager em;
+	
+	Calendar calendar = new GregorianCalendar();
 
 	public Iterable<TemplateData> getTemplatesForId(long id) {
 		Query query = em.createQuery("SELECT t from TemplateEntity t WHERE t.company.id = ?1")
@@ -73,6 +87,88 @@ public class CompanyPersistence {
 			TemplateItemEntity entity = new TemplateItemEntity(item.getAmount(), catDiffEntity, template);
 			em.persist(entity);
 		}
+	}
+	
+	@Transactional(propagation=Propagation.REQUIRED)
+	public void createMultipleTests(long id, List<TestData> tests, CategorySet categories) {
+		for (TestData test : tests){
+			createSingleTest(id, test, categories);
+		}
+	}
+	
+	@Transactional(propagation=Propagation.NESTED)
+	public void createSingleTest(long id, TestData test, CategorySet categories) {
+		CandidateEntity candidateEntity = findOrCreateCandidate(test.getCandidate());
+		TemplateEntity templateEntity = em.find(TemplateEntity.class, test.getTemplateId());
+		
+		
+		//TODO THERE SHOULD BE REAL LINK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		
+		
+		
+		TestEntity testEntity = new TestEntity(templateEntity, candidateEntity, "testlink", 
+				new Date(calendar.getTimeInMillis()), null, null);
+		em.persist(testEntity);
+		
+		generateMultipleCategoriesQuestions(templateEntity.getItems(), categories, testEntity);
+	}
+
+	private void generateMultipleCategoriesQuestions(Set<TemplateItemEntity> items, CategorySet categories, TestEntity testEntity) {
+		for (TemplateItemEntity item : items){
+			generateSingleCategoryQuestions(item, categories, testEntity);
+		}
+	}
+
+	private void generateSingleCategoryQuestions(TemplateItemEntity itemEntity, CategorySet categories, TestEntity testEntity) {
+		for (int i = 0; i < itemEntity.getAmount(); ++i){
+			generateConcreteQuestion(itemEntity.getCatDiff(), categories, testEntity);
+		}	
+	}
+
+	private void generateConcreteQuestion(CatDiffEntity catDiff, CategorySet categories, TestEntity testEntity) {
+		BaseQuestionEntity question = null;
+		String category = categories.getCategoryNameById(catDiff.getCategory());
+		
+		Generator questionGenerator = new Generator();
+		switch (category){
+			case CategorySet.ABSTRACT_TASK:
+			case CategorySet.AMERICAN_TEST:
+			case CategorySet.JAVA_PROGRAMMING_TASK:
+			case CategorySet.NUMERICAL_TASK:
+			case CategorySet.OPEN_QUESTION:
+				break;
+			case CategorySet.ATTENTION_TASK:
+				AttentionTest test = questionGenerator.generateAttentionTest(catDiff.getDifficulty());
+				String answers = AttentionQuestionEntity.buildAnswersSequence(test.getAnswers().keySet());
+				String correctAnswer = null;
+				for (String key : test.getAnswers().keySet()){
+					if (test.getAnswers().get(key)){
+						correctAnswer = key;
+						break;
+					}
+				}
+				question = new AttentionQuestionEntity(null, null, catDiff, testEntity, test.getDescription(), answers, correctAnswer);
+				break;
+			case CategorySet.PROGRAMMING_TASK:
+			default:
+				break;
+		}
+		em.persist(question);
+	}
+
+	@Transactional(propagation=Propagation.NESTED)
+	public CandidateEntity findOrCreateCandidate(CandidateData candidate) {
+		Query query = em.createQuery("SELECT c FROM CandidateEntity c WHERE c.email = ?1")
+				.setParameter(1, candidate.getEmail());
+		CandidateEntity candidateEntity = null;
+		try {
+			candidateEntity = (CandidateEntity) query.getSingleResult();
+		} catch (NoResultException e){
+			candidateEntity = new CandidateEntity(candidate.getEmail(),
+					candidate.getFirstName(), candidate.getLastName());
+			em.persist(candidateEntity);
+		}
+		return candidateEntity;
 	}
 
 }
