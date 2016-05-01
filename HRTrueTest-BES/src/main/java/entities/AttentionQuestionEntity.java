@@ -11,7 +11,6 @@ import javax.persistence.Table;
 
 import main.java.model.config.CategorySet;
 import main.java.model.dao.AttentionQuestionData;
-import main.java.model.dao.CategoryData;
 
 @Entity
 @Table(name="attention_question")
@@ -20,9 +19,9 @@ public class AttentionQuestionEntity extends BaseQuestionEntity {
 	
 	@Column(name="description")
 	String description;
-	@Column(name="answers")
+	@Column(name="answers", length=190)
 	String answers;
-	@Column(name="correct_answer")
+	@Column(name="correct_answer", length=36)
 	String correctAnswer;
 	
 	public AttentionQuestionEntity(String candidateAnswer, Boolean passed, CatDiffEntity catDiff, TestEntity test, String description,

@@ -2,6 +2,7 @@ package main.java.controller;
 
 import java.util.List;
 
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +59,10 @@ public class CompanyAccessController {
 		long id = new JwtUtil().getUserId(authorization);
 		try {
 			model.createMultipleTests(id, tests, categories);
-		} catch (PersistenceException e){
+		} catch (NoResultException e){
+			return new ErrorJsonModel(e.getMessage());
+		}
+		catch (PersistenceException e){
 			return new ErrorJsonModel("persistence error");
 		}
 		return new SuccessJsonModel("ok");

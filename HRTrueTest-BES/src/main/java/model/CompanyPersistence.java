@@ -1,10 +1,10 @@
 package main.java.model;
 
-import java.util.Calendar;
+import java.util.Arrays;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
@@ -16,12 +16,14 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import dao.test.AttentionTest;
+import dao.test.SequenceTest;
 import generator.Generator;
 import main.java.entities.AttentionQuestionEntity;
 import main.java.entities.BaseQuestionEntity;
 import main.java.entities.CandidateEntity;
 import main.java.entities.CatDiffEntity;
 import main.java.entities.CompanyEntity;
+import main.java.entities.NumericalQuestionEntity;
 import main.java.entities.TemplateEntity;
 import main.java.entities.TemplateItemEntity;
 import main.java.entities.TestEntity;
@@ -34,8 +36,6 @@ import main.java.model.dao.TestData;
 public class CompanyPersistence {
 	@PersistenceContext(unitName="HRTrueTestBES")
 	EntityManager em;
-	
-	Calendar calendar = new GregorianCalendar();
 
 	public Iterable<TemplateData> getTemplatesForId(long id) {
 		Query query = em.createQuery("SELECT t from TemplateEntity t WHERE t.company.id = ?1")
@@ -99,15 +99,16 @@ public class CompanyPersistence {
 	@Transactional(propagation=Propagation.NESTED)
 	public void createSingleTest(long id, TestData test, CategorySet categories) {
 		CandidateEntity candidateEntity = findOrCreateCandidate(test.getCandidate());
-		TemplateEntity templateEntity = em.find(TemplateEntity.class, test.getTemplateId());
 		
+		Query query = em.createQuery("SELECT t FROM TemplateEntity t WHERE t.id = ?1 AND t.company.id = ?2")
+				.setParameter(1, test.getTemplateId())
+				.setParameter(2, id);
+		TemplateEntity templateEntity = (TemplateEntity) query.getSingleResult();
 		
-		//TODO THERE SHOULD BE REAL LINK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		
-		
-		
-		TestEntity testEntity = new TestEntity(templateEntity, candidateEntity, "testlink", 
-				new Date(calendar.getTimeInMillis()), null, null);
+		long currTimeInMillis = System.currentTimeMillis();
+		String link = "" + candidateEntity.getId() + "-" + templateEntity.getId() + "-" + currTimeInMillis;
+		TestEntity testEntity = new TestEntity(templateEntity, candidateEntity, link, 
+				new Date(currTimeInMillis), null, null);
 		em.persist(testEntity);
 		
 		generateMultipleCategoriesQuestions(templateEntity.getItems(), categories, testEntity);
@@ -127,28 +128,44 @@ public class CompanyPersistence {
 
 	private void generateConcreteQuestion(CatDiffEntity catDiff, CategorySet categories, TestEntity testEntity) {
 		BaseQuestionEntity question = null;
-		String category = categories.getCategoryNameById(catDiff.getCategory());
+		String category = CategorySet.getCategoryNameById(catDiff.getCategory());
 		
 		Generator questionGenerator = new Generator();
 		switch (category){
 			case CategorySet.ABSTRACT_TASK:
 			case CategorySet.AMERICAN_TEST:
 			case CategorySet.JAVA_PROGRAMMING_TASK:
-			case CategorySet.NUMERICAL_TASK:
+			case CategorySet.NUMERICAL_TASK: {
+				SequenceTest test = questionGenerator.generateSequenceTest(catDiff.getDifficulty());
+				Map<Integer, Boolean> keyMap = test.getAnswers();
+				String sequence = NumericalQuestionEntity.buildNumbersSequence(Arrays.asList(test.getSequence()));
+				String answers = NumericalQuestionEntity.buildNumbersSequence(keyMap.keySet());
+				String correctAnswer = null;
+				for (Integer key : keyMap.keySet()){
+					if (keyMap.get(key)){
+						correctAnswer = key.toString();
+						break;
+					}
+				}
+				question = new NumericalQuestionEntity(null, null, catDiff, testEntity, test.getDescription(), sequence, answers, correctAnswer);
+				break;
+			}
 			case CategorySet.OPEN_QUESTION:
 				break;
-			case CategorySet.ATTENTION_TASK:
+			case CategorySet.ATTENTION_TASK: {
 				AttentionTest test = questionGenerator.generateAttentionTest(catDiff.getDifficulty());
-				String answers = AttentionQuestionEntity.buildAnswersSequence(test.getAnswers().keySet());
+				Map<String, Boolean> keyMap = test.getAnswers();
+				String answers = AttentionQuestionEntity.buildAnswersSequence(keyMap.keySet());
 				String correctAnswer = null;
-				for (String key : test.getAnswers().keySet()){
-					if (test.getAnswers().get(key)){
+				for (String key : keyMap.keySet()){
+					if (keyMap.get(key)){
 						correctAnswer = key;
 						break;
 					}
 				}
 				question = new AttentionQuestionEntity(null, null, catDiff, testEntity, test.getDescription(), answers, correctAnswer);
 				break;
+			}
 			case CategorySet.PROGRAMMING_TASK:
 			default:
 				break;
