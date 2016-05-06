@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 import main.java.model.config.CategorySet;
+import main.java.model.dao.BaseQuestionData;
 import main.java.model.dao.NumericalQuestionData;
 
 @Entity
@@ -70,13 +71,14 @@ public class NumericalQuestionEntity extends BaseQuestionEntity {
 	public void setCorrectAnswer(String correctAnswer) {
 		this.correctAnswer = correctAnswer;
 	}
-
-	public static NumericalQuestionData convertToNumericalQuestionData(NumericalQuestionEntity entity){
-		List<String> answers = new ArrayList<>(Arrays.asList(entity.answers.split(DELIMETER)));
-		List<String> sequence = new ArrayList<>(Arrays.asList(entity.sequence.split(DELIMETER)));
+	
+	@Override
+	public BaseQuestionData convertToDataInstance() {
+		List<String> answers = new ArrayList<>(Arrays.asList(this.answers.split(DELIMETER)));
+		List<String> sequence = new ArrayList<>(Arrays.asList(this.sequence.split(DELIMETER)));
 		
-		return new NumericalQuestionData(entity.id, entity.candidateAnswer, entity.passed,
-				entity.description, sequence, answers, entity.correctAnswer);
+		return new NumericalQuestionData(this.id, this.candidateAnswer, this.passed,
+				this.description, sequence, answers, this.correctAnswer);
 	}
 	
 	public static String buildNumbersSequence(Collection<Integer> numbers) {
@@ -91,5 +93,4 @@ public class NumericalQuestionEntity extends BaseQuestionEntity {
 		
 		return builder.toString();
 	}
-
 }

@@ -6,7 +6,7 @@ import java.util.Map;
 public class AuthenticationTimeout {
 	private Map<String, Long> lastAccess = new HashMap<>();
 	private static AuthenticationTimeout instance = null;
-	private static final long TIMEOUT = 3 * 60 * 1000;
+	private static final long TIMEOUT = 30 * 60 * 1000;
 	
 	private AuthenticationTimeout(){}
 	

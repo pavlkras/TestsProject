@@ -14,6 +14,7 @@
    <bean name="authorizedController" class="main.java.controller.AuthorizedAccessController" /> -->
    <bean class="main.java.controller.GuestAccessController" />
    <bean class="main.java.controller.CompanyAccessController" />
+   <bean class="main.java.controller.TestingProcessController" />
    <mvc:annotation-driven />
    
    <!-- Configure to plugin JSON as request and response in method handler -->

@@ -15,6 +15,7 @@
 	<global-method-security pre-post-annotations="enabled" />
 
 	<http pattern="/guest/**" security="none" />
+	<http pattern="/testing/start-testing" security="none" />
 
 	<http pattern="/authorized/company/**" entry-point-ref="restAuthenticationEntryPoint"
 		create-session="stateless">
@@ -28,6 +29,12 @@
 		<custom-filter before="FORM_LOGIN_FILTER" ref="jwtAuthenticationFilter" />
 	</http>
 
+	<http pattern="/testing/**" entry-point-ref="restAuthenticationEntryPoint"
+		create-session="stateless">
+		<csrf disabled="true" />
+		<custom-filter before="FORM_LOGIN_FILTER" ref="jwtAuthenticationFilterForCandidate" />
+	</http>
+	
 	<context:annotation-config />
 
 	<util:map id="roles">
@@ -44,6 +51,14 @@
 		<beans:property name="allowedRoles">
 			<util:set>
 				<beans:value>#{roles['ROLE_COMPANY']}</beans:value>
+			</util:set>
+		</beans:property>
+	</beans:bean>
+
+	<beans:bean id="jwtAuthenticationFilterForCandidate" parent="jwtAuthenticationFilter">
+		<beans:property name="allowedRoles">
+			<util:set>
+				<beans:value>#{roles['ROLE_CANDIDATE']}</beans:value>
 			</util:set>
 		</beans:property>
 	</beans:bean>
