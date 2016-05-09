@@ -10,7 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import main.java.security.dao.User;
+import main.java.security.dao.JwtUser;
 import main.java.security.exceptions.JwtAuthenticationException;
 import main.java.security.exceptions.JwtTokenMalformedException;
 import main.java.security.util.JwtUtil;
@@ -45,7 +45,7 @@ public class JwtAuthenticationProvider extends AbstractUserDetailsAuthentication
 		JwtAuthenticationToken jwtAuthenticationToken = (JwtAuthenticationToken) authentication;
 		String token = jwtAuthenticationToken.getToken();
 
-		User parsedUser = jwtUtil.parseToken(token);
+		JwtUser parsedUser = jwtUtil.parseToken(token);
 
 		if (parsedUser == null) {
 			throw new JwtTokenMalformedException("JWT token is not valid");

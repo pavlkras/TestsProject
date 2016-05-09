@@ -22,7 +22,7 @@ import main.java.model.dao.CompanyData;
 import main.java.model.dao.EmployeesAmountData;
 import main.java.model.dao.LoginData;
 import main.java.security.AuthenticationTimeout;
-import main.java.security.dao.User;
+import main.java.security.dao.JwtUser;
 import main.java.security.util.JwtUtil;
 import main.java.utils.Crypto;
 
@@ -58,7 +58,7 @@ public class GuestAccessController {
 			return new ErrorJsonModel("login doesn't exist");
 		}
 		if (Crypto.matches(login.getPassword(), company.getPassword())){
-			User u = new User();
+			JwtUser u = new JwtUser();
 			u.setId(company.getId());
 			u.setUsername(company.getName());
 			u.setRole(new String("" + company.getRole()));

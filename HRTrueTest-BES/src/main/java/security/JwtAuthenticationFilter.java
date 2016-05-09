@@ -1,33 +1,29 @@
 package main.java.security;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Set;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.List;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 
-import main.java.security.exceptions.JwtAuthenticationException;
 import main.java.security.exceptions.JwtTokenMissingException;
 
-public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
-
-	private Set<String> allowedRoles; 
+public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFilter { 
+	
+	public static final String HEADER_USER_ID = "Authorized-User";
 	
 	public JwtAuthenticationFilter() {
         super("/**");
     }
-	
-	public void setAllowedRoles(Set<String> allowedRoles){
-		this.allowedRoles = allowedRoles;
-	}
 	
 	@Override
     protected boolean requiresAuthentication(HttpServletRequest request, HttpServletResponse response) {
@@ -43,24 +39,11 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
             throw new JwtTokenMissingException("No JWT token found in request headers");
         }
 
-        String authToken = header.substring(7);
+        String authToken = header.split(" ")[1];
 
         JwtAuthenticationToken authRequest = new JwtAuthenticationToken(authToken);
         
-        boolean hasRolePermission = false;
-        Authentication authentication = getAuthenticationManager().authenticate(authRequest);
-        Collection<? extends GrantedAuthority> roles = authentication.getAuthorities();
-        for (GrantedAuthority ga : roles){
-        	if (allowedRoles == null || allowedRoles.contains(ga.getAuthority())){
-        		hasRolePermission = true;
-        		break;
-        	}
-        }
-        
-        if (!hasRolePermission)
-        	throw new JwtAuthenticationException("No role permissions");
-        
-        return authentication;
+        return getAuthenticationManager().authenticate(authRequest);
 	}
 	
 	@Override
@@ -70,7 +53,31 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 
         // As this authentication is in HTTP header, after success we need to continue the request normally
         // and return the response as if the resource was not secured at all
-        chain.doFilter(request, response);
+        
+        HttpServletRequestWrapper wrapper = new HttpServletRequestWrapper(request){
+
+        	private final String userId = (String) authResult.getPrincipal();
+        	
+			@Override
+			public String getHeader(String name) {				
+				if (HEADER_USER_ID.equals(name)) {
+					return userId;
+				}
+				
+				return super.getHeader(name);
+			}
+
+			@Override
+			public Enumeration<String> getHeaderNames() {
+				List<String> list = Collections.list(((HttpServletRequest)getRequest()).getHeaderNames());
+				list.add(HEADER_USER_ID);
+
+				Enumeration<String> en = Collections.enumeration(list);
+				return en;
+			}
+        	
+        };
+        chain.doFilter(wrapper, response);
     }
 
 }

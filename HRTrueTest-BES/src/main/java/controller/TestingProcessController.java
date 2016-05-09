@@ -15,7 +15,7 @@ import main.java.model.dao.BaseQuestionData;
 import main.java.model.dao.CandidateData;
 import main.java.security.AuthenticationTimeout;
 import main.java.security.config.RolesMap;
-import main.java.security.dao.User;
+import main.java.security.dao.JwtUser;
 import main.java.security.util.JwtUtil;
 
 @RestController
@@ -23,8 +23,6 @@ import main.java.security.util.JwtUtil;
 public class TestingProcessController {
 	@Autowired
 	TestingPersistence model;
-	@Autowired
-	RolesMap roles;
 	
 	@RequestMapping(value="/start-testing/{testDesc}", method=RequestMethod.POST)
 	public IJsonModel getTokenAndStartTesting(@PathVariable String testDesc){
@@ -36,7 +34,7 @@ public class TestingProcessController {
 			//TODO handle concrete exception class
 		}
 		
-		User u = new User();
+		JwtUser u = new JwtUser();
 		u.setId(candidate.getId());
 		u.setUsername(candidate.getEmail());
 		u.setRole(roles.get("ROLE_CANDIDATE").toString());

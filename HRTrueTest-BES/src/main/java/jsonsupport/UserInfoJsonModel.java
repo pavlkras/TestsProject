@@ -1,6 +1,6 @@
 package main.java.jsonsupport;
 
-import main.java.security.dao.User;
+import main.java.security.dao.JwtUser;
 
 public class UserInfoJsonModel implements IJsonModel {
 
@@ -8,7 +8,7 @@ public class UserInfoJsonModel implements IJsonModel {
 	String userName = "";
 	String role = "";
 
-	public UserInfoJsonModel(User user) {
+	public UserInfoJsonModel(JwtUser user) {
 		userId = user.getId() + "";
 		userName = user.getUsername();
 		role = user.getRole();
