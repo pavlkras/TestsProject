@@ -7,54 +7,58 @@ import java.util.List;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 
-import main.java.security.exceptions.JwtTokenMissingException;
+import main.java.security.util.JwtUtil;
 
-public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFilter { 
+public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter { 
 	
 	public static final String HEADER_USER_ID = "Authorized-User";
 	
-	public JwtAuthenticationFilter() {
-        super("/**");
-    }
+	@Autowired
+	private JwtUtil jwtUtil;
+	
+	@Autowired
+	private UserDetailsService userDetailsService;
+
 	
 	@Override
-    protected boolean requiresAuthentication(HttpServletRequest request, HttpServletResponse response) {
-        return true;
-    }
-	
-	@Override
-	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-			throws AuthenticationException, IOException, ServletException {
-        String header = request.getHeader("Authorization");
-
-        if (header == null || !header.startsWith("Bearer ")) {
-            throw new JwtTokenMissingException("No JWT token found in request headers");
-        }
-
-        String authToken = header.split(" ")[1];
-
-        JwtAuthenticationToken authRequest = new JwtAuthenticationToken(authToken);
-        
-        return getAuthenticationManager().authenticate(authRequest);
+	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
+			throws IOException, ServletException {
+		HttpServletRequest httpRequest = (HttpServletRequest) req;
+		String token = httpRequest.getHeader("Authorization").split(" ")[1];
+		
+		String username = jwtUtil.getUsernameFromToken(token);
+		if (username != null && SecurityContextHolder.getContext().getAuthentication() == null){
+			UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+			if (jwtUtil.validateToken(token, userDetails)) {
+				UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+				authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpRequest));
+				SecurityContextHolder.getContext().setAuthentication(authentication);
+			}
+		}
+		
+		chain.doFilter(req, res);
 	}
-	
+
+
 	@Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult)
             throws IOException, ServletException {
-        super.successfulAuthentication(request, response, chain, authResult);
-
-        // As this authentication is in HTTP header, after success we need to continue the request normally
-        // and return the response as if the resource was not secured at all
-        
-        HttpServletRequestWrapper wrapper = new HttpServletRequestWrapper(request){
+		HttpServletRequestWrapper wrapper = new HttpServletRequestWrapper(request){
 
         	private final String userId = (String) authResult.getPrincipal();
         	
@@ -77,7 +81,10 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 			}
         	
         };
-        chain.doFilter(wrapper, response);
+        
+        // As this authentication is in HTTP header, after success we need to continue the request normally
+        // and return the response as if the resource was not secured at all
+        super.successfulAuthentication(wrapper, response, chain, authResult);    
     }
 
 }

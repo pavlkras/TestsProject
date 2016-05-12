@@ -1,22 +1,15 @@
 package main.java.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import main.java.jsonsupport.IJsonModel;
-import main.java.jsonsupport.TokenJsonModel;
 import main.java.model.TestingPersistence;
 import main.java.model.dao.BaseQuestionData;
-import main.java.model.dao.CandidateData;
-import main.java.security.AuthenticationTimeout;
-import main.java.security.config.RolesMap;
-import main.java.security.dao.JwtUser;
-import main.java.security.util.JwtUtil;
+import main.java.security.JwtAuthenticationFilter;
 
 @RestController
 @RequestMapping("testing")
@@ -24,7 +17,7 @@ public class TestingProcessController {
 	@Autowired
 	TestingPersistence model;
 	
-	@RequestMapping(value="/start-testing/{testDesc}", method=RequestMethod.POST)
+	/*@RequestMapping(value="/start-testing/{testDesc}", method=RequestMethod.POST)
 	public IJsonModel getTokenAndStartTesting(@PathVariable String testDesc){
 		CandidateData candidate = null;
 		try {
@@ -44,12 +37,12 @@ public class TestingProcessController {
 		AuthenticationTimeout timeout = AuthenticationTimeout.getInstance();
 		timeout.updateTimeout(u.getUsername());
 		return new TokenJsonModel(token);
-	}
+	}*/
 	
 	@RequestMapping(value="/{testDesc}", method=RequestMethod.GET)
-	Iterable<BaseQuestionData> getTest(@RequestHeader("Authorization") String authorization, 
+	Iterable<BaseQuestionData> getTest(@RequestHeader(JwtAuthenticationFilter.HEADER_USER_ID) String userId, 
 			@PathVariable String testDesc){
-		long id = new JwtUtil().getUserId(authorization);
+		long id = Long.parseLong(userId);
 		
 		return model.getTest(id, testDesc);
 	}

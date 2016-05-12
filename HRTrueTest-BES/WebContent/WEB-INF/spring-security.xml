@@ -43,7 +43,7 @@
 			ref="jwtAuthenticationFailureHandler" />
 	</beans:bean>
 	<beans:bean id="jwtAuthenticationProvider"
-		class="main.java.security.JwtAuthenticationProvider">
+		class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
 	</beans:bean>
 	<beans:bean id="jwtAuthenticationSuccessHandler"
 		class="main.java.security.JwtAuthenticationSuccessHandler">

@@ -20,7 +20,7 @@ import main.java.model.config.CategorySet;
 import main.java.model.dao.CategoryData;
 import main.java.model.dao.TemplateData;
 import main.java.model.dao.TestData;
-import main.java.security.util.JwtUtil;
+import main.java.security.JwtAuthenticationFilter;
 
 @RestController
 @RequestMapping("authorized/company")
@@ -31,21 +31,21 @@ public class CompanyAccessController {
 	CategorySet categories;
 	
 	@RequestMapping(value="/category-list", method=RequestMethod.GET)
-	public Iterable<CategoryData> getAllCategories(@RequestHeader("Authorization") String authorization){
+	public Iterable<CategoryData> getAllCategories(){
 		return CategorySet.convertToCategoryDataTree(categories);
 	}
 	
 	@RequestMapping(value="/templates", method=RequestMethod.GET)
-	public Iterable<TemplateData> getTemplates(@RequestHeader("Authorization") String authorization){
-		long id = new JwtUtil().getUserId(authorization);
+	public Iterable<TemplateData> getTemplates(@RequestHeader(JwtAuthenticationFilter.HEADER_USER_ID) String userId){
+		long id = Long.parseLong(userId);
 		
 		return model.getTemplatesForId(id);
 	}
 	
 	@RequestMapping(value="/add-template", method=RequestMethod.POST)
-	public IJsonModel addTemplate(@RequestHeader("Authorization") String authorization, 
+	public IJsonModel addTemplate(@RequestHeader(JwtAuthenticationFilter.HEADER_USER_ID) String userId, 
 			@RequestBody TemplateData template){
-		long id = new JwtUtil().getUserId(authorization);
+		long id = Long.parseLong(userId);
 		try{
 			model.addTemplateForId(id, template);
 		} catch (PersistenceException e){
@@ -54,9 +54,9 @@ public class CompanyAccessController {
 		return new SuccessJsonModel("ok");
 	}
 	@RequestMapping(value="/create-multiple-tests", method=RequestMethod.POST)
-	public IJsonModel createTest(@RequestHeader("Authorization") String authorization,
+	public IJsonModel createTest(@RequestHeader(JwtAuthenticationFilter.HEADER_USER_ID) String userId,
 			@RequestBody List<TestData> tests){
-		long id = new JwtUtil().getUserId(authorization);
+		long id = Long.parseLong(userId);
 		try {
 			model.createMultipleTests(id, tests, categories);
 		} catch (NoResultException e){
