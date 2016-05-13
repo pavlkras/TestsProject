@@ -22,6 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 
 import main.java.security.dao.JwtUser;
+import main.java.security.exceptions.JwtAuthenticationException;
 import main.java.security.util.JwtUtil;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter { 
@@ -47,6 +48,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		String token = request.getHeader("Authorization").split(" ")[1];
 		
 		String username = jwtUtil.getUsernameFromToken(token);
+		
+		if (username == null) 
+			throw new JwtAuthenticationException("can't determine user from token");
+		
 		UsernamePasswordAuthenticationToken authentication = null;
 		if (username != null && SecurityContextHolder.getContext().getAuthentication() == null){
 			UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
@@ -54,6 +59,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 				authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 				authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 				SecurityContextHolder.getContext().setAuthentication(authentication);
+			} else {
+				throw new JwtAuthenticationException("token validation failed");
 			}
 		}
 		

@@ -12,15 +12,8 @@
 	http://www.springframework.org/schema/util
 	http://www.springframework.org/schema/util/spring-util-4.2.xsd">
 
-	<global-method-security pre-post-annotations="enabled" />
-
 	<http pattern="/guest/**" security="none" />
 	<http pattern="/testing/start-testing" security="none" />
-
-<!-- <http pattern="/authorized/company/**" entry-point-ref="restAuthenticationEntryPoint"
-		create-session="stateless">
-		<csrf disabled="true" />
-	</http> -->
 
 	<http pattern="/authorized/**" entry-point-ref="restAuthenticationEntryPoint"
 		create-session="stateless">
