@@ -17,15 +17,15 @@
 	<http pattern="/guest/**" security="none" />
 	<http pattern="/testing/start-testing" security="none" />
 
-	<http pattern="/authorized/company/**" entry-point-ref="restAuthenticationEntryPoint"
+<!-- <http pattern="/authorized/company/**" entry-point-ref="restAuthenticationEntryPoint"
 		create-session="stateless">
 		<csrf disabled="true" />
-	</http>
+	</http> -->
 
 	<http pattern="/authorized/**" entry-point-ref="restAuthenticationEntryPoint"
 		create-session="stateless">
 		<csrf disabled="true" />
-		<custom-filter before="FORM_LOGIN_FILTER" ref="jwtAuthenticationFilter" />
+		<custom-filter position="FORM_LOGIN_FILTER" ref="jwtAuthenticationFilter" />
 	</http>
 
 	<http pattern="/testing/**" entry-point-ref="restAuthenticationEntryPoint"
@@ -42,8 +42,12 @@
 		<beans:property name="authenticationFailureHandler"
 			ref="jwtAuthenticationFailureHandler" />
 	</beans:bean>
+	
+	<beans:bean id="jwtUserDetailsService" class="main.java.security.JwtUserDetailsService">
+	</beans:bean>
 	<beans:bean id="jwtAuthenticationProvider"
 		class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
+		<beans:property name="userDetailsService" ref="jwtUserDetailsService" />
 	</beans:bean>
 	<beans:bean id="jwtAuthenticationSuccessHandler"
 		class="main.java.security.JwtAuthenticationSuccessHandler">

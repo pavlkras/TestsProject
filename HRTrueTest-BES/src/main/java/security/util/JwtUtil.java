@@ -1,7 +1,10 @@
 package main.java.security.util;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import io.jsonwebtoken.Claims;
@@ -23,32 +26,6 @@ public class JwtUtil {
     
 
     /**
-     * Tries to parse specified String as a JWT token. If successful, returns User object with username, id and role prefilled (extracted from token).
-     * If unsuccessful (token is invalid or not containing all required user properties), simply returns null.
-     * 
-     * @param token the JWT token to parse
-     * @return the User object extracted from specified token or null if a token is invalid.
-     */
- /*   public JwtUser parseToken(String token) {
-        try {
-            Claims body = Jwts.parser()
-                    .setSigningKey(secret)
-                    .parseClaimsJws(token)
-                    .getBody();
-
-            JwtUser u = new JwtUser();
-            u.setUsername(body.getSubject());
-            u.setId(Long.parseLong((String) body.get("userId")));
-            u.setRole((String) body.get("role"));
-
-            return u;
-
-        } catch (JwtException | ClassCastException e) {
-            return null;
-        }
-    }*/
-
-    /**
      * Generates a JWT token containing username as subject, and userId and role as additional claims. These properties are taken from the specified
      * User object. Tokens validity is infinite.
      * 
@@ -56,11 +33,16 @@ public class JwtUtil {
      * @return the JWT token
      */
     public String generateToken(JwtUser u) {
+    	Set<String> roles = new HashSet<>();
+    	for (GrantedAuthority authority : u.getAuthorities()){
+    		roles.add(authority.getAuthority());
+    	}
+    	
         Claims claims = Jwts.claims()
         		.setSubject(u.getUsername())
         		.setId(u.getId().toString())
         		.setIssuedAt(new Date());
-        		claims.put(CLAIM_KEY_ROLES, u.getAuthorities());
+        		claims.put(CLAIM_KEY_ROLES, roles);
 
         return generateToken(claims);
     }
@@ -73,6 +55,18 @@ public class JwtUtil {
 				.compact();
 	}
 
+    public Long getIdFromToken(String token){
+    	Long id;
+    	try {
+    		final Claims claims = getClaimsFromToken(token);
+    		id = Long.parseLong(claims.getId());
+    	} catch (Exception e){
+    		id = null;
+    	}
+    	
+    	return id;
+    }
+    
 	public String getUsernameFromToken(String token) {
     	String username;
     	try {

@@ -1,16 +1,11 @@
 package main.java.controller;
 
-import java.awt.List;
-import java.util.ArrayList;
-import java.util.Collection;
 
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.jpa.JpaSystemException;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,10 +20,10 @@ import main.java.model.config.ActivityTypeMap;
 import main.java.model.config.EmployeesAmountMap;
 import main.java.model.dao.ActivityTypeData;
 import main.java.model.dao.CompanyData;
+import main.java.model.dao.CredentialsData;
 import main.java.model.dao.EmployeesAmountData;
 import main.java.model.dao.LoginData;
-import main.java.security.AuthenticationTimeout;
-import main.java.security.config.AuthorityName;
+import main.java.security.JwtUserFactory;
 import main.java.security.dao.JwtUser;
 import main.java.security.util.JwtUtil;
 import main.java.utils.Crypto;
@@ -57,17 +52,15 @@ public class GuestAccessController {
 	
 	@RequestMapping(value="/login", method=RequestMethod.POST)
 	public IJsonModel loginToSystem(@RequestBody LoginData login){
-		CompanyData company = null;
+		CredentialsData data = null;
 		try {
-			company = model.getCompanyData(login.getEmail());
+			data = model.getCompanyData(login.getEmail());
 		}
 		catch (JpaSystemException | NoResultException e){
 			return new ErrorJsonModel("login doesn't exist");
 		}
-		if (Crypto.matches(login.getPassword(), company.getPassword())){
-			Collection<GrantedAuthority> authorities = new ArrayList<>();
-			authorities.add(new SimpleGrantedAuthority(AuthorityName.ROLE_COMPANY.name()));
-			JwtUser u = new JwtUser(company.getId(), company.getName(), null, authorities, true, null);
+		if (Crypto.matches(login.getPassword(), data.getPassword())){
+			JwtUser u = JwtUserFactory.create(data);
 			
 			JwtUtil util = new JwtUtil();
 			String token = util.generateToken(u);
