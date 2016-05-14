@@ -13,6 +13,8 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import main.java.jsonsupport.ErrorJsonModel;
+import main.java.security.exceptions.JwtTokenExpiredException;
+import main.java.security.exceptions.JwtTokenMalformedException;
 
 public class JwtAuthenticationFailureHandler implements AuthenticationFailureHandler {
 
@@ -20,7 +22,16 @@ public class JwtAuthenticationFailureHandler implements AuthenticationFailureHan
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException exception) throws IOException, ServletException {
 		response.setContentType("application/json");
-		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		
+		if (exception instanceof JwtTokenExpiredException){
+			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+		}
+		else if (exception instanceof JwtTokenMalformedException) {
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		}
+		else {
+			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+		}
 		
 		PrintWriter writer = response.getWriter();
 	    writer.write(new ObjectMapper().writeValueAsString(new ErrorJsonModel(exception.getMessage())));

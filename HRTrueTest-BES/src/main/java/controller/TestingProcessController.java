@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import main.java.model.TestingPersistence;
+import main.java.model.config.RequestHeaderNames;
 import main.java.model.dao.BaseQuestionData;
-import main.java.security.JwtAuthenticationFilter;
 
 @RestController
 @RequestMapping("testing")
@@ -40,7 +40,7 @@ public class TestingProcessController {
 	}*/
 	
 	@RequestMapping(value="/{testDesc}", method=RequestMethod.GET)
-	Iterable<BaseQuestionData> getTest(@RequestHeader(JwtAuthenticationFilter.HEADER_USER_ID) String userId, 
+	Iterable<BaseQuestionData> getTest(@RequestHeader(RequestHeaderNames.HEADER_USER_ID) String userId, 
 			@PathVariable String testDesc){
 		long id = Long.parseLong(userId);
 		

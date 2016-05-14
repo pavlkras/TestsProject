@@ -13,7 +13,7 @@ public class CategoryData {
 		this.name = name;
 		this.children = children;
 	}
-
+	
 	public int getId() {
 		return id;
 	}

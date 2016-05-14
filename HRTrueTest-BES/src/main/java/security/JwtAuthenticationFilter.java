@@ -21,13 +21,15 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import main.java.model.config.RequestHeaderNames;
 import main.java.security.dao.JwtUser;
 import main.java.security.exceptions.JwtAuthenticationException;
+import main.java.security.exceptions.JwtTokenExpiredException;
+import main.java.security.exceptions.JwtTokenMissingException;
 import main.java.security.util.JwtUtil;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter { 
-	
-	public static final String HEADER_USER_ID = "Authorized-User";
 	
 	@Autowired
 	private JwtUtil jwtUtil;
@@ -45,9 +47,22 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
 			throws AuthenticationException {
-		String token = request.getHeader("Authorization").split(" ")[1];
+		String token = null;
+		try {
+			token = request.getHeader(RequestHeaderNames.HEADER_AUTHORIZATION).split(" ")[1];
+		} catch (Exception e) {
+			token = null;
+		}
 		
-		String username = jwtUtil.getUsernameFromToken(token);
+		if (token == null)
+			throw new JwtTokenMissingException("token not found");
+		
+		String username = null;
+		try {
+			username = jwtUtil.getUsernameFromToken(token);
+		} catch (ExpiredJwtException e) {
+			throw new JwtTokenExpiredException(e.getMessage());
+		}
 		
 		if (username == null) 
 			throw new JwtAuthenticationException("can't determine user from token");
@@ -68,6 +83,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	}
 
 	@Override
+	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+			AuthenticationException failed) throws IOException, ServletException {
+		// TODO Auto-generated method stub
+		super.unsuccessfulAuthentication(request, response, failed);
+	}
+
+	@Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult)
             throws IOException, ServletException {
 		HttpServletRequestWrapper wrapper = new HttpServletRequestWrapper(request){
@@ -77,7 +99,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 			@Override
 			public Enumeration<String> getHeaders(String name) {
 				List<String> list = Collections.list(((HttpServletRequest)getRequest()).getHeaders(name));
-				if (HEADER_USER_ID.equals(name)) {
+				if (RequestHeaderNames.HEADER_USER_ID.equals(name)) {
 					list.add(userId);
 				}
 
@@ -87,7 +109,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
 			@Override
 			public String getHeader(String name) {				
-				if (HEADER_USER_ID.equals(name)) {
+				if (RequestHeaderNames.HEADER_USER_ID.equals(name)) {
 					return userId;
 				}
 				
@@ -97,7 +119,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 			@Override
 			public Enumeration<String> getHeaderNames() {
 				List<String> list = Collections.list(((HttpServletRequest)getRequest()).getHeaderNames());
-				list.add(HEADER_USER_ID);
+				list.add(RequestHeaderNames.HEADER_USER_ID);
 
 				Enumeration<String> en = Collections.enumeration(list);
 				return en;

@@ -8,6 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import main.java.security.dao.JwtUser;
@@ -56,50 +57,30 @@ public class JwtUtil {
 	}
 
     public Long getIdFromToken(String token){
-    	Long id;
-    	try {
-    		final Claims claims = getClaimsFromToken(token);
-    		id = Long.parseLong(claims.getId());
-    	} catch (Exception e){
-    		id = null;
-    	}
-    	
+		final Claims claims = getClaimsFromToken(token);
+		Long id = Long.parseLong(claims.getId());
+
     	return id;
     }
     
 	public String getUsernameFromToken(String token) {
-    	String username;
-    	try {
-    		final Claims claims = getClaimsFromToken(token);
-    		username = claims.getSubject();
-    	} catch (Exception e) {
-    		username = null;
-    	}
+		final Claims claims = getClaimsFromToken(token);
+		String username = claims.getSubject();
     	
     	return username;
     }
     
     public Date getCreatedDateFromToken(String token) {
-    	Date created;
-    	try {
-    		final Claims claims = getClaimsFromToken(token);
-    		created = claims.getIssuedAt();
-    	} catch (Exception e) {
-    		created = null;
-    	}
+    	final Claims claims = getClaimsFromToken(token);
+    	Date created = claims.getIssuedAt();
     	
     	return created;
     }
     
     public Date getExpirationDateFromToken(String token) {
-    	Date expiration;
-    	try {
-    		final Claims claims = getClaimsFromToken(token);
-    		expiration = claims.getExpiration();
-    	} catch (Exception e) {
-    		expiration = null;
-    	}
-    	
+    	final Claims claims = getClaimsFromToken(token);
+    	Date expiration = claims.getExpiration();
+
     	return expiration;
     }
 
@@ -110,7 +91,10 @@ public class JwtUtil {
 					.setSigningKey(secret)
 					.parseClaimsJws(token)
 					.getBody();
-		} catch (Exception e) {
+		} catch (ExpiredJwtException e){
+			throw e;
+		}
+		catch (Exception e) {
 			claims = null;
 		}
 		

@@ -10,15 +10,17 @@
                 http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.2.xsd
                 http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.0.xsd">
 
-	<s:global-method-security pre-post-annotations="enabled" />
+   <s:global-method-security pre-post-annotations="enabled" jsr250-annotations="enabled" />
 
-   <!-- <context:component-scan base-package="main.java.controller" /> -->
    <context:annotation-config />
-   <!-- <bean name="guestController" class="main.java.controller.GuestAccessController" />
-   <bean name="authorizedController" class="main.java.controller.AuthorizedAccessController" /> -->
+
    <bean class="main.java.controller.GuestAccessController" />
    <bean class="main.java.controller.CompanyAccessController" />
    <bean class="main.java.controller.TestingProcessController" />
+   
+   <!-- Http errors custom handler -->
+   <bean class="main.java.controller.exception.RestResponseEntityExceptionHandler" />
+   
    <mvc:annotation-driven />
    
    <!-- Configure to plugin JSON as request and response in method handler -->
