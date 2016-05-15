@@ -12,41 +12,21 @@
 	http://www.springframework.org/schema/util
 	http://www.springframework.org/schema/util/spring-util-4.2.xsd">
 
-	<global-method-security pre-post-annotations="enabled" />
-
 	<http pattern="/guest/**" security="none" />
-
-	<http pattern="/authorized/company/**" entry-point-ref="restAuthenticationEntryPoint"
-		create-session="stateless">
-		<csrf disabled="true" />
-		<custom-filter before="FORM_LOGIN_FILTER" ref="jwtAuthenticationFilterForCompany" />
-	</http>
+	<http pattern="/testing/start-testing" security="none" />
 
 	<http pattern="/authorized/**" entry-point-ref="restAuthenticationEntryPoint"
 		create-session="stateless">
 		<csrf disabled="true" />
-		<custom-filter before="FORM_LOGIN_FILTER" ref="jwtAuthenticationFilter" />
+		<custom-filter position="FORM_LOGIN_FILTER" ref="jwtAuthenticationFilter" />
 	</http>
 
-	<context:annotation-config />
-
-	<util:map id="roles">
-		<beans:entry key="ROLE_ADMIN" value="0"></beans:entry>
-		<beans:entry key="ROLE_COMPANY" value="1"></beans:entry>
-		<beans:entry key="ROLE_CANDIDATE" value="2"></beans:entry>
-	</util:map>
-
-	<beans:bean class="main.java.security.config.RolesMap">
-		<beans:constructor-arg type="java.util.Map" ref="roles"></beans:constructor-arg>
-	</beans:bean>
-
-	<beans:bean id="jwtAuthenticationFilterForCompany" parent="jwtAuthenticationFilter">
-		<beans:property name="allowedRoles">
-			<util:set>
-				<beans:value>#{roles['ROLE_COMPANY']}</beans:value>
-			</util:set>
-		</beans:property>
-	</beans:bean>
+	<http pattern="/testing/**" entry-point-ref="restAuthenticationEntryPoint"
+		create-session="stateless">
+		<csrf disabled="true" />
+	</http>
+	
+	<context:annotation-config/>
 
 	<beans:bean id="jwtAuthenticationFilter" class="main.java.security.JwtAuthenticationFilter">
 		<beans:property name="authenticationManager" ref="authenticationManager" />
@@ -55,8 +35,12 @@
 		<beans:property name="authenticationFailureHandler"
 			ref="jwtAuthenticationFailureHandler" />
 	</beans:bean>
+	
+	<beans:bean id="jwtUserDetailsService" class="main.java.security.JwtUserDetailsService">
+	</beans:bean>
 	<beans:bean id="jwtAuthenticationProvider"
-		class="main.java.security.JwtAuthenticationProvider">
+		class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
+		<beans:property name="userDetailsService" ref="jwtUserDetailsService" />
 	</beans:bean>
 	<beans:bean id="jwtAuthenticationSuccessHandler"
 		class="main.java.security.JwtAuthenticationSuccessHandler">

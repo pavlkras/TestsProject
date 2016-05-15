@@ -11,10 +11,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import main.java.model.dao.BaseQuestionData;
+
 @Entity
 @Table(name="base_question")
 @Inheritance(strategy=InheritanceType.JOINED)
-public abstract class BaseQuestionEntity {
+public abstract class BaseQuestionEntity implements Convertable<BaseQuestionData> {
 	@Id
 	@Column(name="aa_id")
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -96,5 +98,4 @@ public abstract class BaseQuestionEntity {
 			return false;
 		return true;
 	}
-	
 }

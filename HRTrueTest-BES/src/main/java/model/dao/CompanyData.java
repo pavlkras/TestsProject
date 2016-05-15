@@ -1,20 +1,21 @@
 package main.java.model.dao;
 
-public class CompanyData extends UserData {
+import java.util.Set;
+
+public class CompanyData extends CredentialsData {
 	String name;
 	String site;
 	byte activityType;
 	byte employeesAmnt;
-	private long id;
 	
 	
 	public CompanyData(){
 	}
 	
 	public CompanyData(String email, String password, String name, String site, byte activityType,
-			byte employeesAmnt) {
+			byte employeesAmnt, Set<String> authorities) {
 		//TODO add constants for roles
-		super(email, password, (byte)1);
+		super(null, email, password, authorities);
 		this.name = name;
 		this.site = site;
 		this.activityType = activityType;
@@ -44,14 +45,5 @@ public class CompanyData extends UserData {
 	}
 	public void setEmployeesAmnt(byte employeesAmnt) {
 		this.employeesAmnt = employeesAmnt;
-	}
-
-	public long getId(){
-		return id;
-	}
-	
-	public void setId(long id) {
-		this.id = id;
-		
 	}
 }

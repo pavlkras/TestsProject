@@ -106,7 +106,8 @@ public class CompanyPersistence {
 		TemplateEntity templateEntity = (TemplateEntity) query.getSingleResult();
 		
 		long currTimeInMillis = System.currentTimeMillis();
-		String link = "" + candidateEntity.getId() + "-" + templateEntity.getId() + "-" + currTimeInMillis;
+		String link = "" + candidateEntity.getId() + TestData.DELIMETER + templateEntity.getId() 
+			+ TestData.DELIMETER + currTimeInMillis;
 		TestEntity testEntity = new TestEntity(templateEntity, candidateEntity, link, 
 				new Date(currTimeInMillis), null, null);
 		em.persist(testEntity);

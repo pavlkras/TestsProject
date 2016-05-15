@@ -3,6 +3,8 @@ package main.java.model.dao;
 import java.util.Date;
 
 public class TestData {
+	public static final String DELIMETER = "-";
+	
 	CandidateData candidate;
 	long templateId;
 	String link;

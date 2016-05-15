@@ -102,9 +102,9 @@ public class CompanyEntity {
 	}
 	
 	public static CompanyData convertToCompanyData(CompanyEntity entity){
-		return new CompanyData(entity.getCredentials().login, entity.getCredentials().getPassword(),
-				entity.getName(), entity.getSite(),
-				entity.getActivityType(), entity.getEmployeesAmnt());
+		return new CompanyData(entity.credentials.login, entity.credentials.password, entity.name,
+				entity.site, entity.activityType, entity.employeesAmnt, 
+				CredentialsEntity.convertDbMaskToAuthorities(entity.credentials.roles));
 	}
 	
 	public static Iterable<CompanyData> convertToCompanyDataList(Iterable<CompanyEntity> entities){

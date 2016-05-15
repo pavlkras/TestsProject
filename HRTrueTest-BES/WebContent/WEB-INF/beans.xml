@@ -9,14 +9,14 @@
 		class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
 		<property name="persistenceUnitName" value="HRTrueTestBES" />
 	</bean>
-	<bean
-		class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" />
+	<bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" />
 	<bean class="main.java.model.GuestPersistence" />
 	<bean class="main.java.model.CompanyPersistence" />
+	<bean class="main.java.model.TestingPersistence" />
+	<bean class="main.java.utils.UserLoaderService" />
 	<bean id="jwtUtil" class="main.java.security.util.JwtUtil" />
 	<tx:annotation-driven transaction-manager="transactionManager" />
 	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
 		<property name="entityManagerFactory" ref="emf" />
 	</bean>
-
 </beans>

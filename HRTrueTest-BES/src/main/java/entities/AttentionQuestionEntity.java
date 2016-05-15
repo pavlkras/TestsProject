@@ -11,6 +11,7 @@ import javax.persistence.Table;
 
 import main.java.model.config.CategorySet;
 import main.java.model.dao.AttentionQuestionData;
+import main.java.model.dao.BaseQuestionData;
 
 @Entity
 @Table(name="attention_question")
@@ -55,11 +56,12 @@ public class AttentionQuestionEntity extends BaseQuestionEntity {
 		this.correctAnswer = correctAnswer;
 	}
 	
-	public static AttentionQuestionData convertToAttentionQuestionData(AttentionQuestionEntity entity){
-		List<String> answers = new ArrayList<>(Arrays.asList(entity.answers.split(DELIMETER)));
+	@Override
+	public BaseQuestionData convertToDataInstance(){
+		List<String> answers = new ArrayList<>(Arrays.asList(this.answers.split(DELIMETER)));
 		
-		return new AttentionQuestionData(entity.id, entity.candidateAnswer, entity.passed,
-				entity.description, answers, entity.correctAnswer);
+		return new AttentionQuestionData(this.id, this.candidateAnswer, this.passed,
+				this.description, answers, this.correctAnswer);
 	}
 	
 	public static String buildAnswersSequence(Collection<String> answers){

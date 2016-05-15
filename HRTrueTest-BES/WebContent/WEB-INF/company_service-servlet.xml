@@ -3,18 +3,25 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns:tx="http://www.springframework.org/schema/tx"
         xmlns:mvc="http://www.springframework.org/schema/mvc"
+        xmlns:s="http://www.springframework.org/schema/security"
         xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd
                 http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
                 http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd
-                http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.2.xsd">
+                http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.2.xsd
+                http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.0.xsd">
 
-   <!-- <context:component-scan base-package="main.java.controller" /> -->
+   <s:global-method-security pre-post-annotations="enabled" jsr250-annotations="enabled" />
+
    <context:annotation-config />
-   <!-- <bean name="guestController" class="main.java.controller.GuestAccessController" />
-   <bean name="authorizedController" class="main.java.controller.AuthorizedAccessController" /> -->
+
    <bean class="main.java.controller.GuestAccessController" />
    <bean class="main.java.controller.CompanyAccessController" />
-   <mvc:annotation-driven/>
+   <bean class="main.java.controller.TestingProcessController" />
+   
+   <!-- Http errors custom handler -->
+   <bean class="main.java.controller.exception.RestResponseEntityExceptionHandler" />
+   
+   <mvc:annotation-driven />
    
    <!-- Configure to plugin JSON as request and response in method handler -->
     <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">

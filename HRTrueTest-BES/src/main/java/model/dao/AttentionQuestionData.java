@@ -2,12 +2,9 @@ package main.java.model.dao;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 public class AttentionQuestionData extends BaseQuestionData {
 	String description;
 	List<String> answers;
-	@JsonIgnore
 	String correctAnswer;
 	
 	public AttentionQuestionData(long id, String candidateAnswer, Boolean passed, String description,
