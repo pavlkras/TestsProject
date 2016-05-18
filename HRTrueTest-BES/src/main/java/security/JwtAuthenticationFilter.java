@@ -22,7 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 
 import io.jsonwebtoken.ExpiredJwtException;
-import main.java.model.config.RequestHeaderNames;
+import main.java.model.config.NamesAndFormats;
 import main.java.security.dao.JwtUser;
 import main.java.security.exceptions.JwtAuthenticationException;
 import main.java.security.exceptions.JwtTokenExpiredException;
@@ -49,7 +49,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 			throws AuthenticationException {
 		String token = null;
 		try {
-			token = request.getHeader(RequestHeaderNames.HEADER_AUTHORIZATION).split(" ")[1];
+			token = request.getHeader(NamesAndFormats.HEADER_AUTHORIZATION).split(" ")[1];
 		} catch (Exception e) {
 			token = null;
 		}
@@ -99,7 +99,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 			@Override
 			public Enumeration<String> getHeaders(String name) {
 				List<String> list = Collections.list(((HttpServletRequest)getRequest()).getHeaders(name));
-				if (RequestHeaderNames.HEADER_USER_ID.equals(name)) {
+				if (NamesAndFormats.HEADER_USER_ID.equals(name)) {
 					list.add(userId);
 				}
 
@@ -109,7 +109,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
 			@Override
 			public String getHeader(String name) {				
-				if (RequestHeaderNames.HEADER_USER_ID.equals(name)) {
+				if (NamesAndFormats.HEADER_USER_ID.equals(name)) {
 					return userId;
 				}
 				
@@ -119,7 +119,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 			@Override
 			public Enumeration<String> getHeaderNames() {
 				List<String> list = Collections.list(((HttpServletRequest)getRequest()).getHeaderNames());
-				list.add(RequestHeaderNames.HEADER_USER_ID);
+				list.add(NamesAndFormats.HEADER_USER_ID);
 
 				Enumeration<String> en = Collections.enumeration(list);
 				return en;

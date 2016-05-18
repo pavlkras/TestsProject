@@ -11,10 +11,14 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
 import dao.test.AttentionTest;
 import dao.test.SequenceTest;
 import generator.Generator;
@@ -38,7 +42,7 @@ public class CompanyPersistence {
 	EntityManager em;
 
 	public Iterable<TemplateData> getTemplatesForId(long id) {
-		Query query = em.createQuery("SELECT t from TemplateEntity t WHERE t.company.id = ?1")
+		Query query = em.createQuery("SELECT t FROM TemplateEntity t WHERE t.company.id = ?1")
 				.setParameter(1, id);
 		List<TemplateEntity> res = query.getResultList();
 		
@@ -187,6 +191,33 @@ public class CompanyPersistence {
 			em.persist(candidateEntity);
 		}
 		return candidateEntity;
+	}
+
+	public Iterable<TestData> getTestsByTemplateId(Long userId, Long templateId, Date fromDate, Date toDate) {
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		
+		CriteriaQuery<TestEntity> q = cb.createQuery(TestEntity.class);
+		Root<TestEntity> test = q.from(TestEntity.class);
+		Join<TestEntity, TemplateEntity> template = test.join("template");
+		Join<TemplateEntity, CompanyEntity> company = template.join("company");
+		
+		Predicate commonPredicate = cb.and(cb.equal(company.get("id"), userId), cb.equal(template.get("id"), templateId)) ;
+		Predicate fromDatePredicate = fromDate == null ? null :
+			cb.greaterThanOrEqualTo(test.get("creationDate"), fromDate);
+		Predicate toDatePredicate = toDate == null ? null :
+			cb.lessThanOrEqualTo(test.get("creationDate"), toDate);
+		
+		if (fromDatePredicate != null){
+			commonPredicate = cb.and(commonPredicate, fromDatePredicate);
+		}
+		if (toDatePredicate != null){
+			commonPredicate = cb.and(commonPredicate, toDatePredicate);
+		}
+		TypedQuery<TestEntity> query = em.createQuery(q.select(test).where(commonPredicate));
+		
+		List<TestEntity> res = query.getResultList();
+		
+		return TestEntity.convertToTestDataList(res);
 	}
 
 }
