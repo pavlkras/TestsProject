@@ -78,6 +78,7 @@ public abstract class BaseQuestionEntity implements Convertable<BaseQuestionData
 	public long getId() {
 		return id;
 	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -85,6 +86,7 @@ public abstract class BaseQuestionEntity implements Convertable<BaseQuestionData
 		result = prime * result + (int) (id ^ (id >>> 32));
 		return result;
 	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -94,7 +96,7 @@ public abstract class BaseQuestionEntity implements Convertable<BaseQuestionData
 		if (getClass() != obj.getClass())
 			return false;
 		BaseQuestionEntity other = (BaseQuestionEntity) obj;
-		if (id != other.id)
+		if (id != other.id || catDiff != other.catDiff)
 			return false;
 		return true;
 	}

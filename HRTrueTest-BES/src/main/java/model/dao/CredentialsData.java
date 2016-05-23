@@ -2,9 +2,14 @@ package main.java.model.dao;
 
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
 public class CredentialsData {
+	@JsonProperty(access=Access.READ_ONLY)
 	Long id;
 	String email;
+	@JsonProperty(access=Access.WRITE_ONLY)
 	String password;
 	Set<String> authorities;
 	public CredentialsData(Long id, String email, String password, Set<String> authorities) {

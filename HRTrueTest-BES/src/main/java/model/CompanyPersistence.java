@@ -1,5 +1,6 @@
 package main.java.model;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedHashSet;
@@ -50,14 +51,16 @@ public class CompanyPersistence {
 	}
 
 	@Transactional(propagation=Propagation.REQUIRED)
-	public void addTemplateForId(long id, TemplateData template) {
+	public TemplateData addTemplateForId(long id, TemplateData template) {
 		Query query = em.createQuery("SELECT c FROM CompanyEntity c WHERE c.id = ?1")
 				.setParameter(1, id);
 		CompanyEntity company = (CompanyEntity) query.getSingleResult();
 		TemplateEntity entity = new TemplateEntity(template.getName(), company);
-		em.persist(entity);
-		addTemplateItemsForTemplate(entity, template.getItems());
 		
+		addTemplateItemsForTemplate(entity, template.getItems());
+		em.persist(entity);
+		
+		return TemplateEntity.convertToTemplateData(entity);
 	}
 	
 	@Transactional(propagation=Propagation.NESTED)
@@ -76,7 +79,7 @@ public class CompanyPersistence {
 				itemsSet.add(item);
 			}
 		}
-
+		Set<TemplateItemEntity> entitiesSet = new LinkedHashSet<>();
 		for (TemplateItemData item : itemsSet){
 			Query query = em.createQuery("SELECT cd FROM CatDiffEntity cd WHERE cd.difficulty = ?1 AND cd.category = ?2")
 					.setParameter(1, item.getDifficulty())
@@ -89,19 +92,24 @@ public class CompanyPersistence {
 				em.persist(catDiffEntity);
 			}
 			TemplateItemEntity entity = new TemplateItemEntity(item.getAmount(), catDiffEntity, template);
-			em.persist(entity);
+			entitiesSet.add(entity);
 		}
+		template.setItems(entitiesSet);
 	}
 	
 	@Transactional(propagation=Propagation.REQUIRED)
-	public void createMultipleTests(long id, List<TestData> tests, CategorySet categories) {
+	public Iterable<TestData> createMultipleTests(long id, List<TestData> tests, CategorySet categories) {
+		List<TestEntity> entities = new ArrayList<>();
 		for (TestData test : tests){
-			createSingleTest(id, test, categories);
+			TestEntity entity = createSingleTest(id, test, categories);
+			entities.add(entity);
 		}
+		
+		return TestEntity.convertToTestDataList(entities);
 	}
 	
 	@Transactional(propagation=Propagation.NESTED)
-	public void createSingleTest(long id, TestData test, CategorySet categories) {
+	public TestEntity createSingleTest(long id, TestData test, CategorySet categories) {
 		CandidateEntity candidateEntity = findOrCreateCandidate(test.getCandidate());
 		
 		Query query = em.createQuery("SELECT t FROM TemplateEntity t WHERE t.id = ?1 AND t.company.id = ?2")
@@ -117,6 +125,8 @@ public class CompanyPersistence {
 		em.persist(testEntity);
 		
 		generateMultipleCategoriesQuestions(templateEntity.getItems(), categories, testEntity);
+		
+		return testEntity;
 	}
 
 	private void generateMultipleCategoriesQuestions(Set<TemplateItemEntity> items, CategorySet categories, TestEntity testEntity) {

@@ -102,7 +102,7 @@ public class CompanyEntity {
 	}
 	
 	public static CompanyData convertToCompanyData(CompanyEntity entity){
-		return new CompanyData(entity.credentials.login, entity.credentials.password, entity.name,
+		return new CompanyData(entity.id, entity.credentials.login, entity.credentials.password, entity.name,
 				entity.site, entity.activityType, entity.employeesAmnt, 
 				CredentialsEntity.convertDbMaskToAuthorities(entity.credentials.roles));
 	}

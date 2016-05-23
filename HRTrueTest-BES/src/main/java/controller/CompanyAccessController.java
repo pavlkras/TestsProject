@@ -33,7 +33,7 @@ public class CompanyAccessController {
 	@Autowired
 	CategorySet categories;
 	
-	@RequestMapping(value="/category-list", method=RequestMethod.GET)
+	@RequestMapping(value="/categories", method=RequestMethod.GET)
 	public Iterable<CategoryData> getAllCategories(){
 		return CategorySet.convertToCategoryDataTree(categories);
 	}
@@ -43,21 +43,19 @@ public class CompanyAccessController {
 		return model.getTemplatesForId(userId);
 	}
 	
-	@RequestMapping(value="/add-template", method=RequestMethod.POST)
-	public IJsonModel addTemplate(@RequestHeader(NamesAndFormats.HEADER_USER_ID) Long userId, 
+	@RequestMapping(value="/templates", method=RequestMethod.POST)
+	public TemplateData addTemplate(@RequestHeader(NamesAndFormats.HEADER_USER_ID) Long userId, 
 			@RequestBody TemplateData template){
-		model.addTemplateForId(userId, template);
-
-		return new SuccessJsonModel("ok");
+		;
+		return model.addTemplateForId(userId, template);
 	}
-	@RequestMapping(value="/create-multiple-tests", method=RequestMethod.POST)
-	public IJsonModel createTest(@RequestHeader(NamesAndFormats.HEADER_USER_ID) Long userId,
+	@RequestMapping(value="/tests", method=RequestMethod.POST)
+	public Iterable<TestData> createTest(@RequestHeader(NamesAndFormats.HEADER_USER_ID) Long userId,
 			@RequestBody List<TestData> tests){
-		model.createMultipleTests(userId, tests, categories);
 
-		return new SuccessJsonModel("ok");
+		return model.createMultipleTests(userId, tests, categories);
 	}
-	@RequestMapping(value="/tests-by-template/{templateId}", method=RequestMethod.GET)
+	@RequestMapping(value="/tests/{templateId}", method=RequestMethod.GET)
 	public Iterable<TestData> getTestsByTemplate(@RequestHeader(NamesAndFormats.HEADER_USER_ID) Long userId,
 			@PathVariable Long templateId,
 			@RequestParam(name="from", required=false) @DateTimeFormat(pattern=NamesAndFormats.DATE_FORMAT) Date fromDate,

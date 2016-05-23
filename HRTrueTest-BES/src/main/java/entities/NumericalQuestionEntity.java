@@ -93,4 +93,48 @@ public class NumericalQuestionEntity extends BaseQuestionEntity {
 		
 		return builder.toString();
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((answers == null) ? 0 : answers.hashCode());
+		result = prime * result + ((correctAnswer == null) ? 0 : correctAnswer.hashCode());
+		result = prime * result + ((description == null) ? 0 : description.hashCode());
+		result = prime * result + ((sequence == null) ? 0 : sequence.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		NumericalQuestionEntity other = (NumericalQuestionEntity) obj;
+		if (answers == null) {
+			if (other.answers != null)
+				return false;
+		} else if (!answers.equals(other.answers))
+			return false;
+		if (correctAnswer == null) {
+			if (other.correctAnswer != null)
+				return false;
+		} else if (!correctAnswer.equals(other.correctAnswer))
+			return false;
+		if (description == null) {
+			if (other.description != null)
+				return false;
+		} else if (!description.equals(other.description))
+			return false;
+		if (sequence == null) {
+			if (other.sequence != null)
+				return false;
+		} else if (!sequence.equals(other.sequence))
+			return false;
+		return true;
+	}
+	
 }

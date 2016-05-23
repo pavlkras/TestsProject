@@ -3,7 +3,9 @@ package main.java.model.dao;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import main.java.model.config.NamesAndFormats;
 
@@ -12,7 +14,9 @@ public class TestData {
 	
 	CandidateData candidate;
 	long templateId;
+	@JsonProperty(access=Access.READ_ONLY)
 	String link;
+	@JsonProperty(access=Access.READ_ONLY)
 	@JsonFormat(shape=Shape.STRING, pattern=NamesAndFormats.DATE_FORMAT)
 	Date creationDate;
 	@JsonFormat(shape=Shape.STRING, pattern=NamesAndFormats.DATE_TIME_FORMAT)

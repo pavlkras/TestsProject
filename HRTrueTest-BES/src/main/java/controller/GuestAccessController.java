@@ -36,9 +36,8 @@ public class GuestAccessController {
 	EmployeesAmountMap employeesAmountOpts;
 	
 	@RequestMapping(value="/signup/company", method=RequestMethod.POST)
-	public IJsonModel registerCompany(@RequestBody CompanyData company){
-		model.registerCompany(company);
-		return new SuccessJsonModel("ok");
+	public CompanyData registerCompany(@RequestBody CompanyData company){
+		return model.registerCompany(company);
 	}
 	
 	@RequestMapping(value="/login", method=RequestMethod.POST)

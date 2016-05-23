@@ -18,13 +18,13 @@ public class GuestPersistence{
 	EntityManager em;
 	
 	@Transactional
-	public boolean registerCompany(CompanyData data) {
+	public CompanyData registerCompany(CompanyData data) {
 		data.setPassword(Crypto.generateHash(data.getPassword()));
 		CredentialsEntity credentials = new CredentialsEntity(data.getEmail(), data.getPassword(), AuthorityName.ROLE_COMPANY.code());
 		CompanyEntity company = new CompanyEntity(credentials, data.getName(), data.getSite(),
 				data.getAcitivityType(),data.getEmployeesAmnt());
 		em.persist(company);
-		return true;
+		return CompanyEntity.convertToCompanyData(company);
 	}
 
 	public CompanyData getCompanyData(String email) {

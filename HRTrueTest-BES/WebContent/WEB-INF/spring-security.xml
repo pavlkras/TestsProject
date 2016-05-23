@@ -13,7 +13,6 @@
 	http://www.springframework.org/schema/util/spring-util-4.2.xsd">
 
 	<http pattern="/guest/**" security="none" />
-	<http pattern="/testing/start-testing" security="none" />
 
 	<http pattern="/authorized/**" entry-point-ref="restAuthenticationEntryPoint"
 		create-session="stateless">

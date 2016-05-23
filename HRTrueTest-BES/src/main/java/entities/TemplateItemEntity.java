@@ -81,7 +81,7 @@ public class TemplateItemEntity {
 		if (getClass() != obj.getClass())
 			return false;
 		TemplateItemEntity other = (TemplateItemEntity) obj;
-		if (id != other.id)
+		if (id != other.id || catDiff != other.catDiff)
 			return false;
 		return true;
 	}

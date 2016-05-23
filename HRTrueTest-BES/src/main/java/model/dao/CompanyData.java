@@ -12,10 +12,10 @@ public class CompanyData extends CredentialsData {
 	public CompanyData(){
 	}
 	
-	public CompanyData(String email, String password, String name, String site, byte activityType,
+	public CompanyData(Long id, String email, String password, String name, String site, byte activityType,
 			byte employeesAmnt, Set<String> authorities) {
 		//TODO add constants for roles
-		super(null, email, password, authorities);
+		super(id, email, password, authorities);
 		this.name = name;
 		this.site = site;
 		this.activityType = activityType;

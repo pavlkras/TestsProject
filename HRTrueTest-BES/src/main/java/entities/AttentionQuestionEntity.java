@@ -76,4 +76,40 @@ public class AttentionQuestionEntity extends BaseQuestionEntity {
 		
 		return builder.toString();
 	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((answers == null) ? 0 : answers.hashCode());
+		result = prime * result + ((correctAnswer == null) ? 0 : correctAnswer.hashCode());
+		result = prime * result + ((description == null) ? 0 : description.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AttentionQuestionEntity other = (AttentionQuestionEntity) obj;
+		if (answers == null) {
+			if (other.answers != null)
+				return false;
+		} else if (!answers.equals(other.answers))
+			return false;
+		if (correctAnswer == null) {
+			if (other.correctAnswer != null)
+				return false;
+		} else if (!correctAnswer.equals(other.correctAnswer))
+			return false;
+		if (description == null) {
+			if (other.description != null)
+				return false;
+		} else if (!description.equals(other.description))
+			return false;
+		return true;
+	}
+	
 }
