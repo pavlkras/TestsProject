@@ -8,8 +8,8 @@ public class AttentionQuestionData extends BaseQuestionData {
 	String correctAnswer;
 	
 	public AttentionQuestionData(long id, String candidateAnswer, Boolean passed, String description,
-			List<String> answers, String correctAnswer) {
-		super(id, candidateAnswer, passed);
+			List<String> answers, String correctAnswer, int category, int difficulty) {
+		super(id, candidateAnswer, passed, category, difficulty);
 		this.description = description;
 		this.answers = answers;
 		this.correctAnswer = correctAnswer;

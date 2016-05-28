@@ -21,8 +21,6 @@ public abstract class BaseQuestionEntity implements Convertable<BaseQuestionData
 	@Column(name="aa_id")
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	long id;
-	@Column(name="question_type", nullable=false)
-	byte questionType;
 	@Column(name="candidate_answer")
 	String candidateAnswer;
 	@Column(name="passed")
@@ -33,9 +31,8 @@ public abstract class BaseQuestionEntity implements Convertable<BaseQuestionData
 	@ManyToOne
 	@JoinColumn(name="test_id",nullable=false)
 	TestEntity test;
-	public BaseQuestionEntity(Byte questionType, String candidateAnswer, Boolean passed, CatDiffEntity catDiff, TestEntity test) {
+	public BaseQuestionEntity(String candidateAnswer, Boolean passed, CatDiffEntity catDiff, TestEntity test) {
 		super();
-		this.questionType = questionType;
 		this.candidateAnswer = candidateAnswer;
 		this.passed = passed;
 		this.catDiff = catDiff;
@@ -44,12 +41,6 @@ public abstract class BaseQuestionEntity implements Convertable<BaseQuestionData
 	public BaseQuestionEntity() {
 		super();
 		// TODO Auto-generated constructor stub
-	}
-	public byte getQuestionType() {
-		return questionType;
-	}
-	public void setQuestionType(byte questionType) {
-		this.questionType = questionType;
 	}
 	public String getCandidateAnswer() {
 		return candidateAnswer;

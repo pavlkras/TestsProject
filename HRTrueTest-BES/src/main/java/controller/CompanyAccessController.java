@@ -6,7 +6,6 @@ import java.util.List;
 import javax.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -15,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import main.java.jsonsupport.IJsonModel;
-import main.java.jsonsupport.SuccessJsonModel;
 import main.java.model.CompanyPersistence;
 import main.java.model.config.CategorySet;
 import main.java.model.config.NamesAndFormats;

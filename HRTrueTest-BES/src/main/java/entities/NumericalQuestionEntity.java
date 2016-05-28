@@ -9,7 +9,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import main.java.model.config.CategorySet;
 import main.java.model.dao.BaseQuestionData;
 import main.java.model.dao.NumericalQuestionData;
 
@@ -29,7 +28,7 @@ public class NumericalQuestionEntity extends BaseQuestionEntity {
 	
 	public NumericalQuestionEntity(String candidateAnswer, Boolean passed, CatDiffEntity catDiff,
 			TestEntity test, String description, String sequence, String answers, String correctAnswer) {
-		super((byte)CategorySet.getCategoryIdByName(CategorySet.NUMERICAL_TASK), candidateAnswer, passed, catDiff, test);
+		super(candidateAnswer, passed, catDiff, test);
 		this.description = description;
 		this.sequence = sequence;
 		this.answers = answers;
@@ -78,7 +77,7 @@ public class NumericalQuestionEntity extends BaseQuestionEntity {
 		List<String> sequence = new ArrayList<>(Arrays.asList(this.sequence.split(DELIMETER)));
 		
 		return new NumericalQuestionData(this.id, this.candidateAnswer, this.passed,
-				this.description, sequence, answers, this.correctAnswer);
+				this.description, sequence, answers, this.correctAnswer, this.catDiff.category, this.catDiff.difficulty);
 	}
 	
 	public static String buildNumbersSequence(Collection<Integer> numbers) {

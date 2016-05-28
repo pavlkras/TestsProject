@@ -48,7 +48,7 @@ public class DbGenPersistence {
 	@Transactional
 	public boolean addCompany(CompanyData data) {
 		data.setPassword(Crypto.generateHash(data.getPassword()));
-		CredentialsEntity credentials = new CredentialsEntity(data.getEmail(), data.getPassword(), data.getRole());
+		CredentialsEntity credentials = new CredentialsEntity(data.getEmail(), data.getPassword(), data.getAuthorities());
 		CompanyEntity company = new CompanyEntity(credentials, data.getName(), data.getSite(), data.getAcitivityType(),
 				data.getEmployeesAmnt());
 		em.persist(company);

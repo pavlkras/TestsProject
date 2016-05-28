@@ -9,7 +9,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import main.java.model.config.CategorySet;
 import main.java.model.dao.AttentionQuestionData;
 import main.java.model.dao.BaseQuestionData;
 
@@ -27,7 +26,7 @@ public class AttentionQuestionEntity extends BaseQuestionEntity {
 	
 	public AttentionQuestionEntity(String candidateAnswer, Boolean passed, CatDiffEntity catDiff, TestEntity test, String description,
 			String answers, String correctAnswer) {
-		super((byte)CategorySet.getCategoryIdByName(CategorySet.ATTENTION_TASK), candidateAnswer, passed, catDiff, test);
+		super(candidateAnswer, passed, catDiff, test);
 		this.description = description;
 		this.answers = answers;
 		this.correctAnswer = correctAnswer;
@@ -61,7 +60,7 @@ public class AttentionQuestionEntity extends BaseQuestionEntity {
 		List<String> answers = new ArrayList<>(Arrays.asList(this.answers.split(DELIMETER)));
 		
 		return new AttentionQuestionData(this.id, this.candidateAnswer, this.passed,
-				this.description, answers, this.correctAnswer);
+				this.description, answers, this.correctAnswer, this.catDiff.category, this.catDiff.difficulty);
 	}
 	
 	public static String buildAnswersSequence(Collection<String> answers){

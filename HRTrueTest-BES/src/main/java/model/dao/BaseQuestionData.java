@@ -4,11 +4,15 @@ public abstract class BaseQuestionData {
 	long id;
 	String candidateAnswer;
 	Boolean passed;
-	public BaseQuestionData(long id, String candidateAnswer, Boolean passed) {
+	int category;
+	int difficulty;
+	public BaseQuestionData(long id, String candidateAnswer, Boolean passed, int category, int difficulty) {
 		super();
 		this.id = id;
 		this.candidateAnswer = candidateAnswer;
 		this.passed = passed;
+		this.category = category;
+		this.difficulty = difficulty;
 	}
 	public BaseQuestionData() {
 		super();
@@ -32,5 +36,17 @@ public abstract class BaseQuestionData {
 	}
 	public void setPassed(Boolean passed) {
 		this.passed = passed;
+	}
+	public int getCategory() {
+		return category;
+	}
+	public void setCategory(int category) {
+		this.category = category;
+	}
+	public int getDifficulty() {
+		return difficulty;
+	}
+	public void setDifficulty(int difficulty) {
+		this.difficulty = difficulty;
 	}
 }

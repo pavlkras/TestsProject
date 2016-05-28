@@ -20,9 +20,11 @@
 		<custom-filter position="FORM_LOGIN_FILTER" ref="jwtAuthenticationFilter" />
 	</http>
 
-	<http pattern="/testing/**" entry-point-ref="restAuthenticationEntryPoint"
+	<http pattern="/test/*/login" security="none" />
+	<http pattern="/test/**" entry-point-ref="restAuthenticationEntryPoint"
 		create-session="stateless">
 		<csrf disabled="true" />
+		<custom-filter position="FORM_LOGIN_FILTER" ref="jwtAuthenticationFilter" />
 	</http>
 	
 	<context:annotation-config/>

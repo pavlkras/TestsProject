@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import main.java.jsonsupport.IJsonModel;
-import main.java.jsonsupport.SuccessJsonModel;
 import main.java.jsonsupport.TokenJsonModel;
 import main.java.model.GuestPersistence;
 import main.java.model.config.ActivityTypeMap;

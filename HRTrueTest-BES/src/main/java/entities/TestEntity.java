@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -46,11 +45,13 @@ public class TestEntity {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="end_date")
 	Date endDate;
+	@Column(name="allowed_exec_time")
+	Short allowedTime;
 	@OneToMany(mappedBy="test",fetch=FetchType.EAGER,orphanRemoval=true)
 	Set<BaseQuestionEntity> questions;
 	
-	public TestEntity(TemplateEntity template, CandidateEntity candidate, String link, 
-			Date creationDate, Date startDate, Date endDate) {
+	public TestEntity(TemplateEntity template, CandidateEntity candidate, String link,
+			Short allowedTime, Date creationDate, Date startDate, Date endDate) {
 		super();
 		this.template = template;
 		this.candidate = candidate;
@@ -58,6 +59,7 @@ public class TestEntity {
 		this.creationDate = creationDate;
 		this.startDate = startDate;
 		this.endDate = endDate;
+		this.allowedTime = allowedTime;
 	}
 	public TestEntity() {
 		super();
@@ -105,10 +107,16 @@ public class TestEntity {
 	public void setQuestions(Set<BaseQuestionEntity> questions) {
 		this.questions = questions;
 	}
+	
+	public Short getAllowedTime() {
+		return allowedTime;
+	}
+	public void setAllowedTime(Short allowedTime) {
+		this.allowedTime = allowedTime;
+	}
 	public long getId() {
 		return id;
 	}
-	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -138,7 +146,7 @@ public class TestEntity {
 	public static TestData convertToTestData(TestEntity entity){
 		CandidateData candidate = CandidateEntity.convertToCandidateData(entity.candidate);
 		return new TestData(candidate, entity.template.id,
-				entity.link, entity.creationDate, entity.startDate, entity.endDate);
+				entity.link, entity.allowedTime, entity.creationDate, entity.startDate, entity.endDate);
 	}
 	public static List<TestData> convertToTestDataList(Iterable<TestEntity> entities){
 		List<TestData> tests = new ArrayList<TestData>();

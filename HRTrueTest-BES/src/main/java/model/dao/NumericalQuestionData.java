@@ -12,8 +12,8 @@ public class NumericalQuestionData extends BaseQuestionData {
 	String correctAnswer;
 	
 	public NumericalQuestionData(long id, String candidateAnswer, Boolean passed, String description,
-			List<String> sequence, List<String> answers, String correctAnswer) {
-		super(id, candidateAnswer, passed);
+			List<String> sequence, List<String> answers, String correctAnswer, int category, int difficulty) {
+		super(id, candidateAnswer, passed, category, difficulty);
 		this.description = description;
 		this.sequence = sequence;
 		this.answers = answers;

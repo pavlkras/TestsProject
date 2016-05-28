@@ -120,7 +120,7 @@ public class CompanyPersistence {
 		long currTimeInMillis = System.currentTimeMillis();
 		String link = "" + candidateEntity.getId() + TestData.DELIMETER + templateEntity.getId() 
 			+ TestData.DELIMETER + currTimeInMillis;
-		TestEntity testEntity = new TestEntity(templateEntity, candidateEntity, link, 
+		TestEntity testEntity = new TestEntity(templateEntity, candidateEntity, link, test.getAllowedTime(),
 				new Date(currTimeInMillis), null, null);
 		em.persist(testEntity);
 		
@@ -190,7 +190,7 @@ public class CompanyPersistence {
 
 	@Transactional(propagation=Propagation.NESTED)
 	public CandidateEntity findOrCreateCandidate(CandidateData candidate) {
-		Query query = em.createQuery("SELECT c FROM CandidateEntity c WHERE c.email = ?1")
+		Query query = em.createQuery("SELECT c FROM CandidateEntity c WHERE c.credentials.login = ?1")
 				.setParameter(1, candidate.getEmail());
 		CandidateEntity candidateEntity = null;
 		try {

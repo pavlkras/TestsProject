@@ -23,14 +23,16 @@ public class TestData {
 	Date startDate;
 	@JsonFormat(shape=Shape.STRING, pattern=NamesAndFormats.DATE_TIME_FORMAT)
 	Date endDate;
-	public TestData(CandidateData candidate, long templateId, String link, 
-			Date creationDate, Date startDate, Date endDate) {
+	Short allowedTime;
+	public TestData(CandidateData candidate, long templateId, String link,
+			Short allowedTime, Date creationDate, Date startDate, Date endDate) {
 		this.candidate = candidate;
 		this.templateId = templateId;
 		this.link = link;
 		this.creationDate = creationDate;
 		this.startDate = startDate;
 		this.endDate = endDate;
+		this.allowedTime = allowedTime;
 	}
 	public TestData() {
 		super();
@@ -72,5 +74,10 @@ public class TestData {
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
 	}
-
+	public Short getAllowedTime() {
+		return allowedTime;
+	}
+	public void setAllowedTime(Short allowedTime) {
+		this.allowedTime = allowedTime;
+	}
 }

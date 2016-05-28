@@ -7,7 +7,9 @@ import java.util.Set;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
+import main.java.entities.CredentialsEntity;
 import main.java.model.DbGenPersistence;
+import main.java.model.config.AuthorityName;
 import main.java.model.dao.CompanyData;
 import main.java.model.dao.TemplateItemData;
 
@@ -26,8 +28,14 @@ public class DbGenApp {
 		model = (DbGenPersistence)ctx.getBean("dbGen");
 		
 		for (int i = 0; i < COMPANIES_CNT; ++i){
-			CompanyData data = new CompanyData(getEmail(i), getPassword(i), getRandomString("Comp_Name_"), getRandomString("Site_"),
-					getRandomByte(model.getActivityTypes().size()), getRandomByte(model.getEmployeesAmounts().size())); 
+			CompanyData data = new CompanyData();
+			data.setEmail(getEmail(i));
+			data.setPassword(getPassword(i));
+			data.setName(getRandomString("Comp_Name_"));
+			data.setSite(getRandomString("Site_"));
+			data.setActivityType(getRandomByte(model.getActivityTypes().size()));
+			data.setEmployeesAmnt(getRandomByte(model.getEmployeesAmounts().size()));
+			data.setAuthorities(CredentialsEntity.convertDbMaskToAuthorities(AuthorityName.ROLE_COMPANY.code()));
 			model.addCompany(data);
 			int templ_cnt = random.nextInt(TEMPLATES_MAX_CNT);
 			for (int j = 0; j < templ_cnt; ++j){

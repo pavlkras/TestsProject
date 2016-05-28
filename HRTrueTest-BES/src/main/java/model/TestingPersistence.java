@@ -8,6 +8,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import main.java.entities.BaseQuestionEntity;
+import main.java.entities.TestEntity;
 import main.java.model.dao.BaseQuestionData;
 import main.java.model.dao.TestData;
 
@@ -31,5 +32,13 @@ public class TestingPersistence {
 		}
 		
 		return questions;
+	}
+
+	public long getCandidateFromTest(String testDesc) {
+		Query query = em.createQuery("SELECT t FROM TestEntity t WHERE t.link =?1")
+				.setParameter(1, testDesc);
+		TestEntity testEntity = (TestEntity) query.getSingleResult();
+				
+		return testEntity.getCandidate().getId();
 	}
 }
