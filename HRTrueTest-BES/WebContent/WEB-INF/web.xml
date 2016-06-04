@@ -65,6 +65,7 @@
 		<param-value>
 			/WEB-INF/spring-security.xml,
 			/WEB-INF/beans.xml,
+			/WEB-INF/logging-beans.xml,
 			/WEB-INF/config-beans.xml
 		</param-value>
 	</context-param>

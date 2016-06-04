@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+  http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+  http://www.springframework.org/schema/aop
+  http://www.springframework.org/schema/aop/spring-aop-4.2.xsd">
+
+	<bean id="execTimeLogger" class="main.java.utils.logging.ExecutionTimeLogger">
+		<constructor-arg name="fileName" value="logTM.log" />
+	</bean>
+	<bean id="callsToLogger" class="main.java.utils.logging.CallsLogger">
+		<constructor-arg name="fileName" value="logPM.log" />
+	</bean>
+	
+	<aop:aspectj-autoproxy />
+	<aop:config >
+		<aop:aspect ref="execTimeLogger" order="2">
+			<aop:pointcut id="execTimePointcut" expression="execution(public * main.java.controller.*.*(..))"/>
+			<aop:around method="makeLog" pointcut-ref="execTimePointcut"/>
+		</aop:aspect>
+		<aop:aspect ref="callsToLogger" order="1">
+			<aop:pointcut id="callToPointcut" expression="execution(* org.springframework.security.web.FilterChainProxy.doFilter(..))"/>
+			<aop:around method="makeLog" pointcut-ref="callToPointcut"/>
+		</aop:aspect>
+	</aop:config>
+</beans>

@@ -39,6 +39,7 @@
 		<org.springframework.version>4.2.5.RELEASE</org.springframework.version>
 		<mysql.version>5.1.38</mysql.version>
 		<jackson.version>2.7.4</jackson.version>
+		<org.aspectj.version>1.8.9</org.aspectj.version>
 	</properties>
 
 	<dependencies>
@@ -50,10 +51,10 @@
 		</dependency>
 		<!-- JWT support -->
 		<dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt</artifactId>
@@ -141,6 +142,18 @@
 			<version>1.7.18</version>
 		</dependency>
 
+		<!-- AspectJ support -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aop</artifactId>
+			<version>${org.springframework.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjtools</artifactId>
+			<version>${org.aspectj.version}</version>
+		</dependency>
+
 
 		<dependency>
 			<groupId>javax.validation</groupId>
@@ -151,6 +164,11 @@
 			<groupId>javax.annotation</groupId>
 			<artifactId>jsr250-api</artifactId>
 			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.5</version>
 		</dependency>
 	</dependencies>
 </project>
