@@ -7,7 +7,7 @@
   http://www.springframework.org/schema/aop
   http://www.springframework.org/schema/aop/spring-aop-4.2.xsd">
 
-	<bean id="execTimeLogger" class="main.java.utils.logging.ExecutionTimeLogger">
+	<bean id="execTimeLogger" class="main.java.utils.logging.PerformanceLogger">
 		<constructor-arg name="fileName" value="logTM.log" />
 	</bean>
 	<bean id="callsToLogger" class="main.java.utils.logging.CallsLogger">

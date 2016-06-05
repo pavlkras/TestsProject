@@ -5,17 +5,12 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import org.aspectj.lang.ProceedingJoinPoint;
 
 public abstract class AbstractFileLogger {
 	protected BufferedWriter bw;
 	private static final String TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm";
-	private static final SimpleDateFormat dateFormat = new SimpleDateFormat(TIMESTAMP_FORMAT);
-	/* format: "Timestamp userID ipAddr class method message */
-	private static final String LOG_FORMAT = "%s\t%d%17s\t%s\t%s\t%s%n";
-	
+	protected static final SimpleDateFormat dateFormat = new SimpleDateFormat(TIMESTAMP_FORMAT);
 	
 	public AbstractFileLogger(String fileName){
 		try {
@@ -33,13 +28,6 @@ public abstract class AbstractFileLogger {
 				e1.printStackTrace();
 			}
 		}
-	}
-	
-	protected String getFormattedLog(Long id, String ip, String clazz, String method, String message){
-		String currDT = dateFormat.format(new Date(System.currentTimeMillis()));
-		if (ip == null || ip.isEmpty())
-			ip = "----------------";
-		return String.format(LOG_FORMAT, currDT, id, ip, clazz, method, message);
 	}
 	
 	@Override
