@@ -2,13 +2,10 @@ package main.java.model.dao;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 public class NumericalQuestionData extends BaseQuestionData {
 	String description;
 	List<String> sequence;
 	List<String> answers;
-	@JsonIgnore
 	String correctAnswer;
 	
 	public NumericalQuestionData(long id, String candidateAnswer, Boolean passed, String description,
@@ -29,7 +26,6 @@ public class NumericalQuestionData extends BaseQuestionData {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
 	public List<String> getSequence() {
 		return sequence;
 	}
