@@ -23,22 +23,25 @@
 	<bean
 		class="main.java.controller.exception.RestResponseEntityExceptionHandler" />
 
-	<mvc:annotation-driven />
-
-	<!-- Configure to plugin JSON as request and response in method handler -->
-	<bean
-		class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
-		<property name="messageConverters">
-			<list>
-				<ref bean="jsonMessageConverter" />
-			</list>
-		</property>
+	<mvc:annotation-driven>
+		<mvc:message-converters>
+			<bean id="jsonMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+				<property name="objectMapper" ref="jacksonObjectMapper" />
+		</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+	
+	<bean id="jacksonObjectMapper" class="com.fasterxml.jackson.databind.ObjectMapper">
+		<property name="annotationIntrospector" ref="pairedAnnotationIntrospector" />
 	</bean>
-
-	<!-- Configure bean to convert JSON to POJO and vice versa -->
-	<bean id="jsonMessageConverter"
-		class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+	
+	<bean id="pairedAnnotationIntrospector" class="com.fasterxml.jackson.databind.introspect.AnnotationIntrospectorPair"  factory-method="create">
+		<constructor-arg ref="rolesJsonIgnoreAnnotationIntrospector" />
+		<constructor-arg ref="jacksonAnnotationIntrospector" />
 	</bean>
+	
+	<bean id="rolesJsonIgnoreAnnotationIntrospector" class="main.java.utils.annotations.RolesJsonIgnoreAnnotationIntrospector" />
+	<bean id="jacksonAnnotationIntrospector" class="com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector" />
 
 	<aop:aspectj-autoproxy />
 

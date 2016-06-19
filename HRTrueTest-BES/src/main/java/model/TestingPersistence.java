@@ -1,12 +1,17 @@
 package main.java.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import javassist.expr.NewArray;
 import main.java.entities.BaseQuestionEntity;
 import main.java.entities.TestEntity;
 import main.java.model.dao.BaseQuestionData;
@@ -40,5 +45,13 @@ public class TestingPersistence {
 		TestEntity testEntity = (TestEntity) query.getSingleResult();
 				
 		return testEntity.getCandidate().getId();
+	}
+	
+	@Transactional(propagation=Propagation.REQUIRED)
+	public int startTesting(String testDesc) {
+		Query query = em.createQuery("UPDATE TestEntity t SET start_date = ?1 WHERE t.link = ?2")
+				.setParameter(1, new Date(System.currentTimeMillis()))
+				.setParameter(2, testDesc);
+		return query.executeUpdate();
 	}
 }

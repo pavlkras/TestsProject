@@ -2,6 +2,8 @@ package main.java.model.dao;
 
 import java.util.List;
 
+import main.java.utils.annotations.RolesJsonIgnore;
+
 public class NumericalQuestionData extends BaseQuestionData {
 	String description;
 	List<String> sequence;
@@ -38,9 +40,11 @@ public class NumericalQuestionData extends BaseQuestionData {
 	public void setAnswers(List<String> answers) {
 		this.answers = answers;
 	}
+	@RolesJsonIgnore({"ROLE_USER", "ROLE_CANDIDATE"})
 	public String getCorrectAnswer() {
 		return correctAnswer;
 	}
+	@RolesJsonIgnore({"ROLE_USER", "ROLE_CANDIDATE"})
 	public void setCorrectAnswer(String correctAnswer) {
 		this.correctAnswer = correctAnswer;
 	}

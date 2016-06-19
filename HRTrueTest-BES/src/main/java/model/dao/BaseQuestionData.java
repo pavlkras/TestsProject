@@ -1,5 +1,7 @@
 package main.java.model.dao;
 
+import main.java.utils.annotations.RolesJsonIgnore;
+
 public abstract class BaseQuestionData {
 	long id;
 	String candidateAnswer;
@@ -25,6 +27,7 @@ public abstract class BaseQuestionData {
 	public void setId(long id) {
 		this.id = id;
 	}
+	@RolesJsonIgnore("ROLE_CANDIDATE")
 	public String getCandidateAnswer() {
 		return candidateAnswer;
 	}

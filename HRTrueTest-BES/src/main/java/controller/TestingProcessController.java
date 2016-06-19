@@ -56,6 +56,10 @@ public class TestingProcessController {
 			throw new BadCredentialsException("bad credentials");
 		}
 		
+		if (model.startTesting(testDesc) != 1){
+			return new ErrorJsonModel("can't start testing");
+		}
+		
 		return new TokenJsonModel(token);
 	}
 }
