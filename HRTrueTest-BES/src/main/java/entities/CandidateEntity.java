@@ -2,7 +2,6 @@ package main.java.entities;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,7 +19,6 @@ import org.hibernate.annotations.Parameter;
 
 import main.java.model.config.AuthorityName;
 import main.java.model.dao.CandidateData;
-import main.java.utils.Crypto;
 
 @Entity
 @Table(name="candidate")
@@ -42,13 +40,12 @@ public class CandidateEntity {
 	String lastName;
 	@Column(name="temp_passwd", length=8)
 	String tmpPasswd;
-	public CandidateEntity(String email, String firstName, String lastName) {
+	public CandidateEntity(String email, String firstName, String lastName, String hash, String tmpPasswd) {
 		super();
-		this.tmpPasswd = generateTemporaryPassword();
+		this.tmpPasswd = tmpPasswd;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		
-		String hash = Crypto.generateHash(tmpPasswd);
 		credentials = new CredentialsEntity(email, hash, (byte)(AuthorityName.ROLE_USER.code()|AuthorityName.ROLE_CANDIDATE.code()));
 	}
 	public CandidateEntity() {
@@ -123,15 +120,5 @@ public class CandidateEntity {
 			candidates.add(convertToCandidateData(entity));
 		}
 		return candidates;
-	}
-	
-	private String generateTemporaryPassword() {
-		Random random = new Random();
-		final String alphabet = "0123456789abcdefghijklnmopqrstuvwxyzABCDEFGHIJKLNMOPQRSTUVWXYZ";
-		StringBuilder ret = new StringBuilder();
-		for (int i = 0; i < 8; ++i){
-			ret.append(alphabet.charAt(random.nextInt(alphabet.length())));
-		}
-		return ret.toString();
 	}
 }

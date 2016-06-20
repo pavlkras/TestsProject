@@ -1,4 +1,4 @@
-package main.java.utils;
+package main.java.security.util;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;

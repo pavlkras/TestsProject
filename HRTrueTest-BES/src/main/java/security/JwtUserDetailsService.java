@@ -5,7 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import main.java.utils.UserLoaderService;
+import main.java.security.util.UserLoaderService;
 
 public class JwtUserDetailsService implements UserDetailsService {
 	

@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
@@ -37,6 +38,7 @@ import main.java.model.dao.CandidateData;
 import main.java.model.dao.TemplateData;
 import main.java.model.dao.TemplateItemData;
 import main.java.model.dao.TestData;
+import main.java.utils.Crypto;
 
 public class CompanyPersistence {
 	@PersistenceContext(unitName="HRTrueTestBES")
@@ -196,11 +198,23 @@ public class CompanyPersistence {
 		try {
 			candidateEntity = (CandidateEntity) query.getSingleResult();
 		} catch (NoResultException e){
+			String tmpPasswd = generateTemporaryPassword();
+			String hash = Crypto.generateHash(tmpPasswd);
 			candidateEntity = new CandidateEntity(candidate.getEmail(),
-					candidate.getFirstName(), candidate.getLastName());
+					candidate.getFirstName(), candidate.getLastName(), hash, tmpPasswd);
 			em.persist(candidateEntity);
 		}
 		return candidateEntity;
+	}
+	
+	private static String generateTemporaryPassword() {
+		Random random = new Random();
+		final String alphabet = "0123456789abcdefghijklnmopqrstuvwxyzABCDEFGHIJKLNMOPQRSTUVWXYZ";
+		StringBuilder ret = new StringBuilder();
+		for (int i = 0; i < 8; ++i){
+			ret.append(alphabet.charAt(random.nextInt(alphabet.length())));
+		}
+		return ret.toString();
 	}
 
 	public Iterable<TestData> getTestsByTemplateId(Long userId, Long templateId, Date fromDate, Date toDate) {
