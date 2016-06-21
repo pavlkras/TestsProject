@@ -1,4 +1,4 @@
-package main.java.controller.exception;
+package main.java.controller.exceptions;
 
 import javax.persistence.PersistenceException;
 

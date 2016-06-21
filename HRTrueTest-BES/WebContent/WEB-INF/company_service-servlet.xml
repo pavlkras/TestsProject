@@ -21,7 +21,7 @@
 
 	<!-- Http errors custom handler -->
 	<bean
-		class="main.java.controller.exception.RestResponseEntityExceptionHandler" />
+		class="main.java.controller.exceptions.RestResponseEntityExceptionHandler" />
 
 	<mvc:annotation-driven>
 		<mvc:message-converters>
